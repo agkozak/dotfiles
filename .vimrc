@@ -10,6 +10,10 @@ silent function! WINDOWS() abort      " Not true of Cygwin/MSys2/WSL
   return (has('win32') || has('win64'))
 endfunction
 
+if ! CMDEXE() && ! WINDOWS()
+  let g:system_uname_a=system('uname -a')
+endif
+
 " }}}1
 
 " Options {{{1
@@ -289,12 +293,12 @@ if executable('git')
     " Set up bundle support
     if CMDEXE() || WINDOWS()
       set runtimepath=~/.vim,$VIMRUNTIME
-    endif
 
     " Avoid multiple threads on CloudLinux
-    if system('uname -a') =~ 'lve'
+    elif g:system_uname_a =~ 'lve'
       let g:plug_threads=1
     endif
+
     call plug#begin()
 
     " Bundles
@@ -569,10 +573,10 @@ if has('autocmd')
     " .todo extension is TaskPaper
     autocmd BufNewFile,BufReadPost *.todo set filetype=taskpaper
 
+    " }}}2
   augroup END
 endif
 
-  " }}}2
 
 " Reload .vimrc when it changes
 " From http://stackoverflow.com/questions/2400264/is-it-possible-to-apply-vim-configurations-without-restarting/2403926#2403926
@@ -590,27 +594,26 @@ let g:markdown_fenced_languages = ['html', 'javascript', 'css', 'python', 'bash=
 
 set t_ut= " Disable background color erase
 
-" rg/ag/ack
-if executable('rg')
-  set grepprg=rg\ --vimgrep\ --noheading
-  let g:ctrlp_user_command = 'rg %s --files --color=never --glob ""'
-  if ! CMDEXE() || ! WINDOWS()
+" rg/ag/ack {{{2
+
+" Avoid problems with native Windows rg/ag 
+if g:system_uname_a !~ 'Msys' && g:system_uname_a !~ 'Cygwin' 
+
+  if executable('rg')
+    set grepprg=rg\ --vimgrep\ --noheading
+    let g:ctrlp_user_command = 'rg %s --files --color=never --glob ""'
     let g:ctrlp_use_caching  = 0
-  endif
-elseif executable('ag')
-  " Use ag over grep
-  set grepprg=ag\ --nogroup\ --nocolor
-
-  " Use ag in CtrlP for listing files. Lightning fast and respects .gitignore
-  let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
-
-  if ! CMDEXE() || ! WINDOWS()
-    " ag is fast enough that CtrlP doesn't need to cache
+  elseif executable('ag')
+    set grepprg=ag\ --nogroup\ --nocolor
+    let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
     let g:ctrlp_use_caching = 0
+  elseif executable('ack')
+    set grepprg=ack\ -aH
   endif
-elseif executable('ack')
-  set grepprg=ack\ -aH
+
 endif
+
+" }}}2
 
 " Project-Specific .vimrc.local files
 " https://www.reddit.com/r/vim/comments/7iy03o/you_aint_gonna_need_it_your_replacement_for/
