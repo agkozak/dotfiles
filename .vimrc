@@ -300,7 +300,7 @@ if executable('git')
     " Bundles
 
     " General
-    Plug 'kien/ctrlp.vim'
+    Plug 'ctrlpvim/ctrlp.vim'
     Plug 'mhinz/vim-startify'
     Plug 'scrooloose/syntastic'
     if &term != 'win32'
