@@ -1,0 +1,38 @@
+# ~/.editorconfig
+#
+# https://github.com/agkozak/dotfiles
+
+# This file is for unifying the coding style for different editors and IDEs
+# editorconfig.org
+
+# Based on WordPress Coding Standards,
+# https://make.wordpress.org/core/handbook/coding-standards/
+
+root = true
+
+[*.{css,html,js,php}]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+indent_style = tab
+
+[{.jshintrc,*.json,*.yml}]
+indent_style = space
+indent_size = 2
+
+[{*.txt,wp-config-sample.php}]
+end_of_line = crlf
+
+# Non-WordPress settings
+
+[{*.vim,.vimrc,.gvimrc,_vimrc,_gvimrc,.shrc,.bashrc,.zshrc,.profile,.bash_profile,.zprofile,*.sh,*.zsh,.kshrc,.mkshrc}]
+indent_style = space
+indent_size = 2
+
+[*.scss]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+indent_style = tab

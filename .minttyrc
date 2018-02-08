@@ -1,0 +1,39 @@
+# ~/.minttyrc
+#
+# A high-contrast Zenburn mintty
+#
+# https://github.com/agkozak/dotfiles
+
+BoldAsFont=yes
+Font=Consolas
+FontHeight=22
+Term=xterm-256color
+Transparency=off
+OpaqueWhenFocused=no
+FontSmoothing=full
+Locale=en_US
+Charset=UTF-8
+CursorType=block
+
+ForegroundColour=220,220,204
+BackgroundColour=28,28,28
+CursorColour=115,99,90
+
+Black=30,35,32
+Red=215,135,135
+Green=96,180,138
+Yellow=223,175,143
+Blue=80,96,112
+Magenta=220,140,195
+Cyan=140,208,211
+White=220,220,204
+BoldBlack=112,144,128
+BoldRed=220,163,163
+BoldGreen=195,191,159
+BoldYellow=240,223,175
+BoldBlue=148,191,243
+BoldMagenta=236,147,211
+BoldCyan=147,224,227
+BoldWhite=255,255,255
+
+# vim: ft=dosini

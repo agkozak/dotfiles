@@ -1,0 +1,21 @@
+UXTerm*faceName:		Lucida Console
+UXTerm*cursorBlink:		true
+
+UXTerm*background: #1c1c1c
+UXTerm*foreground: #dcdccc
+UXTerm*color0:  #1E2320
+UXTerm*color1:  #d78787
+UXTerm*color2:  #60b48a
+UXTerm*color3:  #dfaf8f
+UXTerm*color4:  #506070
+UXTerm*color5:  #dc8cc3
+UXTerm*color6:  #8cd0d3
+UXTerm*color7:  #dcdccc
+UXTerm*color8:  #709080
+UXTerm*color9:  #dca3a3
+UXTerm*color10: #c3bf9f
+UXTerm*color11: #f0dfaf
+UXTerm*color12: #94bff3
+UXTerm*color13: #ec93d3
+UXTerm*color14: #93e0e3
+UXTerm*color15: #ffffff

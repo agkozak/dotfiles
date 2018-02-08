@@ -1,0 +1,251 @@
+# ~/.shrc - bourne shell startup file
+#
+# https://github.com/agkozak/dotfiles
+#
+# This file will be used if the shell is invoked for interactive use and
+# the environment variable ENV is set to this file. It is sourced at the
+# beginnning of .zshrc and .bashrc
+#
+# shellcheck shell=sh
+
+[ -z "$AGKOZAK_SYSTEMINFO" ] && AGKOZAK_SYSTEMINFO="$(uname -a)"
+
+#shellcheck source=/dev/null
+if [ -z "$ENV" ]; then
+  [ -f "$HOME/.profile" ] && . "$HOME/.profile"
+fi
+
+# Begin .shrc benchmark {{{
+
+_is_busybox() {
+  if command -v readlink > /dev/null 2>&1; then
+    case "$(exec 2>/dev/null; readlink "/proc/$$/exe")" in
+      */busybox) return 0 ;;
+      *) return 1 ;;
+    esac
+  fi
+}
+
+if [ "$AGKOZAK_RC_BENCHMARKS" = '1' ]; then
+  case $AGKOZAK_SYSTEMINFO in
+    FreeBSD*) ;;                          # BSD `date` cannot handle nanoseconds.
+    # Ubuntu busybox sh handles math oddly
+    *) ! _is_busybox && start=$(($(date +%s%N)/1000000)) ;;
+  esac
+fi
+
+# }}}
+
+# some useful aliases {{{
+
+alias h='fc -l'
+alias j=jobs
+alias m='$PAGER'
+alias g='egrep -i'
+
+# }}}
+
+# enable color support of ls and also add handy aliases {{{
+
+case $AGKOZAK_SYSTEMINFO in
+  Darwin*|FreeBSD*)
+    LS_OPTIONS="-G"
+    ;;
+  *Msys)
+    LS_OPTIONS='--group-directories-first --color=tty -F -h -T 0 --hide="NTUSER*" --hide="ntuser*"'
+    ;;
+  *Cygwin)
+    case $TERM in
+      xterm|*-256color)
+        LS_OPTIONS='--group-directories-first --color=tty -F -h -T 0 --hide="NTUSER*" --hide="ntuser*"'
+        ;;
+      *)
+        LS_OPTIONS='--group-directories-first -F -h -T 0 --hide="NTUSER*" --hide="ntuser*"'
+        ;;
+    esac
+    ;;
+  SunOS*) ;;
+  *)
+    LS_OPTIONS='--group-directories-first --color=tty -F -h -T 0'
+    ;;
+esac
+
+
+alias ls='ls $LS_OPTIONS'
+if command -v dircolors > /dev/null 2>&1; then
+  if [ -r "$HOME/.dircolors" ]; then
+    eval "$(dircolors -b "$HOME/.dircolors")"
+  else
+    eval "$(dircolors -b)"
+  fi
+  case $AGKOZAK_SYSTEMINFO in
+    SunOS*)
+      [ -x /usr/gnu/bin/ls ] && alias ls='/usr/gnu/bin/ls --color=auto'
+      ;;
+    *)
+      # alias ls='ls --color=auto'
+      # shellcheck disable=SC2139
+      alias ls="/bin/ls $LS_OPTIONS"
+      alias dir='dir --color=auto'
+      alias vdir='vdir --color=auto'
+
+      alias grep='grep --color=auto'
+      alias fgrep='fgrep --color=auto'
+      alias egrep='egrep --color=auto'
+      ;;
+  esac
+fi
+
+# }}}
+
+# some more ls aliases {{{
+
+alias ll='ls -alF'
+alias la='ls -A'
+alias l='ls -CF'
+
+alias lr='ls -tRFh'   # sorted by date, recursive, show type, human-readable
+alias lt='ls -ltFh'   # long list, sorted by date, show type, human-readable
+alias ldot='ls -ld .*'
+alias lS='ls -1FSsh'
+alias lart='ls -1Fcart'
+alias lrt='ls -1Fcrt'
+
+# }}}
+
+case $KSH_VERSION in
+  *R55*) ;; # mksh version R55 erroneously does not allow these aliases
+  *)
+    alias ..='cd ..'
+    alias ...='cd ../..'
+    ;;
+esac
+alias c='clear'
+alias composer='$HOME/bin/composer.phar'
+alias dud='du -d 1 -h'
+alias duf='du -sh *'
+# command -v dos2unix > /dev/null 2>&1 || alias dos2unix='perl -p -i -e "s/\\r\\n/\\n/g"'
+
+# find shorthand {{{
+
+f() {
+  find . -name "$1" 2>&1 | grep -v 'Permission denied'
+}
+
+# }}}
+
+alias fd='find . -type d -name'
+alias ff='find . -type f -name'
+alias hgrep="fc -El 0 | grep"
+alias help='man'
+alias p='ps -f'
+alias phpunit='$HOME/bin/phpunit.phar'
+alias sgrep='grep -R -n -H -C 5 --exclude-dir={.git,.svn,CVS} '
+alias sortnr='sort -n -r'
+alias t='tail -f'
+alias v='findv'
+alias vv='findv --verbose'
+command -v vim > /dev/null 2>&1 && alias vi='vim'
+alias wp='$HOME/bin/wp-cli.phar'
+alias yta='youtube-dl --audio-format best -x '
+
+case "$AGKOZAK_SYSTEMINFO" in
+  *Msys|*Cygwin)
+    alias choco='winpty choco'
+    alias cinst='winpty cinst'
+    alias cuninst='winpty cuninst'
+    alias cup='winpty cup'
+    alias eslint='winpty $APPDATA/npm/eslint.cmd'
+    alias ghci='ghcii.sh'
+    alias gvim='/c/Windows/gvim.bat'
+    alias node='winpty node'
+    alias pear='/c/tools/php/pear.bat'
+    alias php='winpty php'
+    alias psysh='winpty $APPDATA/Composer/vendor/bin/psysh.bat'
+    ;;
+esac
+
+case "$AGKOZAK_SYSTEMINFO" in
+  *Msys)
+    alias wp='winpty php $HOME/bin/wp-cli.phar --no-color'
+    ;;
+  *Cygwin)
+    alias composer='php $(cygpath -w "$HOME/bin/composer.phar")'
+    ;;
+  *raspberrypi*)
+    # alias screen='export TERM=xterm-256color; screen'
+    mutt() { TERM=xterm-256color; /usr/bin/mutt "$@"; }
+    screen() { export TERM=xterm-256color; /usr/bin/screen "$@"; }
+    alias temp='/opt/vc/bin/vcgencmd measure_temp | egrep "[0-9.]{4,}" -o'
+    alias tmux='tmux -2'
+    ;;
+  FreeBSD*|SunOS*)
+    alias tmux='TERM=xterm-256color tmux'
+    alias mutt='TERM=xterm-256color mutt'
+    ;;
+esac
+
+# set prompt: ``username@hostname$ '' {{{
+
+if [ "$0" = 'sh' ]; then
+  PS1=$(whoami)@$(hostname | sed 's/\..*//')
+  case $(id -u) in
+    0) PS1="${PS1}# " ;;
+    *) PS1="${PS1}$ " ;;
+  esac
+fi
+
+# If possible, load the pan-POSIX Polyglot Prompt
+# But not in zsh -- it uses agkozak-zsh-theme
+if ! _is_busybox; then
+  case $(ps -p "$$") in
+    *zsh*) ;;
+    *)
+      if [ -f "$HOME/dotfiles/themes/polyglot/polyglot.sh" ]; then
+        # shellcheck source=/dev/null
+        . "$HOME/dotfiles/themes/polyglot/polyglot.sh"
+      fi
+      ;;
+  esac
+fi
+
+# }}}
+
+# search path for cd(1)
+# CDPATH=:$HOME
+
+# For ksh93/mksh
+
+# vi-style line editing
+set -o vi
+
+HISTSIZE=10000
+
+# Pull in updates from the dotfiles repo and install them
+update_rc() {
+  (cd "$HOME/dotfiles" && git pull && ./install.sh)
+}
+
+if [ -f "$HOME/.shrc.local" ]; then
+  # shellcheck source=/dev/null
+  . "$HOME/.shrc.local"
+fi
+
+# End .shrc benchmark {{{
+
+if [ "$AGKOZAK_RC_BENCHMARKS" = '1' ]; then
+  case $AGKOZAK_SYSTEMINFO in
+    FreeBSD*) ;;
+    *)
+      if ! _is_busybox; then
+        finish=$(($(date +%s%N)/1000000))
+        difference=$((finish-start))
+        echo ".shrc loaded in ${difference}ms."
+      fi
+      ;;
+  esac
+fi
+
+# }}}
+
+# vim: ft=sh:fdm=marker:ts=2:et:sw=2:ai:sts=2

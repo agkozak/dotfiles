@@ -1,0 +1,8 @@
+# ~/.inputrc
+#
+# https://github.com/agkozak/dotfiles
+
+set editing-mode vi
+Control-n: next-history
+Control-p: previous-history
+set keyseq-timeout 100

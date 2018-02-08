@@ -1,0 +1,18 @@
+term screen-256color
+startup_message off
+shell -$SHELL
+hardstatus on
+hardstatus alwayslastline '%H:  %-Lw%34>[%n*%f %t]%+Lw'
+escape "^  "
+termcapinfo xterm*|rxvt*|kterm*|Eterm*|putty*|dtterm* WS=\E[8;%d;%dt
+termcapinfo xterm*|rxvt*|kterm*|Eterm*|putty*|dtterm* ti@:te@:G0
+termcapinfo xterm*|rxvt*|kterm*|Eterm*|putty*|dtterm* hs:ts=\E]2;:fs=\007:ds=\E]2;8)\007
+termcapinfo xterm*|rxvt*|kterm*|Eterm*|putty*|dtterm* XT
+termcapinfo Eterm*|linux* C8
+termcapinfo * "" Co#256
+termcapinfo rxvt*|Eterm* "" *7=\E[8$:%i=\E[c:#4=\E[d:#2=\E[7$
+termcapinfo xterm*      "" *7=\E[2F:%i=\E[2C:#4=\E[2D:#2=\E[2H
+windowlist string "%3n %{= dd}%?%h%:%t%?%=%f%{-}"
+caption    string "%?%F%{y}%?%3n %{= wk}%?%h%:%t%?%{-}"
+activity "Activity in window %n (%t)^G^G"
+bell_msg "Bell in window %n (%t)^G"
