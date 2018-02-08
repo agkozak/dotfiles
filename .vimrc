@@ -2,6 +2,8 @@
 "
 " https://github.com/agkozak/dotfiles
 
+" => Environment {{{1
+
 silent function! CMDEXE() abort       " Is the shell cmd.exe?
   return (&shell =~? 'cmd')
 endfunction
@@ -20,8 +22,6 @@ endif
 
 " Options are arranged according to the sections in Vim's `:options` help
 " menu.
-
-" => Environment {{{1
 
 " => 2 moving around, searching and patterns {{{2
 
