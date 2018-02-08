@@ -1,4 +1,4 @@
-# ALEXANDROS KOZÁK'S DOTFILES
+# ALEXANDROS KOZAK'S DOTFILES
 
 I have tested these dotfiles primarily on
 
@@ -10,7 +10,7 @@ I have tested these dotfiles primarily on
     - Raspian/Ubuntu/Linux Mint
     - CloudLinux
 * BSD
-    - FreeBSD/TrueOs/GhostBSD
+    - FreeBSD/TrueOS/GhostBSD
 * Unix
     - Solaris
     - OpenIndiana
