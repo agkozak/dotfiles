@@ -295,7 +295,7 @@ if executable('git')
       set runtimepath=~/.vim,$VIMRUNTIME
 
     " Avoid multiple threads on CloudLinux
-    elif g:system_uname_a =~ 'lve'
+    elseif g:system_uname_a =~ 'lve'
       let g:plug_threads=1
     endif
 
