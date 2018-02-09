@@ -12,7 +12,7 @@ silent function! WINDOWS() abort      " Not true of Cygwin/MSys2/WSL
   return (has('win32') || has('win64'))
 endfunction
 
-if CMDEXE() || WINDOWS()
+if CMDEXE() || WINDOWS() || $VIM =~# 'iVim'
   let g:system_uname_a=''
 else
   let g:system_uname_a=system('uname -a')
