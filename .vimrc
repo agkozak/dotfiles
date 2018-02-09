@@ -465,10 +465,11 @@ endif
 let g:startify_custom_header = [ '' ]
 
 " Prevent Startify from showing a mixture of slashes and backslashes in Windows
-augroup Startify
-  autocmd!
-  autocmd FileType startify setlocal shellslash
-augroup END
+" TODO: prevents vim-plug from working
+" augroup Startify
+"   autocmd!
+"   autocmd FileType startify setlocal shellslash
+" augroup END
 
 " phpcomplete.vim
 if has('autocmd')
