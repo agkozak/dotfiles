@@ -450,12 +450,12 @@ endif
 
 " Startify
 " Make Startify get along with NERDTree and CtrlP
-if has('autocmd')
-  augroup Startify
-    autocmd!
-    autocmd User Startified setlocal buftype=
-  augroup END
-endif
+" if has('autocmd')
+"   augroup Startify
+"     autocmd!
+"     autocmd User Startified setlocal buftype=
+"   augroup END
+" endif
 let g:startify_custom_header = [ '' ]
 
 " Prevent Startify from showing a mixture of slashes and backslashes in Windows
