@@ -14,6 +14,8 @@ endfunction
 
 if ! CMDEXE() && ! WINDOWS()
   let g:system_uname_a=system('uname -a')
+else
+  let g:system_uname_a=''
 endif
 
 " }}}1
