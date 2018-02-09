@@ -12,10 +12,10 @@ silent function! WINDOWS() abort      " Not true of Cygwin/MSys2/WSL
   return (has('win32') || has('win64'))
 endfunction
 
-if ! CMDEXE() && ! WINDOWS()
-  let g:system_uname_a=system('uname -a')
-else
+if CMDEXE() || WINDOWS()
   let g:system_uname_a=''
+else
+  let g:system_uname_a=system('uname -a')
 endif
 
 " }}}1
