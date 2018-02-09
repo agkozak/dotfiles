@@ -12,12 +12,6 @@ silent function! WINDOWS() abort      " Not true of Cygwin/MSys2/WSL
   return (has('win32') || has('win64'))
 endfunction
 
-if CMDEXE() || WINDOWS() || $VIM =~# 'iVim'
-  let g:system_uname_a=''
-else
-  let g:system_uname_a=system('uname -a')
-endif
-
 " }}}1
 
 " Options {{{1
@@ -297,7 +291,7 @@ if executable('git')
       set runtimepath=~/.vim,$VIMRUNTIME
 
     " Avoid multiple threads on CloudLinux
-    elseif g:system_uname_a =~ 'lve'
+    elseif $VIM !~# 'iVim' && system('uname -a') =~ 'lve'
       let g:plug_threads=1
     endif
 
@@ -600,7 +594,7 @@ set t_ut= " Disable background color erase
 " rg/ag/ack {{{2
 
 " Avoid problems with native Windows rg/ag 
-if g:system_uname_a !~ 'Msys' && g:system_uname_a !~ 'Cygwin' 
+if ! has('win32unix') 
 
   if executable('rg')
     set grepprg=rg\ --vimgrep\ --noheading
