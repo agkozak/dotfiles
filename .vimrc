@@ -506,6 +506,13 @@ let g:tagbar_autofocus = 1
 " Colorizer
 let g:colorizer_auto_filetype='css,scss,html'
 
+" Git Gutter
+if CMDEXE() || WINDOWS()
+  if executable('rg')
+    let g:gitgutter_grep='rg'
+  endif
+endif
+
 " }}}1
 
 " => Miscellaneous {{{1
