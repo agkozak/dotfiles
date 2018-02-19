@@ -566,7 +566,7 @@ if has('autocmd')
     autocmd BufNewFile,BufReadPost MERGE_MSG set syn=gitcommit
 
     " Treat *.md files as Markdown, not Modula-2
-    autocmd BufNewFile,BufReadPost *.md set filetype=markdown
+    autocmd BufNewFile,BufReadPost *.md setlocal filetype=markdown linebreak
 
     " mintty config file syntax
     autocmd BufNewFile,BufReadPost .minttyrc set filetype=dosini
