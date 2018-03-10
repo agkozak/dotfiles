@@ -551,7 +551,7 @@ if has('autocmd')
 
     " Jump to last known position in file
     autocmd BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$")
-      \ | exe "normal! g'\"" | endif
+      \ | execute "normal! g'\"" | endif
 
     " Syntax {{{2
 
@@ -562,8 +562,8 @@ if has('autocmd')
     autocmd BufNewFile,BufReadPost *.cson set filetype=coffee
 
     " Highlight git commit messages correctly in Windows
-    autocmd BufNewFile,BufReadPost COMMIT_EDITMSG set syn=gitcommit
-    autocmd BufNewFile,BufReadPost MERGE_MSG set syn=gitcommit
+    " autocmd BufNewFile,BufReadPost COMMIT_EDITMSG set syn=gitcommit
+    " autocmd BufNewFile,BufReadPost MERGE_MSG set syn=gitcommit
 
     " Treat *.md files as Markdown, not Modula-2
     autocmd BufNewFile,BufReadPost *.md setlocal filetype=markdown linebreak
