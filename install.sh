@@ -86,10 +86,12 @@ if command -v nvim > /dev/null 2>&1; then
   if ! command -v vim > /dev/null 2>&1; then
     cp .vimrc "$HOME"
   fi
-  [ ! -d "$HOME/.config/nvim" ] \
-    && ln -s "$HOME/.vim" "$HOME/.config/nvim" \
-    && [ ! -f "$HOME.config/nvim/init.vim" ] \
-    && ln -s "$HOME/.vimrc" "$HOME/.config/nvim/init.vim"
+  if [ ! -d "$HOME/.config/nvim" ]; then
+    ln -s "$HOME/.vim" "$HOME/.config/nvim"
+  fi
+  if [ ! -f "$HOME.config/nvim/init.vim" ]; then
+    ln -s "$HOME/.vimrc" "$HOME/.config/nvim/init.vim"
+  fi
 fi
 
 conditional_install zsh .zprofile .zshrc
