@@ -17,8 +17,6 @@ fi
 
 # compile_or_recompile() {{{1
 
-autoload -Uz zrecompile
-
 ###########################################################
 # If files do not have compiled forms, compile them;
 # if they have been compiled, recompile them when necessary
@@ -27,13 +25,13 @@ autoload -Uz zrecompile
 #   $1, etc.  Shell scripts to be compiled
 ###########################################################
 compile_or_recompile() {
+  local file
   for file in "$@"; do
     if [[ ! -f "${file}.zwc" ]]; then
-      zcompile "${file}" &> /dev/null
+      zcompile $file
     else
-      zrecompile -q "${HOME}/${file}" 2> /dev/null
+      [[ $file -nt "${file}.zwc" ]] && zcompile $file
     fi
-    unset file
   done
 }
 
