@@ -223,7 +223,16 @@ HISTSIZE=10000
 
 # Pull in updates from the dotfiles repo and install them
 update_rc() {
-  (cd "$HOME/dotfiles" && git pull && ./install.sh)
+  CUR_DIR="$(pwd)"
+  cd "$HOME/dotfiles" && git pull && ./install.sh
+  for i in $(find . -name ".git" | cut -c 3-); do
+    cd "$i"
+    cd ..
+    git pull
+    cd "$HOME/dotfiles" 
+  done
+  cd $CUR_DIR
+  unset CUR_DIR
 }
 
 if [ -f "$HOME/.shrc.local" ]; then
