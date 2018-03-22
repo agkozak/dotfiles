@@ -149,6 +149,8 @@ rationalise-dot() {
 
 zle -N rationalise-dot
 bindkey . rationalise-dot
+# Without the following, typing a period aborts incremental history search
+bindkey -M isearch . self-insert
 
 # Menu-style completion
 zstyle ':completion:*' menu select
