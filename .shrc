@@ -226,12 +226,12 @@ update_rc() {
   CUR_DIR="$(pwd)"
   cd "$HOME/dotfiles" && git pull && ./install.sh
   for i in $(find . -name ".git" | cut -c 3-); do
-    cd "$i"
+    cd "$i" || exit
     cd ..
     git pull
-    cd "$HOME/dotfiles" 
+    cd "$HOME/dotfiles" || exit
   done
-  cd $CUR_DIR
+  cd "$CUR_DIR" || exit
   unset CUR_DIR
 }
 
