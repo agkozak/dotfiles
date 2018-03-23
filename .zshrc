@@ -2,7 +2,7 @@
 #
 # https://github.com/agkozak/dotfiles
 #
-# shellcheck disable=SC1090,SC2034,SC2148,SC2154
+# shellcheck disable=SC1090,SC2034,SC2128,SC2148,SC2154
 
 # Begin .zshrc benchmark {{{1
 
@@ -28,9 +28,9 @@ compile_or_recompile() {
   local file
   for file in "$@"; do
     if [[ ! -f "${file}.zwc" ]]; then
-      zcompile $file
+      zcompile "$file"
     else
-      [[ $file -nt "${file}.zwc" ]] && zcompile $file
+      [[ $file -nt "${file}.zwc" ]] && zcompile "$file"
     fi
   done
 }
