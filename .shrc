@@ -149,6 +149,8 @@ command -v vim > /dev/null 2>&1 && alias vi='vim'
 alias wp='$HOME/bin/wp-cli.phar'
 alias yta='youtube-dl --audio-format best -x '
 
+# System-specific aliases {{{1
+
 case "$AGKOZAK_SYSTEMINFO" in
   *Msys|*Cygwin)
     alias choco='winpty choco'
@@ -185,7 +187,11 @@ case "$AGKOZAK_SYSTEMINFO" in
     ;;
 esac
 
-# set prompt: ``username@hostname$ '' {{{
+# }}}1
+
+# Prompt {{{1
+
+# set prompt: ``username@hostname$ ''
 
 if [ "$0" = 'sh' ]; then
   PS1=$(whoami)@$(hostname | sed 's/\..*//')
@@ -209,7 +215,7 @@ if ! _is_busybox; then
   esac
 fi
 
-# }}}
+# }}}1
 
 # search path for cd(1)
 # CDPATH=:$HOME
@@ -221,7 +227,7 @@ set -o vi
 
 HISTSIZE=10000
 
-# Pull in updates from the dotfiles repo and install them
+# Pull in updates from the dotfiles repo and install them {{{1
 update_rc() {
   CUR_DIR="$(pwd)"
   cd "$HOME/dotfiles" && git pull && ./install.sh
@@ -234,6 +240,8 @@ update_rc() {
   cd "$CUR_DIR" || exit
   unset CUR_DIR
 }
+
+# }}}1
 
 if [ -f "$HOME/.shrc.local" ]; then
   # shellcheck source=/dev/null
