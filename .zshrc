@@ -387,7 +387,7 @@ hooks() {
     esac
   done
 
-  (( exit_code )) && true || false
+  (( exit_code ))
 }
 
 # }}}1
