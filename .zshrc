@@ -297,12 +297,15 @@ if (( AGKOZAK_NO_ZPLUGIN != 1 )) && is-at-least 5; then
     (( ${+_comps} )) && _comps[zplugin]=_zplugin
 
     # Load plugins and snippets {{{2
+
     # AGKOZAK_THEME_DEBUG=1
+    case $ZSH_VERSION in 5.5*) AGKOZAK_MULTILINE=1 ;; esac
     zplugin light agkozak/agkozak-zsh-theme
+
     zplugin light agkozak/z
     zplugin light jreese/zsh-titles
-    # zplugin light zdharma/zui
-    # zplugin light zdharma/zbrowse
+    zplugin light zdharma/zui
+    zplugin light zdharma/zbrowse
     CRASIS_THEME="safari-256"
     # zplugin light zdharma/zplugin-crasis
 
