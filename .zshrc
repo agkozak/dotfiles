@@ -299,7 +299,6 @@ if (( AGKOZAK_NO_ZPLUGIN != 1 )) && is-at-least 5; then
     # Load plugins and snippets {{{2
 
     # AGKOZAK_THEME_DEBUG=1
-    case $ZSH_VERSION in 5.5*) AGKOZAK_MULTILINE=1 ;; esac
     zplugin light agkozak/agkozak-zsh-theme
 
     zplugin light agkozak/z
