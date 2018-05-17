@@ -169,10 +169,12 @@ esac
 
 case "$AGKOZAK_SYSTEMINFO" in
   *Msys)
+    alias npm='winpty /c/Program\ Files/nodejs/npm.cmd'
     alias wp='winpty php $HOME/bin/wp-cli.phar --no-color'
     ;;
   *Cygwin)
     alias composer='php $(cygpath -w "$HOME/bin/composer.phar")'
+    alias npm='winpty /cygdrive/c/Program\ Files/nodejs/npm.cmd'
     ;;
   *raspberrypi*)
     # alias screen='export TERM=xterm-256color; screen'
