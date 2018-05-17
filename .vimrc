@@ -340,8 +340,11 @@ if executable('git')
     Plug 'hail2u/vim-css3-syntax', { 'for': 'css' }
     Plug 'cakebaker/scss-syntax.vim', { 'for': 'scss' }
     Plug 'tpope/vim-haml'
-    " Plug 'ap/vim-css-color', { 'for': 'css' }
-    Plug 'chrisbra/Colorizer'
+    if v:version > 800
+      Plug 'chrisbra/Colorizer'
+    else
+      Plug 'ap/vim-css-color', { 'for': 'css' }
+    endif
     Plug 'csscomb/vim-csscomb', { 'for': 'css' }
     " Plug 'bolasblack/csslint.vim', { 'for': 'css' }
 
