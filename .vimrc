@@ -308,7 +308,7 @@ if executable('git') && (executable('curl') || WINDOWS())
       Plug 'ConradIrwin/vim-bracketed-paste'
     endif
     Plug 'sgur/vim-editorconfig'
-    if v:version >= 704 && executable('ctags')
+    if v:version >= 704 && executable('ctags') && system('ctags --version') !~ 'Emacs'
       Plug 'ludovicchabant/vim-gutentags'
     endif
     Plug 'majutsushi/tagbar', { 'on': 'TagbarToggle' }
