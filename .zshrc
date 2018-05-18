@@ -301,6 +301,7 @@ if (( AGKOZAK_NO_ZPLUGIN != 1 )) && is-at-least 5; then
     # AGKOZAK_THEME_DEBUG=1
     zplugin light agkozak/agkozak-zsh-theme
 
+    zplugin light agkozak/zsh-hooks
     zplugin light agkozak/z
     zplugin light jreese/zsh-titles
     zplugin light zdharma/zui
@@ -349,48 +350,6 @@ bindkey '^R' history-incremental-search-backward
 bindkey '^F' history-incremental-search-forward
 
 # }}}2
-
-# Display all zsh hook arrays and functions
-hooks() {
-  if (( $(tput colors) >= 8 )); then
-    autoload -Uz colors && colors
-    local start_color="$fg[yellow]"
-  else
-    local start_color=''
-  fi
-
-  local -a hook_names
-  hook_names=(
-    'chpwd' \
-    'periodic' \
-    'precmd' \
-    'preexec' \
-    'zshaddhistory' \
-    'zsh_directory_name' \
-    'zshexit'
-    )
-
-  local i exit_code
-  for i in $hook_names; do
-    # Display contents of hook arrays
-    local hook_var="\$${i}_functions"
-    local hook_var_content="$(eval echo $hook_var)"
-    if [[ -n $hook_var_content ]]; then
-      printf '%s:\n%s\n\n' "${start_color}${hook_var}${reset_color}" "$hook_var_content"
-      ((exit_code++))
-    fi
-    # Display defined hook functions
-    case $(whence -w $i) in
-      *function)
-        local hook_function="$(which $i)"
-        printf '%s\n\n' "${start_color}${hook_function%%\{*}${reset_color}${hook_function##*\(\)}"
-        ((exit_code++))
-        ;;
-    esac
-  done
-
-  (( exit_code ))
-}
 
 # }}}1
 
