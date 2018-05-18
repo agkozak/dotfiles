@@ -280,8 +280,9 @@ endif
 
 " => Plugins {{{1
 
-" This plugin arrangement depends on git being present
-if executable('git')
+" This plugin arrangement requires git (and curl, except in Windows
+" CMD.EXE/Powershell
+if executable('git') && (executable('curl') || WINDOWS())
 
   " Only try to load plugins if vim-plug is installed
   if filereadable(expand('~/.vim/autoload/plug.vim'))
@@ -402,7 +403,12 @@ if executable('git')
 
   endif
 else
-  echom 'Please install git.'
+  if !executable('git')
+    echom 'Please install git.'
+  endif
+  if !executable('curl')
+    echom 'Please install curl.'
+  endif
   filetype plugin indent on   " Normally handled by vim-plug
 endif
 
