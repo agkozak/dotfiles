@@ -301,7 +301,7 @@ if (( AGKOZAK_NO_ZPLUGIN != 1 )) && is-at-least 5; then
     # AGKOZAK_THEME_DEBUG=1
     zplugin light agkozak/agkozak-zsh-theme
 
-    zplugin light agkozak/zsh-hooks
+    zplugin light agkozak/zhooks
     zplugin light agkozak/z
     zplugin light jreese/zsh-titles
     zplugin light zdharma/zui
