@@ -133,4 +133,16 @@ if command -v tmux > /dev/null 2>&1; then
 	fi
 fi
 
+if command -v emacs > /dev/null 2>&1; then
+  if [ ! -d "$HOME/.emacs.d" ]; then
+    mkdir "$HOME/.emacs.d"
+  fi
+  printf "init.el\\n"
+  cp ./.emacs.d/init.el "$HOME/.emacs.d"
+  if command -v wget > /dev/null 2>&1; then
+    (cd "$HOME/.emacs.d" \
+      && wget https://raw.githubusercontent.com/purcell/exec-path-from-shell/master/exec-path-from-shell.el)
+  fi
+fi
+
 # vim: ft=sh:fdm=marker:ts=2:sts=2:sw=2:et
