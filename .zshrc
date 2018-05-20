@@ -309,7 +309,9 @@ if (( AGKOZAK_NO_ZPLUGIN != 1 )) && is-at-least 5; then
     zplugin light agkozak/z
 
     # zsh-titles causes dittography in Emacs shell 
-    [ -z $EMACS ] && zplugin light jreese/zsh-titles
+    if [[ -z $EMACS ]] && [[ ! $TERM = 'dumb' ]]; then
+      zplugin light jreese/zsh-titles
+    fi
 
     zplugin light zdharma/zui
     zplugin light zdharma/zbrowse
