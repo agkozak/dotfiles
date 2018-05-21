@@ -48,7 +48,7 @@ alias g='egrep -i'
 # enable color support of ls and also add handy aliases {{{
 
 # Do not enable dircolors in Emacs shell
-if [ -z "$INSIDE_EMACS" ] && [ "$TERM" = 'dumb' ]; then
+if [ -z "$INSIDE_EMACS" ] && [ "$TERM" != 'dumb' ]; then
   case $AGKOZAK_SYSTEMINFO in
     Darwin*|FreeBSD*)
       LS_OPTIONS="-G"
