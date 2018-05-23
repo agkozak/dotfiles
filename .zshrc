@@ -101,7 +101,7 @@ setopt INTERACTIVE_COMMENTS # Allow comments in interactive mode
 # Job Control {{{2
 
 # Disable nice for background processes in WSL
-[[ -z $AGKOZAK_SYSTEMINFO ]] && AGKOZAK_SYSTEMINFO=$(uname -a)
+[[ -z $AGKOZAK_SYSTEMINFO ]] && AGKOZAK_SYSTEMINFO="$(uname -a)"
 case $AGKOZAK_SYSTEMINFO in
   *Microsoft*) unsetopt BG_NICE ;;
 esac
@@ -112,14 +112,14 @@ esac
 
 # zsh-specific aliases - POSIX aliases are in .shrc {{{1
 
-alias -g CA="2>&1 | cat -A"
+alias -g CA='2>&1 | cat -A'
 alias -g G='| grep'
 alias -g H='| head'
-alias -g L="| less"
-alias -g LL="2>&1 | less"
-alias -g M="| most"
-alias -g NE="2> /dev/null"
-alias -g NUL="> /dev/null 2>&1"
+alias -g L='| less'
+alias -g LL='2>&1 | less'
+alias -g M='| most'
+alias -g NE='2> /dev/null'
+alias -g NUL='> /dev/null 2>&1'
 alias -g T='| tail'
 alias -g V='|& vim -'
 
@@ -269,7 +269,7 @@ autoload -Uz is-at-least
 
 if (( AGKOZAK_NO_ZPLUGIN != 1 )) && is-at-least 5; then
 
-  if command -v git > /dev/null 2>&1; then
+  if whence git &> /dev/null; then
 
     if [[ ! -d ${HOME}/.zplugin ]]; then
       echo "Installing zplugin..."
