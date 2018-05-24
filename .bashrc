@@ -79,10 +79,15 @@ fi
 
 # }}}1
 
-# if [[ ! -f /var/.cagefs/.cagefs.token ]]; then  # z.sh does not work in bash on CloudLinux
-  # shellcheck source=/dev/null
-  [[ -f ${HOME}/.zplugin/plugins/agkozak---z/z.sh ]] && . ${HOME}/.zplugin/plugins/agkozak---z/z.sh
-# fi
+# shellcheck source=/dev/null
+if [[ -f ${HOME}/.zplugin/plugins/agkozak---z/z.sh ]]; then
+  . ${HOME}/.zplugin/plugins/agkozak---z/z.sh
+else
+  if [[ ${HOME}/dotfiles/z ]]; then
+    git clone https://github.com/agkozak/z.git "${HOME}/dotfiles/plugins/z"
+  fi
+  . "${HOME}/dotfiles/plugins/z/z.sh"
+fi
 
 # End .bashrc benchmark {{{
 
