@@ -66,6 +66,7 @@ if [ -z "$INSIDE_EMACS" ] && [ "$TERM" != 'dumb' ]; then
           ;;
       esac
       ;;
+    CYGWIN*GNU/Linux) ;;                             # MobaXterm uses busybox ls
     SunOS*) ;;
     *)
       LS_OPTIONS='--group-directories-first --color=tty -F -h -T 0'
