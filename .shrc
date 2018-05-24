@@ -116,6 +116,8 @@ alias lrt='ls -1Fcrt'
 
 # }}}
 
+[ command -v hue > /dev/null 2>&1 ] && alias bri='hue set all -b'
+
 case $KSH_VERSION in
   *R55*) ;; # mksh version R55 erroneously does not allow these aliases
   *)
@@ -180,11 +182,9 @@ case "$AGKOZAK_SYSTEMINFO" in
     alias npm='winpty /cygdrive/c/Program\ Files/nodejs/npm.cmd'
     ;;
   *raspberrypi*)
-    # alias screen='export TERM=xterm-256color; screen'
-    mutt() { TERM=xterm-256color; /usr/bin/mutt "$@"; }
-    screen() { export TERM=xterm-256color; /usr/bin/screen "$@"; }
+    alias mutt='TERM=xterm-256color mutt'
+    alias screen='TERM=xterm-256color screen'
     alias temp='/opt/vc/bin/vcgencmd measure_temp | egrep "[0-9.]{4,}" -o'
-    alias tmux='tmux -2'
     ;;
   FreeBSD*|SunOS*)
     alias tmux='TERM=xterm-256color tmux'
