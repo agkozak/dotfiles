@@ -7,7 +7,7 @@ I have tested these dotfiles primarily on
     - Cygwin with mintty
     - The Windows Subsystem for Linux (a.ka. Bash on Ubuntu on Windows)
 * Linux
-    - Raspian/Ubuntu/Linux Mint
+    - Raspbian/Ubuntu/Linux Mint
     - CloudLinux
 * BSD
     - FreeBSD/TrueOS/GhostBSD
