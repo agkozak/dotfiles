@@ -102,6 +102,10 @@ case $AGKOZAK_SYSTEMINFO in
     ;;
 esac
 
+if [ "$(umask)" = "000" ]; then            # For WSL
+  umask 022
+fi
+
 if [ -f "$HOME/.profile.local" ]; then
 	# shellcheck source=/dev/null
 	. "$HOME/.profile.local"
