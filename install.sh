@@ -143,6 +143,8 @@ if command -v emacs > /dev/null 2>&1; then
         && wget https://raw.githubusercontent.com/purcell/exec-path-from-shell/master/exec-path-from-shell.el)
     fi
   fi
+  echo '.spacemacs'
+  cp .spacemacs "$HOME"
 fi
 
 # vim: ft=sh:fdm=marker:ts=2:sts=2:sw=2:et
