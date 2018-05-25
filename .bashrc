@@ -84,7 +84,7 @@ if [[ -f ${HOME}/.zplugin/plugins/agkozak---z/z.sh ]]; then
   . ${HOME}/.zplugin/plugins/agkozak---z/z.sh
 else
   if [[ ! -d ${HOME}/dotfiles/plugins/z ]]; then
-    git clone https://github.com/agkozak/z.git "${HOME}/dotfiles/plugins/z"
+    git clone https://github.com/agkozak/z.git "$HOME/dotfiles/plugins/z"
   fi
   . "${HOME}/dotfiles/plugins/z/z.sh"
 fi
