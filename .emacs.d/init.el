@@ -2,6 +2,8 @@
 
 (require 'package)
 
+(setq quelpa-update-melpa-p nil)
+
 ; List the packages you want
 (setq package-list '(evil
                      evil-leader
