@@ -1,11 +1,12 @@
-; https://gist.github.com/martinklepsch/4e5f2c52a5d9797278d1
+; See https://gist.github.com/martinklepsch/4e5f2c52a5d9797278d1
 
 (require 'package)
 
 ; List the packages you want
 (setq package-list '(evil
                      evil-leader
-		     exec-path-from-shell))
+		     exec-path-from-shell
+		     hc-zenburn-theme))
 
 ; Add Melpa as the default Emacs Package repository
 ; only contains a very limited number of packages
@@ -33,6 +34,12 @@
 (evil-leader/set-key
   "b" 'switch-to-buffer
   "w" 'save-buffer)
+
+(require 'exec-path-from-shell)
+(exec-path-from-shell-initialize)
+
+(require 'hc-zenburn-theme)
+
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -45,6 +52,3 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  )
-
-(require 'exec-path-from-shell)
-(exec-path-from-shell-initialize)
