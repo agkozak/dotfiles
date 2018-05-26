@@ -44,7 +44,7 @@
 
 ;; High-contrast Zenburn
 (quelpa '(zenburn-theme :repo "holomorph/emacs-zenburn" :fetcher github))
-(load-theme 'zenburn t)
+(require 'zenburn-theme)
 
 ;; Suppress echoing in term and ansi-term (tmux-related)
 (setq comint-process-echoes t)
