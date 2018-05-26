@@ -5,6 +5,7 @@
 ; List the packages you want
 (setq package-list '(evil
                      evil-leader
+		     evil-commentary
 		     exec-path-from-shell
 		     hc-zenburn-theme))
 
@@ -35,10 +36,13 @@
   "b" 'switch-to-buffer
   "w" 'save-buffer)
 
-(require 'exec-path-from-shell)
-(exec-path-from-shell-initialize)
+;; (require 'exec-path-from-shell)
+;; (exec-path-from-shell-initialize)
 
 (require 'hc-zenburn-theme)
+
+(require 'evil-commentary)
+(evil-commentary-mode)
 
 ;; Suppress echoing in term and ansi-term (tmux-related)
 (setq comint-process-echoes t)
