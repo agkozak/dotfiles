@@ -43,6 +43,9 @@
 ;; Suppress echoing in term and ansi-term (tmux-related)
 (setq comint-process-echoes t)
 
+;; Starting term and ansi-term in Emacs mode fixes zsh vi mode
+(evil-set-initial-state 'term-mode 'emacs)
+
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
