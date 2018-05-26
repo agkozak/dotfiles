@@ -40,6 +40,9 @@
 
 (require 'hc-zenburn-theme)
 
+;; Suppress echoing in term and ansi-term (tmux-related)
+(setq comint-process-echoes t)
+
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
