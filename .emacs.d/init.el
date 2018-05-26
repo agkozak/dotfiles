@@ -7,7 +7,7 @@
                      evil-leader
 		     evil-commentary
 		     exec-path-from-shell
-		     hc-zenburn-theme))
+		     quelpa))
 
 ; Add Melpa as the default Emacs Package repository
 ; only contains a very limited number of packages
@@ -39,10 +39,12 @@
 ;; (require 'exec-path-from-shell)
 ;; (exec-path-from-shell-initialize)
 
-(require 'hc-zenburn-theme)
-
 (require 'evil-commentary)
 (evil-commentary-mode)
+
+;; High-contrast Zenburn
+(quelpa '(zenburn-theme :repo "holomorph/emacs-zenburn" :fetcher github))
+(load-theme 'zenburn t)
 
 ;; Suppress echoing in term and ansi-term (tmux-related)
 (setq comint-process-echoes t)
