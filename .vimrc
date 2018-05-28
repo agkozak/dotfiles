@@ -58,7 +58,11 @@ set statusline+=%r                                " Readonly flag
 set statusline+=%y                                " File type
 set statusline+=%{SL('fugitive#statusline')}
 set statusline+=%#ErrorMsg#
-set statusline+=%{SL('SyntasticStatuslineFlag')}
+if !has('job') && !has('nvim')
+  set statusline+=%{SL('SyntasticStatuslineFlag')}
+else
+  set statusline+=%{SL('LinterStatus')}
+endif
 set statusline+=%*
 set statusline+=%=                                " Right-aligned from here on
 set statusline+=%-14.(%l,%c%V%)           " Line no., column/virtual column nos.
@@ -185,7 +189,9 @@ inoremap jj <Esc>
 nnoremap <Leader>cc :call ColorColumnToggle()<CR>
 " Edit .vimrc
 nnoremap <leader>ev :vsplit $MYVIMRC<CR>
-nnoremap <Leader>sc :SyntasticCheck<CR>
+if !has('job') && !has('nvim')
+  nnoremap <Leader>sc :SyntasticCheck<CR>
+endif
 " Show syntax highlighting group
 nnoremap <Leader>sh :call <SID>SynStack()<CR>
 nnoremap <Leader>st :Startify<CR>
@@ -303,7 +309,11 @@ if executable('git') && (executable('curl') || WINDOWS())
     " General
     Plug 'ctrlpvim/ctrlp.vim'
     Plug 'mhinz/vim-startify'
-    Plug 'scrooloose/syntastic'
+    if !has('job') && !has('nvim')
+      Plug 'scrooloose/syntastic'
+    else
+      Plug 'w0rp/ale'
+    endif
     if &term != 'win32'
       Plug 'ConradIrwin/vim-bracketed-paste'
     endif
@@ -489,16 +499,19 @@ let g:phpcomplete_complete_for_unknown_classes = 1
 let g:wordpress_vim_php_syntax_highlight = 1
 
 " Syntastic
-let g:syntastic_php_checkers = ['php', 'phpcs', 'phpmd']
-" let g:syntastic_php_phpcs_args='--tab-width=4 --standard=agkozak'
-" let g:syntastic_wordpress_phpcs_standard = 'agkozak' " Default standard
-let g:syntastic_viml_checkers = ['vim-lint']
-let g:syntastic_javascript_checkers = ['eslint']
-let g:syntastic_check_on_open = 0
-let g:syntastic_check_on_wq = 0
-if CMDEXE() || WINDOWS()
-  let g:syntastic_auto_loc_list = 1
+if !has('job') && !has('nvim')
+  let g:syntastic_php_checkers = ['php', 'phpcs', 'phpmd']
+  " let g:syntastic_php_phpcs_args='--tab-width=4 --standard=agkozak'
+  " let g:syntastic_wordpress_phpcs_standard = 'agkozak' " Default standard
+  let g:syntastic_viml_checkers = ['vim-lint']
+  let g:syntastic_javascript_checkers = ['eslint']
+  let g:syntastic_check_on_open = 0
+  let g:syntastic_check_on_wq = 0
+  if CMDEXE() || WINDOWS()
+    let g:syntastic_auto_loc_list = 1
+  endif
 endif
+
 let g:is_posix=1
 
 " CtrlP
@@ -663,6 +676,24 @@ if has("eval")
 	  endif
 	endfunction
 endif
+
+" ALE linter status {{{2
+" https://github.com/w0rp/ale#faq-statusline
+
+function! LinterStatus() abort
+  let l:counts = ale#statusline#Count(bufnr(''))
+
+  let l:all_errors = l:counts.error + l:counts.style_error
+  let l:all_non_errors = l:counts.total - l:all_errors
+
+  return l:counts.total == 0 ? ' OK' : printf(
+        \   ' %dW %dE',
+        \   all_non_errors,
+        \   all_errors
+        \)
+endfunction
+
+" }}}2
 
 " }}}1
 
