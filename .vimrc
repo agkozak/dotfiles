@@ -351,11 +351,11 @@ if executable('git') && (executable('curl') || WINDOWS())
     Plug 'hail2u/vim-css3-syntax', { 'for': 'css' }
     Plug 'cakebaker/scss-syntax.vim', { 'for': 'scss' }
     Plug 'tpope/vim-haml'
-    if v:version > 800
-      Plug 'chrisbra/Colorizer'
-    else
+    " if v:version > 800
+      " Plug 'chrisbra/Colorizer'
+    " else
       Plug 'ap/vim-css-color', { 'for': 'css' }
-    endif
+    " endif
     Plug 'csscomb/vim-csscomb', { 'for': 'css' }
     " Plug 'bolasblack/csslint.vim', { 'for': 'css' }
 
