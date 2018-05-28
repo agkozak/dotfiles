@@ -213,26 +213,26 @@ set fileformats=unix,dos
 " Derived from http://www.valmikam.com/2010/09/vim-auto-backup-configuration.html
 
 " Avoid problems with file permissions
-if $USER != 'root'
+if $USER !=# 'root'
 
   "enable backup
   set backup
   "
   "Create a backup folder, I like to have it in $HOME/vimbackup/date/
-  let g:backup_day = strftime("%Y.%m.%d")
-  let g:backupdir = $HOME . "/vimbackup/" . g:backup_day
-  silent! let g:xyz = mkdir(g:backupdir, "p")
+  let g:backup_day = strftime('%Y.%m.%d')
+  let g:backupdir = $HOME . '/vimbackup/' . g:backup_day
+  silent! let g:xyz = mkdir(g:backupdir, 'p')
   "
   "Set the backup folder
-  let g:backup_cmd = "set backupdir=" . g:backupdir
-  execute backup_cmd
+  let g:backup_cmd = 'set backupdir=' . g:backupdir
+  execute g:backup_cmd
   "
   "Create an extention for backup file, useful when you are modifying the
   "same file multiple times in a day. I like to have an extention with
   "time hour.min.sec
-  let g:backup_time = strftime(".%H.%M.%S")
-  let g:backup_cmd = "set backupext=". g:backup_time
-  execute backup_cmd
+  let g:backup_time = strftime('.%H.%M.%S')
+  let g:backup_cmd = 'set backupext='. g:backup_time
+  execute g:backup_cmd
   "
   "test.cpp is going to be backed up as HOME/vimbackup/date/test.cpp.hour.min.sec
 
@@ -298,7 +298,7 @@ if executable('git') && (executable('curl') || WINDOWS())
       set runtimepath=~/.vim,$VIMRUNTIME
 
     " Avoid multiple threads on CloudLinux
-    elseif $VIM !~# 'iVim' && system('uname -a') =~ 'lve'
+    elseif $VIM !~# 'iVim' && system('uname -a') =~# 'lve'
       let g:plug_threads=1
     endif
 
@@ -314,11 +314,11 @@ if executable('git') && (executable('curl') || WINDOWS())
     else
       Plug 'w0rp/ale'
     endif
-    if &term != 'win32'
+    if &term !=# 'win32'
       Plug 'ConradIrwin/vim-bracketed-paste'
     endif
     Plug 'sgur/vim-editorconfig'
-    if v:version >= 704 && executable('ctags') && system('ctags --version') !~ 'Emacs'
+    if v:version >= 704 && executable('ctags') && system('ctags --version') !~# 'Emacs'
       Plug 'ludovicchabant/vim-gutentags'
     endif
     Plug 'majutsushi/tagbar', { 'on': 'TagbarToggle' }
@@ -428,10 +428,10 @@ endif
 
 " Rule out certain Cygwin/MSys2 shells in ConEmu
 " Rule out cmd.exe and Powershell in the Windows Console
-if &term != 'cygwin' && &term != 'win32'
+if &term !=# 'cygwin' && &term !=# 'win32'
 
   " ConEmu running cmd.exe or Powershell
-  if $ConEmuDir != '' && CMDEXE()
+  if $ConEmuDir !=# '' && CMDEXE()
     set term=xterm
     inoremap <Char-0x07F> <BS>  " Backspace
     nnoremap <Char-0x07F> <BS>
@@ -613,7 +613,7 @@ endif
 if has('autocmd')
   augroup myvimrc
     autocmd!
-    if $MYVIMRC != ''
+    if $MYVIMRC !=# ''
       autocmd BufWritePost .vimrc source $MYVIMRC
     endif
   augroup END
@@ -667,7 +667,7 @@ endif
 
 " statusline function (from https://github.com/tpope/tpope/blob/master/.vimrc)
 
-if has("eval")
+if has('eval')
 	function! SL(function) abort
 	  if exists('*'.a:function)
 	    return call(a:function,[])
@@ -688,8 +688,8 @@ function! LinterStatus() abort
 
   return l:counts.total == 0 ? ' OK' : printf(
         \   ' %dW %dE',
-        \   all_non_errors,
-        \   all_errors
+        \   l:all_non_errors,
+        \   l:all_errors
         \)
 endfunction
 
@@ -700,7 +700,7 @@ endfunction
 " .vimrc.local {{{1
 
 " Source ~/.vimrc.local, if it exists
-if filereadable(glob("~/.vimrc.local"))
+if filereadable(glob('~/.vimrc.local'))
   source ~/.vimrc.local
 endif
 
