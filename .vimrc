@@ -503,7 +503,11 @@ if !has('job') && !has('nvim')
   let g:syntastic_php_checkers = ['php', 'phpcs', 'phpmd']
   " let g:syntastic_php_phpcs_args='--tab-width=4 --standard=agkozak'
   " let g:syntastic_wordpress_phpcs_standard = 'agkozak' " Default standard
-  let g:syntastic_viml_checkers = ['vim-lint']
+  if executable('vint')
+    let g:syntastic_vim_checkers = ['vint']
+  else
+    let g:syntastic_vim_checkers = ['vim-lint']
+  endif
   let g:syntastic_javascript_checkers = ['eslint']
   let g:syntastic_check_on_open = 0
   let g:syntastic_check_on_wq = 0
