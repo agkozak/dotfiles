@@ -503,11 +503,7 @@ if !has('job') && !has('nvim')
   let g:syntastic_php_checkers = ['php', 'phpcs', 'phpmd']
   " let g:syntastic_php_phpcs_args='--tab-width=4 --standard=agkozak'
   " let g:syntastic_wordpress_phpcs_standard = 'agkozak' " Default standard
-  if executable('vint')
-    let g:syntastic_vim_checkers = ['vint']
-  else
-    let g:syntastic_vim_checkers = ['vim-lint']
-  endif
+  let g:syntastic_viml_checkers = ['vim-lint']
   let g:syntastic_javascript_checkers = ['eslint']
   let g:syntastic_check_on_open = 0
   let g:syntastic_check_on_wq = 0
@@ -690,8 +686,8 @@ function! LinterStatus() abort
   let l:all_errors = l:counts.error + l:counts.style_error
   let l:all_non_errors = l:counts.total - l:all_errors
 
-  return l:counts.total == 0 ? ' OK' : printf(
-        \   ' %dW %dE',
+  return l:counts.total == 0 ? '[OK]' : printf(
+        \   '[%dW %dE]',
         \   l:all_non_errors,
         \   l:all_errors
         \)
