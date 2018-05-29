@@ -368,8 +368,10 @@ if executable('git') && (executable('curl') || WINDOWS())
     endif
 
     " VimL
-    Plug 'ynkdir/vim-vimlparser', { 'for': 'vim' }
-    Plug 'syngan/vim-vimlint', { 'for': 'vim' }
+    if !has('job') && !has('nvim') && !executable('vint')
+      Plug 'ynkdir/vim-vimlparser', { 'for': 'vim' }
+      Plug 'syngan/vim-vimlint', { 'for': 'vim' }
+    endif
 
     " Color Schemes
     Plug 'jnurmine/Zenburn'
