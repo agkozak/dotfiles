@@ -51,6 +51,7 @@ for i in '/snap/bin' \
 	"$HOME/.cabal/bin" \
 	"$HOME/.config/composer/vendor/bin" \
 	"$HOME/.composer/vendor/bin" \
+  "$HOME/.luarocks/bin" \
 	"$HOME/ruby/gems/bin" \
 	"$HOME/.rvim/bin" \
 	"$HOME/bin"; do
