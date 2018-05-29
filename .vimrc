@@ -555,6 +555,7 @@ function! <SID>SynStack() abort
   if !exists('*synstack')
     return
   endif
+  " vint: -ProhibitUnnecessaryDoubleQuote
   echo map(synstack(line('.'), col('.')), 'synIDattr(v:val, "name")')
 endfunction
 
