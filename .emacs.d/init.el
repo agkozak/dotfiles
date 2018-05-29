@@ -1,29 +1,38 @@
-; See https://gist.github.com/martinklepsch/4e5f2c52a5d9797278d1
+;; ~/.emacs.d/init.el
+;;
+;; https://github.com/agkozak/dotfiles
 
 (require 'package)
 
-(setq quelpa-update-melpa-p nil)
+;; Don't have quelpa use melpa
+(setq quelpa-checkout-melpa-p nil)
 
-; List the packages you want
+;; List the packages you want
 (setq package-list '(evil
-                     evil-leader
+		     evil-leader
 		     evil-commentary
 		     exec-path-from-shell
 		     quelpa))
 
-; Add Melpa as the default Emacs Package repository
-; only contains a very limited number of packages
-(add-to-list 'package-archives
-             '("melpa" . "http://melpa.milkbox.net/packages/") t)
+;; Add Melpa as the default Emacs Package repository
+(let* ((no-ssl (and (memq system-type '(windows-nt ms-dos))
+		    (not (gnutls-available-p))))
+       (proto (if no-ssl "http" "https")))
+  ;; Comment/uncomment these two lines to enable/disable MELPA and MELPA Stable as desired
+  (add-to-list 'package-archives (cons "melpa" (concat proto "://melpa.org/packages/")) t)
+  ;;(add-to-list 'package-archives (cons "melpa-stable" (concat proto "://stable.melpa.org/packages/")) t)
+  (when (< emacs-major-version 24)
+    ;; For important compatibility libraries like cl-lib
+    (add-to-list 'package-archives '("gnu" . (concat proto "://elpa.gnu.org/packages/")))))
 
-; Activate all the packages (in particular autoloads)
+;; Activate all the packages (in particular autoloads)
 (package-initialize)
 
-; Update your local package index
+;; Update your local package index
 (unless package-archive-contents
   (package-refresh-contents))
 
-; Install all missing packages
+;; Install all missing packages
 (dolist (package package-list)
   (unless (package-installed-p package)
     (package-install package)))
@@ -53,6 +62,10 @@
 
 ;; Starting term and ansi-term in Emacs mode fixes zsh vi mode
 (evil-set-initial-state 'term-mode 'emacs)
+
+;; Line numbers padded with one space
+(global-linum-mode t)
+(setq linum-format "%d ")
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
