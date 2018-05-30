@@ -120,7 +120,7 @@ alias lrt='ls -1Fcrt'
 
 # }}}
 
-[ command -v hue > /dev/null 2>&1 ] && alias bri='hue set all -b'
+command -v hue > /dev/null 2>&1 && alias bri='hue set all -b'
 
 case $KSH_VERSION in
   *R55*) ;; # mksh version R55 erroneously does not allow these aliases
