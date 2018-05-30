@@ -70,7 +70,8 @@ conditional_install lesspipe.sh .lessfilter
 
 conditional_install lynx .lynx.cfg
 
-printf ".profile\\n.shrc\\n"
+echo .profile
+echo .shrc
 cp .profile .shrc ..
 
 if [ -e "$HOME/.vimrc" ] \
@@ -104,31 +105,31 @@ systeminfo=$( uname -a )
 
 case $systeminfo in
 	FreeBSD*|freebsd*)
-		printf ".login_conf\\n"
+		echo .login_conf
 		cp .login_conf "$HOME"
 	;;
 	*raspberrypi*)
-		printf ".config/lxterminal\\n"
+		echo .config/lxterminal
 		cp .config/lxterminal/lxterminal.conf "$HOME/.config/lxterminal"
 	;;
 	*Msys|*Cygwin)
-		printf ".minttyrc\\n"
+		echo .minttyrc
 		github_clone_or_update "agkozak/zenburn.minttyrc" develop
 	;;
 esac
 
 case $systeminfo in
   *Cygwin)
-    printf ".Xresources\\n"
+    echo .Xresources
     cp .Xresources.cygwin ../.Xresources
     ;;
 esac
 
 if command -v tmux > /dev/null 2>&1; then
-	printf ".tmux.conf\\n"
+	echo .tmux.conf
   cp .tmux.conf ..
 	if [ ! -d "$HOME/.tmux" ]; then
-		printf "%s\\n" "Installing tpm"
+		echo Installing tpm
 		git clone https://github.com/tmux-plugins/tpm "$HOME/.tmux/plugins/tpm"
 	fi
 fi
@@ -137,7 +138,7 @@ if command -v emacs > /dev/null 2>&1; then
   if [ ! -d "$HOME/.emacs.d" ]; then
     mkdir "$HOME/.emacs.d"
   fi
-  printf "init.el\\n"
+  echo Installing ~/.emacs./init.el
   cp ./.emacs.d/init.el "$HOME/.emacs.d"
 fi
 
