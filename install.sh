@@ -140,6 +140,7 @@ if command -v emacs > /dev/null 2>&1; then
   fi
   echo Installing ~/.emacs./init.el
   cp ./.emacs.d/init.el "$HOME/.emacs.d"
+  curl 'https://github.com/holomorph/emacs-zenburn/blob/master/zenburn-theme.el' > "$HOME/.emacs.d/themes/zenburn-theme.el"
 fi
 
 # vim: ft=sh:fdm=marker:ts=2:sts=2:sw=2:et
