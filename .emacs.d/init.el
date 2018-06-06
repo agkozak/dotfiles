@@ -4,12 +4,16 @@
 
 (require 'package)
 
+;; Don't have quelpa use melpa
+(setq quelpa-checkout-melpa-p nil)
+
 ;; List the packages you want
 (setq package-list '(evil
 		     evil-leader
 		     evil-commentary
 		     exec-path-from-shell
-		     emacs-vim-modeline))
+		     emacs-vim-modeline
+		     quelpa))
 
 ;; Add Melpa as the default Emacs Package repository
 (let* ((no-ssl (and (memq system-type '(windows-nt ms-dos))
@@ -51,8 +55,8 @@
 (evil-commentary-mode)
 
 ;; High-contrast Zenburn
-(add-to-list 'custom-theme-load-path "~/.emacs.d/themes/")
-(load-theme 'zenburn t)
+(quelpa '(zenburn-theme :repo "holomorph/emacs-zenburn" :fetcher github))
+(require 'zenburn-theme)
 
 ;; Suppress echoing in term and ansi-term (tmux-related)
 (setq comint-process-echoes t)
