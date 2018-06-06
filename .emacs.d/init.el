@@ -57,6 +57,10 @@
 (quelpa '(zenburn-theme :repo "holomorph/emacs-zenburn" :fetcher github))
 (require 'zenburn-theme)
 
+;; Support for Vim modelines
+(quelpa '(vim-modeline :repo "cinsk/emacs-vim-modeline" :fetcher github))
+(require 'vim-modeline)
+
 ;; Suppress echoing in term and ansi-term (tmux-related)
 (setq comint-process-echoes t)
 
