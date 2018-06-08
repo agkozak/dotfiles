@@ -58,7 +58,7 @@ set statusline+=%r                                " Readonly flag
 set statusline+=%y                                " File type
 set statusline+=%{SL('fugitive#statusline')}
 set statusline+=%#ErrorMsg#
-if !has('job') && !has('nvim')
+if v:version < 800 || !has('job') && !has('nvim')
   set statusline+=%{SL('SyntasticStatuslineFlag')}
 else
   set statusline+=%{SL('LinterStatus')}
@@ -189,7 +189,7 @@ inoremap jj <Esc>
 nnoremap <Leader>cc :call ColorColumnToggle()<CR>
 " Edit .vimrc
 nnoremap <leader>ev :vsplit $MYVIMRC<CR>
-if !has('job') && !has('nvim')
+if v:version < 800 || !has('job') && !has('nvim')
   nnoremap <Leader>sc :SyntasticCheck<CR>
 endif
 " Show syntax highlighting group
@@ -309,7 +309,7 @@ if executable('git') && (executable('curl') || WINDOWS())
     " General
     Plug 'ctrlpvim/ctrlp.vim'
     Plug 'mhinz/vim-startify'
-    if !has('job') && !has('nvim')
+    if v:version < 800 || !has('job') && !has('nvim')
       Plug 'scrooloose/syntastic'
     else
       Plug 'w0rp/ale'
@@ -368,7 +368,7 @@ if executable('git') && (executable('curl') || WINDOWS())
     endif
 
     " VimL
-    if !has('job') && !has('nvim') && !executable('vint')
+    if v:version < 800 || !has('job') && !has('nvim') && !executable('vint')
       Plug 'ynkdir/vim-vimlparser', { 'for': 'vim' }
       Plug 'syngan/vim-vimlint', { 'for': 'vim' }
     endif
@@ -501,7 +501,7 @@ let g:phpcomplete_complete_for_unknown_classes = 1
 let g:wordpress_vim_php_syntax_highlight = 1
 
 " Syntastic
-if !has('job') && !has('nvim')
+if v:version < 800 || !has('job') && !has('nvim')
   let g:syntastic_php_checkers = ['php', 'phpcs', 'phpmd']
   " let g:syntastic_php_phpcs_args='--tab-width=4 --standard=agkozak'
   " let g:syntastic_wordpress_phpcs_standard = 'agkozak' " Default standard
