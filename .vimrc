@@ -110,7 +110,7 @@ if has('gui_running')
     " endif
   else
     set lines=100 columns=200     " Open large window
-    set guifont=DejaVu\ Sans\ Mono\ 18
+    set guifont=DejaVu\ Sans\ Mono\ 12
   endif
 endif
 
