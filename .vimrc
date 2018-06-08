@@ -14,6 +14,10 @@ endfunction
 
 " }}}1
 
+function! ALECompatible() abort
+  return ((v:version >= 800 && has('job') && has('timers') && has('channel')) || has('nvim'))
+endfunction
+
 " Options {{{1
 
 " Options are arranged according to the sections in Vim's `:options` help
@@ -58,10 +62,10 @@ set statusline+=%r                                " Readonly flag
 set statusline+=%y                                " File type
 set statusline+=%{SL('fugitive#statusline')}
 set statusline+=%#ErrorMsg#
-if v:version < 800 || !has('job') && !has('nvim')
-  set statusline+=%{SL('SyntasticStatuslineFlag')}
-else
+if ALECompatible()
   set statusline+=%{SL('LinterStatus')}
+else
+  set statusline+=%{SL('SyntasticStatuslineFlag')}
 endif
 set statusline+=%*
 set statusline+=%=                                " Right-aligned from here on
@@ -189,7 +193,7 @@ inoremap jj <Esc>
 nnoremap <Leader>cc :call ColorColumnToggle()<CR>
 " Edit .vimrc
 nnoremap <leader>ev :vsplit $MYVIMRC<CR>
-if v:version < 800 || !has('job') && !has('nvim')
+if ! ALECompatible()
   nnoremap <Leader>sc :SyntasticCheck<CR>
 endif
 " Show syntax highlighting group
@@ -309,10 +313,10 @@ if executable('git') && (executable('curl') || WINDOWS())
     " General
     Plug 'ctrlpvim/ctrlp.vim'
     Plug 'mhinz/vim-startify'
-    if v:version < 800 || !has('job') && !has('nvim')
-      Plug 'scrooloose/syntastic'
-    else
+    if ALECompatible()
       Plug 'w0rp/ale'
+    else
+      Plug 'scrooloose/syntastic'
     endif
     if &term !=# 'win32'
       Plug 'ConradIrwin/vim-bracketed-paste'
@@ -368,7 +372,7 @@ if executable('git') && (executable('curl') || WINDOWS())
     endif
 
     " VimL
-    if v:version < 800 || !has('job') && !has('nvim') && !executable('vint')
+    if ! ALECompatible() && !executable('vint')
       Plug 'ynkdir/vim-vimlparser', { 'for': 'vim' }
       Plug 'syngan/vim-vimlint', { 'for': 'vim' }
     endif
@@ -501,7 +505,7 @@ let g:phpcomplete_complete_for_unknown_classes = 1
 let g:wordpress_vim_php_syntax_highlight = 1
 
 " Syntastic
-if v:version < 800 || !has('job') && !has('nvim')
+if ! ALECompatible()
   let g:syntastic_php_checkers = ['php', 'phpcs', 'phpmd']
   " let g:syntastic_php_phpcs_args='--tab-width=4 --standard=agkozak'
   " let g:syntastic_wordpress_phpcs_standard = 'agkozak' " Default standard
