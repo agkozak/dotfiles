@@ -23,6 +23,14 @@ endfunction
 " Options are arranged according to the sections in Vim's `:options` help
 " menu.
 
+" => 1 important {{{2
+
+" Believe it or not, /r/vim, the following became necessary when I upgraded to
+" vim 8.1.53.
+set nocompatible
+
+" }}}2
+
 " => 2 moving around, searching and patterns {{{2
 
 set incsearch               " Find-as-you-type search
