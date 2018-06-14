@@ -35,6 +35,10 @@ LYNX_CFG="$HOME/.lynx.cfg"
 export MANPAGER
 MANPAGER='less -X'
 
+# Always use Unicode line-drawing characters, not VT100-style ones
+export NCURSES_NO_UTF8_ACS
+NCURSES_NO_UTF8_ACS=1
+
 export PAGER
 PAGER=less
 
