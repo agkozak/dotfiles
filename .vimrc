@@ -27,6 +27,8 @@ endfunction
 
 " Believe it or not, /r/vim, the following became necessary when I upgraded to
 " vim 8.1.53.
+"
+" vint: -ProhibitSetNoCompatible
 set nocompatible
 
 " }}}2
