@@ -6,6 +6,6 @@
 if [[ -z $ENV ]] && [[ -n $PATH ]]; then
   case $- in
     *l*) ;;
-    *) source "$HOME/.profile" &> /dev/null ;;
+    *) [[ -f "$HOME/.profile" ]] && source "$HOME/.profile" ;;
   esac
 fi
