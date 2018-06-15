@@ -25,11 +25,11 @@ endfunction
 
 " => 1 important {{{2
 
-" Believe it or not, /r/vim, the following became necessary when I upgraded to
-" vim 8.1.53. See https://github.com/vim/vim/issues/3014
-"
+" See https://github.com/vim/vim/issues/3014
+if v:version == 801 && has('patch37') && !has('patch55')
 " vint: -ProhibitSetNoCompatible
-set nocompatible
+  set nocompatible
+endif
 
 " }}}2
 
