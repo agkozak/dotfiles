@@ -36,7 +36,7 @@ fi
 
 # }}}
 
-# some useful aliases {{{
+# Aliases {{{1
 
 case $(type fc) in                              # fc can be /Windows/System32/fc
   *builtin) alias h='fc -l' ;;
@@ -46,9 +46,7 @@ alias j=jobs
 alias m='$PAGER'
 alias g='egrep -i'
 
-# }}}
-
-# enable color support of ls and also add handy aliases {{{
+# enable color support of ls and also add handy aliases {{{2
 
 # Do not enable dircolors in Emacs shell
 if [ -z "$INSIDE_EMACS" ] && [ "$TERM" != 'dumb' ]; then
@@ -103,9 +101,9 @@ if [ -z "$INSIDE_EMACS" ] && [ "$TERM" != 'dumb' ]; then
   fi
 fi
 
-# }}}
+# }}}2
 
-# some more ls aliases {{{
+# some more ls aliases {{{2
 
 alias ll='ls -alF'
 alias la='ls -A'
@@ -118,7 +116,7 @@ alias lS='ls -1FSsh'
 alias lart='ls -1Fcart'
 alias lrt='ls -1Fcrt'
 
-# }}}
+# }}}2
 
 command -v hue > /dev/null 2>&1 && alias bri='hue set all -b'
 
@@ -134,15 +132,6 @@ alias composer='$HOME/bin/composer.phar'
 alias dud='du -d 1 -h'
 alias duf='du -sh *'
 # command -v dos2unix > /dev/null 2>&1 || alias dos2unix='perl -p -i -e "s/\\r\\n/\\n/g"'
-
-# find shorthand {{{
-
-f() {
-  find . -name "$1" 2>&1 | grep -v 'Permission denied'
-}
-
-# }}}
-
 alias fd='find . -type d -name'
 alias ff='find . -type f -name'
 alias hgrep="fc -El 0 | grep"
@@ -158,7 +147,7 @@ command -v vim > /dev/null 2>&1 && alias vi='vim'
 alias wp='$HOME/bin/wp-cli.phar'
 alias yta='youtube-dl --audio-format best -x '
 
-# System-specific aliases {{{1
+# System-specific aliases {{{2
 
 case "$AGKOZAK_SYSTEMINFO" in
   *Msys|*Cygwin)
@@ -196,6 +185,8 @@ case "$AGKOZAK_SYSTEMINFO" in
     ;;
 esac
 
+# }}}2
+
 # }}}1
 
 # Prompt {{{1
@@ -231,7 +222,16 @@ set -o vi
 
 HISTSIZE=10000
 
+# find shorthand {{{
+
+f() {
+  find . -name "$1" 2>&1 | grep -v 'Permission denied'
+}
+
+# }}}
+
 # Pull in updates from the dotfiles repo and install them {{{1
+
 update_rc() {
   CUR_DIR="$(pwd)"
   cd "$HOME/dotfiles" && git pull && ./install.sh
