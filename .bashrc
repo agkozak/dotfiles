@@ -104,7 +104,7 @@ fi
 
 if [[ -f "$HOME/.bashrc.local" ]]; then
   # shellcheck source=/dev/null
-  . $HOME/.bashrc.local
+  . "$HOME/.bashrc.local"
 fi
 
 # }}}1
