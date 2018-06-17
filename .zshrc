@@ -6,7 +6,7 @@
 
 # Begin .zshrc benchmark {{{1
 
-if (( AGKOZAK_RC_BENCHMARKS == 1 )); then
+if (( AGKOZAK_RC_BENCHMARKS )); then
   case $OSTYPE in
     freebsd*) ;;                        #BSD `date` can't handle nanoseconds
     *) ((start=$(date +%s%N)/1000000)) ;;
@@ -370,7 +370,7 @@ compile_or_recompile "${HOME}/.zshrc"
 
 # End .zshrc benchmark {{{1
 
-if (( AGKOZAK_RC_BENCHMARKS == 1 )); then
+if (( AGKOZAK_RC_BENCHMARKS )); then
   case $OSTYPE in
     freebsd*) ;;
     *)
