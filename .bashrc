@@ -6,7 +6,7 @@
 
 # Begin .bashrc benchmark {{{1
 
-if (( AGKOZAK_RC_BENCHMARKS == 1 )); then
+if (( AGKOZAK_RC_BENCHMARKS )); then
   case $OSTYPE in
     FreeBSD*|freebsd*) ;;
     *) ((start=$(date +%s%N)/1000000)) ;;
@@ -87,7 +87,7 @@ fi
 
 # End .bashrc benchmark {{{
 
-if (( AGKOZAK_RC_BENCHMARKS == 1 )); then
+if (( AGKOZAK_RC_BENCHMARKS )); then
   case $OSTYPE in
     FreeBSD*|freebsd*) ;;
     *)
@@ -104,7 +104,7 @@ fi
 
 if [[ -f "$HOME/.bashrc.local" ]]; then
   # shellcheck source=/dev/null
-  . $HOME/.bashrc.local
+  . "$HOME/.bashrc.local"
 fi
 
 # }}}1
