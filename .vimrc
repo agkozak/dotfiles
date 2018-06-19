@@ -14,9 +14,13 @@ endfunction
 
 " }}}1
 
+" ALE Compatibility {{{
+
 function! ALECompatible() abort
   return ((v:version >= 800 && has('job') && has('timers') && has('channel')) || has('nvim'))
 endfunction
+
+" }}}
 
 " Options {{{1
 
