@@ -1,5 +1,8 @@
 # ALEXANDROS KOZAK'S DOTFILES
 
+[![MIT License](img/mit_license.svg)](https://opensource.org/licenses/MIT)
+![GitHub Stars](https://img.shields.io/github/stars/agkozak/dotfiles.svg)
+
 I have tested these dotfiles primarily on
 
 * Windows
