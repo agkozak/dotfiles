@@ -45,7 +45,7 @@ compile_or_recompile "${HOME}/.shrc"
 # Source ~/.shrc
 if [[ -f ${HOME}/.shrc ]]; then
   # emulate sh
-  . "${HOME}/.shrc"
+  source "${HOME}/.shrc"
   # emulate zsh
 fi
 
@@ -290,11 +290,11 @@ if (( AGKOZAK_NO_ZPLUGIN != 1 )) && is-at-least 5; then
 
     # In FreeBSD, /home is /usr/home
     case $OSTYPE in
-      freebsd*) _Z_NO_RESOLVE_SYMLINKS=1;;
+      freebsd*) typeset -g _Z_NO_RESOLVE_SYMLINKS=1;;
     esac
 
     # zplugin and its plugins and snippets
-    . "${HOME}/.zplugin/bin/zplugin.zsh"
+    source "${HOME}/.zplugin/bin/zplugin.zsh"
 
     autoload -Uz _zplugin
 
