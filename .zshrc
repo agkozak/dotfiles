@@ -182,84 +182,89 @@ bindkey -M vicmd 'v' edit-command-line
 
 # The Debian solution to Del/Home/End/etc. keybindings {{{1
 
-typeset -A key
-# shellcheck disable=SC2190
-key=(
-	BackSpace  "${terminfo[kbs]}"
-	Home       "${terminfo[khome]}"
-	End        "${terminfo[kend]}"
-	Insert     "${terminfo[kich1]}"
-	Delete     "${terminfo[kdch1]}"
-	Up         "${terminfo[kcuu1]}"
-	Down       "${terminfo[kcud1]}"
-	Left       "${terminfo[kcub1]}"
-	Right      "${terminfo[kcuf1]}"
-	PageUp     "${terminfo[kpp]}"
-	PageDown   "${terminfo[knp]}"
-)
+# No need to load the following code if I'm using Debian
+if [[ ! -f '/etc/debian-version' ]] && [[ ! -f 'etc/zsh/zshrc' ]]; then
 
-function bind2maps () {
-	local i sequence widget
-	local -a maps
+  typeset -A key
+  # shellcheck disable=SC2190
+  key=(
+    BackSpace  "${terminfo[kbs]}"
+    Home       "${terminfo[khome]}"
+    End        "${terminfo[kend]}"
+    Insert     "${terminfo[kich1]}"
+    Delete     "${terminfo[kdch1]}"
+    Up         "${terminfo[kcuu1]}"
+    Down       "${terminfo[kcud1]}"
+    Left       "${terminfo[kcub1]}"
+    Right      "${terminfo[kcuf1]}"
+    PageUp     "${terminfo[kpp]}"
+    PageDown   "${terminfo[knp]}"
+  )
 
-	while [[ "$1" != "--" ]]; do
-		maps+=( "$1" )
-		shift
-	done
-	shift
+  function bind2maps () {
+    local i sequence widget
+    local -a maps
 
-	sequence="${key[$1]}"
-	widget="$2"
+    while [[ "$1" != "--" ]]; do
+      maps+=( "$1" )
+      shift
+    done
+    shift
 
-	[[ -z "$sequence" ]] && return 1
+    sequence="${key[$1]}"
+    widget="$2"
 
-	for i in "${maps[@]}"; do
-		bindkey -M "$i" "$sequence" "$widget"
-	done
-  unset i
-}
+    [[ -z "$sequence" ]] && return 1
 
-bind2maps emacs             -- BackSpace   backward-delete-char
-bind2maps       viins       -- BackSpace   vi-backward-delete-char
-bind2maps             vicmd -- BackSpace   vi-backward-char
-bind2maps emacs             -- Home        beginning-of-line
-bind2maps       viins vicmd -- Home        vi-beginning-of-line
-bind2maps emacs             -- End         end-of-line
-bind2maps       viins vicmd -- End         vi-end-of-line
-bind2maps emacs viins       -- Insert      overwrite-mode
-bind2maps             vicmd -- Insert      vi-insert
-bind2maps emacs             -- Delete      delete-char
-bind2maps       viins vicmd -- Delete      vi-delete-char
-bind2maps emacs viins vicmd -- Up          up-line-or-history
-bind2maps emacs viins vicmd -- Down        down-line-or-history
-bind2maps emacs             -- Left        backward-char
-bind2maps       viins vicmd -- Left        vi-backward-char
-bind2maps emacs             -- Right       forward-char
-bind2maps       viins vicmd -- Right       vi-forward-char
+    for i in "${maps[@]}"; do
+      bindkey -M "$i" "$sequence" "$widget"
+    done
+    unset i
+  }
 
-# Make sure the terminal is in application mode, when zle is
-# active. Only then are the values from $terminfo valid.
-#
-# shellcheck disable=SC2004
-if (( ${+terminfo[smkx]} )) && (( ${+terminfo[rmkx]} )); then
-	function zle-line-init () {
-		emulate -L zsh
-		printf '%s' "${terminfo[smkx]}"
-	}
-	function zle-line-finish () {
-		emulate -L zsh
-		printf '%s' "${terminfo[rmkx]}"
-	}
-	zle -N zle-line-init
-	zle -N zle-line-finish
-else
-	for i in {s,r}mkx; do
-		(( ${+terminfo[$i]} )) || debian_missing_features+=("$i")
-	done
-	unset i
+  bind2maps emacs             -- BackSpace   backward-delete-char
+  bind2maps       viins       -- BackSpace   vi-backward-delete-char
+  bind2maps             vicmd -- BackSpace   vi-backward-char
+  bind2maps emacs             -- Home        beginning-of-line
+  bind2maps       viins vicmd -- Home        vi-beginning-of-line
+  bind2maps emacs             -- End         end-of-line
+  bind2maps       viins vicmd -- End         vi-end-of-line
+  bind2maps emacs viins       -- Insert      overwrite-mode
+  bind2maps             vicmd -- Insert      vi-insert
+  bind2maps emacs             -- Delete      delete-char
+  bind2maps       viins vicmd -- Delete      vi-delete-char
+  bind2maps emacs viins vicmd -- Up          up-line-or-history
+  bind2maps emacs viins vicmd -- Down        down-line-or-history
+  bind2maps emacs             -- Left        backward-char
+  bind2maps       viins vicmd -- Left        vi-backward-char
+  bind2maps emacs             -- Right       forward-char
+  bind2maps       viins vicmd -- Right       vi-forward-char
+
+  # Make sure the terminal is in application mode, when zle is
+  # active. Only then are the values from $terminfo valid.
+  #
+  # shellcheck disable=SC2004
+  if (( ${+terminfo[smkx]} )) && (( ${+terminfo[rmkx]} )); then
+    function zle-line-init () {
+      emulate -L zsh
+      printf '%s' "${terminfo[smkx]}"
+    }
+    function zle-line-finish () {
+      emulate -L zsh
+      printf '%s' "${terminfo[rmkx]}"
+    }
+    zle -N zle-line-init
+    zle -N zle-line-finish
+  else
+    for i in {s,r}mkx; do
+      (( ${+terminfo[$i]} )) || debian_missing_features+=("$i")
+    done
+    unset i
+  fi
+
+  unfunction bind2maps
+
 fi
-
-unfunction bind2maps
 
 # }}}1
 
