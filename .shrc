@@ -242,7 +242,7 @@ update_rc() {
     cd "$HOME/dotfiles" || exit
   done
   cd "$CUR_DIR" || exit
-  unset CUR_DIR
+  unset CUR_DIR i
 }
 
 # }}}1
