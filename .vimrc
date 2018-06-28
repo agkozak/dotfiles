@@ -214,7 +214,7 @@ endif
 nnoremap <Leader>sh :call <SID>SynStack()<CR>
 nnoremap <Leader>st :Startify<CR>
 nnoremap <Leader>t :TagbarToggle<CR>
-nnoremap <Leader>zc :call ZenburnContrastToggle()<CR>
+" nnoremap <Leader>zc :call ZenburnContrastToggle()<CR>
 nnoremap <Leader><Tab> :NERDTreeToggle<CR>
 
 set ttimeoutlen=50          " Make <Esc> faster
@@ -378,7 +378,7 @@ if executable('git') && (executable('curl') || WINDOWS())
     " Plug 'bolasblack/csslint.vim', { 'for': 'css' }
 
     " WordPress
-    Plug 'dsawardekar/wordpress.vim', { 'branch': 'develop' }
+    " Plug 'dsawardekar/wordpress.vim', { 'branch': 'develop' }
 
     " PowerShell
     if executable('cmd')
@@ -405,6 +405,9 @@ if executable('git') && (executable('curl') || WINDOWS())
 
     " zsh
     Plug 'agkozak/vim-zsh', { 'for': 'zsh', 'branch': 'develop' }
+
+    " Zeal
+    Plug 'KabbAmine/zeavim.vim'
 
     call plug#end()
 
