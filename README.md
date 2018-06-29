@@ -22,12 +22,14 @@ I have tested these dotfiles primarily on
 
 Clone this repository to a `~/dotfiles` directory (the directory name is hard-coded at the moment) and run the installation script:
 
-    git clone https://github.com/agkozak/dotfiles.git "$HOME/dotfiles"
-    cd "$HOME/dotfiles"
-    ./install.sh
+```sh
+git clone https://github.com/agkozak/dotfiles.git "$HOME/dotfiles"
+cd "$HOME/dotfiles"
+./install.sh
+```
 
 That will copy relevant configuration files to your home directory. The files copied depend on what shells or other programs you have installed on your system, so if you install others in the future, run the installation script again or type
 
-    update_rc
+    update_dotfiles
 
-in any POSIX-compliant shell. `update_rc` is a function that pulls in the latest commits to my dotfiles repository and does what is necessary to update the system.
+in any POSIX-compliant shell. `update_dotfiles` is a function that pulls in the latest commits to my dotfiles repository and does what is necessary to update the system.
