@@ -1,0 +1,5 @@
+" ~/.ideavimrc
+"
+" https://github.com/agkozak/dotfiles
+
+source ~/.vimrc
