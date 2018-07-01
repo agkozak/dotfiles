@@ -142,4 +142,12 @@ if command -v emacs > /dev/null 2>&1; then
   cp ./.emacs.d/init.el "$HOME/.emacs.d"
 fi
 
+if command -v phpstorm > /dev/null 2>&1 \
+  || [ -d '/c/Program Files/JetBrains' ] \
+  || [ -d '/cygdrive/c/Program Files/JetBrains' ] \
+  || [ -d '/mnt/c/Program Files/JetBrains' ]; then
+  echo Installing .ideavimrc
+  cp .ideavimrc "$HOME"
+fi
+
 # vim: ft=sh:fdm=marker:ts=2:sts=2:sw=2:et
