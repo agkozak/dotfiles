@@ -58,6 +58,7 @@ conditional_install vi .exrc
 if command -v dircolors > /dev/null 2>&1; then
 	echo '.dircolors'
 	github_clone_or_update "agkozak/dircolors-zenburn"
+  mv dircolors-zenburn/dircolors "$HOME/.dircolors"
 fi
 
 conditional_install bash .bash_profile .bashrc .inputrc
