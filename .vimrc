@@ -627,6 +627,9 @@ if has('autocmd')
     " .todo extension is TaskPaper
     autocmd BufNewFile,BufReadPost *.todo set filetype=taskpaper
 
+    " JetBrains IDE color schemes
+    autocmd BufNewFile,BufReadPost *.icls set filetype=xml
+
     " }}}2
   augroup END
 endif
