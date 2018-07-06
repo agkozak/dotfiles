@@ -306,7 +306,7 @@ endif
 
 " This plugin arrangement requires git (and curl, except in Windows
 " CMD.EXE/Powershell
-if executable('git') && (executable('curl') || WINDOWS())
+if executable('git') && (executable('curl') || executable('wget') || WINDOWS())
 
   " Only try to load plugins if vim-plug is installed
   if filereadable(expand('~/.vim/autoload/plug.vim'))
@@ -421,8 +421,10 @@ if executable('git') && (executable('curl') || WINDOWS())
       silent !git clone https://github.com/junegunn/vim-plug \%USERPROFILE\%\.vim\vim-plug
       silent !copy \%USERPROFILE\%\.vim\vim-plug\plug.vim \%USERPROFILE\%\.vim\autoload\plug.vim
       silent !rmdir /s /q \%USERPROFILE\%\.vim\vim-plug
-    else
+    elseif executable('curl')
       !curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+    elseif executable('wget')
+      !mkdir ~/.vim/autoload && wget -O ~/.vim/autoload/plug.vim https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
     endif
 
     source $MYVIMRC
@@ -439,8 +441,8 @@ else
   if !executable('git')
     echom 'Please install git.'
   endif
-  if !executable('curl')
-    echom 'Please install curl.'
+  if !executable('curl') || !executable('wget')
+    echom 'Please install curl or wget.'
   endif
   filetype plugin indent on   " Normally handled by vim-plug
 endif
