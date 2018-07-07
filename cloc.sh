@@ -5,6 +5,7 @@ cloc --by-file-by-lang \
   --force-lang="Bourne Again Shell",bash_profile \
   --force-lang="Bourne Again Shell",bashrc \
   --force-lang="Bourne Again Shell",inputrc \
+  --force-lang="Bourne Again Shell",editrc \
   --force-lang="Bourne Again Shell",zprofile \
   --force-lang="Bourne Again Shell",zshrc \
   --force-lang="Bourne Shell",profile \

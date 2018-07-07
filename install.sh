@@ -151,4 +151,6 @@ if command -v phpstorm > /dev/null 2>&1 \
   cp .ideavimrc "$HOME"
 fi
 
+conditional_install mysql .editrc
+
 # vim: ft=sh:fdm=marker:ts=2:sts=2:sw=2:et
