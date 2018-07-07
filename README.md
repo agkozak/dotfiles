@@ -1,3 +1,7 @@
+<p align="center">
+    <img src="img/logo.png">
+</p>
+
 # ALEXANDROS KOZAK'S DOTFILES
 
 [![MIT License](img/mit_license.svg)](https://opensource.org/licenses/MIT)
