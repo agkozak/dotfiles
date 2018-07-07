@@ -7,6 +7,7 @@ cloc --by-file-by-lang \
   --force-lang="Bourne Again Shell",inputrc \
   --force-lang="Bourne Again Shell",editrc \
   --force-lang="Bourne Again Shell",zprofile \
+  --force-lang="Bourne Again Shell",zshenv \
   --force-lang="Bourne Again Shell",zshrc \
   --force-lang="Bourne Shell",profile \
   --force-lang="Bourne Shell",sh \
@@ -15,4 +16,5 @@ cloc --by-file-by-lang \
   --force-lang="C Shell",login_conf \
   --force-lang="vim script",exrc \
   --force-lang="vim script",vimrc \
+  --force-lang="vim script",ideavimrc \
   .
