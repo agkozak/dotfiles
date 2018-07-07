@@ -51,6 +51,7 @@ export PATH
 
 # Construct $PATH
 for i in "$HOME/.local/bin" \
+  "$HOME/go/bin" \
 	"$HOME/.cabal/bin" \
 	"$HOME/.config/composer/vendor/bin" \
 	"$HOME/.composer/vendor/bin" \
