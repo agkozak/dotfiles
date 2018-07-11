@@ -10,12 +10,12 @@
 I have tested these dotfiles primarily on
 
 * Windows
-    - MSys2 with mintty
+    - MSYS2 with mintty
     - Cygwin with mintty
     - The Windows Subsystem for Linux (a.ka. Bash on Ubuntu on Windows)
 * Linux
-    - Raspbian/Ubuntu/Linux Mint
-    - CloudLinux
+    - Ubuntu/Linux Mint/Raspbian
+    - CloudLinux (based on CentOS)
 * BSD
     - FreeBSD/TrueOS/GhostBSD
 * Unix
