@@ -49,7 +49,8 @@ cd themes || exit
 
 github_clone_or_update "agkozak/polyglot" develop
 
-github_clone_or_update "agkozak/agkozak-zsh-theme" develop
+[ ! -d "$HOME/.zplugin/plugins/agkozak---agkozak-zsh-theme" ] \
+  && github_clone_or_update "agkozak/agkozak-zsh-theme" develop
 
 cd ..
 
