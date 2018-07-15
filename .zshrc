@@ -303,8 +303,60 @@ if (( AGKOZAK_NO_ZPLUGIN != 1 )) && is-at-least 5; then
 
     # Load plugins and snippets {{{2
 
+    # borekb theme
+    # AGKOZAK_ZPML_PROMPT=(
+    #   if is_exit_0 then
+    #   else
+    #       bold fg_red exit_status unfg unbold space
+    #   fi
+
+    #   bold fg_blue pwd unfg unbold
+
+    #   fg_243 git_branch_status unfg newline
+      
+    #   if is_superuser then
+    #     zshcode'#'
+    #   else
+    #     zshcode'$'
+    #   fi
+    #   space
+    # )
+
+    # AGKOZAK_ZPML_RPROMPT=()
+
+    AGKOZAK_ZPML_PROMPT=(
+      if is_exit_0 then
+      else
+        bold fg_red exit_status unfg unbold space
+      fi
+
+      if is_superuser then
+        reverse bold
+      else
+        bold fg_green
+      fi
+
+      user_host
+
+      if is_superuser then
+        unbold unreverse
+      else
+        unfg unbold
+      fi
+
+      space
+
+      bold fg_blue pwd unfg unbold
+      fg_yellow git_branch_status unfg
+      newline
+
+      vi_mode_indicator space
+    )
+
+    AGKOZAK_ZPML_RPROMPT=()
+
     # AGKOZAK_THEME_DEBUG=1
-    zplugin ice ver"develop"
+    zplugin ice ver"custom"
     zplugin light agkozak/agkozak-zsh-theme
 
     zplugin ice ver"develop"
