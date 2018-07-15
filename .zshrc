@@ -324,36 +324,37 @@ if (( AGKOZAK_NO_ZPLUGIN != 1 )) && is-at-least 5; then
 
     # AGKOZAK_ZPML_RPROMPT=()
 
-    AGKOZAK_ZPML_PROMPT=(
-      if is_exit_0 then
-      else
-        bold fg_red exit_status unfg unbold space
-      fi
+    # agkozak2 theme
+    # AGKOZAK_ZPML_PROMPT=(
+    #   if is_exit_0 then
+    #   else
+    #     bold fg_red exit_status unfg unbold space
+    #   fi
 
-      if is_superuser then
-        reverse bold
-      else
-        bold fg_green
-      fi
+    #   if is_superuser then
+    #     reverse bold
+    #   else
+    #     bold fg_green
+    #   fi
 
-      user_host
+    #   user_host
 
-      if is_superuser then
-        unbold unreverse
-      else
-        unfg unbold
-      fi
+    #   if is_superuser then
+    #     unbold unreverse
+    #   else
+    #     unfg unbold
+    #   fi
 
-      space
+    #   space
 
-      bold fg_blue pwd unfg unbold
-      fg_yellow git_branch_status unfg
-      newline
+    #   bold fg_blue pwd unfg unbold
+    #   fg_yellow git_branch_status unfg
+    #   newline
 
-      vi_mode_indicator space
-    )
+    #   vi_mode_indicator space
+    # )
 
-    AGKOZAK_ZPML_RPROMPT=()
+    # AGKOZAK_ZPML_RPROMPT=()
 
     # AGKOZAK_THEME_DEBUG=1
     zplugin ice ver"custom"
