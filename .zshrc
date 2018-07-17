@@ -356,7 +356,9 @@ if (( AGKOZAK_NO_ZPLUGIN != 1 )) && is-at-least 5; then
 
     # AGKOZAK_ZPML_RPROMPT=()
 
-    # pure-like prompt
+    # impure prompt
+    # AGKOZAK_BLANK_LINES=1
+
     # AGKOZAK_ZPML_PROMPT=(
     #   fg_blue literal '%~' unfg
     #   fg_242 git_branch_status unfg
