@@ -313,7 +313,7 @@ if (( AGKOZAK_NO_ZPLUGIN != 1 )) && is-at-least 5; then
     #   bold fg_blue pwd unfg unbold
 
     #   fg_243 git_branch_status unfg newline
-      
+
     #   if is_superuser then
     #     zshcode'#'
     #   else
@@ -356,13 +356,28 @@ if (( AGKOZAK_NO_ZPLUGIN != 1 )) && is-at-least 5; then
 
     # AGKOZAK_ZPML_RPROMPT=()
 
+    # pure-like prompt
+    # AGKOZAK_ZPML_PROMPT=(
+    #   fg_blue literal '%~' unfg
+    #   fg_242 git_branch_status unfg
+    #   newline
+    #   if is_exit_0 then
+    #     fg_magenta
+    #   else
+    #     fg_red
+    #   fi
+    #   literal '❯' unfg space
+    # )
+
+    # AGKOZAK_ZPML_RPROMPT=()
+
     # AGKOZAK_THEME_DEBUG=1
     zplugin ice ver"custom"
     zplugin light agkozak/agkozak-zsh-theme
 
     zplugin ice ver"develop"
     zplugin light agkozak/zhooks
- 
+
     zplugin light agkozak/z
 
     # zsh-titles causes dittography in Emacs shell and Vim terminal
