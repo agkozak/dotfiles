@@ -632,6 +632,9 @@ if has('autocmd')
     " JetBrains IDE color schemes
     autocmd BufNewFile,BufReadPost *.icls set filetype=xml
 
+    " ZPML
+    autocmd BufNewFile,BufReadPost *.zpml set filetype=zsh
+
     " }}}2
   augroup END
 endif
