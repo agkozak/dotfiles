@@ -15,6 +15,8 @@ fi
 
 # }}}1
 
+autoload -Uz is-at-least
+
 # compile_or_recompile() {{{1
 
 ###########################################################
@@ -166,9 +168,15 @@ bindkey -M menuselect 'j' vi-down-line-or-history # bottom
 zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
 
 # Allow pasting URLs as CLI arguments
-autoload -Uz url-quote-magic bracketed-paste-magic
-zle -N self-insert url-quote-magic
-zle -N bracketed-paste bracketed-paste-magic
+if [[ $ZSH_VERSION != '5.1.1' ]] && [[ $TERM != 'dumb' ]] \
+  && [[ -z $INSIDE_EMACS ]]; then
+  if is-at-least 5.1; then
+    autoload -Uz bracketed-paste-magic
+    zle -N bracketed-paste bracketed-paste-magic
+  fi
+  autoload -Uz url-quote-magic
+  zle -N self-insert url-quote-magic
+fi
 
 # Use Esc-K for run-help
 bindkey -M vicmd 'K' run-help
@@ -269,8 +277,6 @@ fi
 # }}}1
 
 # .zplugin {{{1
-
-autoload -Uz is-at-least
 
 if (( AGKOZAK_NO_ZPLUGIN != 1 )) && is-at-least 5; then
 
