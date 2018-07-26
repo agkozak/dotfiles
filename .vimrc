@@ -438,11 +438,13 @@ if executable('git') && (executable('curl') || executable('wget') || WINDOWS())
 
   endif
 else
-  if !executable('git')
-    echom 'Please install git.'
-  endif
-  if !executable('curl') || !executable('wget')
-    echom 'Please install curl or wget.'
+  if !has('iVim')
+    if !executable('git')
+      echom 'Please install git.'
+    endif
+    if !executable('curl') || !executable('wget')
+      echom 'Please install curl or wget.'
+    endif
   endif
   filetype plugin indent on   " Normally handled by vim-plug
 endif
@@ -464,7 +466,11 @@ if &term !=# 'cygwin' && &term !=# 'win32'
 
   syntax on
   let g:zenburn_high_Contrast = 1
-  silent! colorscheme zenburn
+  if has('iVim')
+    silent! colorscheme desert
+  else
+    silent! colorscheme zenburn
+  endif
 
 else
   syntax off
