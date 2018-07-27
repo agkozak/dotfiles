@@ -176,6 +176,8 @@ if [[ $ZSH_VERSION != '5.1.1' ]] && [[ $TERM != 'dumb' ]] \
   fi
   autoload -Uz url-quote-magic
   zle -N self-insert url-quote-magic
+elif [[ $TERM == 'dumb' ]]; then
+  unset zle_bracketed_paste # Avoid ugly control sequences
 fi
 
 # Use Esc-K for run-help
