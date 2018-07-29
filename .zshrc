@@ -287,7 +287,7 @@ if (( AGKOZAK_NO_ZPLUGIN != 1 )) && is-at-least 5; then
     if [[ ! -d ${HOME}/.zplugin ]]; then
       echo "Installing zplugin..."
       mkdir "${HOME}/.zplugin"
-      git clone https://github.com/agkozak/zplugin.git "${HOME}/.zplugin/bin"
+      git clone https://github.com/zdharma/zplugin.git "${HOME}/.zplugin/bin"
       ( cd "$HOME/.zplugin/bin" && git checkout solaris )
     fi
 
