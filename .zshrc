@@ -6,11 +6,8 @@
 
 # Begin .zshrc benchmark {{{1
 
-if (( AGKOZAK_RC_BENCHMARKS )); then
-  case $OSTYPE in
-    freebsd*) ;;                        #BSD `date` can't handle nanoseconds
-    *) ((start=$(date +%s%N)/1000000)) ;;
-  esac
+if (( AGKOZAK_RC_BENCHMARKS )) && [[ $OSTYPE != freebsd* ]]; then
+  ((start=$(date +%s%N)/1000000)) # BSD date can't handle nanoseconds
 fi
 
 # }}}1
@@ -104,9 +101,7 @@ setopt INTERACTIVE_COMMENTS # Allow comments in interactive mode
 
 # Disable nice for background processes in WSL
 [[ -z $AGKOZAK_SYSTEMINFO ]] && AGKOZAK_SYSTEMINFO="$(uname -a)"
-case $AGKOZAK_SYSTEMINFO in
-  *Microsoft*) unsetopt BG_NICE ;;
-esac
+[[ $AGKOZAK_SYSTEMINFO == *Microsoft* ]] && unsetopt BG_NICE
 
 # }}}2
 
@@ -297,9 +292,7 @@ if (( AGKOZAK_NO_ZPLUGIN != 1 )) && is-at-least 5; then
     unset file
 
     # In FreeBSD, /home is /usr/home
-    case $OSTYPE in
-      freebsd*) typeset -g _Z_NO_RESOLVE_SYMLINKS=1;;
-    esac
+    [[ $OSTYPE == freebsd* ]] && typeset -g _Z_NO_RESOLVE_SYMLINKS=1
 
     # zplugin and its plugins and snippets
     source "${HOME}/.zplugin/bin/zplugin.zsh"
@@ -350,9 +343,7 @@ fi
 # Miscellaneous {{{1
 
 # Disable echo escape sequences in MSys2 or Cygwin
-case $OSTYPE in
-  msys|cygwin) alias echo='echo -E' ;;
-esac
+[[ $OSTYPE == (msys|cygwin) ]] && alias echo='echo -E'
 
 # 10ms for key sequences
 KEYTIMEOUT=1
@@ -383,15 +374,10 @@ compile_or_recompile "${HOME}/.zshrc"
 
 # End .zshrc benchmark {{{1
 
-if (( AGKOZAK_RC_BENCHMARKS )); then
-  case $OSTYPE in
-    freebsd*) ;;
-    *)
-      ((finish=$(date +%s%N)/1000000))
-      ((difference=finish-start))
-      echo ".zshrc loaded in ${difference}ms total."
-      ;;
-  esac
+if (( AGKOZAK_RC_BENCHMARKS )) && [[ $OSTYPE != freebsd* ]]; then
+  ((finish=$(date +%s%N)/1000000))
+  ((difference=finish-start))
+  echo ".zshrc loaded in ${difference}ms total."
 fi
 
 unset start finish difference
