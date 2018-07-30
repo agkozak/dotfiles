@@ -334,7 +334,7 @@ if (( AGKOZAK_NO_ZPLUGIN != 1 )) && is-at-least 5; then
 
 elif is-at-least 4.3.11; then
 
-  source "$HOME/dotfiles/themes/agkozak-zsh-theme/agkozak-zsh-theme.plugin.zsh"
+  source "$HOME/dotfiles/themes/agkozak-zsh-prompt/agkozak-zsh-prompt.plugin.zsh"
 
 fi
 
