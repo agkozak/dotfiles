@@ -313,7 +313,7 @@ if (( AGKOZAK_NO_ZPLUGIN != 1 )) && is-at-least 5; then
 
     # AGKOZAK_THEME_DEBUG=1
     zplugin ice ver"custom"
-    zplugin light agkozak/agkozak-zsh-theme
+    zplugin light agkozak/agkozak-zsh-prompt
 
     zplugin ice ver"develop"
     zplugin light agkozak/zhooks
