@@ -305,7 +305,7 @@ if (( AGKOZAK_NO_ZPLUGIN != 1 )) && is-at-least 5; then
     # Load plugins and snippets {{{2
 
     # AGKOZAK_THEME_DEBUG=1
-    zplugin ice ver"custom"
+    zplugin ice ver"develop"
     zplugin light agkozak/agkozak-zsh-prompt
 
     zplugin ice ver"develop"
