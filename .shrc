@@ -176,8 +176,12 @@ case "$AGKOZAK_SYSTEMINFO" in
     alias npm='winpty /cygdrive/c/Program\ Files/nodejs/npm.cmd'
     ;;
   *raspberrypi*)
-    alias mutt='TERM=xterm-256color mutt'
-    alias screen='TERM=xterm-256color screen'
+    # Because LXTerminal can't set TERM
+    if [ "$XDG_CURRENT_DESKTOP" = 'LXDE' ]; then
+      if [ "$TERM" = 'xterm' ]; then
+        TERM='xterm-256color'
+      fi
+    fi
     alias temp='/opt/vc/bin/vcgencmd measure_temp | egrep "[0-9.]{4,}" -o'
     ;;
   FreeBSD*|SunOS*)
