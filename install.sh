@@ -1,4 +1,5 @@
 #!/bin/sh
+# shellcheck disable=SC1117
 
 # Functions {{{1
 
@@ -15,9 +16,9 @@ conditional_install() {
     shift
     while [ $# -ne 0 ]; do
       if [ -e "$HOME/$1" ]; then
-        printf "Replacing %s\\n" "$1"
+        printf "Replacing %s\n" "$1"
       else
-        printf "Installing %s\\n" "$1"
+        printf "Installing %s\n" "$1"
       fi
       cp "$1" "$HOME"
       shift
@@ -35,7 +36,8 @@ conditional_install() {
 github_clone_or_update() {
   REPO=$(echo "$1" | awk -F/ '{ printf "%s", $2 }')
   if [ ! -d "$REPO" ]; then
-    (git clone https://github.com/"$1".git; cd "$REPO" || return; [ -n "$2" ] && git checkout "$2")
+    (git clone https://github.com/"$1".git; cd "$REPO" || return; [ -n "$2" ] \
+      && git checkout "$2")
   else
     (cd "$REPO" || return; git pull; [ "$2" != '' ] && git checkout "$2")
   fi
