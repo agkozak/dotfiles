@@ -183,6 +183,12 @@ autoload -Uz edit-command-line
 zle -N edit-command-line
 bindkey -M vicmd 'v' edit-command-line
 
+# Fuzzy matching of completions
+zstyle ':completion:*' completer _complete _match _approximate
+zstyle ':completion:*:match:*' original only
+zstyle -e ':completion:*:approximate:*' \
+  max-errors 'reply=($((($#PREFIX+$#SUFFIX)/3))numeric)'
+
 # }}}1
 
 # The Debian solution to Del/Home/End/etc. keybindings {{{1
