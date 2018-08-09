@@ -184,6 +184,7 @@ zle -N edit-command-line
 bindkey -M vicmd 'v' edit-command-line
 
 # Fuzzy matching of completions
+# https://grml.org/zsh/zsh-lovers.html
 zstyle ':completion:*' completer _complete _match _approximate
 zstyle ':completion:*:match:*' original only
 zstyle -e ':completion:*:approximate:*' \
