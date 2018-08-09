@@ -190,6 +190,15 @@ zstyle ':completion:*:match:*' original only
 zstyle -e ':completion:*:approximate:*' \
   max-errors 'reply=($((($#PREFIX+$#SUFFIX)/3))numeric)'
 
+# Have the completion system announce what it is completing
+zstyle ':completion:*' format 'Completing %d'
+
+# In menu-style completion, give a status bar
+zstyle ':completion:*' select-prompt '%SScrolling active: current selection at %p%s'
+
+# In the line editor, number of matches to show before asking permission
+LISTMAX=9999
+
 # }}}1
 
 # The Debian solution to Del/Home/End/etc. keybindings {{{1
