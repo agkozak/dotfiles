@@ -19,7 +19,7 @@ I have tested these dotfiles primarily on
 * BSD
     - FreeBSD/TrueOS/GhostBSD
 * Unix
-    - Solaris
+    - Solaris 11.3
     - OpenIndiana
 
 ## Installation
