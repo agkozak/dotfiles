@@ -62,7 +62,7 @@ if ( -x /usr/local/bin/vim || -x /usr/bin/vim ) then
   setenv EDITOR vim
 else if ( -x /usr/bin/vi || -x /bin/vi ) then
   setenv VISUAL vi
-  setenv EDITOR vim
+  setenv EDITOR vi
 endif
 
 if ( $?VISUAL && "$VISUAL" == vim ) alias vi vim
