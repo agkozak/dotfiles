@@ -58,6 +58,7 @@ fi
 
 setopt AUTO_CD            # Change to a directory just by typing its name
 setopt AUTO_PUSHD         # Make cd push each old directory onto the stack
+setopt CDABLE_VARS        # Like AUTO_CD, but for named directories
 setopt PUSHD_IGNORE_DUPS  # Don't push duplicates onto the stack
 
 # }}}2
@@ -365,6 +366,7 @@ fi
 KEYTIMEOUT=1
 
 [[ -d "$HOME/public_html/wp-content" ]] && hash -d wp-content="$HOME/public_html/wp-content"
+[[ -d "$HOME/.zplugin/plugins/agkozak---agkozak-zsh-prompt" ]] && hash -d agk="$HOME/.zplugin/plugins/agkozak---agkozak-zsh-prompt"
 
 # vi mode and exceptions {{{2
 
