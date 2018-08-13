@@ -49,6 +49,7 @@ if ($?prompt) then
 		bindkey "^W" backward-delete-word
 		bindkey -k up history-search-backward
 		bindkey -k down history-search-forward
+    bindkey -v
 	endif
 endif
 
@@ -61,7 +62,7 @@ if ( -x /usr/local/bin/vim || -x /usr/bin/vim ) then
   setenv EDITOR vim
 else if ( -x /usr/bin/vi || -x /bin/vi ) then
   setenv VISUAL vi
-  setenv EDITOR vim
+  setenv EDITOR vi
 endif
 
 if ( $?VISUAL && "$VISUAL" == vim ) alias vi vim
