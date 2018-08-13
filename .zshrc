@@ -365,8 +365,10 @@ fi
 # 10ms for key sequences
 KEYTIMEOUT=1
 
-[[ -d "$HOME/public_html/wp-content" ]] && hash -d wp-content="$HOME/public_html/wp-content"
-[[ -d "$HOME/.zplugin/plugins/agkozak---agkozak-zsh-prompt" ]] && hash -d agk="$HOME/.zplugin/plugins/agkozak---agkozak-zsh-prompt"
+[[ -d "$HOME/public_html/wp-content" ]] \
+  && hash -d wp-content="$HOME/public_html/wp-content"
+[[ -d "$HOME/.zplugin/plugins/agkozak---agkozak-zsh-prompt" ]] \
+  && hash -d agk="$HOME/.zplugin/plugins/agkozak---agkozak-zsh-prompt"
 
 # vi mode and exceptions {{{2
 
