@@ -322,10 +322,7 @@ if (( AGKOZAK_NO_ZPLUGIN != 1 )) && is-at-least 5; then
     # Load plugins and snippets {{{2
 
     # AGKOZAK_PROMPT_DEBUG=1
-    case $ZSH_VERSION in
-      5.5.0|5.5.1) ;;
-      *) AGKOZAK_MULTILINE=0 ;;
-    esac
+    AGKOZAK_MULTILINE=0
     zplugin ice ver"develop"
     zplugin light agkozak/agkozak-zsh-prompt
 
