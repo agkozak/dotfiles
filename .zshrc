@@ -375,7 +375,7 @@ KEYTIMEOUT=1
 # Dynamic named directory
 
 if [[ -d '/c/wamp64/www' ]]; then
-zsh_directory_name() {
+  zsh_directory_name() {
     emulate -L zsh
     setopt extendedglob
     local -a match mbegin mend
