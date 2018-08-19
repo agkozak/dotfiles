@@ -373,7 +373,7 @@ KEYTIMEOUT=1
   && hash -d agk="$HOME/.zplugin/plugins/agkozak---agkozak-zsh-prompt"
 
 # Dynamic named directory
-
+# https://superuser.com/questions/751523/dynamic-directory-hash
 if [[ -d '/c/wamp64/www' ]]; then
 zsh_directory_name() {
     emulate -L zsh
