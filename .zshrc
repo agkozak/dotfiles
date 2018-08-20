@@ -63,6 +63,12 @@ setopt PUSHD_IGNORE_DUPS  # Don't push duplicates onto the stack
 
 # }}}2
 
+# Expansion and Globbing {{{2
+
+setopt EXTENDED_GLOB
+
+# }}}2
+
 # History {{{2
 
 # History environment variables
@@ -375,7 +381,7 @@ KEYTIMEOUT=1
 # Dynamic named directory
 # https://superuser.com/questions/751523/dynamic-directory-hash
 if [[ -d '/c/wamp64/www' ]]; then
-  zsh_directory_name() {
+zsh_directory_name() {
     emulate -L zsh
     setopt extendedglob
     local -a match mbegin mend
