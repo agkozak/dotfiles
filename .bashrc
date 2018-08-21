@@ -35,9 +35,11 @@ shopt -s autocd     # cd to directory names without typing cd
 # After each command, redraw lines and columns if window size has changed
 shopt -s checkwinsize
 
+shopt -s extglob  # Extended globbing
+
 # If set, the pattern "**" used in a pathname expansion context will
 # match all files and zero or more directories and subdirectories.
-#shopt -s globstar
+shopt -s globstar
 
 shopt -s histappend # Append to the history file (don't overwrite it)
 
