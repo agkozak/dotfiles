@@ -119,7 +119,7 @@ setopt INTERACTIVE_COMMENTS # Allow comments in interactive mode
 alias -g CA='2>&1 | cat -A'
 alias -g G='| grep'
 alias -g H='| head'
-alias -g L='| less'
+alias -g L='| less -R'
 alias -g LL='2>&1 | less'
 alias -g M='| most'
 alias -g NE='2> /dev/null'
