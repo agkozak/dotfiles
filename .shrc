@@ -55,12 +55,12 @@ if [ -z "$INSIDE_EMACS" ] && [ "$TERM" != 'dumb' ]; then
       LS_OPTIONS="-G"
       ;;
     *Msys)
-      LS_OPTIONS='--group-directories-first --color=tty -F -h -T 0 --hide="NTUSER*" --hide="ntuser*"'
+      LS_OPTIONS='--group-directories-first --color -F -h -T 0 --hide="NTUSER*" --hide="ntuser*"'
       ;;
     *Cygwin)
       case $TERM in
         xterm|*-256color)
-          LS_OPTIONS='--group-directories-first --color=tty -F -h -T 0 --hide="NTUSER*" --hide="ntuser*"'
+          LS_OPTIONS='--group-directories-first --color -F -h -T 0 --hide="NTUSER*" --hide="ntuser*"'
           ;;
         *)
           LS_OPTIONS='--group-directories-first -F -h -T 0 --hide="NTUSER*" --hide="ntuser*"'
@@ -70,7 +70,7 @@ if [ -z "$INSIDE_EMACS" ] && [ "$TERM" != 'dumb' ]; then
     CYGWIN*GNU/Linux) ;;                             # MobaXterm uses busybox ls
     SunOS*) ;;
     *)
-      LS_OPTIONS='--group-directories-first --color=tty -F -h -T 0'
+      LS_OPTIONS='--group-directories-first --color -F -h -T 0'
       ;;
   esac
 
