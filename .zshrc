@@ -354,7 +354,6 @@ if (( AGKOZAK_NO_ZPLUGIN != 1 )) && is-at-least 5; then
     # zplugin light zdharma/zplugin-crasis
 
     zplugin snippet OMZ::plugins/extract/extract.plugin.zsh
-    # zplugin light zdharma/fast-syntax-highlighting # Must be loaded last
 
     zplugin light zsh-users/zsh-history-substring-search
     bindkey '^[[A' history-substring-search-up
@@ -363,6 +362,8 @@ if (( AGKOZAK_NO_ZPLUGIN != 1 )) && is-at-least 5; then
     bindkey '^N' history-substring-search-down
     bindkey -M vicmd 'k' history-substring-search-up
     bindkey -M vicmd 'j' history-substring-search-down
+
+    # zplugin light zdharma/fast-syntax-highlighting # Must be loaded last
 
   else
     echo 'Please install git.'
