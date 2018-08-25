@@ -300,6 +300,12 @@ fi
 
 if (( AGKOZAK_NO_ZPLUGIN != 1 )) && is-at-least 5; then
 
+  # Optional binary module
+  if [[ -f "$HOME/.zplugin/bin/zmodules/Src/zdharma/zplugin.so" ]]; then
+    module_path+=( "/home/alexandros/.zplugin/bin/zmodules/Src" )
+    zmodload zdharma/zplugin
+  fi
+
   if whence git &> /dev/null; then
 
     if [[ ! -d ${HOME}/.zplugin ]]; then
