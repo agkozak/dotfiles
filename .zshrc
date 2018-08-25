@@ -356,6 +356,14 @@ if (( AGKOZAK_NO_ZPLUGIN != 1 )) && is-at-least 5; then
     zplugin snippet OMZ::plugins/extract/extract.plugin.zsh
     # zplugin light zdharma/fast-syntax-highlighting # Must be loaded last
 
+    zplugin light zsh-users/zsh-history-substring-search
+    bindkey '^[[A' history-substring-search-up
+    bindkey '^[[B' history-substring-search-down
+    bindkey '^P' history-substring-search-up
+    bindkey '^N' history-substring-search-down
+    bindkey -M vicmd 'k' history-substring-search-up
+    bindkey -M vicmd 'j' history-substring-search-down
+
   else
     echo 'Please install git.'
   fi
@@ -425,8 +433,8 @@ fi
 # bindkey -v  " `set -o vi` is in .shrc
 
 # Borrowed from emacs mode
-bindkey '^P' up-history
-bindkey '^N' down-history
+# bindkey '^P' up-history
+# bindkey '^N' down-history
 bindkey '^R' history-incremental-search-backward
 
 bindkey '^F' history-incremental-search-forward
