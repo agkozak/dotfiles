@@ -433,6 +433,8 @@ bindkey '^F' history-incremental-search-forward
 
 # }}}2
 
+autoload -Uz zmv
+
 # }}}1
 
 # Compile or recompile ~/.zcompdump and ~/.zshrc {{{1
