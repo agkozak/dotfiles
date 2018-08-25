@@ -94,7 +94,7 @@ if [ -z "$INSIDE_EMACS" ] && [ "$TERM" != 'dumb' ]; then
     esac
   fi
 
-  alias ls='ls $LS_OPTIONS'
+  alias ls="ls $LS_OPTIONS"
 
   if command -v dircolors > /dev/null 2>&1; then
     if [ -r "$HOME/.dircolors" ] && _shrc_has_colors 256; then
