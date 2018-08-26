@@ -53,36 +53,21 @@ alias g='egrep -i'
 
 # enable color support of ls and also add handy aliases {{{2
 
-############################################################
-# Does the terminal support enough colors?
-#
-# Argument:
-#   $1  Number of colors to support
-############################################################
-_shrc_has_colors() {
-  case $TERM in
-    *-256color) SHRC_TERM_COLORS=256 ;;
-    vt100|dumb) SHRC_TERM_COLORS=-1 ;;
-    *)
-      case $AGKOZAK_SYSTEMINFO in
-        *BSD*|*bsd*|*[Dd]ragon[Ff]ly*) SHRC_TERM_COLORS=$(tput Co) ;;
-        *) SHRC_TERM_COLORS=$(tput colors) ;;
-      esac
-      ;;
-  esac
-  if [ "${SHRC_TERM_COLORS:-0}" -ge "$1" ]; then
-    unset SHRC_TERM_COLORS
-    return 0
-  else
-    unset SHRC_TERM_COLORS
-    return 1
-  fi
-}
+case $TERM in
+  *-256color) SHRC_TERM_COLORS=256 ;;
+  vt100|dumb) SHRC_TERM_COLORS=-1 ;;
+  *)
+    case $AGKOZAK_SYSTEMINFO in
+      *BSD*|*bsd*|*[Dd]ragon[Ff]ly*) SHRC_TERM_COLORS=$(tput Co) ;;
+      *) SHRC_TERM_COLORS=$(tput colors) ;;
+    esac
+    ;;
+esac
 
 # Do not enable colors in Emacs shell
 if [ -z "$INSIDE_EMACS" ] && [ "$TERM" != 'dumb' ]; then
 
-  if _shrc_has_colors 8; then
+  if [ "$SHRC_TERM_COLORS" -ge 8 ]; then
     case $AGKOZAK_SYSTEMINFO in
       Darwin*|FreeBSD*)
         LS_OPTIONS="-G"
@@ -108,9 +93,9 @@ if [ -z "$INSIDE_EMACS" ] && [ "$TERM" != 'dumb' ]; then
   alias ls="ls $LS_OPTIONS"
 
   if command -v dircolors > /dev/null 2>&1; then
-    if [ -r "$HOME/.dircolors" ] && _shrc_has_colors 256; then
+    if [ -r "$HOME/.dircolors" ] && [ "$SHRC_HAS_COLORS" -ge 256 ]; then
       eval "$(dircolors -b "$HOME/.dircolors")"
-    elif _shrc_has_colors 8; then
+    elif [ "$SHRC_HAS_COLORS" -ge 8 ]; then
       eval "$(dircolors -b)"
     fi
   fi
