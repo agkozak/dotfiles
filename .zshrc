@@ -4,6 +4,15 @@
 #
 # shellcheck disable=SC1090,SC2034,SC2128,SC2148,SC2154
 
+autoload -Uz is-at-least
+
+# To run zprof, execute
+#     env ZSH_PROF= zsh -ic zprof
+
+if (( $+ZSH_PROF )); then
+  zmodload zsh/zprof
+fi
+
 # Begin .zshrc benchmark {{{1
 
 if (( AGKOZAK_RC_BENCHMARKS )) && [[ $OSTYPE != freebsd* ]]; then
@@ -11,8 +20,6 @@ if (( AGKOZAK_RC_BENCHMARKS )) && [[ $OSTYPE != freebsd* ]]; then
 fi
 
 # }}}1
-
-autoload -Uz is-at-least
 
 # compile_or_recompile() {{{1
 
