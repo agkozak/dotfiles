@@ -5,6 +5,7 @@
 # shellcheck shell=sh
 # shellcheck disable=SC2034
 
+export AGKOZAK_SYSTEMINFO
 AGKOZAK_SYSTEMINFO=$(uname -a)
 
 export EDITOR VISUAL
@@ -29,8 +30,10 @@ elif command -v lesspipe.sh > /dev/null 2>&1; then
 	LESSOPEN="$(command -v lesspipe.sh) %s"
 fi
 
-export LYNX_CFG
-LYNX_CFG="$HOME/.lynx.cfg"
+if [ -f "$HOME/.lynx.cfg" ]; then
+  export LYNX_CFG
+  LYNX_CFG="$HOME/.lynx.cfg"
+fi
 
 export MANPAGER
 MANPAGER='less -X'
