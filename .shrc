@@ -99,7 +99,7 @@ if [ -z "$INSIDE_EMACS" ] && [ "$TERM" != 'dumb' ]; then
   if command -v dircolors > /dev/null 2>&1; then
     if [ -r "$HOME/.dircolors" ] && _shrc_has_colors 256; then
       eval "$(dircolors -b "$HOME/.dircolors")"
-    else
+    elif _shrc_has_colors 8; then
       eval "$(dircolors -b)"
     fi
   fi
