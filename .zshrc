@@ -348,16 +348,16 @@ if (( AGKOZAK_NO_ZPLUGIN != 1 )) && is-at-least 5; then
       zplugin light jreese/zsh-titles
     fi
 
-    zplugin light zdharma/zui
-    zplugin light zdharma/zbrowse
-    CRASIS_THEME="safari-256"
+    # zplugin light zdharma/zui
+    # zplugin light zdharma/zbrowse
+    # CRASIS_THEME="safari-256"
     # zplugin light zdharma/zplugin-crasis
 
     zplugin snippet OMZ::plugins/extract/extract.plugin.zsh
 
     zplugin light zsh-users/zsh-history-substring-search
-    bindkey '^[[A' history-substring-search-up
-    bindkey '^[[B' history-substring-search-down
+    bindkey '^[OA' history-substring-search-up
+    bindkey '^[OB' history-substring-search-down
     bindkey '^P' history-substring-search-up
     bindkey '^N' history-substring-search-down
     bindkey -M vicmd 'k' history-substring-search-up
