@@ -17,20 +17,11 @@ fi
 
 # Begin .shrc benchmark {{{
 
-_is_busybox() {
-  if command -v readlink > /dev/null 2>&1; then
-    case "$(exec 2>/dev/null; readlink "/proc/$$/exe")" in
-      */busybox) return 0 ;;
-      *) return 1 ;;
-    esac
-  fi
-}
-
 if [ "$AGKOZAK_RC_BENCHMARKS" = '1' ]; then
   case $AGKOZAK_SYSTEMINFO in
-    FreeBSD*) ;;                          # BSD `date` cannot handle nanoseconds.
-    # Ubuntu busybox sh handles math oddly
-    *) ! _is_busybox && start=$(($(date +%s%N)/1000000)) ;;
+    FreeBSD*) ;;                        # BSD `date` cannot handle nanoseconds.
+    # Busybox ash handles math oddly; suppress errors
+    *) start=$(($(date +%s%N)/1000000)) 2> /dev/null ;;
   esac
 fi
 
@@ -286,11 +277,9 @@ if [ "$AGKOZAK_RC_BENCHMARKS" = '1' ]; then
   case $AGKOZAK_SYSTEMINFO in
     FreeBSD*) ;;
     *)
-      if ! _is_busybox; then
-        finish=$(($(date +%s%N)/1000000))
-        difference=$((finish-start))
-        echo ".shrc loaded in ${difference}ms."
-      fi
+      finish=$(($(date +%s%N)/1000000)) 2> /dev/null
+      difference=$((finish-start))
+      [ -z "$difference" ] && echo ".shrc loaded in ${difference}ms."
       ;;
   esac
 fi
