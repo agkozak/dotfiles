@@ -93,9 +93,9 @@ if [ -z "$INSIDE_EMACS" ] && [ "$TERM" != 'dumb' ]; then
   alias ls="ls $LS_OPTIONS"
 
   if command -v dircolors > /dev/null 2>&1; then
-    if [ -r "$HOME/.dircolors" ] && [ "$SHRC_HAS_COLORS" -ge 256 ]; then
+    if [ -r "$HOME/.dircolors" ] && [ "$SHRC_TERM_COLORS" -ge 256 ]; then
       eval "$(dircolors -b "$HOME/.dircolors")"
-    elif [ "$SHRC_HAS_COLORS" -ge 8 ]; then
+    elif [ "$SHRC_TERM_COLORS" -ge 8 ]; then
       eval "$(dircolors -b)"
     fi
   fi
