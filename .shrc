@@ -68,15 +68,15 @@ _shrc_has_colors() {
         *BSD*|*bsd*|*[Dd]ragon[Ff]ly*) SHRC_TERM_COLORS=$(tput Co) ;;
         *) SHRC_TERM_COLORS=$(tput colors) ;;
       esac
-      if [ "${SHRC_TERM_COLORS:-0}" -ge "$1" ]; then
-        unset SHRC_TERM_COLORS
-        return 0
-      else
-        unset SHRC_TERM_COLORS
-        return 1
-      fi
       ;;
   esac
+  if [ "${SHRC_TERM_COLORS:-0}" -ge "$1" ]; then
+    unset SHRC_TERM_COLORS
+    return 0
+  else
+    unset SHRC_TERM_COLORS
+    return 1
+  fi
 }
 
 # Do not enable colors in Emacs shell
