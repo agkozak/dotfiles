@@ -18,12 +18,17 @@ fi
 # Begin .shrc benchmark {{{
 
 _is_busybox() {
-  if command -v readlink > /dev/null 2>&1; then
-    case "$(exec 2>/dev/null; readlink "/proc/$$/exe")" in
-      */busybox) return 0 ;;
-      *) return 1 ;;
-    esac
-  fi
+  case $0 in
+    ash|sh)
+      if command -v readlink > /dev/null 2>&1; then
+        case "$(exec 2>/dev/null; readlink "/proc/$$/exe")" in
+          */busybox) return 0 ;;
+          *) return 1 ;;
+        esac
+      fi
+      ;;
+    *) return 1 ;;
+  esac
 }
 
 if [ "$AGKOZAK_RC_BENCHMARKS" = '1' ]; then
