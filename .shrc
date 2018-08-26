@@ -261,7 +261,7 @@ f() {
 # Pull in updates from the dotfiles repo and install them {{{1
 
 update_dotfiles() {
-  CUR_DIR="$(pwd)"
+  CUR_DIR="$PWD"
   cd "$HOME/dotfiles" && git pull && ./install.sh
   for i in $(find . -name ".git" | cut -c 3-); do
     cd "$i" || exit
