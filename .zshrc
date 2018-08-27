@@ -6,14 +6,19 @@
 
 autoload -Uz is-at-least
 
+# Begin .zshrc benchmarks {{{1
+
 # To run zprof, execute
+#
 #     env ZSH_PROF= zsh -ic zprof
 
-if (( $+ZSH_PROF )); then
-  zmodload zsh/zprof
-fi
+(( $+ZSH_PROF )) && zmodload zsh/zprof
 
-# Begin .zshrc benchmark {{{1
+# For simple script running times, execute
+#
+#     AGKOZAK_RC_BENCHMARKS=1
+#
+# before sourcing.
 
 if (( AGKOZAK_RC_BENCHMARKS )) && [[ $OSTYPE != freebsd* ]]; then
   ((start=$(date +%s%N)/1000000)) # BSD date can't handle nanoseconds
@@ -400,7 +405,7 @@ KEYTIMEOUT=1
 [[ -d "$HOME/.zplugin/plugins/agkozak---agkozak-zsh-prompt" ]] \
   && hash -d agk="$HOME/.zplugin/plugins/agkozak---agkozak-zsh-prompt"
 
-# Dynamic named directory
+# Dynamic named directories
 # https://superuser.com/questions/751523/dynamic-directory-hash
 if [[ -d '/c/wamp64/www' ]]; then
 zsh_directory_name() {
