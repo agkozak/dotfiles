@@ -245,6 +245,11 @@ case $KSH_VERSION in *93*) set -o globstar ;; esac
 
 HISTSIZE=10000
 
+case $KSH_VERSION in
+  *'PD KSH'*) HISTFILE="$HOME/.pdksh_history" ;;
+  *MIRBSD*) HISTFILE="$HOME/.mksh_history" ;;
+esac
+
 # find shorthand {{{
 
 f() {
