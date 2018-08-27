@@ -38,10 +38,8 @@ fi
 compile_or_recompile() {
   local file
   for file in "$@"; do
-    if [[ ! -f "${file}.zwc" ]]; then
+    if [[ ! -f "${file}.zwc" ]] || [[ $file -nt "${file}.zwc" ]]; then
       zcompile "$file"
-    else
-      [[ $file -nt "${file}.zwc" ]] && zcompile "$file"
     fi
   done
 }
@@ -54,11 +52,7 @@ compile_or_recompile() {
 compile_or_recompile "${HOME}/.shrc"
 
 # Source ~/.shrc
-if [[ -f ${HOME}/.shrc ]]; then
-  # emulate sh
-  source "${HOME}/.shrc"
-  # emulate zsh
-fi
+[[ -f ${HOME}/.shrc ]] && source "${HOME}/.shrc"
 
 # }}}1
 
@@ -93,13 +87,11 @@ setopt HIST_EXPIRE_DUPS_FIRST # Expire duplicates first
 
 # Enable history on CloudLinux for a custom build of zsh in ~/bin
 # with HAVE_SYMLINKS=0 set at compile time
-if [[ -f /var/.cagefs/.cagefs.token ]]; then
-  if [[ =zsh != "/bin/zsh" ]]; then
-    setopt HIST_FCNTL_LOCK
-  else
-    # Otherwise, just disable persistent history
-    unset HISTFILE
-  fi
+if [[ -f /var/.cagefs/.cagefs.token ]] && [[ =zsh != '/bin/zsh' ]]; then
+  setopt HIST_FCNTL_LOCK
+else
+  # Otherwise, just disable persistent history
+  unset HISTFILE
 fi
 
 setopt HIST_IGNORE_DUPS     # Do not enter 2 consecutive duplicates into history
@@ -449,7 +441,6 @@ fi
 # bindkey '^P' up-history
 # bindkey '^N' down-history
 bindkey '^R' history-incremental-search-backward
-
 bindkey '^F' history-incremental-search-forward
 
 # }}}2
