@@ -31,7 +31,7 @@ _is_busybox() {
   esac
 }
 
-if [ "$AGKOZAK_RC_BENCHMARKS" = '1' ]; then
+if [ "$AGKOZAK_RC_BENCHMARKS" -eq 1 ]; then
   case $AGKOZAK_SYSTEMINFO in
     FreeBSD*) ;;                          # BSD `date` cannot handle nanoseconds.
     # Ubuntu busybox sh handles math oddly
@@ -278,7 +278,7 @@ fi
 
 # End .shrc benchmark {{{
 
-if [ "$AGKOZAK_RC_BENCHMARKS" = '1' ]; then
+if [ "$AGKOZAK_RC_BENCHMARKS" -eq 1 ]; then
   case $AGKOZAK_SYSTEMINFO in
     FreeBSD*) ;;
     *)
