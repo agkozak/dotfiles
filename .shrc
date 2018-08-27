@@ -43,7 +43,7 @@ fi
 
 # Aliases {{{1
 
-case $(type fc) in                              # fc can be /Windows/System32/fc
+case $(type fc) in                              # fc can be Windows file compare
   *builtin) alias h='fc -l' ;;
 esac
 

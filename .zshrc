@@ -475,7 +475,7 @@ unset start finish difference
 # Source ~/.zshrc.local, if present {{{1
 
 if [[ -f ${HOME}/.zshrc.local ]]; then
-. "${HOME}/.zshrc.local"
+  source "${HOME}/.zshrc.local"
 fi
 
 # }}}1
