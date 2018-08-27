@@ -322,12 +322,6 @@ if (( AGKOZAK_NO_ZPLUGIN != 1 )) && is-at-least 5; then
       git clone https://github.com/zdharma/zplugin.git "${HOME}/.zplugin/bin"
     fi
 
-    # Recomple *.zsh files in ~/.zplugin/bin when necessary
-    for file in $HOME/.zplugin/bin/*.zsh; do
-      compile_or_recompile "$file"
-    done
-    unset file
-
     # In FreeBSD, /home is /usr/home
     [[ $OSTYPE == freebsd* ]] && typeset -g _Z_NO_RESOLVE_SYMLINKS=1
 
