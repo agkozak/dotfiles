@@ -123,7 +123,7 @@ setopt INTERACTIVE_COMMENTS # Allow comments in interactive mode
 # Test for minimal ZSH version
 autoload -Uz is-at-least
 
-# Function for batch moving and renaming
+# Function for batch moving and renaming of files
 autoload -Uz zmv
 
 # }}}1
