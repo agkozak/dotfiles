@@ -152,7 +152,6 @@ alias duf='du -sh *'
 alias fd='find . -type d -name'
 alias ff='find . -type f -name'
 alias github-stats='github-stats --token $GITHUB_STATS_TOKEN'
-alias hgrep="fc -El 0 | grep"
 alias help='man'
 alias p='ps -f'
 alias phpunit='$HOME/bin/phpunit.phar'

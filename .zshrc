@@ -87,11 +87,13 @@ setopt HIST_EXPIRE_DUPS_FIRST # Expire duplicates first
 
 # Enable history on CloudLinux for a custom build of zsh in ~/bin
 # with HAVE_SYMLINKS=0 set at compile time
-if [[ -f /var/.cagefs/.cagefs.token ]] && [[ =zsh != '/bin/zsh' ]]; then
-  setopt HIST_FCNTL_LOCK
-else
-  # Otherwise, just disable persistent history
-  unset HISTFILE
+if [[ -f /var/.cagefs/.cagefs.token ]]; then
+  if [[ =zsh != '/bin/zsh' ]]; then
+    setopt HIST_FCNTL_LOCK
+  else
+    # Otherwise, just disable persistent history
+    unset HISTFILE
+  fi
 fi
 
 setopt HIST_IGNORE_DUPS     # Do not enter 2 consecutive duplicates into history
@@ -119,6 +121,8 @@ setopt INTERACTIVE_COMMENTS # Allow comments in interactive mode
 # }}}1
 
 # zsh-specific aliases - POSIX aliases are in .shrc {{{1
+
+alias hgrep='fc -fl 0 | grep'
 
 alias -g CA='2>&1 | cat -A'
 alias -g G='| grep'
