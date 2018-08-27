@@ -4,8 +4,6 @@
 #
 # shellcheck disable=SC1090,SC2034,SC2128,SC2148,SC2154
 
-autoload -Uz is-at-least
-
 # Begin .zshrc benchmarks {{{1
 
 # To run zprof, execute
@@ -120,6 +118,16 @@ setopt INTERACTIVE_COMMENTS # Allow comments in interactive mode
 
 # }}}1
 
+# Some autoloaded functions {{{1
+
+# Test for minimal ZSH version
+autoload -Uz is-at-least
+
+# Function for batch moving and renaming
+autoload -Uz zmv
+
+# }}}1
+
 # zsh-specific aliases - POSIX aliases are in .shrc {{{1
 
 alias hgrep='fc -fl 0 | grep'
@@ -134,85 +142,6 @@ alias -g NE='2> /dev/null'
 alias -g NUL='> /dev/null 2>&1'
 alias -g T='| tail'
 alias -g V='|& vim -'
-
-# }}}1
-
-# Styles and completions {{{1
-
-autoload -Uz compinit
-compinit -u -d "${HOME}/.zcompdump_${ZSH_VERSION}"
-
-# https://www.zsh.org/mla/users/2015/msg00467.html
-# shellcheck disable=SC2016
-zstyle -e ':completion:*:*:ssh:*:my-accounts' users-hosts \
-	'[[ -f ${HOME}/.ssh/config && $key = hosts ]] && key=my_hosts reply=()'
-
-# Allow SSH tab completion for mosh hostnames
-compdef mosh=ssh
-
-# https://grml.org/zsh/zsh-lovers.html
-rationalise-dot() {
-  if [[ $LBUFFER = *.. ]]; then
-    LBUFFER+=/..
-  else
-    LBUFFER+=.
-  fi
-}
-
-zle -N rationalise-dot
-bindkey . rationalise-dot
-# Without the following, typing a period aborts incremental history search
-bindkey -M isearch . self-insert
-
-# Menu-style completion
-zstyle ':completion:*' menu select
-
-# use the vi navigation keys (hjkl) besides cursor keys in menu completion
-zmodload zsh/complist
-bindkey -M menuselect 'h' vi-backward-char        # left
-bindkey -M menuselect 'k' vi-up-line-or-history   # up
-bindkey -M menuselect 'l' vi-forward-char         # right
-bindkey -M menuselect 'j' vi-down-line-or-history # bottom
-
-# Use dircolors $LS_COLORS for completion when possible
-zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
-
-# Allow pasting URLs as CLI arguments
-if [[ $ZSH_VERSION != '5.1.1' ]] && [[ $TERM != 'dumb' ]] \
-  && [[ -z $INSIDE_EMACS ]]; then
-  if is-at-least 5.1; then
-    autoload -Uz bracketed-paste-magic
-    zle -N bracketed-paste bracketed-paste-magic
-  fi
-  autoload -Uz url-quote-magic
-  zle -N self-insert url-quote-magic
-elif [[ $TERM == 'dumb' ]]; then
-  unset zle_bracketed_paste # Avoid ugly control sequences
-fi
-
-# Use Esc-K for run-help
-bindkey -M vicmd 'K' run-help
-
-# Allow v to edit the command line
-autoload -Uz edit-command-line
-zle -N edit-command-line
-bindkey -M vicmd 'v' edit-command-line
-
-# Fuzzy matching of completions
-# https://grml.org/zsh/zsh-lovers.html
-zstyle ':completion:*' completer _complete _match _approximate
-zstyle ':completion:*:match:*' original only
-zstyle -e ':completion:*:approximate:*' \
-  max-errors 'reply=($((($#PREFIX+$#SUFFIX)/3))numeric)'
-
-# Have the completion system announce what it is completing
-zstyle ':completion:*' format 'Completing %d'
-
-# In menu-style completion, give a status bar
-zstyle ':completion:*' select-prompt '%SScrolling active: current selection at %p%s'
-
-# In the line editor, number of matches to show before asking permission
-LISTMAX=9999
 
 # }}}1
 
@@ -301,6 +230,97 @@ if [[ ! -f '/etc/debian-version' ]] && [[ ! -f 'etc/zsh/zshrc' ]]; then
   unfunction bind2maps
 
 fi
+
+# }}}1
+
+# Styles and completions {{{1
+
+autoload -Uz compinit
+compinit -u -d "${HOME}/.zcompdump_${ZSH_VERSION}"
+
+# https://www.zsh.org/mla/users/2015/msg00467.html
+# shellcheck disable=SC2016
+zstyle -e ':completion:*:*:ssh:*:my-accounts' users-hosts \
+	'[[ -f ${HOME}/.ssh/config && $key = hosts ]] && key=my_hosts reply=()'
+
+# Allow SSH tab completion for mosh hostnames
+compdef mosh=ssh
+
+# https://grml.org/zsh/zsh-lovers.html
+rationalise-dot() {
+  if [[ $LBUFFER = *.. ]]; then
+    LBUFFER+=/..
+  else
+    LBUFFER+=.
+  fi
+}
+
+zle -N rationalise-dot
+bindkey . rationalise-dot
+# Without the following, typing a period aborts incremental history search
+bindkey -M isearch . self-insert
+
+# Menu-style completion
+zstyle ':completion:*' menu select
+
+# use the vi navigation keys (hjkl) besides cursor keys in menu completion
+zmodload zsh/complist
+bindkey -M menuselect 'h' vi-backward-char        # left
+bindkey -M menuselect 'k' vi-up-line-or-history   # up
+bindkey -M menuselect 'l' vi-forward-char         # right
+bindkey -M menuselect 'j' vi-down-line-or-history # bottom
+
+# Use dircolors $LS_COLORS for completion when possible
+zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
+
+# Allow pasting URLs as CLI arguments
+if [[ $ZSH_VERSION != '5.1.1' ]] && [[ $TERM != 'dumb' ]] \
+  && [[ -z $INSIDE_EMACS ]]; then
+  if is-at-least 5.1; then
+    autoload -Uz bracketed-paste-magic
+    zle -N bracketed-paste bracketed-paste-magic
+  fi
+  autoload -Uz url-quote-magic
+  zle -N self-insert url-quote-magic
+elif [[ $TERM == 'dumb' ]]; then
+  unset zle_bracketed_paste # Avoid ugly control sequences
+fi
+
+# Use Esc-K for run-help
+bindkey -M vicmd 'K' run-help
+
+# Allow v to edit the command line
+autoload -Uz edit-command-line
+zle -N edit-command-line
+bindkey -M vicmd 'v' edit-command-line
+
+# Fuzzy matching of completions
+# https://grml.org/zsh/zsh-lovers.html
+zstyle ':completion:*' completer _complete _match _approximate
+zstyle ':completion:*:match:*' original only
+zstyle -e ':completion:*:approximate:*' \
+  max-errors 'reply=($((($#PREFIX+$#SUFFIX)/3))numeric)'
+
+# Have the completion system announce what it is completing
+zstyle ':completion:*' format 'Completing %d'
+
+# In menu-style completion, give a status bar
+zstyle ':completion:*' select-prompt '%SScrolling active: current selection at %p%s'
+
+# In the line editor, number of matches to show before asking permission
+LISTMAX=9999
+
+# vi mode and exceptions {{{2
+
+# bindkey -v    # `set -o vi` is in .shrc
+
+# Borrowed from emacs mode
+bindkey '^P' up-history
+bindkey '^N' down-history
+bindkey '^R' history-incremental-search-backward
+bindkey '^F' history-incremental-search-forward
+
+# }}}2
 
 # }}}1
 
@@ -430,20 +450,6 @@ zsh_directory_name() {
     return 0
   }
 fi
-
-# vi mode and exceptions {{{2
-
-# bindkey -v  " `set -o vi` is in .shrc
-
-# Borrowed from emacs mode
-# bindkey '^P' up-history
-# bindkey '^N' down-history
-bindkey '^R' history-incremental-search-backward
-bindkey '^F' history-incremental-search-forward
-
-# }}}2
-
-autoload -Uz zmv
 
 # }}}1
 
