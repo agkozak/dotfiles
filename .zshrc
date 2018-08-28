@@ -132,12 +132,13 @@ alias hgrep='fc -fl 0 | grep'
 
 # LS_OPTIONS array for ls alias {{{2
 
-typeset -ga LS_OPTIONS=(
-                          --group-directories-first
-                          -F
-                          -h
-                          '-T 0'
-                       )
+typeset -ga LS_OPTIONS
+LS_OPTIONS=(
+            --group-directories-first
+            -F
+            -h
+            '-T 0'
+           )
 
 if (( $SHRC_TERM_COLORS >= 8 )); then
   case $OSTYPE in
