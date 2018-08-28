@@ -402,6 +402,8 @@ if (( AGKOZAK_NO_ZPLUGIN != 1 )) && is-at-least 5; then
     zplugin snippet OMZ::plugins/extract/extract.plugin.zsh
 
     zplugin light zsh-users/zsh-history-substring-search
+    HISTORY_SUBSTRING_SEARCH_HIGHLIGHT_FOUND='underline'
+    HISTORY_SUBSTRING_SEARCH_HIGHLIGHT_NOT_FOUND=''
     bindkey '^[OA' history-substring-search-up
     bindkey '^[OB' history-substring-search-down
     bindkey '^P' history-substring-search-up
