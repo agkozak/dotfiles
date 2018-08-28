@@ -18,7 +18,7 @@
 #
 # before sourcing.
 
-if (( AGKOZAK_RC_BENCHMARKS )) && [[ $OSTYPE != freebsd* ]]; then
+if (( AGKOZAK_RC_BENCHMARKS )) && [[ $OSTYPE != (darwin*|*bsd*|dragonfly*) ]]; then
   ((start=$(date +%s%N)/1000000)) # BSD date can't handle nanoseconds
 fi
 
@@ -135,14 +135,15 @@ alias hgrep='fc -fl 0 | grep'
 # LS_OPTIONS array for ls alias {{{2
 
 typeset -ga LS_OPTIONS=(
-                        --group-directories-first
-                        -F
-                        -h
-                        '-T 0'
-                      )
+                          --group-directories-first
+                          -F
+                          -h
+                          '-T 0'
+                       )
+
 if (( $SHRC_TERM_COLORS >= 8 )); then
   case $OSTYPE in
-    darwin*|*bsd*) LS_OPTIONS+=( -G ) ;;
+    darwin*|*bsd*|dragonfly*) LS_OPTIONS+=( -G ) ;;
     *) LS_OPTIONS+=( --color ) ;;
   esac
 fi
