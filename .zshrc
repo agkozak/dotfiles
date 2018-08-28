@@ -132,6 +132,27 @@ autoload -Uz zmv
 
 alias hgrep='fc -fl 0 | grep'
 
+# LS_OPTIONS array for ls alias {{{2
+
+typeset -ga LS_OPTIONS=(
+                        --group-directories-first
+                        -F
+                        -h
+                        '-T 0'
+                      )
+if (( $SHRC_TERM_COLORS >= 8 )); then
+  case $OSTYPE in
+    darwin*|*bsd*) LS_OPTIONS+=( -G ) ;;
+    *) LS_OPTIONS+=( --color ) ;;
+  esac
+fi
+
+[[ OSTYPE == (msys|cygwin) ]] && LS_OPTIONS+=( --hide="NTUSER*" --hide="ntuser*" )
+
+# }}}2
+
+# Global Aliases {{{2
+
 alias -g CA='2>&1 | cat -A'
 alias -g G='| grep'
 alias -g H='| head'
@@ -142,6 +163,8 @@ alias -g NE='2> /dev/null'
 alias -g NUL='> /dev/null 2>&1'
 alias -g T='| tail'
 alias -g V='|& vim -'
+
+# }}}2
 
 # }}}1
 
