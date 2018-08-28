@@ -147,7 +147,7 @@ if (( $SHRC_TERM_COLORS >= 8 )); then
   esac
 fi
 
-[[ OSTYPE == (msys|cygwin) ]] && LS_OPTIONS+=( --hide="NTUSER*" --hide="ntuser*" )
+[[ $OSTYPE == (msys|cygwin) ]] && LS_OPTIONS+=( --hide="NTUSER*" --hide="ntuser*" )
 
 # }}}2
 
