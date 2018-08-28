@@ -46,11 +46,10 @@ compile_or_recompile() {
 
 # (Compile and) source ~/.shrc {{{1
 
-# Recompile ~/.shrc when necessary
-compile_or_recompile "${HOME}/.shrc"
-
-# Source ~/.shrc
-[[ -f ${HOME}/.shrc ]] && source "${HOME}/.shrc"
+if [[ -f ${HOME}/.shrc ]]; then
+  compile_or_recompile "${HOME}/.shrc"
+  source "${HOME}/.shrc"
+fi
 
 # }}}1
 
@@ -111,8 +110,7 @@ setopt INTERACTIVE_COMMENTS # Allow comments in interactive mode
 # Job Control {{{2
 
 # Disable nice for background processes in WSL
-[[ -z $AGKOZAK_SYSTEMINFO ]] && AGKOZAK_SYSTEMINFO="$(uname -a)"
-[[ $AGKOZAK_SYSTEMINFO == *Microsoft* ]] && unsetopt BG_NICE
+[[ ${AGKOZAK_SYSTEMINFO:-$(uname -a)} == *Microsoft* ]] && unsetopt BG_NICE
 
 # }}}2
 
