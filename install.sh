@@ -108,7 +108,7 @@ conditional_install screen .screenrc
 systeminfo=$( uname -a )
 
 case $systeminfo in
-	FreeBSD*|freebsd*)
+	*BSD*|*bsd*|DragonFly*)
 		echo .login_conf
 		cp .login_conf "$HOME"
 	;;
