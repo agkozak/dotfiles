@@ -68,8 +68,8 @@ case $TERM in
 esac
 
 case $AGKOZAK_SYSTEMINFO in
-  # MobaXterm uses busybox ls
-  CYGWIN*GNU/Linux) ;;
+  # MobaXterm uses busybox ls; Solaris uses System V ls
+  CYGWIN*GNU/Linux|SunOS*) ;;
   # BSD ls
   Darwin*|*BSD*|*bsd*|*[Dd]ragon[Ff]ly*)
     [ "$SHRC_TERM_COLORS" -ge 8 ] && LS_OPTIONS='-G'
@@ -85,6 +85,14 @@ esac
 
 alias ls='ls $LS_OPTIONS'
 
+case $AGKOZAK_SYSTEMINFO in
+  SunOS*)
+    if [ -x /usr/gnu/bin/ls ]; then
+      alias ls='/usr/gnu/bin/ls --group-directories-first -F -h -T 0 --color'
+    fi
+    ;;
+esac
+
 if command -v dircolors > /dev/null 2>&1; then
   if [ -r "$HOME/.dircolors" ] && [ "$SHRC_TERM_COLORS" -ge 256 ]; then
     eval "$(dircolors -b "$HOME/.dircolors")"
@@ -93,14 +101,19 @@ if command -v dircolors > /dev/null 2>&1; then
   fi
 fi
 
-if [ "$SHRC_TERM_COLORS" -ge 8 ]; then
-  alias dir='dir --color=auto'
-  alias vdir='vdir --color=auto'
+case $AGKOZAK_SYSTEMINFO in
+  CYGWIN*GNU/Linux|SunOS*) ;;
+  *)
+    if [ "$SHRC_TERM_COLORS" -ge 8 ]; then
+      alias dir='dir --color=auto'
+      alias vdir='vdir --color=auto'
 
-  alias grep='grep --color=auto'
-  alias fgrep='fgrep --color=auto'
-  alias egrep='egrep --color=auto'
-fi
+      alias grep='grep --color=auto'
+      alias fgrep='fgrep --color=auto'
+      alias egrep='egrep --color=auto'
+    fi
+    ;;
+esac
 
 # }}}2
 
