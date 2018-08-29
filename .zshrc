@@ -138,21 +138,28 @@ alias hgrep='fc -fl 0 | grep'
 # LS_OPTIONS array for ls alias {{{2
 
 typeset -ga LS_OPTIONS
-LS_OPTIONS=(
-            --group-directories-first
-            -F
-            -h
-            '-T 0'
-           )
 
-if (( $SHRC_TERM_COLORS >= 8 )); then
-  case $OSTYPE in
-    darwin*|*bsd*|dragonfly*) LS_OPTIONS+=( -G ) ;;
-    *) LS_OPTIONS+=( --color ) ;;
-  esac
-fi
+case $AGKOZAK_SYSTEMINFO in
+  CYGWIN*GNU/Linux|SunOS*) ;;
+  Darwin*|*BSD*|*bsd*|*[Dd]ragon[Ff]ly*)
+    (( SHRC_TERM_COLORS >= 8 )) && LS_OPTIONS=( -G )
+    ;;
+  *)
+    LS_OPTIONS=(
+      --group-directories-first
+      -F
+      -h
+      '-T 0'
+    )
+   (( SHRC_TERM_COLORS >= 8 )) && LS_OPTIONS+=( --color )
+   ;;
+esac
 
 [[ $OSTYPE == (msys|cygwin) ]] && LS_OPTIONS+=( --hide="NTUSER*" --hide="ntuser*" )
+
+if [[ -x /usr/gnu/bin/ls ]]; then
+  alias ls='/usr/gnu/bin/ls --group-directories-first -F -h -T 0 --color'
+fi
 
 # }}}2
 
