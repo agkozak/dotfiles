@@ -67,58 +67,39 @@ case $TERM in
     ;;
 esac
 
-# Do not enable colors in Emacs shell
-if [ -z "$INSIDE_EMACS" ] && [ "$TERM" != 'dumb' ]; then
-
-  if [ "$SHRC_TERM_COLORS" -ge 8 ]; then
+case $AGKOZAK_SYSTEMINFO in
+  # MobaXterm uses busybox ls
+  CYGWIN*GNU/Linux) ;;
+  # BSD ls
+  Darwin*|*BSD*|*bsd*|*[Dd]ragon[Ff]ly*)
+    [ "$SHRC_TERM_COLORS" -ge 8 ] && LS_OPTIONS='-G'
+    ;;
+  *)
+    LS_OPTIONS='--group-directories-first -F -h -T 0'
+    [ "$SHRC_TERM_COLORS" -ge 8 ] && LS_OPTIONS="$LS_OPTIONS --color"
     case $AGKOZAK_SYSTEMINFO in
-      Darwin*|FreeBSD*)
-        LS_OPTIONS="-G"
-        ;;
-      *Msys|*Cygwin)
-        LS_OPTIONS='--group-directories-first --color -F -h -T 0 --hide="NTUSER*" --hide="ntuser*"'
-        ;;
-      CYGWIN*GNU/Linux|SunOS) ;;        # MobaXterm and Solaris don't use Gnu ls
-      *)
-        LS_OPTIONS='--group-directories-first --color -F -h -T 0'
-        ;;
+      *Msys|*Cygwin) LS_OPTIONS="$LS_OPTIONS --hide='NTUSER*' --hide='ntuser*'" ;;
     esac
-  else
-    case $AGKOZAK_SYSTEMINFO in
-      *Msys|*Cygwin)
-        LS_OPTIONS='--group-directories-first -F -h -T 0 --hide="NTUSER*" --hide="ntuser*"'
-        ;;
-      Darwin*|FreeBSD*|CYGWIN*GNU/Linux|SunOS*) ;;
-      *) LS_OPTIONS='--group-directories-first -F -h -T 0'
-    esac
+    ;;
+esac
+
+alias ls='ls $LS_OPTIONS'
+
+if command -v dircolors > /dev/null 2>&1; then
+  if [ -r "$HOME/.dircolors" ] && [ "$SHRC_TERM_COLORS" -ge 256 ]; then
+    eval "$(dircolors -b "$HOME/.dircolors")"
+  elif [ "$SHRC_TERM_COLORS" -ge 8 ]; then
+    eval "$(dircolors -b)"
   fi
+fi
 
-  alias ls='ls $LS_OPTIONS'
+if [ "$SHRC_TERM_COLORS" -ge 8 ]; then
+  alias dir='dir --color=auto'
+  alias vdir='vdir --color=auto'
 
-  if command -v dircolors > /dev/null 2>&1; then
-    if [ -r "$HOME/.dircolors" ] && [ "$SHRC_TERM_COLORS" -ge 256 ]; then
-      eval "$(dircolors -b "$HOME/.dircolors")"
-    elif [ "$SHRC_TERM_COLORS" -ge 8 ]; then
-      eval "$(dircolors -b)"
-    fi
-  fi
-
-  case $AGKOZAK_SYSTEMINFO in
-    SunOS*)
-      [ -x /usr/gnu/bin/ls ] && alias ls='/usr/gnu/bin/ls --color=auto'
-      ;;
-    *)
-      # alias ls='ls --color=auto'
-      # shellcheck disable=SC2139
-      # alias ls="/bin/ls $LS_OPTIONS"
-      alias dir='dir --color=auto'
-      alias vdir='vdir --color=auto'
-
-      alias grep='grep --color=auto'
-      alias fgrep='fgrep --color=auto'
-      alias egrep='egrep --color=auto'
-      ;;
-  esac
+  alias grep='grep --color=auto'
+  alias fgrep='fgrep --color=auto'
+  alias egrep='egrep --color=auto'
 fi
 
 # }}}2
