@@ -78,7 +78,7 @@ case $AGKOZAK_SYSTEMINFO in
     LS_OPTIONS='--group-directories-first -F -h -T 0'
     [ "$SHRC_TERM_COLORS" -ge 8 ] && LS_OPTIONS="$LS_OPTIONS --color"
     case $AGKOZAK_SYSTEMINFO in
-      *Msys|*Cygwin) LS_OPTIONS="$LS_OPTIONS --hide='NTUSER*' --hide='ntuser*'" ;;
+      *Msys|*Cygwin) LS_OPTIONS="$LS_OPTIONS --hide=NTUSER* --hide=ntuser*" ;;
     esac
     ;;
 esac
