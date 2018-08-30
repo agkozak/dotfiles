@@ -267,10 +267,8 @@ update_dotfiles() {
 
 # }}}1
 
-if [ -f "$HOME/.shrc.local" ]; then
-  # shellcheck source=/dev/null
-  . "$HOME/.shrc.local"
-fi
+# shellcheck source=/dev/null
+[ -f "$HOME/.shrc.local" ] && . "$HOME/.shrc.local"
 
 # End .shrc benchmark {{{
 
