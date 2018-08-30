@@ -176,14 +176,11 @@ _agkozak_winpty_alias() {
 }
 
 case "$AGKOZAK_SYSTEMINFO" in
-#  *Msys|*Cygwin)
-  *)
+  *Msys|*Cygwin)
     _agkozak_winpty_alias choco cinst cuninst cup node php
     alias eslint='winpty $APPDATA/npm/eslint.cmd'
     alias ghci='ghcii.sh'
     alias gvim='/c/Windows/gvim.bat'
-    alias node='winpty node'
-    alias php='winpty php'
     ;;
 esac
 
@@ -205,7 +202,7 @@ case "$AGKOZAK_SYSTEMINFO" in
     fi
     alias temp='/opt/vc/bin/vcgencmd measure_temp | egrep "[0-9.]{4,}" -o'
     ;;
-  FreeBSD*|SunOS*)
+  FreeBSD*)
     alias tmux='TERM=xterm-256color tmux'
     alias mutt='TERM=xterm-256color mutt'
     ;;
@@ -216,16 +213,6 @@ esac
 # }}}1
 
 # Prompt {{{1
-
-# set prompt: ``username@hostname$ ''
-
-if [ "$0" = 'sh' ]; then
-  PS1=$(whoami)@$(hostname | sed 's/\..*//')
-  case $(id -u) in
-    0) PS1="${PS1}# " ;;
-    *) PS1="${PS1}$ " ;;
-  esac
-fi
 
 # If possible, load the pan-POSIX Polyglot Prompt
 # But not in zsh -- it uses agkozak-zsh-theme
