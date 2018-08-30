@@ -456,7 +456,7 @@ KEYTIMEOUT=1
 # Dynamic named directories
 # https://superuser.com/questions/751523/dynamic-directory-hash
 if [[ -d '/c/wamp64/www' ]]; then
-zsh_directory_name() {
+  zsh_directory_name() {
     emulate -L zsh
     setopt extendedglob
     local -a match mbegin mend
