@@ -91,11 +91,13 @@ case $AGKOZAK_SYSTEMINFO in
     ;;
 esac
 
-if command -v dircolors > /dev/null 2>&1; then
-  if [ -r "$HOME/.dircolors" ] && [ "$SHRC_TERM_COLORS" -ge 256 ]; then
-    eval "$(dircolors -b "$HOME/.dircolors")"
-  elif [ "$SHRC_TERM_COLORS" -ge 8 ]; then
-    eval "$(dircolors -b)"
+if [ -z "$LS_COLORS" ]; then
+  if command -v dircolors > /dev/null 2>&1; then
+    if [ -r "$HOME/.dircolors" ] && [ "$SHRC_TERM_COLORS" -ge 256 ]; then
+      eval "$(dircolors -b "$HOME/.dircolors")"
+    elif [ "$SHRC_TERM_COLORS" -ge 8 ]; then
+      eval "$(dircolors -b)"
+    fi
   fi
 fi
 
