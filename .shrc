@@ -14,9 +14,7 @@ if [ -z "$AGKOZAK_SYSTEMINFO" ]; then
 fi
 
 #shellcheck source=/dev/null
-if [ -z "$ENV" ]; then
-  [ -f "$HOME/.profile" ] && . "$HOME/.profile"
-fi
+[ -z "$ENV" ] && [ -f "$HOME/.profile" ] && . "$HOME/.profile"
 
 # Begin .shrc benchmark {{{
 
@@ -36,8 +34,8 @@ _is_busybox() {
 
 if [ "${AGKOZAK_RC_BENCHMARKS:-0}" -eq 1 ]; then
   case $AGKOZAK_SYSTEMINFO in
-    FreeBSD*) ;;                          # BSD date cannot handle nanoseconds.
-    # Ubuntu busybox sh handles math oddly
+    # BSD and busybox date don't handle nanoseconds
+    *BSD*|*bsd*|DragonFly*) ;;
     *) ! _is_busybox && start=$(($(date +%s%N)/1000000)) ;;
   esac
 fi
@@ -163,19 +161,29 @@ alias yta='youtube-dl --audio-format best -x '
 
 # System-specific aliases {{{2
 
+############################################################
+# Create winpty aliases for MSYS2 and Cygwin
+#
+# Arguments:
+#   $1, $2, etc.  Programs that should be run with winpty
+############################################################
+_agkozak_winpty_alias() {
+  while [[ "$#" -ne 0 ]]; do
+    # shellcheck disable=SC2140
+    alias "$1"="winpty $1"
+    shift
+  done
+}
+
 case "$AGKOZAK_SYSTEMINFO" in
-  *Msys|*Cygwin)
-    alias choco='winpty choco'
-    alias cinst='winpty cinst'
-    alias cuninst='winpty cuninst'
-    alias cup='winpty cup'
+#  *Msys|*Cygwin)
+  *)
+    _agkozak_winpty_alias choco cinst cuninst cup node php
     alias eslint='winpty $APPDATA/npm/eslint.cmd'
     alias ghci='ghcii.sh'
     alias gvim='/c/Windows/gvim.bat'
     alias node='winpty node'
-    alias pear='/c/tools/php/pear.bat'
     alias php='winpty php'
-    alias psysh='winpty $APPDATA/Composer/vendor/bin/psysh.bat'
     ;;
 esac
 
