@@ -353,7 +353,8 @@ LISTMAX=9999
 bindkey '^P' up-history
 bindkey '^N' down-history
 bindkey '^R' history-incremental-search-backward
-bindkey '^F' history-incremental-search-forward
+setopt NO_FLOW_CONTROL                          # Or the next command won't work 
+bindkey '^S' history-incremental-search-forward
 
 # }}}2
 
