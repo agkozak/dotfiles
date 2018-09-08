@@ -423,7 +423,9 @@ if (( AGKOZAK_NO_ZPLUGIN != 1 )) && is-at-least 5; then
     bindkey -M vicmd 'k' history-substring-search-up
     bindkey -M vicmd 'j' history-substring-search-down
 
-    # zplugin light zdharma/fast-syntax-highlighting # Must be loaded last
+    # Must be loaded last
+    # zplugin ice wait'0.75' atload 'fast-theme forest'
+    # zplugin light zdharma/fast-syntax-highlighting
 
   else
     echo 'Please install git.'
