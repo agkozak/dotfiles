@@ -3,7 +3,7 @@ startup_message off
 shell -$SHELL
 hardstatus on
 hardstatus alwayslastline '%H:  %-Lw%34>[%n*%f %t]%+Lw'
-escape "^Qq"
+escape "^  "
 termcapinfo xterm*|rxvt*|kterm*|Eterm*|putty*|dtterm* WS=\E[8;%d;%dt
 termcapinfo xterm*|rxvt*|kterm*|Eterm*|putty*|dtterm* ti@:te@:G0
 termcapinfo xterm*|rxvt*|kterm*|Eterm*|putty*|dtterm* hs:ts=\E]2;:fs=\007:ds=\E]2;8)\007

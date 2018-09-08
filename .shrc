@@ -269,9 +269,6 @@ update_dotfiles() {
 
 # }}}1
 
-# Turn off flow control
-stty -ixon
-
 # shellcheck source=/dev/null
 [ -f "$HOME/.shrc.local" ] && . "$HOME/.shrc.local"
 
