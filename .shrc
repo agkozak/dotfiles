@@ -56,10 +56,10 @@ alias g='egrep -i'
 
 case $TERM in
   *-256color) SHRC_TERM_COLORS=256 ;;
-  vt100|dumb) SHRC_TERM_COLORS=-1 ;;
+  vt100|vt220|dumb) SHRC_TERM_COLORS=-1 ;;
   *)
     case $AGKOZAK_SYSTEMINFO in
-      *BSD*|*bsd*|*[Dd]ragon[Ff]ly*) SHRC_TERM_COLORS=$(tput Co) ;;
+      FreeBSD*) SHRC_TERM_COLORS=$(tput Co) ;;
       *) SHRC_TERM_COLORS=$(tput colors) ;;
     esac
     ;;
