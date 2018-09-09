@@ -66,8 +66,8 @@ case $TERM in
 esac
 
 case $AGKOZAK_SYSTEMINFO in
-  # MobaXterm uses busybox ls; Solaris uses System V ls
-  CYGWIN*GNU/Linux|SunOS*) ;;
+  # CYGWIN*GNU/Linux is MobaXterm, which uses busybox ls
+  CYGWIN*GNU/Linux|SunOS*|NetBSD*|OpenBSD*) ;;
   # BSD ls
   Darwin*|*BSD*|*bsd*|*[Dd]ragon[Ff]ly*)
     [ "$SHRC_TERM_COLORS" -ge 8 ] && LS_OPTIONS='-G'
