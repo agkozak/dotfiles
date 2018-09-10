@@ -59,7 +59,7 @@ case $TERM in
   vt100|vt220|dumb) SHRC_TERM_COLORS=-1 ;;
   *)
     case $AGKOZAK_SYSTEMINFO in
-      FreeBSD*) SHRC_TERM_COLORS=$(tput Co) ;;
+      FreeBSD*|DragonFly*) SHRC_TERM_COLORS=$(tput Co) ;;
       *) SHRC_TERM_COLORS=$(tput colors) ;;
     esac
     ;;
