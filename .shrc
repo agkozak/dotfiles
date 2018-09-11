@@ -170,7 +170,7 @@ alias yta='youtube-dl --audio-format best -x '
 #   $1, $2, etc.  Programs that should be run with winpty
 ############################################################
 _agkozak_winpty_alias() {
-  while [[ "$#" -ne 0 ]]; do
+  while [ "$#" -ne 0 ]; do
     # shellcheck disable=SC2140
     alias "$1"="winpty $1"
     shift
