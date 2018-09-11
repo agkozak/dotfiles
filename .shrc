@@ -42,6 +42,24 @@ fi
 
 # }}}
 
+# Raspberry Pi LXTerminal {{{1
+
+# It's important to set this up early so that dircolors uses the right number of
+# colors
+
+case $AGKOZAK_SYSTEMINFO in
+  *raspberrypi*)
+    # Because LXTerminal can't set TERM
+    if [ "$XDG_CURRENT_DESKTOP" = 'LXDE' ]; then
+      if [ "$TERM" = 'xterm' ]; then
+        TERM='xterm-256color'
+      fi
+    fi
+    ;;
+esac
+
+# }}}1
+
 # Aliases {{{1
 
 case $(type fc) in                              # fc can be Windows file compare
@@ -196,12 +214,6 @@ case "$AGKOZAK_SYSTEMINFO" in
     alias npm='winpty /cygdrive/c/Program\ Files/nodejs/npm.cmd'
     ;;
   *raspberrypi*)
-    # Because LXTerminal can't set TERM
-    if [ "$XDG_CURRENT_DESKTOP" = 'LXDE' ]; then
-      if [ "$TERM" = 'xterm' ]; then
-        TERM='xterm-256color'
-      fi
-    fi
     alias temp='/opt/vc/bin/vcgencmd measure_temp | egrep "[0-9.]{4,}" -o'
     ;;
   FreeBSD*)
