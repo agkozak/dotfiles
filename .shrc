@@ -47,16 +47,8 @@ fi
 # It's important to set this up early so that dircolors uses the right number of
 # colors
 
-case $AGKOZAK_SYSTEMINFO in
-  *raspberrypi*)
-    # Because LXTerminal can't set TERM
-    if [ "$XDG_CURRENT_DESKTOP" = 'LXDE' ]; then
-      if [ "$TERM" = 'xterm' ]; then
-        TERM='xterm-256color'
-      fi
-    fi
-    ;;
-esac
+[ "$XDG_CURRENT_DESKTOP" = 'LXDE' ] && [ "$TERM" = 'xterm' ] \
+  && TERM='xterm-256color'                          # LXTerminal can't set TERM
 
 # }}}1
 
