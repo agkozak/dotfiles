@@ -8,7 +8,7 @@
 
 # To run zprof, execute
 #
-#     env ZSH_PROF= zsh -ic zprof
+#   env ZSH_PROF='' zsh -ic zprof
 
 (( $+ZSH_PROF )) && zmodload zsh/zprof
 
