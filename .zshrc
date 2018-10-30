@@ -392,8 +392,8 @@ if (( AGKOZAK_NO_ZPLUGIN != 1 )) && is-at-least 5; then
     # Load plugins and snippets {{{2
 
     # AGKOZAK_PROMPT_DEBUG=1
-    AGKOZAK_MULTILINE=0
-    zplugin ice ver"develop"
+    # AGKOZAK_MULTILINE=0
+    zplugin ice ver"subst-async"
     zplugin light agkozak/agkozak-zsh-prompt
 
     zplugin ice ver"develop"
