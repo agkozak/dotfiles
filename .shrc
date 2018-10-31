@@ -8,6 +8,12 @@
 #
 # shellcheck shell=sh
 
+# Only run this script when shell is interactive
+case $- in
+  *i*) ;;
+  *) exit ;;
+esac
+
 if [ -z "$AGKOZAK_SYSTEMINFO" ]; then
   export AGKOZAK_SYSTEMINFO
   AGKOZAK_SYSTEMINFO="$(uname -a)"
