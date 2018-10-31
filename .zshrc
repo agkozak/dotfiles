@@ -140,7 +140,7 @@ alias hgrep='fc -fl 0 | grep'
 typeset -ga LS_OPTIONS
 
 case $AGKOZAK_SYSTEMINFO in
-  CYGWIN*GNU/Linux|SunOS*) ;;
+  CYGWIN*GNU/Linux|SunOS*|NetBSD*) ;;
   Darwin*|*BSD*|*bsd*|*[Dd]ragon[Ff]ly*)
     (( SHRC_TERM_COLORS >= 8 )) && LS_OPTIONS=( -G )
     ;;
