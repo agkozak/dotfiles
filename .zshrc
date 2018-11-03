@@ -393,7 +393,7 @@ if (( AGKOZAK_NO_ZPLUGIN != 1 )) && is-at-least 5; then
 
     # AGKOZAK_PROMPT_DEBUG=1
     # AGKOZAK_MULTILINE=0
-    zplugin ice ver"subst-async"
+    zplugin ice ver"develop"
     zplugin light agkozak/agkozak-zsh-prompt
 
     zplugin ice ver"develop"
