@@ -107,7 +107,9 @@ case $AGKOZAK_SYSTEMINFO in
     ;;
 esac
 
-if [ -z "$LS_COLORS" ]; then
+if [ -n "$INSIDE_EMACS" ]; then
+  unset LS_COLORS
+elif [ -z "$LS_COLORS" ]; then
   if command -v dircolors > /dev/null 2>&1; then
     if [ -r "$HOME/.dircolors" ] && [ "$SHRC_TERM_COLORS" -ge 256 ]; then
       eval "$(dircolors -b "$HOME/.dircolors")"
