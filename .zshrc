@@ -18,8 +18,8 @@
 #
 # before sourcing.
 
-if (( AGKOZAK_RC_BENCHMARKS )) && [[ $OSTYPE != (darwin*|*bsd*|dragonfly*) ]]; then
-  ((start=$(date +%s%N)/1000000)) # BSD date can't handle nanoseconds
+if (( AGKOZAK_RC_BENCHMARKS )); then
+  typeset -F SECONDS
 fi
 
 # }}}1
@@ -373,7 +373,7 @@ if (( AGKOZAK_NO_ZPLUGIN != 1 )) && is-at-least 5; then
   if whence git &> /dev/null; then
 
     if [[ ! -d ${HOME}/.zplugin ]]; then
-      echo "Installing zplugin..."
+      print "Installing zplugin..."
       mkdir "${HOME}/.zplugin"
       git clone https://github.com/zdharma/zplugin.git "${HOME}/.zplugin/bin"
     fi
@@ -437,7 +437,7 @@ if (( AGKOZAK_NO_ZPLUGIN != 1 )) && is-at-least 5; then
     # zplugin light zdharma/fast-syntax-highlighting
 
   else
-    echo 'Please install git.'
+    print 'Please install git.'
   fi
 
   # }}}2
@@ -511,10 +511,9 @@ compile_or_recompile "${HOME}/.zshrc"
 
 # End .zshrc benchmark {{{1
 
-if (( AGKOZAK_RC_BENCHMARKS )) && [[ $OSTYPE != freebsd* ]]; then
-  ((finish=$(date +%s%N)/1000000))
-  ((difference=finish-start))
-  echo ".zshrc loaded in ${difference}ms total."
+if (( AGKOZAK_RC_BENCHMARKS )); then
+  print ".zshrc loaded in ${$(( SECONDS * 1000 ))%.*}ms total."
+  typeset -i SECONDS
 fi
 
 unset start finish difference
