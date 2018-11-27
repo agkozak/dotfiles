@@ -393,17 +393,9 @@ if (( AGKOZAK_NO_ZPLUGIN != 1 )) && is-at-least 5; then
 
     # AGKOZAK_PROMPT_DEBUG=1
     # AGKOZAK_MULTILINE=0
+    AGKOZAK_LEFT_PROMPT_ONLY=1
     zplugin ice ver"develop"
     zplugin light agkozak/agkozak-zsh-prompt
-
-    # AGKOZAK_CUSTOM_PROMPT='%(?..%B%F{${AGKOZAK_COLORS_EXIT_STATUS}}(%?%)%f%b )'
-    # AGKOZAK_CUSTOM_PROMPT+='%(!.%S%B.%B%F{${AGKOZAK_COLORS_USER_HOST}})%n%1v%(!.%b%s.%f%b) '
-    # AGKOZAK_CUSTOM_PROMPT+='%B%F{${AGKOZAK_COLORS_PATH}}%2v%f%b'
-    # AGKOZAK_CUSTOM_PROMPT+='%(3V.%F{${AGKOZAK_COLORS_BRANCH_STATUS}}%3v%f.)'
-    # AGKOZAK_CUSTOM_PROMPT+='${AGKOZAK_PROMPT_WHITESPACE}'
-    # AGKOZAK_CUSTOM_PROMPT+='%(4V.:.%#) '
-
-    # AGKOZAK_CUSTOM_RPROMPT=''
 
     zplugin ice ver"develop"
     zplugin light agkozak/zhooks
