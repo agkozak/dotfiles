@@ -135,33 +135,7 @@ autoload -Uz zmv
 
 alias hgrep='fc -fl 0 | grep'
 
-# LS_OPTIONS array for ls alias {{{2
-
-typeset -ga LS_OPTIONS
-
-case $AGKOZAK_SYSTEMINFO in
-  CYGWIN*GNU/Linux|SunOS*|NetBSD*) ;;
-  Darwin*|*BSD*|*bsd*|*[Dd]ragon[Ff]ly*)
-    (( SHRC_TERM_COLORS >= 8 )) && LS_OPTIONS=( -G )
-    ;;
-  *)
-    LS_OPTIONS=(
-      --group-directories-first
-      -F
-      -h
-      '-T 0'
-    )
-   (( SHRC_TERM_COLORS >= 8 )) && LS_OPTIONS+=( --color )
-   ;;
-esac
-
-[[ $OSTYPE == (msys|cygwin) ]] && LS_OPTIONS+=( --hide="NTUSER*" --hide="ntuser*" )
-
-if [[ -x /usr/gnu/bin/ls ]]; then
-  alias ls='/usr/gnu/bin/ls --group-directories-first -F -h -T 0 --color'
-fi
-
-# }}}2
+alias ls='ls ${=LS_OPTIONS}'
 
 # Global Aliases {{{2
 
