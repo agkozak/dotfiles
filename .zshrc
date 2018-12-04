@@ -383,8 +383,8 @@ if (( AGKOZAK_NO_ZPLUGIN != 1 )) && is-at-least 5; then
       zplugin light jreese/zsh-titles
     fi
 
-    zplugin light zdharma/fast-syntax-highlighting
-    fast-theme free &> /dev/null
+    # zplugin light zdharma/fast-syntax-highlighting
+    # fast-theme free &> /dev/null
 
     # zplugin light zdharma/zui
     # zplugin light zdharma/zbrowse
