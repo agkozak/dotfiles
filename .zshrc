@@ -375,7 +375,7 @@ if (( AGKOZAK_NO_ZPLUGIN != 1 )) && is-at-least 5; then
     zplugin light agkozak/zhooks
 
     zplugin ice from"bitbucket"
-    zplugin light agkozak/zz
+    zplugin light agkozak/zsh-z
     # zplugin light agkozak/z
 
     # zsh-titles causes dittography in Emacs shell and Vim terminal
