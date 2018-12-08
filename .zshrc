@@ -316,6 +316,10 @@ zstyle ':completion:*' format 'Completing %d'
 # In menu-style completion, give a status bar
 zstyle ':completion:*' select-prompt '%SScrolling active: current selection at %p%s'
 
+# Command caching for completion
+zstyle ':completion:*' use-cache on
+zstyle ':completion:*' cache-path "${HOME}/.zsh/cache"
+
 # In the line editor, number of matches to show before asking permission
 LISTMAX=9999
 
