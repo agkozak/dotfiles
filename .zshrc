@@ -316,10 +316,6 @@ zstyle ':completion:*' format 'Completing %d'
 # In menu-style completion, give a status bar
 zstyle ':completion:*' select-prompt '%SScrolling active: current selection at %p%s'
 
-# Command caching for completion
-zstyle ':completion:*' use-cache on
-zstyle ':completion:*' cache-path "${HOME}/.zsh/cache"
-
 # In the line editor, number of matches to show before asking permission
 LISTMAX=9999
 
@@ -438,6 +434,8 @@ KEYTIMEOUT=1
   && hash -d wp-content="$HOME/public_html/wp-content"
 [[ -d "$HOME/.zplugin/plugins/agkozak---agkozak-zsh-prompt" ]] \
   && hash -d agk="$HOME/.zplugin/plugins/agkozak---agkozak-zsh-prompt"
+[[ -d ${HOME}/.zplugin/plugins/agkozak---zsh-z ]] \
+  && hash -d z="$HOME/.zplugin/plugins/agkozak---zsh-z"
 
 # Dynamic named directories
 # https://superuser.com/questions/751523/dynamic-directory-hash
