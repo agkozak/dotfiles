@@ -84,6 +84,8 @@ setopt HIST_EXPIRE_DUPS_FIRST # Expire duplicates first
 
 # Enable history on CloudLinux for a custom build of zsh in ~/bin
 # with HAVE_SYMLINKS=0 set at compile time
+#
+# See https://gist.github.com/agkozak/50a9bf7da14b9f060c68124418ac5217
 if [[ -f /var/.cagefs/.cagefs.token ]]; then
   if [[ =zsh != '/bin/zsh' ]]; then
     setopt HIST_FCNTL_LOCK
