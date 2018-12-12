@@ -374,7 +374,7 @@ if (( AGKOZAK_NO_ZPLUGIN != 1 )) && is-at-least 5; then
     zplugin ice ver"develop"
     zplugin light agkozak/zhooks
 
-    zplugin ice from"bitbucket"
+    zplugin ice ver"develop"
     zplugin light agkozak/zsh-z
     # zplugin light agkozak/z
 
