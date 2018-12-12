@@ -377,14 +377,17 @@ if (( AGKOZAK_NO_ZPLUGIN != 1 )) && is-at-least 5; then
     zplugin ice ver"develop"
     zplugin light agkozak/zhooks
 
-    # zplugin ice from"bitbucket"
-    # zplugin light agkozak/zz
-    zplugin light agkozak/z
+    zplugin ice ver"develop"
+    zplugin light agkozak/zsh-z
+    # zplugin light agkozak/z
 
     # zsh-titles causes dittography in Emacs shell and Vim terminal
     if [[ -z $EMACS ]] && [[ ! $TERM = 'dumb' ]] && [[ -z $VIM ]]; then
       zplugin light jreese/zsh-titles
     fi
+
+    # zplugin light zdharma/fast-syntax-highlighting
+    # fast-theme free &> /dev/null
 
     # zplugin light zdharma/zui
     # zplugin light zdharma/zbrowse
@@ -434,6 +437,8 @@ KEYTIMEOUT=1
   && hash -d wp-content="$HOME/public_html/wp-content"
 [[ -d "$HOME/.zplugin/plugins/agkozak---agkozak-zsh-prompt" ]] \
   && hash -d agk="$HOME/.zplugin/plugins/agkozak---agkozak-zsh-prompt"
+[[ -d ${HOME}/.zplugin/plugins/agkozak---zsh-z ]] \
+  && hash -d z="$HOME/.zplugin/plugins/agkozak---zsh-z"
 
 # Dynamic named directories
 # https://superuser.com/questions/751523/dynamic-directory-hash
