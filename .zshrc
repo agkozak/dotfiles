@@ -475,6 +475,12 @@ fi
 
 # }}}1
 
+# While tinkering with ZSH-z
+if (( SHLVL = 1 )); then
+  [[ ! -d ${HOME}/.zbackup ]] && mkdir "${HOME}/.zbackup"
+  cp "${HOME}/.z" "${HOME}/.zbackup/.z_${EPOCHSECONDS}"
+fi
+
 # Compile or recompile ~/.zcompdump and ~/.zshrc {{{1
 
 compile_or_recompile "${HOME}/.zcompdump_${ZSH_VERSION}"
