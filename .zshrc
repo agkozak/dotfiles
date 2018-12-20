@@ -332,7 +332,7 @@ bindkey '^S' history-incremental-search-forward
 
 # }}}1
 
-# .zplugin {{{1
+# zplugin {{{1
 
 if (( AGKOZAK_NO_ZPLUGIN != 1 )) && is-at-least 5; then
 
@@ -350,8 +350,11 @@ if (( AGKOZAK_NO_ZPLUGIN != 1 )) && is-at-least 5; then
       git clone https://github.com/zdharma/zplugin.git "${HOME}/.zplugin/bin"
     fi
 
-    # In FreeBSD, /home is /usr/home
-    [[ $OSTYPE == freebsd* ]] && typeset -g ZSHZ_NO_RESOLVE_SYMLINKS=1
+    # Configuration hash
+    typeset -A ZPLGM
+
+    # Location of .zcompdump file
+    ZPLGM[ZCOMPDUMP_PATH]="${HOME}/.zcompdump_${ZSH_VERSION}"
 
     # zplugin and its plugins and snippets
     source "${HOME}/.zplugin/bin/zplugin.zsh"
@@ -372,9 +375,10 @@ if (( AGKOZAK_NO_ZPLUGIN != 1 )) && is-at-least 5; then
     zplugin ice ver"develop"
     zplugin load agkozak/zhooks
 
+    # In FreeBSD, /home is /usr/home
+    [[ $OSTYPE == freebsd* ]] && typeset -g ZSHZ_NO_RESOLVE_SYMLINKS=1
     zplugin ice ver"develop"
     zplugin load agkozak/zsh-z
-    # zplugin load agkozak/z
 
     # zsh-titles causes dittography in Emacs shell and Vim terminal
     if [[ -z $EMACS ]] && [[ ! $TERM = 'dumb' ]] && [[ -z $VIM ]]; then
