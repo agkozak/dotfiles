@@ -369,31 +369,31 @@ if (( AGKOZAK_NO_ZPLUGIN != 1 )) && is-at-least 5; then
     # AGKOZAK_MULTILINE=0
     AGKOZAK_LEFT_PROMPT_ONLY=1
     zplugin ice ver"develop"
-    zplugin light agkozak/agkozak-zsh-prompt
+    zplugin load agkozak/agkozak-zsh-prompt
 
     zplugin ice ver"develop"
-    zplugin light agkozak/zhooks
+    zplugin load agkozak/zhooks
 
     zplugin ice ver"develop"
-    zplugin light agkozak/zsh-z
-    # zplugin light agkozak/z
+    zplugin load agkozak/zsh-z
+    # zplugin load agkozak/z
 
     # zsh-titles causes dittography in Emacs shell and Vim terminal
     if [[ -z $EMACS ]] && [[ ! $TERM = 'dumb' ]] && [[ -z $VIM ]]; then
-      zplugin light jreese/zsh-titles
+      zplugin load jreese/zsh-titles
     fi
 
-    # zplugin light zdharma/fast-syntax-highlighting
+    # zplugin load zdharma/fast-syntax-highlighting
     # fast-theme free &> /dev/null
 
-    # zplugin light zdharma/zui
-    # zplugin light zdharma/zbrowse
+    # zplugin load zdharma/zui
+    # zplugin load zdharma/zbrowse
     # CRASIS_THEME="safari-256"
-    # zplugin light zdharma/zplugin-crasis
+    # zplugin load zdharma/zplugin-crasis
 
     zplugin snippet OMZ::plugins/extract/extract.plugin.zsh
 
-    zplugin light zsh-users/zsh-history-substring-search
+    zplugin load zsh-users/zsh-history-substring-search
     HISTORY_SUBSTRING_SEARCH_HIGHLIGHT_FOUND='underline'
     HISTORY_SUBSTRING_SEARCH_HIGHLIGHT_NOT_FOUND=''
     bindkey '^[OA' history-substring-search-up
@@ -405,7 +405,7 @@ if (( AGKOZAK_NO_ZPLUGIN != 1 )) && is-at-least 5; then
 
     # Must be loaded last
     # zplugin ice wait'0.75' atload 'fast-theme forest'
-    # zplugin light zdharma/fast-syntax-highlighting
+    # zplugin load zdharma/fast-syntax-highlighting
 
   else
     print 'Please install git.'
