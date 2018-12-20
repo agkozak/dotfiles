@@ -77,6 +77,10 @@ fi
 
 # }}}1
 
+# In FreeBSD, /home is /usr/home
+# shellcheck disable=SC2034
+[[ $OSTYPE == freebsd* ]] && _Z_NO_RESOLVE_SYMLINKS=1
+
 # shellcheck source=/dev/null
 if [[ -f ${HOME}/.zplugin/plugins/agkozak---z/z.sh ]]; then
   . "${HOME}/.zplugin/plugins/agkozak---z/z.sh"

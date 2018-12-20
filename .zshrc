@@ -9,7 +9,6 @@
 # To run zprof, execute
 #
 #   env ZSH_PROF='' zsh -ic zprof
-
 (( $+ZSH_PROF )) && zmodload zsh/zprof
 
 # For simple script running times, execute
@@ -17,7 +16,6 @@
 #     AGKOZAK_RC_BENCHMARKS=1
 #
 # before sourcing.
-
 (( AGKOZAK_RC_BENCHMARKS )) && typeset -F SECONDS
 
 # }}}1
@@ -63,6 +61,10 @@ setopt CDABLE_VARS        # Like AUTO_CD, but for named directories
 setopt PUSHD_IGNORE_DUPS  # Don't push duplicates onto the stack
 
 # }}}2
+
+# Completion {{{2
+
+unsetopt LIST_BEEP        # Don't beep on an ambiguous completion
 
 # Expansion and Globbing {{{2
 
@@ -155,7 +157,7 @@ alias -g V='|& vim -'
 # The Debian solution to Del/Home/End/etc. keybindings {{{1
 
 # No need to load the following code if I'm using Debian
-if [[ ! -f '/etc/debian-version' ]] && [[ ! -f 'etc/zsh/zshrc' ]]; then
+if [[ ! -f '/etc/debian-version' ]] && [[ ! -f '/etc/zsh/zshrc' ]]; then
 
   typeset -A key
   # shellcheck disable=SC2190
@@ -250,7 +252,7 @@ if (( AGKOZAK_NO_ZPLUGIN != 1 )) && is-at-least 5; then
     zmodload zdharma/zplugin
   fi
 
-  if whence git &> /dev/null; then
+  if whence -w git &> /dev/null; then
 
     if [[ ! -d ${HOME}/.zplugin ]]; then
       print "Installing zplugin..."
@@ -266,11 +268,6 @@ if (( AGKOZAK_NO_ZPLUGIN != 1 )) && is-at-least 5; then
 
     # zplugin and its plugins and snippets
     source "${HOME}/.zplugin/bin/zplugin.zsh"
-
-    autoload -Uz _zplugin
-
-    # shellcheck disable=SC2004
-    # (( ${+_comps} )) && _comps[zplugin]=_zplugin
 
     # Load plugins and snippets {{{2
 
@@ -289,20 +286,21 @@ if (( AGKOZAK_NO_ZPLUGIN != 1 )) && is-at-least 5; then
     zplugin load agkozak/zsh-z
 
     # zsh-titles causes dittography in Emacs shell and Vim terminal
-    if [[ -z $EMACS ]] && [[ ! $TERM = 'dumb' ]] && [[ -z $VIM ]]; then
+    if (( $+EMACS )) && [[ ! $TERM = 'dumb' ]] && (( $+VIM )); then
       zplugin load jreese/zsh-titles
     fi
 
-    # zplugin load zdharma/fast-syntax-highlighting
-    # fast-theme free &> /dev/null
+    is-at-least 5.3 && zplugin ice silent wait'0'
+    zplugin load zdharma/zui
+    is-at-least 5.3 && zplugin ice silent wait'1'
+    zplugin load zdharma/zbrowse
 
-    # zplugin load zdharma/zui
-    # zplugin load zdharma/zbrowse
     # CRASIS_THEME="safari-256"
     # zplugin load zdharma/zplugin-crasis
 
     zplugin snippet OMZ::plugins/extract/extract.plugin.zsh
 
+    is-at-least 5.3 && zplugin ice silent wait'0'
     zplugin load zsh-users/zsh-history-substring-search
     HISTORY_SUBSTRING_SEARCH_HIGHLIGHT_FOUND='underline'
     HISTORY_SUBSTRING_SEARCH_HIGHLIGHT_NOT_FOUND=''
@@ -314,8 +312,8 @@ if (( AGKOZAK_NO_ZPLUGIN != 1 )) && is-at-least 5; then
     bindkey -M vicmd 'j' history-substring-search-down
 
     # Must be loaded last
-    # zplugin ice wait'0.75' atload 'fast-theme forest'
-    # zplugin load zdharma/fast-syntax-highlighting
+    is-at-least 5.3 && zplugin ice silent wait'0' atload 'fast-theme free'
+    zplugin load zdharma/fast-syntax-highlighting
 
   else
     print 'Please install git.'
@@ -375,7 +373,7 @@ zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
 
 # Allow pasting URLs as CLI arguments
 if [[ $ZSH_VERSION != '5.1.1' ]] && [[ $TERM != 'dumb' ]] \
-  && [[ -z $INSIDE_EMACS ]]; then
+  && (( $+INSIDE_EMACS )); then
   if is-at-least 5.1; then
     autoload -Uz bracketed-paste-magic
     zle -N bracketed-paste bracketed-paste-magic
@@ -434,9 +432,9 @@ bindkey '^S' history-incremental-search-forward
 KEYTIMEOUT=1
 
 # Static named directories
-[[ -d "$HOME/public_html/wp-content" ]] \
+[[ -d ${HOME}/public_html/wp-content ]] \
   && hash -d wp-content="$HOME/public_html/wp-content"
-[[ -d "$HOME/.zplugin/plugins/agkozak---agkozak-zsh-prompt" ]] \
+[[ -d ${HOME}/.zplugin/plugins/agkozak---agkozak-zsh-prompt ]] \
   && hash -d agk="$HOME/.zplugin/plugins/agkozak---agkozak-zsh-prompt"
 [[ -d ${HOME}/.zplugin/plugins/agkozak---zsh-z ]] \
   && hash -d z="$HOME/.zplugin/plugins/agkozak---zsh-z"
@@ -480,7 +478,7 @@ fi
 # }}}1
 
 # While tinkering with ZSH-z
-if (( SHLVL = 1 )); then
+if (( SHLVL == 1 )); then
   [[ ! -d ${HOME}/.zbackup ]] && mkdir "${HOME}/.zbackup"
   cp "${HOME}/.z" "${HOME}/.zbackup/.z_${EPOCHSECONDS}"
 fi
