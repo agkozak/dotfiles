@@ -53,7 +53,8 @@ PAGER=less
 export PATH
 
 # Construct $PATH
-for i in "$HOME/.local/bin" \
+for i in "$HOME/.gem/ruby/2.4.0/bin" \
+  "$HOME/.local/bin" \
   "$HOME/go/bin" \
 	"$HOME/.cabal/bin" \
 	"$HOME/.config/composer/vendor/bin" \
