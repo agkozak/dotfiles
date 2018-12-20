@@ -337,6 +337,8 @@ fi
 autoload -Uz compinit
 compinit -u -d "${HOME}/.zcompdump_${ZSH_VERSION}"
 
+(( ! AGKOZAK_NO_ZPLUGIN )) && zplugin cdreplay -q
+
 # https://www.zsh.org/mla/users/2015/msg00467.html
 # shellcheck disable=SC2016
 zstyle -e ':completion:*:*:ssh:*:my-accounts' users-hosts \
