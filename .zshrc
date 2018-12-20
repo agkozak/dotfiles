@@ -18,9 +18,7 @@
 #
 # before sourcing.
 
-if (( AGKOZAK_RC_BENCHMARKS )); then
-  typeset -F SECONDS
-fi
+(( AGKOZAK_RC_BENCHMARKS )) && typeset -F SECONDS
 
 # }}}1
 
@@ -36,7 +34,7 @@ fi
 compile_or_recompile() {
   local file
   for file in "$@"; do
-    if [[ ! -f "${file}.zwc" ]] || [[ $file -nt "${file}.zwc" ]]; then
+    if [[ ! -f ${file}.zwc ]] || [[ $file -nt ${file}.zwc ]]; then
       zcompile "$file"
     fi
   done
@@ -84,7 +82,7 @@ setopt HIST_EXPIRE_DUPS_FIRST # Expire duplicates first
 
 # Enable history on CloudLinux for a custom build of zsh in ~/bin
 # with HAVE_SYMLINKS=0 set at compile time
-if [[ -f /var/.cagefs/.cagefs.token ]]; then
+if [[ -f '/var/.cagefs/.cagefs.token' ]]; then
   if [[ =zsh != '/bin/zsh' ]]; then
     setopt HIST_FCNTL_LOCK
   else
