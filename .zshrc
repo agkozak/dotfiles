@@ -240,6 +240,97 @@ fi
 
 # }}}1
 
+# zplugin {{{1
+
+if (( AGKOZAK_NO_ZPLUGIN != 1 )) && is-at-least 5; then
+
+  # Optional binary module
+  if [[ -f "$HOME/.zplugin/bin/zmodules/Src/zdharma/zplugin.so" ]]; then
+    module_path+=( "$HOME/.zplugin/bin/zmodules/Src" )
+    zmodload zdharma/zplugin
+  fi
+
+  if whence git &> /dev/null; then
+
+    if [[ ! -d ${HOME}/.zplugin ]]; then
+      print "Installing zplugin..."
+      mkdir "${HOME}/.zplugin"
+      git clone https://github.com/zdharma/zplugin.git "${HOME}/.zplugin/bin"
+    fi
+
+    # Configuration hash
+    typeset -A ZPLGM
+
+    # Location of .zcompdump file
+    ZPLGM[ZCOMPDUMP_PATH]="${HOME}/.zcompdump_${ZSH_VERSION}"
+
+    # zplugin and its plugins and snippets
+    source "${HOME}/.zplugin/bin/zplugin.zsh"
+
+    autoload -Uz _zplugin
+
+    # shellcheck disable=SC2004
+    # (( ${+_comps} )) && _comps[zplugin]=_zplugin
+
+    # Load plugins and snippets {{{2
+
+    # AGKOZAK_PROMPT_DEBUG=1
+    # AGKOZAK_MULTILINE=0
+    AGKOZAK_LEFT_PROMPT_ONLY=1
+    zplugin ice ver"develop"
+    zplugin load agkozak/agkozak-zsh-prompt
+
+    zplugin ice ver"develop"
+    zplugin load agkozak/zhooks
+
+    # In FreeBSD, /home is /usr/home
+    [[ $OSTYPE == freebsd* ]] && typeset -g ZSHZ_NO_RESOLVE_SYMLINKS=1
+    zplugin ice ver"develop"
+    zplugin load agkozak/zsh-z
+
+    # zsh-titles causes dittography in Emacs shell and Vim terminal
+    if [[ -z $EMACS ]] && [[ ! $TERM = 'dumb' ]] && [[ -z $VIM ]]; then
+      zplugin load jreese/zsh-titles
+    fi
+
+    # zplugin load zdharma/fast-syntax-highlighting
+    # fast-theme free &> /dev/null
+
+    # zplugin load zdharma/zui
+    # zplugin load zdharma/zbrowse
+    # CRASIS_THEME="safari-256"
+    # zplugin load zdharma/zplugin-crasis
+
+    zplugin snippet OMZ::plugins/extract/extract.plugin.zsh
+
+    zplugin load zsh-users/zsh-history-substring-search
+    HISTORY_SUBSTRING_SEARCH_HIGHLIGHT_FOUND='underline'
+    HISTORY_SUBSTRING_SEARCH_HIGHLIGHT_NOT_FOUND=''
+    bindkey '^[OA' history-substring-search-up
+    bindkey '^[OB' history-substring-search-down
+    bindkey '^P' history-substring-search-up
+    bindkey '^N' history-substring-search-down
+    bindkey -M vicmd 'k' history-substring-search-up
+    bindkey -M vicmd 'j' history-substring-search-down
+
+    # Must be loaded last
+    # zplugin ice wait'0.75' atload 'fast-theme forest'
+    # zplugin load zdharma/fast-syntax-highlighting
+
+  else
+    print 'Please install git.'
+  fi
+
+  # }}}2
+
+elif is-at-least 4.3.11; then
+
+  source "$HOME/dotfiles/themes/agkozak-zsh-prompt/agkozak-zsh-prompt.plugin.zsh"
+
+fi
+
+# }}}1
+
 # Styles and completions {{{1
 
 autoload -Uz compinit
@@ -325,101 +416,10 @@ LISTMAX=9999
 bindkey '^P' up-history
 bindkey '^N' down-history
 bindkey '^R' history-incremental-search-backward
-setopt NO_FLOW_CONTROL                          # Or the next command won't work 
+setopt NO_FLOW_CONTROL                          # Or the next command won't work
 bindkey '^S' history-incremental-search-forward
 
 # }}}2
-
-# }}}1
-
-# zplugin {{{1
-
-if (( AGKOZAK_NO_ZPLUGIN != 1 )) && is-at-least 5; then
-
-  # Optional binary module
-  if [[ -f "$HOME/.zplugin/bin/zmodules/Src/zdharma/zplugin.so" ]]; then
-    module_path+=( "$HOME/.zplugin/bin/zmodules/Src" )
-    zmodload zdharma/zplugin
-  fi
-
-  if whence git &> /dev/null; then
-
-    if [[ ! -d ${HOME}/.zplugin ]]; then
-      print "Installing zplugin..."
-      mkdir "${HOME}/.zplugin"
-      git clone https://github.com/zdharma/zplugin.git "${HOME}/.zplugin/bin"
-    fi
-
-    # Configuration hash
-    typeset -A ZPLGM
-
-    # Location of .zcompdump file
-    ZPLGM[ZCOMPDUMP_PATH]="${HOME}/.zcompdump_${ZSH_VERSION}"
-
-    # zplugin and its plugins and snippets
-    source "${HOME}/.zplugin/bin/zplugin.zsh"
-
-    autoload -Uz _zplugin
-
-    # shellcheck disable=SC2004
-    (( ${+_comps} )) && _comps[zplugin]=_zplugin
-
-    # Load plugins and snippets {{{2
-
-    # AGKOZAK_PROMPT_DEBUG=1
-    # AGKOZAK_MULTILINE=0
-    AGKOZAK_LEFT_PROMPT_ONLY=1
-    zplugin ice ver"develop"
-    zplugin load agkozak/agkozak-zsh-prompt
-
-    zplugin ice ver"develop"
-    zplugin load agkozak/zhooks
-
-    # In FreeBSD, /home is /usr/home
-    [[ $OSTYPE == freebsd* ]] && typeset -g ZSHZ_NO_RESOLVE_SYMLINKS=1
-    zplugin ice ver"develop"
-    zplugin load agkozak/zsh-z
-
-    # zsh-titles causes dittography in Emacs shell and Vim terminal
-    if [[ -z $EMACS ]] && [[ ! $TERM = 'dumb' ]] && [[ -z $VIM ]]; then
-      zplugin load jreese/zsh-titles
-    fi
-
-    # zplugin load zdharma/fast-syntax-highlighting
-    # fast-theme free &> /dev/null
-
-    # zplugin load zdharma/zui
-    # zplugin load zdharma/zbrowse
-    # CRASIS_THEME="safari-256"
-    # zplugin load zdharma/zplugin-crasis
-
-    zplugin snippet OMZ::plugins/extract/extract.plugin.zsh
-
-    zplugin load zsh-users/zsh-history-substring-search
-    HISTORY_SUBSTRING_SEARCH_HIGHLIGHT_FOUND='underline'
-    HISTORY_SUBSTRING_SEARCH_HIGHLIGHT_NOT_FOUND=''
-    bindkey '^[OA' history-substring-search-up
-    bindkey '^[OB' history-substring-search-down
-    bindkey '^P' history-substring-search-up
-    bindkey '^N' history-substring-search-down
-    bindkey -M vicmd 'k' history-substring-search-up
-    bindkey -M vicmd 'j' history-substring-search-down
-
-    # Must be loaded last
-    # zplugin ice wait'0.75' atload 'fast-theme forest'
-    # zplugin load zdharma/fast-syntax-highlighting
-
-  else
-    print 'Please install git.'
-  fi
-
-  # }}}2
-
-elif is-at-least 4.3.11; then
-
-  source "$HOME/dotfiles/themes/agkozak-zsh-prompt/agkozak-zsh-prompt.plugin.zsh"
-
-fi
 
 # }}}1
 
