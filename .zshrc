@@ -351,7 +351,7 @@ if (( AGKOZAK_NO_ZPLUGIN != 1 )) && is-at-least 5; then
     fi
 
     # In FreeBSD, /home is /usr/home
-    [[ $OSTYPE == freebsd* ]] && typeset -g _Z_NO_RESOLVE_SYMLINKS=1
+    [[ $OSTYPE == freebsd* ]] && typeset -g ZSHZ_NO_RESOLVE_SYMLINKS=1
 
     # zplugin and its plugins and snippets
     source "${HOME}/.zplugin/bin/zplugin.zsh"
