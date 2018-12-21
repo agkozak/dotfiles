@@ -5,8 +5,8 @@
 # shellcheck shell=sh
 # shellcheck disable=SC2034
 
-export AGKOZAK_SYSTEMINFO
-AGKOZAK_SYSTEMINFO=$(uname -a)
+export AGKDOT_SYSTEMINFO
+AGKDOT_SYSTEMINFO=$(uname -a)
 
 export EDITOR VISUAL
 if command -v vim > /dev/null 2>&1; then
@@ -75,7 +75,7 @@ done
 
 unset i
 
-case $AGKOZAK_SYSTEMINFO in
+case $AGKDOT_SYSTEMINFO in
   *Msys) [ -d /mingw64/bin ] && PATH="$PATH:/mingw64/bin" ;;
 esac
 
@@ -83,7 +83,7 @@ esac
 # shellcheck source=/dev/null
 [ -s "$HOME/.rvm/scripts/rvm" ] && . "$HOME/.rvm/scripts/rvm"
 
-case $AGKOZAK_SYSTEMINFO in
+case $AGKDOT_SYSTEMINFO in
 	Darwin*|FreeBSD*)
 		export CLICOLOR LSCOLORS SSL_CERT_DIR SSL_CERT_FILE
 		CLICOLOR=1

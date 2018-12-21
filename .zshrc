@@ -13,10 +13,10 @@
 
 # For simple script running times, execute
 #
-#     AGKOZAK_RC_BENCHMARKS=1
+#     AGKDOT_BENCHMARKS=1
 #
 # before sourcing.
-(( AGKOZAK_RC_BENCHMARKS )) && typeset -F SECONDS
+(( AGKDOT_BENCHMARKS )) && typeset -F SECONDS
 
 # }}}1
 
@@ -111,12 +111,12 @@ setopt INTERACTIVE_COMMENTS # Allow comments in interactive mode
 # Job Control {{{2
 
 # Disable nice for background processes in WSL
-if [[ -z ${AGKOZAK_SYSTEMINFO} ]]; then
- typeset -gx AGKOZAK_SYSTEMINFO
- AGKOZAK_SYSTEMINFO=$(uname -a)
+if [[ -z ${AGKDOT_SYSTEMINFO} ]]; then
+ typeset -gx AGKDOT_SYSTEMINFO
+ AGKDOT_SYSTEMINFO=$(uname -a)
 fi
 
-[[ ${AGKOZAK_SYSTEMINFO} == *Microsoft* ]] && unsetopt BG_NICE
+[[ ${AGKDOT_SYSTEMINFO} == *Microsoft* ]] && unsetopt BG_NICE
 
 # }}}2
 
@@ -245,7 +245,7 @@ fi
 
 # zplugin {{{1
 
-if (( AGKOZAK_NO_ZPLUGIN != 1 )) && is-at-least 5; then
+if (( AGKDOT_NO_ZPLUGIN != 1 )) && is-at-least 5; then
 
   # Optional binary module
   if [[ -f "$HOME/.zplugin/bin/zmodules/Src/zdharma/zplugin.so" ]]; then
@@ -259,6 +259,7 @@ if (( AGKOZAK_NO_ZPLUGIN != 1 )) && is-at-least 5; then
       print "Installing zplugin..."
       mkdir "${HOME}/.zplugin"
       git clone https://github.com/zdharma/zplugin.git "${HOME}/.zplugin/bin"
+      compile_or_recompile "${HOME}/.zplugin/bin/zplugin.zsh"
     fi
 
     # Configuration hash
@@ -278,16 +279,18 @@ if (( AGKOZAK_NO_ZPLUGIN != 1 )) && is-at-least 5; then
     zplugin ice ver"develop"
     zplugin load agkozak/agkozak-zsh-prompt
 
+    is-at-least 5.3 && zplugin ice silent wait'0'
     zplugin ice ver"develop"
     zplugin load agkozak/zhooks
 
     # In FreeBSD, /home is /usr/home
     [[ $OSTYPE == freebsd* ]] && typeset -g ZSHZ_NO_RESOLVE_SYMLINKS=1
+    is-at-least 5.3 && zplugin ice silent wait'0'
     zplugin ice ver"develop"
     zplugin load agkozak/zsh-z
 
     # zsh-titles causes dittography in Emacs shell and Vim terminal
-    if (( $+EMACS )) && [[ ! $TERM = 'dumb' ]] && (( $+VIM )); then
+    if (( ! $+EMACS )) && [[ ! $TERM = 'dumb' ]] && (( $+VIM )); then
       zplugin load jreese/zsh-titles
     fi
 
@@ -332,10 +335,19 @@ fi
 
 # Styles and completions {{{1
 
+# Perform compinit only once a day {{{2
 autoload -Uz compinit
-compinit -u -d "${HOME}/.zcompdump_${ZSH_VERSION}"
 
-(( ! AGKOZAK_NO_ZPLUGIN )) && is-at-least 5.0.0  && zplugin cdreplay -q
+for dump in "${HOME}/.zcompdump_${ZSH_VERSION}"(#qN.m1); do
+  compinit -u -d "${HOME}/.zcompdump_${ZSH_VERSION}"
+  compile_or_recompile $dump
+  print 'Initializing and compiling completions...'
+done
+compinit -C -d "${HOME}/.zcompdump_${ZSH_VERSION}"
+
+# }}}2
+
+(( ! AGKDOT_NO_ZPLUGIN )) && is-at-least 5.0.0  && zplugin cdreplay -q
 
 # https://www.zsh.org/mla/users/2015/msg00467.html
 # shellcheck disable=SC2016
@@ -374,7 +386,7 @@ zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
 
 # Allow pasting URLs as CLI arguments
 if [[ $ZSH_VERSION != '5.1.1' ]] && [[ $TERM != 'dumb' ]] \
-  && (( $+INSIDE_EMACS )); then
+  && (( ! $+INSIDE_EMACS )); then
   if is-at-least 5.1; then
     autoload -Uz bracketed-paste-magic
     zle -N bracketed-paste bracketed-paste-magic
@@ -486,14 +498,13 @@ fi
 
 # Compile or recompile ~/.zcompdump and ~/.zshrc {{{1
 
-compile_or_recompile "${HOME}/.zcompdump_${ZSH_VERSION}"
 compile_or_recompile "${HOME}/.zshrc"
 
 # }}}1
 
 # End .zshrc benchmark {{{1
 
-if (( AGKOZAK_RC_BENCHMARKS )); then
+if (( AGKDOT_BENCHMARKS )); then
   print ".zshrc loaded in ${$(( SECONDS * 1000 ))%.*}ms total."
   typeset -i SECONDS
 fi

@@ -6,7 +6,7 @@
 
 # Begin .bashrc benchmark {{{1
 
-if (( AGKOZAK_RC_BENCHMARKS )); then
+if (( AGKDOT_BENCHMARKS )); then
   case $OSTYPE in
     FreeBSD*|freebsd*) ;;
     *) ((start=$(date +%s%N)/1000000)) ;;
@@ -93,7 +93,7 @@ fi
 
 # End .bashrc benchmark {{{
 
-if (( AGKOZAK_RC_BENCHMARKS )); then
+if (( AGKDOT_BENCHMARKS )); then
   case $OSTYPE in
     FreeBSD*|freebsd*) ;;
     *)
