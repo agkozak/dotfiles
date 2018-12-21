@@ -334,8 +334,17 @@ fi
 
 # Styles and completions {{{1
 
+# Perform compinit only once a day {{{2
 autoload -Uz compinit
-compinit -u -d "${HOME}/.zcompdump_${ZSH_VERSION}"
+
+for dump in "${HOME}/.zcompdump_${ZSH_VERSION}"(#qN.m1); do
+  compinit -u -d "${HOME}/.zcompdump_${ZSH_VERSION}"
+  compile_or_recompile $dump
+  print 'Initializing and compiling completions...'
+done
+compinit -C -d "${HOME}/.zcompdump_${ZSH_VERSION}"
+
+# }}}2
 
 (( ! AGKDOT_NO_ZPLUGIN )) && is-at-least 5.0.0  && zplugin cdreplay -q
 
@@ -488,7 +497,6 @@ fi
 
 # Compile or recompile ~/.zcompdump and ~/.zshrc {{{1
 
-compile_or_recompile "${HOME}/.zcompdump_${ZSH_VERSION}"
 compile_or_recompile "${HOME}/.zshrc"
 
 # }}}1
