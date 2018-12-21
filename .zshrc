@@ -258,6 +258,7 @@ if (( AGKDOT_NO_ZPLUGIN != 1 )) && is-at-least 5; then
       print "Installing zplugin..."
       mkdir "${HOME}/.zplugin"
       git clone https://github.com/zdharma/zplugin.git "${HOME}/.zplugin/bin"
+      compile_or_recompile "${HOME}/.zplugin/bin/zplugin.zsh"
     fi
 
     # Configuration hash
@@ -277,11 +278,13 @@ if (( AGKDOT_NO_ZPLUGIN != 1 )) && is-at-least 5; then
     zplugin ice ver"develop"
     zplugin load agkozak/agkozak-zsh-prompt
 
+    is-at-least 5.3 && zplugin ice silent wait'0'
     zplugin ice ver"develop"
     zplugin load agkozak/zhooks
 
     # In FreeBSD, /home is /usr/home
     [[ $OSTYPE == freebsd* ]] && typeset -g ZSHZ_NO_RESOLVE_SYMLINKS=1
+    is-at-least 5.3 && zplugin ice silent wait'0'
     zplugin ice ver"develop"
     zplugin load agkozak/zsh-z
 
