@@ -13,10 +13,10 @@
 
 # For simple script running times, execute
 #
-#     AGKOZAK_RC_BENCHMARKS=1
+#     AGKDOT_BENCHMARKS=1
 #
 # before sourcing.
-(( AGKOZAK_RC_BENCHMARKS )) && typeset -F SECONDS
+(( AGKDOT_BENCHMARKS )) && typeset -F SECONDS
 
 # }}}1
 
@@ -110,12 +110,12 @@ setopt INTERACTIVE_COMMENTS # Allow comments in interactive mode
 # Job Control {{{2
 
 # Disable nice for background processes in WSL
-if [[ -z ${AGKOZAK_SYSTEMINFO} ]]; then
- typeset -gx AGKOZAK_SYSTEMINFO
- AGKOZAK_SYSTEMINFO=$(uname -a)
+if [[ -z ${AGKDOT_SYSTEMINFO} ]]; then
+ typeset -gx AGKDOT_SYSTEMINFO
+ AGKDOT_SYSTEMINFO=$(uname -a)
 fi
 
-[[ ${AGKOZAK_SYSTEMINFO} == *Microsoft* ]] && unsetopt BG_NICE
+[[ ${AGKDOT_SYSTEMINFO} == *Microsoft* ]] && unsetopt BG_NICE
 
 # }}}2
 
@@ -244,7 +244,7 @@ fi
 
 # zplugin {{{1
 
-if (( AGKOZAK_NO_ZPLUGIN != 1 )) && is-at-least 5; then
+if (( AGKDOT_NO_ZPLUGIN != 1 )) && is-at-least 5; then
 
   # Optional binary module
   if [[ -f "$HOME/.zplugin/bin/zmodules/Src/zdharma/zplugin.so" ]]; then
@@ -334,7 +334,7 @@ fi
 autoload -Uz compinit
 compinit -u -d "${HOME}/.zcompdump_${ZSH_VERSION}"
 
-(( ! AGKOZAK_NO_ZPLUGIN )) && is-at-least 5.0.0  && zplugin cdreplay -q
+(( ! AGKDOT_NO_ZPLUGIN )) && is-at-least 5.0.0  && zplugin cdreplay -q
 
 # https://www.zsh.org/mla/users/2015/msg00467.html
 # shellcheck disable=SC2016
@@ -492,7 +492,7 @@ compile_or_recompile "${HOME}/.zshrc"
 
 # End .zshrc benchmark {{{1
 
-if (( AGKOZAK_RC_BENCHMARKS )); then
+if (( AGKDOT_BENCHMARKS )); then
   print ".zshrc loaded in ${$(( SECONDS * 1000 ))%.*}ms total."
   typeset -i SECONDS
 fi
