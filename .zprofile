@@ -18,7 +18,6 @@ if [[ -f "${HOME}/.profile" ]]; then
     zcompile "${HOME}/.profile" &> /dev/null
   fi
   (( ! $+ENV )) && source "${HOME}/.profile"
-  fi
 fi
 
 # vim: ts=2:et:ai:sts=2:sw=2
