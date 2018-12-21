@@ -283,6 +283,7 @@ if (( AGKDOT_NO_ZPLUGIN != 1 )) && is-at-least 5; then
     zplugin load agkozak/zhooks
 
     # In FreeBSD, /home is /usr/home
+    ZSHZ_DEBUG=1
     [[ $OSTYPE == freebsd* ]] && typeset -g ZSHZ_NO_RESOLVE_SYMLINKS=1
     is-at-least 5.3 && zplugin ice silent wait'0'
     zplugin ice ver"develop"
