@@ -289,7 +289,7 @@ if (( AGKDOT_NO_ZPLUGIN != 1 )) && is-at-least 5; then
     zplugin load agkozak/zsh-z
 
     # zsh-titles causes dittography in Emacs shell and Vim terminal
-    if (( $+EMACS )) && [[ ! $TERM = 'dumb' ]] && (( $+VIM )); then
+    if (( ! $+EMACS )) && [[ ! $TERM = 'dumb' ]] && (( $+VIM )); then
       zplugin load jreese/zsh-titles
     fi
 
@@ -385,7 +385,7 @@ zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
 
 # Allow pasting URLs as CLI arguments
 if [[ $ZSH_VERSION != '5.1.1' ]] && [[ $TERM != 'dumb' ]] \
-  && (( $+INSIDE_EMACS )); then
+  && (( ! $+INSIDE_EMACS )); then
   if is-at-least 5.1; then
     autoload -Uz bracketed-paste-magic
     zle -N bracketed-paste bracketed-paste-magic
