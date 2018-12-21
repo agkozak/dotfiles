@@ -5,20 +5,19 @@
 # https://github.com/agkozak/dotfiles
 
 # Add snap binary and desktop directories to environment
-if whence snap &> /dev/null && [[ -f /etc/profile.d/apps-bin-path.sh ]]; then
-  if [[ ! $PATH =~ 'snap' ]] || [[ ! $XDG_DATA_DIRS =~ 'snapd' ]]; then
+if whence -w snap &> /dev/null && [[ -f /etc/profile.d/apps-bin-path.sh ]]; then
+  if [[ ! $PATH == */snap/bin* ]] || [[ ! $XDG_DATA_DIRS == */snapd/* ]]; then
     emulate sh
     source /etc/profile.d/apps-bin-path.sh
     emulate zsh
   fi
 fi
 
-if [[ -f $HOME/.profile ]]; then
-  if [[ ! -f $HOME/.profile.zwc ]] || [[ $HOME/.profile -nt $HOME/profile.zwc ]]; then
-    zcompile "$HOME/.profile" &> /dev/null
+if [[ -f "${HOME}/.profile" ]]; then
+  if [[ ! -f "${HOME}/.profile.zwc" ]] || [[ "${HOME}/.profile" -nt "${HOME}/profile.zwc" ]]; then
+    zcompile "${HOME}/.profile" &> /dev/null
   fi
-  if [[ -z $ENV ]]; then
-    source "$HOME/.profile"
+  (( ! $+ENV )) && source "${HOME}/.profile"
   fi
 fi
 
