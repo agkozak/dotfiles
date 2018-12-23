@@ -343,12 +343,17 @@ fi
 # Perform compinit only once a day {{{2
 autoload -Uz compinit
 
-for dump in "${HOME}/.zcompdump_${ZSH_VERSION}"(#qN.m1); do
-  compinit -u -d "${HOME}/.zcompdump_${ZSH_VERSION}"
-  compile_or_recompile $dump
+zcompdump="${HOME}/.zcompdump_${ZSH_VERSION}"
+
+if [[ -n ${zcompdump}(#qN.mh+24) ]]; then
   print 'Initializing and compiling completions...'
-done
-compinit -C -d "${HOME}/.zcompdump_${ZSH_VERSION}"
+	compinit -u -d ${zcompdump}
+  compile_or_recompile ${zcompdump}
+else
+	compinit -C -d ${zcompdump}
+fi
+
+unset zcompdump
 
 # }}}2
 
