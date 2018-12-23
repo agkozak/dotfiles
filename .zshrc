@@ -296,6 +296,7 @@ if (( AGKDOT_NO_ZPLUGIN != 1 )) && is-at-least 5; then
 
     # zsh-titles causes dittography in Emacs shell and Vim terminal
     if (( ! $+EMACS )) && [[ ! $TERM = 'dumb' ]] && (( $+VIM )); then
+      is-at-least 5.3 && zplugin ice silent wait'0'
       zplugin load jreese/zsh-titles
     fi
 
