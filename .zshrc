@@ -81,8 +81,8 @@ setopt EXTENDED_GLOB
 
 # History environment variables
 HISTFILE=${HOME}/.zsh_history
-HISTSIZE=12000  # Larger than $SAVEHIST for HIST_EXPIRE_DUPS_FIRST to work
-SAVEHIST=10000
+HISTSIZE=120000  # Larger than $SAVEHIST for HIST_EXPIRE_DUPS_FIRST to work
+SAVEHIST=100000
 
 setopt EXTENDED_HISTORY       # Save time stamps and durations
 setopt HIST_EXPIRE_DUPS_FIRST # Expire duplicates first
@@ -259,7 +259,7 @@ if (( AGKDOT_NO_ZPLUGIN != 1 )) && is-at-least 5; then
 
   if whence -w git &> /dev/null; then
 
-    if [[ ! -d ${HOME}/.zplugin ]]; then
+    if [[ ! -d ${HOME}/.zplugin/bin ]]; then
       print "Installing zplugin..."
       mkdir "${HOME}/.zplugin"
       git clone https://github.com/zdharma/zplugin.git "${HOME}/.zplugin/bin"
