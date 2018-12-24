@@ -12,18 +12,23 @@
 #   $2, $3, $4, etc. Configuration files
 ###########################################################
 conditional_install() {
-  if command -v "$1" > /dev/null 2>&1; then
+  AGKDOT_PROGRAM=$1
+  shift
+  if command -v "$AGKDOT_PROGRAM" > /dev/null 2>&1; then
     shift
-    while [ $# -ne 0 ]; do
-      if [ -e "$HOME/$1" ]; then
-        printf "Replacing %s\n" "$1"
+    until [ $# = 0 ]; do
+      if [ ! -e "$1" ]; then
+        printf 'Installing %s\n' "$1"
+      elif [ -n "$(find -L "./$1" -prune -newer "${HOME}/$1")" ]; then
+        printf 'Upgrading %s\n' "$1"
       else
-        printf "Installing %s\n" "$1"
+        printf 'Replacing %s\n' "$1"
       fi
       cp "$1" "$HOME"
       shift
     done
   fi
+  unset AGKDOT_PROGRAM
 }
 
 ###########################################################
@@ -34,13 +39,17 @@ conditional_install() {
 #   $2 Branch (if other than master)
 ###########################################################
 github_clone_or_update() {
-  REPO=$(echo "$1" | awk -F/ '{ printf "%s", $2 }')
-  if [ ! -d "$REPO" ]; then
-    (git clone https://github.com/"$1".git; cd "$REPO" || return; [ -n "$2" ] \
+  AGKDOT_REPO=$(echo "$1" | awk -F/ '{ printf "%s", $2 }')
+  echo
+  printf 'GitHub repository %s:\n' "$1"
+  if [ ! -d "$AGKDOT_REPO" ]; then
+    (git clone https://github.com/"$1".git; cd "$AGKDOT_REPO" || return; [ -n "$2" ] \
       && git checkout "$2")
   else
-    (cd "$REPO" || return; git pull; [ "$2" != '' ] && git checkout "$2")
+    (cd "$AGKDOT_REPO" || return; git pull; [ "$2" != '' ] && git checkout "$2")
   fi
+  echo
+  unset AGKDOT_REPO
 }
 
 # }}}1
