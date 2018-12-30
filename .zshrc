@@ -21,7 +21,7 @@ fi
 #     AGKDOT_BENCHMARKS=1
 #
 # before sourcing.
-(( AGKDOT_BENCHMARKS )) && typeset -F SECONDS
+(( AGKDOT_BENCHMARKS )) && typeset -F SECONDS=0
 
 # }}}1
 
