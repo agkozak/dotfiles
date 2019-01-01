@@ -73,7 +73,7 @@ unsetopt LIST_BEEP        # Don't beep on an ambiguous completion
 
 # Expansion and Globbing {{{2
 
-setopt EXTENDED_GLOB
+# setopt EXTENDED_GLOB
 
 # }}}2
 
