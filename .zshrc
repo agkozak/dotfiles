@@ -11,12 +11,17 @@
 #   env ZSH_PROF='' zsh -ic zprof
 (( $+ZSH_PROF )) && zmodload zsh/zprof
 
+# Restore global path when using tmux
+if (( $+TMUX )); then
+  source "$HOME/.zprofile" &> /dev/null
+fi
+
 # For simple script running times, execute
 #
 #     AGKDOT_BENCHMARKS=1
 #
 # before sourcing.
-(( AGKDOT_BENCHMARKS )) && typeset -F SECONDS
+(( AGKDOT_BENCHMARKS )) && typeset -F SECONDS=0
 
 # }}}1
 
@@ -68,7 +73,7 @@ unsetopt LIST_BEEP        # Don't beep on an ambiguous completion
 
 # Expansion and Globbing {{{2
 
-setopt EXTENDED_GLOB
+# setopt EXTENDED_GLOB
 
 # }}}2
 
@@ -76,8 +81,8 @@ setopt EXTENDED_GLOB
 
 # History environment variables
 HISTFILE=${HOME}/.zsh_history
-HISTSIZE=12000  # Larger than $SAVEHIST for HIST_EXPIRE_DUPS_FIRST to work
-SAVEHIST=10000
+HISTSIZE=120000  # Larger than $SAVEHIST for HIST_EXPIRE_DUPS_FIRST to work
+SAVEHIST=100000
 
 setopt EXTENDED_HISTORY       # Save time stamps and durations
 setopt HIST_EXPIRE_DUPS_FIRST # Expire duplicates first
@@ -255,7 +260,7 @@ if (( AGKDOT_NO_ZPLUGIN != 1 )) && is-at-least 5; then
 
   if whence -w git &> /dev/null; then
 
-    if [[ ! -d ${HOME}/.zplugin ]]; then
+    if [[ ! -d ${HOME}/.zplugin/bin ]]; then
       print "Installing zplugin..."
       mkdir "${HOME}/.zplugin"
       git clone https://github.com/zdharma/zplugin.git "${HOME}/.zplugin/bin"
@@ -284,6 +289,7 @@ if (( AGKDOT_NO_ZPLUGIN != 1 )) && is-at-least 5; then
     zplugin load agkozak/zhooks
 
     # In FreeBSD, /home is /usr/home
+    ZSHZ_DEBUG=1
     [[ $OSTYPE == freebsd* ]] && typeset -g ZSHZ_NO_RESOLVE_SYMLINKS=1
     is-at-least 5.3 && zplugin ice silent wait'0'
     zplugin ice ver"develop"
@@ -291,6 +297,7 @@ if (( AGKDOT_NO_ZPLUGIN != 1 )) && is-at-least 5; then
 
     # zsh-titles causes dittography in Emacs shell and Vim terminal
     if (( ! $+EMACS )) && [[ ! $TERM = 'dumb' ]] && (( $+VIM )); then
+      is-at-least 5.3 && zplugin ice silent wait'0'
       zplugin load jreese/zsh-titles
     fi
 
@@ -335,17 +342,8 @@ fi
 
 # Styles and completions {{{1
 
-# Perform compinit only once a day {{{2
 autoload -Uz compinit
-
-for dump in "${HOME}/.zcompdump_${ZSH_VERSION}"(#qN.m1); do
-  compinit -u -d "${HOME}/.zcompdump_${ZSH_VERSION}"
-  compile_or_recompile $dump
-  print 'Initializing and compiling completions...'
-done
-compinit -C -d "${HOME}/.zcompdump_${ZSH_VERSION}"
-
-# }}}2
+compinit -u -d "${HOME}/.zcompdump_${ZSH_VERSION}"
 
 (( ! AGKDOT_NO_ZPLUGIN )) && is-at-least 5.0.0  && zplugin cdreplay -q
 
@@ -498,6 +496,7 @@ fi
 
 # Compile or recompile ~/.zcompdump and ~/.zshrc {{{1
 
+compile_or_recompile "${HOME}/.zcompdump_${ZSH_VERSION}"
 compile_or_recompile "${HOME}/.zshrc"
 
 # }}}1

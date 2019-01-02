@@ -282,6 +282,9 @@ update_dotfiles() {
 
 # }}}1
 
+# Disable flow control -- allows use of Ctrl-Q as tmux/screen prefix
+[ -z $ZSH_VERSION ] && stty -ixon
+
 # shellcheck source=/dev/null
 [ -f "$HOME/.shrc.local" ] && . "$HOME/.shrc.local"
 
