@@ -12,9 +12,7 @@
 #   $2, $3, $4, etc. Configuration files
 ###########################################################
 conditional_install() {
-  AGKDOT_PROGRAM=$1
-  shift
-  if command -v "$AGKDOT_PROGRAM" > /dev/null 2>&1; then
+  if command -v "$1" > /dev/null 2>&1; then
     shift
     until [ $# = 0 ]; do
       if [ ! -e "$1" ]; then
@@ -28,7 +26,6 @@ conditional_install() {
       shift
     done
   fi
-  unset AGKDOT_PROGRAM
 }
 
 ###########################################################
