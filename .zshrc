@@ -507,8 +507,6 @@ if (( AGKDOT_BENCHMARKS )); then
   typeset -i SECONDS
 fi
 
-unset start finish difference
-
 # }}}1
 
 # Source ~/.zshrc.local, if present {{{1
