@@ -491,7 +491,7 @@ fi
 # While tinkering with ZSH-z
 if (( SHLVL == 1 )); then
   [[ ! -d ${HOME}/.zbackup ]] && mkdir "${HOME}/.zbackup"
-  cp "${HOME}/.z" "${HOME}/.zbackup/.z_${EPOCHSECONDS}"
+  cp "${HOME}/.z" "${HOME}/.zbackup/.z_${EPOCHSECONDS}" 2> /dev/null
 fi
 
 # Compile or recompile ~/.zcompdump and ~/.zshrc {{{1
