@@ -282,6 +282,8 @@ if (( AGKDOT_NO_ZPLUGIN != 1 )) && is-at-least 5; then
     AGKOZAK_LEFT_PROMPT_ONLY=1
     zplugin ice ver"develop"
     zplugin load agkozak/agkozak-zsh-prompt
+    AGKOZAK_PROMPT_CHAR=( '❯' '❯' '❮' )
+    AGKOZAK_COLORS_PROMPT_CHAR='magenta'
 
     is-at-least 5.3 && zplugin ice silent wait'0'
     zplugin ice ver"develop"
