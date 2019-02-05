@@ -51,9 +51,9 @@ github_clone_or_update() {
 
 # }}}1
 
-[ ! -d themes ] && mkdir themes
+[ ! -d prompts ] && mkdir prompts
 
-cd themes || exit
+cd prompts || exit
 
 github_clone_or_update "agkozak/polyglot" develop
 

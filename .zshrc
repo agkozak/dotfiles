@@ -283,8 +283,9 @@ if (( AGKDOT_NO_ZPLUGIN != 1 )) && is-at-least 5; then
     AGKOZAK_LEFT_PROMPT_ONLY=1
     zplugin ice ver"develop"
     zplugin load agkozak/agkozak-zsh-prompt
-    AGKOZAK_PROMPT_CHAR=( '❯' '❯' '❮' )
-    AGKOZAK_COLORS_PROMPT_CHAR='magenta'
+    # AGKOZAK_PROMPT_CHAR=( '❯' '❯' '❮' )
+    # AGKOZAK_COLORS_PROMPT_CHAR='magenta'
+    # AGKOZAK_CUSTOM_SYMBOLS=( '⇣⇡' '⇣' '⇡' '+' 'x' '!' '>' '?' )
 
     is-at-least 5.3 && zplugin ice silent wait'0'
     zplugin ice ver"develop"
@@ -336,7 +337,7 @@ if (( AGKDOT_NO_ZPLUGIN != 1 )) && is-at-least 5; then
 
 elif is-at-least 4.3.11; then
 
-  source "$HOME/dotfiles/themes/agkozak-zsh-prompt/agkozak-zsh-prompt.plugin.zsh"
+  source "$HOME/dotfiles/prompts/agkozak-zsh-prompt/agkozak-zsh-prompt.plugin.zsh"
 
 fi
 
