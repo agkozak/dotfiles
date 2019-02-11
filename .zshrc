@@ -148,7 +148,7 @@ alias ls='ls ${=LS_OPTIONS}'
 alias -g CA='2>&1 | cat -A'
 alias -g G='| grep'
 alias -g H='| head'
-alias -g L='| less -R'
+alias -g L='| less'
 alias -g LL='2>&1 | less'
 alias -g M='| most'
 alias -g NE='2> /dev/null'
@@ -522,3 +522,4 @@ fi
 # }}}1
 
 # vim: ai:fdm=marker:ts=2:et:sts=2:sw=2
+=2

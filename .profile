@@ -19,8 +19,13 @@ VISUAL="$EDITOR"
 export ENV
 ENV="$HOME/.shrc"
 
-export LESS
-LESS='-R'
+case $(ls -l $(command -v less)) in
+  *busybox*) ;;
+  *)
+    export LESS
+    LESS='-R'
+    ;;
+esac
 
 if command -v lesspipe > /dev/null 2>&1; then
   export LESSOPEN
