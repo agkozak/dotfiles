@@ -17,7 +17,7 @@ conditional_install() {
     until [ $# = 0 ]; do
       if [ ! -e "$1" ]; then
         printf 'Installing %s\n' "$1"
-      elif [ -n "$(find -L "./$1" -prune -newer "${HOME}/$1")" ]; then
+      elif [ -n "$(find -L "./$1" -prune -newer "${HOME}/$1" > /dev/null 2>&1)" ]; then
         printf 'Upgrading %s\n' "$1"
       else
         printf 'Replacing %s\n' "$1"
