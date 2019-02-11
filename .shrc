@@ -120,7 +120,7 @@ elif [ -z "$LS_COLORS" ]; then
 fi
 
 case $AGKDOT_SYSTEMINFO in
-  CYGWIN*GNU/Linux|SunOS*) ;;
+  CYGWIN*GNU/Linux|SunOS*|*ish*) ;;
   *)
     if [ "$SHRC_TERM_COLORS" -ge 8 ]; then
       alias dir='dir --color=auto'
