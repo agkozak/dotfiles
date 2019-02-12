@@ -304,10 +304,12 @@ if (( AGKDOT_NO_ZPLUGIN != 1 )) && is-at-least 5; then
       zplugin load jreese/zsh-titles
     fi
 
-    is-at-least 5.3 && zplugin ice silent wait'0'
-    zplugin load zdharma/zui
-    is-at-least 5.3 && zplugin ice silent wait'1'
-    zplugin load zdharma/zbrowse
+    if [[ $AGKDOT_SYSTEMINFO != *ish* ]]; then
+      is-at-least 5.3 && zplugin ice silent wait'0'
+      zplugin load zdharma/zui
+      is-at-least 5.3 && zplugin ice silent wait'1'
+      zplugin load zdharma/zbrowse
+    fi
 
     # CRASIS_THEME="safari-256"
     # zplugin load zdharma/zplugin-crasis
@@ -522,4 +524,3 @@ fi
 # }}}1
 
 # vim: ai:fdm=marker:ts=2:et:sts=2:sw=2
-=2
