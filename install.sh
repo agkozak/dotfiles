@@ -36,6 +36,7 @@ conditional_install() {
 #   $2 Branch (if other than master)
 ###########################################################
 github_clone_or_update() {
+  command -v git > /dev/null 2>&1 || echo 'Install git.' >&2
   AGKDOT_REPO=$(echo "$1" | awk -F/ '{ printf "%s", $2 }')
   echo
   printf 'GitHub repository %s:\n' "$1"
@@ -140,6 +141,7 @@ if command -v tmux > /dev/null 2>&1; then
   cp .tmux.conf ..
 	if [ ! -d "$HOME/.tmux" ]; then
 		echo Installing tpm
+    command -v git > /dev/null 2>&1 || echo 'Install git.' >&2
 		git clone https://github.com/tmux-plugins/tpm "$HOME/.tmux/plugins/tpm"
 	fi
 fi
