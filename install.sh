@@ -125,7 +125,8 @@ case $systeminfo in
 	;;
 	*Msys|*Cygwin)
 		echo .minttyrc
-		github_clone_or_update "agkozak/zenburn.minttyrc" develop
+		# github_clone_or_update "agkozak/zenburn.minttyrc" develop
+    cp .minttyrc "$HOME"
 	;;
 esac
 
