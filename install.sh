@@ -57,6 +57,7 @@ github_clone_or_update() {
 cd prompts || exit
 
 github_clone_or_update "agkozak/polyglot" develop
+github_clone_or_update "jonmosco/kube-ps1"
 github_clone_or_update "agkozak/polyglot-kube-ps1"
 
 [ ! -d "$HOME/.zplugin/plugins/agkozak---agkozak-zsh-prompt" ] \
