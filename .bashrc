@@ -91,6 +91,11 @@ else
   . "${HOME}/dotfiles/plugins/z/z.sh"
 fi
 
+# if type kubectl &> /dev/null; then
+  . "${HOME}/dotfiles/prompts/kube-ps1/kube-ps1.sh"
+  . "${HOME}/dotfiles/prompts/polyglot-kube-ps1/polyglot-kube-ps1.sh"
+# fi
+
 # End .bashrc benchmark {{{
 
 if (( AGKDOT_BENCHMARKS )); then

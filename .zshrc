@@ -287,6 +287,11 @@ if (( AGKDOT_NO_ZPLUGIN != 1 )) && is-at-least 5; then
     # AGKOZAK_COLORS_PROMPT_CHAR='magenta'
     # AGKOZAK_CUSTOM_SYMBOLS=( '⇣⇡' '⇣' '⇡' '+' 'x' '!' '>' '?' )
 
+    # if which kubetcl &> /dev/null; then
+    #   zplugin load jonmosco/kube-ps1
+    #   zplugin load agkozak/polyglot-kube-ps1
+    # fi
+
     is-at-least 5.3 && zplugin ice silent wait'0'
     zplugin ice ver"develop"
     zplugin load agkozak/zhooks
