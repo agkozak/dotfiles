@@ -24,14 +24,14 @@ fi
 
 # Begin .shrc benchmark {{{
 
-_is_busybox() {
-  [ "$IS_BUSYBOX" = '1' ] && return 0
+_agkdot_is_busybox() {
+  [ "$AGKDOT_IS_BUSYBOX" = '1' ] && return 0
   case $0 in
     ash|sh)
       if command -v readlink > /dev/null 2>&1; then
         case "$(exec 2>/dev/null; readlink "/proc/$$/exe")" in
           */busybox)
-            IS_BUSYBOX=1
+            AGKDOT_IS_BUSYBOX=1
             return 0 ;;
           *) return 1 ;;
         esac
@@ -45,7 +45,7 @@ if [ "${AGKDOT_BENCHMARKS:-0}" -eq 1 ]; then
   case $AGKDOT_SYSTEMINFO in
     # BSD and busybox date don't handle nanoseconds
     *BSD*|*bsd*|DragonFly*) ;;
-    *) ! _is_busybox && start=$(($(date +%s%N)/1000000)) ;;
+    *) ! _agkdot_is_busybox && start=$(($(date +%s%N)/1000000)) ;;
   esac
 fi
 
@@ -173,7 +173,7 @@ alias github-stats='github-stats --token $GITHUB_STATS_TOKEN'
 alias help='man'
 alias p='ps -f'
 alias phpunit='$HOME/bin/phpunit.phar'
-! _is_busybox && alias sgrep='grep -R -n -H -C 5 --exclude-dir={.git,.svn,CVS} '
+! _agkdot_is_busybox && alias sgrep='grep -R -n -H -C 5 --exclude-dir={.git,.svn,CVS} '
 alias sortnr='sort -n -r'
 alias t='tail -f'
 alias v='findv'
@@ -294,7 +294,7 @@ if [ "${AGKDOT_BENCHMARKS:-0}" -eq 1 ]; then
   case $AGKDOT_SYSTEMINFO in
     FreeBSD*) ;;
     *)
-      if ! _is_busybox; then
+      if ! _agkdot_is_busybox; then
         finish=$(($(date +%s%N)/1000000))
         difference=$((finish-start))
         echo ".shrc loaded in ${difference}ms."
@@ -308,6 +308,6 @@ fi
 # shellcheck source=/dev/null
 [ -f "$HOME/.shrc.local" ] && . "$HOME/.shrc.local"
 
-unset IS_BUSYBOX
+unset AGKDOT_IS_BUSYBOX
 
 # vim: ft=sh:fdm=marker:ts=2:et:sw=2:ai:sts=2
