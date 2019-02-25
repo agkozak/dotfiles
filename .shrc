@@ -25,11 +25,14 @@ fi
 # Begin .shrc benchmark {{{
 
 _is_busybox() {
+  [ "$IS_BUSYBOX" = '1' ] && return 0
   case $0 in
     ash|sh)
       if command -v readlink > /dev/null 2>&1; then
         case "$(exec 2>/dev/null; readlink "/proc/$$/exe")" in
-          */busybox) return 0 ;;
+          */busybox)
+            IS_BUSYBOX=1
+            return 0 ;;
           *) return 1 ;;
         esac
       fi
@@ -170,7 +173,7 @@ alias github-stats='github-stats --token $GITHUB_STATS_TOKEN'
 alias help='man'
 alias p='ps -f'
 alias phpunit='$HOME/bin/phpunit.phar'
-alias sgrep='grep -R -n -H -C 5 --exclude-dir={.git,.svn,CVS} '
+! _is_busybox && alias sgrep='grep -R -n -H -C 5 --exclude-dir={.git,.svn,CVS} '
 alias sortnr='sort -n -r'
 alias t='tail -f'
 alias v='findv'
@@ -285,9 +288,6 @@ update_dotfiles() {
 # Disable flow control -- allows use of Ctrl-Q as tmux/screen prefix
 [ -z $ZSH_VERSION ] && stty -ixon
 
-# shellcheck source=/dev/null
-[ -f "$HOME/.shrc.local" ] && . "$HOME/.shrc.local"
-
 # End .shrc benchmark {{{
 
 if [ "${AGKDOT_BENCHMARKS:-0}" -eq 1 ]; then
@@ -304,5 +304,10 @@ if [ "${AGKDOT_BENCHMARKS:-0}" -eq 1 ]; then
 fi
 
 # }}}
+
+# shellcheck source=/dev/null
+[ -f "$HOME/.shrc.local" ] && . "$HOME/.shrc.local"
+
+unset IS_BUSYBOX
 
 # vim: ft=sh:fdm=marker:ts=2:et:sw=2:ai:sts=2
