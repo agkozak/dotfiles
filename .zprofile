@@ -17,7 +17,7 @@ if [[ -f "${HOME}/.profile" ]]; then
   if [[ ! -f "${HOME}/.profile.zwc" ]] || [[ "${HOME}/.profile" -nt "${HOME}/profile.zwc" ]]; then
     zcompile "${HOME}/.profile" &> /dev/null
   fi
-  (( ! $+ENV )) && source "${HOME}/.profile"
+  (( $+TMUX )) && source "${HOME}/.profile"
 fi
 
 # vim: ts=2:et:ai:sts=2:sw=2
