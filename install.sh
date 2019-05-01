@@ -142,11 +142,11 @@ esac
 if command -v tmux > /dev/null 2>&1; then
 	echo .tmux.conf
   cp .tmux.conf ..
-	if [ ! -d "$HOME/.tmux" ]; then
-		echo Installing tpm
-    command -v git > /dev/null 2>&1 || echo 'Install git.' >&2
-		git clone https://github.com/tmux-plugins/tpm "$HOME/.tmux/plugins/tpm"
-	fi
+	# if [ ! -d "$HOME/.tmux" ]; then
+	# 	echo Installing tpm
+    # command -v git > /dev/null 2>&1 || echo 'Install git.' >&2
+	# 	git clone https://github.com/tmux-plugins/tpm "$HOME/.tmux/plugins/tpm"
+	# fi
 fi
 
 if command -v emacs > /dev/null 2>&1; then
