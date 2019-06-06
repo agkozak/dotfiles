@@ -346,6 +346,7 @@ if executable('git') && (executable('curl') || executable('wget') || WINDOWS())
     if has('gui') && has('python')
       Plug 'mbadran/headlights'
     endif
+    Plug 'ciaranm/securemodelines'
 
     " Git
     Plug 'tpope/vim-fugitive'
