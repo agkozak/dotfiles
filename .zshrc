@@ -89,6 +89,7 @@ setopt HIST_EXPIRE_DUPS_FIRST # Expire duplicates first
 
 # Enable history on CloudLinux for a custom build of zsh in ~/bin
 # with HAVE_SYMLINKS=0 set at compile time
+# See https://gist.github.com/agkozak/50a9bf7da14b9f060c68124418ac5217
 if [[ -f '/var/.cagefs/.cagefs.token' ]]; then
   if [[ =zsh != '/bin/zsh' ]]; then
     setopt HIST_FCNTL_LOCK
@@ -147,7 +148,7 @@ alias ls='ls ${=LS_OPTIONS}'
 alias -g CA='2>&1 | cat -A'
 alias -g G='| grep'
 alias -g H='| head'
-alias -g L='| less -R'
+alias -g L='| less'
 alias -g LL='2>&1 | less'
 alias -g M='| most'
 alias -g NE='2> /dev/null'
@@ -282,47 +283,56 @@ if (( AGKDOT_NO_ZPLUGIN != 1 )) && is-at-least 5; then
     AGKOZAK_LEFT_PROMPT_ONLY=1
     zplugin ice ver"develop"
     zplugin load agkozak/agkozak-zsh-prompt
+    # AGKOZAK_PROMPT_CHAR=( '❯' '❯' '❮' )
+    # AGKOZAK_COLORS_PROMPT_CHAR='magenta'
+    # AGKOZAK_CUSTOM_SYMBOLS=( '⇣⇡' '⇣' '⇡' '+' 'x' '!' '>' '?' )
 
-    is-at-least 5.3 && zplugin ice silent wait'0'
+    # zplugin load agkozak/polyglot
+    # if which kubectl &> /dev/null; then
+    #   zplugin load jonmosco/kube-ps1
+    #   zplugin load agkozak/polyglot-kube-ps1
+    # fi
+
+    is-at-least 5.3 && zplugin ice lucid wait'0'
     zplugin ice ver"develop"
     zplugin load agkozak/zhooks
 
     # In FreeBSD, /home is /usr/home
     ZSHZ_DEBUG=1
     [[ $OSTYPE == freebsd* ]] && typeset -g ZSHZ_NO_RESOLVE_SYMLINKS=1
-    is-at-least 5.3 && zplugin ice silent wait'0'
+    is-at-least 5.3 && zplugin ice lucid wait'0'
     zplugin ice ver"develop"
     zplugin load agkozak/zsh-z
 
     # zsh-titles causes dittography in Emacs shell and Vim terminal
     if (( ! $+EMACS )) && [[ ! $TERM = 'dumb' ]] && (( $+VIM )); then
-      is-at-least 5.3 && zplugin ice silent wait'0'
+      is-at-least 5.3 && zplugin ice lucid wait'0'
       zplugin load jreese/zsh-titles
     fi
 
-    is-at-least 5.3 && zplugin ice silent wait'0'
-    zplugin load zdharma/zui
-    is-at-least 5.3 && zplugin ice silent wait'1'
-    zplugin load zdharma/zbrowse
+    if [[ $AGKDOT_SYSTEMINFO != *ish* ]]; then
+      is-at-least 5.3 && zplugin ice lucid wait'0'
+      zplugin load zdharma/zui
+      is-at-least 5.3 && zplugin ice lucid wait'1'
+      zplugin load zdharma/zbrowse
+    fi
 
     # CRASIS_THEME="safari-256"
     # zplugin load zdharma/zplugin-crasis
 
     zplugin snippet OMZ::plugins/extract/extract.plugin.zsh
 
-    is-at-least 5.3 && zplugin ice silent wait'0'
+    # is-at-least 5.3 && zplugin ice lucid wait'0'
     zplugin load zsh-users/zsh-history-substring-search
     HISTORY_SUBSTRING_SEARCH_HIGHLIGHT_FOUND='underline'
     HISTORY_SUBSTRING_SEARCH_HIGHLIGHT_NOT_FOUND=''
     bindkey '^[OA' history-substring-search-up
     bindkey '^[OB' history-substring-search-down
-    bindkey '^P' history-substring-search-up
-    bindkey '^N' history-substring-search-down
     bindkey -M vicmd 'k' history-substring-search-up
     bindkey -M vicmd 'j' history-substring-search-down
 
     # Must be loaded last
-    # is-at-least 5.3 && zplugin ice silent wait'0' atload 'fast-theme free'
+    # is-at-least 5.3 && zplugin ice lucid wait'1' atload 'fast-theme free'
     # zplugin load zdharma/fast-syntax-highlighting
 
   else
@@ -333,7 +343,7 @@ if (( AGKDOT_NO_ZPLUGIN != 1 )) && is-at-least 5; then
 
 elif is-at-least 4.3.11; then
 
-  source "$HOME/dotfiles/themes/agkozak-zsh-prompt/agkozak-zsh-prompt.plugin.zsh"
+  source "$HOME/dotfiles/prompts/agkozak-zsh-prompt/agkozak-zsh-prompt.plugin.zsh"
 
 fi
 
@@ -429,6 +439,10 @@ bindkey '^R' history-incremental-search-backward
 setopt NO_FLOW_CONTROL                          # Or the next command won't work
 bindkey '^S' history-incremental-search-forward
 
+# More zsh-history-substring-search bindings
+bindkey '^P' history-substring-search-up
+bindkey '^N' history-substring-search-down
+
 # }}}2
 
 # }}}1
@@ -493,7 +507,7 @@ alias which &> /dev/null && unalias which
 # While tinkering with ZSH-z
 if (( SHLVL == 1 )); then
   [[ ! -d ${HOME}/.zbackup ]] && mkdir "${HOME}/.zbackup"
-  cp "${HOME}/.z" "${HOME}/.zbackup/.z_${EPOCHSECONDS}"
+  cp "${HOME}/.z" "${HOME}/.zbackup/.z_${EPOCHSECONDS}" 2> /dev/null
 fi
 
 # Compile or recompile ~/.zcompdump and ~/.zshrc {{{1

@@ -24,12 +24,15 @@ fi
 
 # Begin .shrc benchmark {{{
 
-_is_busybox() {
+_agkdot_is_busybox() {
+  [ "$AGKDOT_IS_BUSYBOX" = '1' ] && return 0
   case $0 in
     ash|sh)
       if command -v readlink > /dev/null 2>&1; then
         case "$(exec 2>/dev/null; readlink "/proc/$$/exe")" in
-          */busybox) return 0 ;;
+          */busybox)
+            AGKDOT_IS_BUSYBOX=1
+            return 0 ;;
           *) return 1 ;;
         esac
       fi
@@ -42,7 +45,7 @@ if [ "${AGKDOT_BENCHMARKS:-0}" -eq 1 ]; then
   case $AGKDOT_SYSTEMINFO in
     # BSD and busybox date don't handle nanoseconds
     *BSD*|*bsd*|DragonFly*) ;;
-    *) ! _is_busybox && start=$(($(date +%s%N)/1000000)) ;;
+    *) ! _agkdot_is_busybox && start=$(($(date +%s%N)/1000000)) ;;
   esac
 fi
 
@@ -120,7 +123,7 @@ elif [ -z "$LS_COLORS" ]; then
 fi
 
 case $AGKDOT_SYSTEMINFO in
-  CYGWIN*GNU/Linux|SunOS*) ;;
+  CYGWIN*GNU/Linux|SunOS*|*ish*) ;;
   *)
     if [ "$SHRC_TERM_COLORS" -ge 8 ]; then
       alias dir='dir --color=auto'
@@ -170,7 +173,7 @@ alias github-stats='github-stats --token $GITHUB_STATS_TOKEN'
 alias help='man'
 alias p='ps -f'
 alias phpunit='$HOME/bin/phpunit.phar'
-alias sgrep='grep -R -n -H -C 5 --exclude-dir={.git,.svn,CVS} '
+! _agkdot_is_busybox && alias sgrep='grep -R -n -H -C 5 --exclude-dir={.git,.svn,CVS} '
 alias sortnr='sort -n -r'
 alias t='tail -f'
 alias v='findv'
@@ -232,9 +235,9 @@ esac
 # But not in zsh -- it uses agkozak-zsh-theme
 if [ -z "$ZSH_VERSION" ] || [ "$0" = 'bash' ] || [ "$0" = 'ksh' ] \
   || [ "$0" = 'sh' ]; then
-  if [ -f "$HOME/dotfiles/themes/polyglot/polyglot.sh" ]; then
+  if [ -f "$HOME/dotfiles/prompts/polyglot/polyglot.sh" ]; then
     # shellcheck source=/dev/null
-    . "$HOME/dotfiles/themes/polyglot/polyglot.sh"
+    . "$HOME/dotfiles/prompts/polyglot/polyglot.sh"
   fi
 fi
 
@@ -285,16 +288,13 @@ update_dotfiles() {
 # Disable flow control -- allows use of Ctrl-Q as tmux/screen prefix
 [ -z $ZSH_VERSION ] && stty -ixon
 
-# shellcheck source=/dev/null
-[ -f "$HOME/.shrc.local" ] && . "$HOME/.shrc.local"
-
 # End .shrc benchmark {{{
 
 if [ "${AGKDOT_BENCHMARKS:-0}" -eq 1 ]; then
   case $AGKDOT_SYSTEMINFO in
     FreeBSD*) ;;
     *)
-      if ! _is_busybox; then
+      if ! _agkdot_is_busybox; then
         finish=$(($(date +%s%N)/1000000))
         difference=$((finish-start))
         echo ".shrc loaded in ${difference}ms."
@@ -304,5 +304,10 @@ if [ "${AGKDOT_BENCHMARKS:-0}" -eq 1 ]; then
 fi
 
 # }}}
+
+# shellcheck source=/dev/null
+[ -f "$HOME/.shrc.local" ] && . "$HOME/.shrc.local"
+
+unset AGKDOT_IS_BUSYBOX
 
 # vim: ft=sh:fdm=marker:ts=2:et:sw=2:ai:sts=2

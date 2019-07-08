@@ -346,6 +346,7 @@ if executable('git') && (executable('curl') || executable('wget') || WINDOWS())
     if has('gui') && has('python')
       Plug 'mbadran/headlights'
     endif
+    Plug 'ciaranm/securemodelines'
 
     " Git
     Plug 'tpope/vim-fugitive'
@@ -404,6 +405,7 @@ if executable('git') && (executable('curl') || executable('wget') || WINDOWS())
     Plug 'agkozak/vim-zsh', { 'for': 'zsh', 'branch': 'develop' }
 
     " Zeal
+    set modifiable
     Plug 'KabbAmine/zeavim.vim'
 
     call plug#end()

@@ -17,7 +17,7 @@ conditional_install() {
     until [ $# = 0 ]; do
       if [ ! -e "$1" ]; then
         printf 'Installing %s\n' "$1"
-      elif [ -n "$(find -L "./$1" -prune -newer "${HOME}/$1")" ]; then
+      elif [ -n "$(find -L "./$1" -prune -newer "${HOME}/$1" > /dev/null 2>&1)" ]; then
         printf 'Upgrading %s\n' "$1"
       else
         printf 'Replacing %s\n' "$1"
@@ -36,6 +36,7 @@ conditional_install() {
 #   $2 Branch (if other than master)
 ###########################################################
 github_clone_or_update() {
+  command -v git > /dev/null 2>&1 || echo 'Install git.' >&2
   AGKDOT_REPO=$(echo "$1" | awk -F/ '{ printf "%s", $2 }')
   echo
   printf 'GitHub repository %s:\n' "$1"
@@ -51,11 +52,13 @@ github_clone_or_update() {
 
 # }}}1
 
-[ ! -d themes ] && mkdir themes
+[ ! -d prompts ] && mkdir prompts
 
-cd themes || exit
+cd prompts || exit
 
 github_clone_or_update "agkozak/polyglot" develop
+github_clone_or_update "jonmosco/kube-ps1"
+github_clone_or_update "agkozak/polyglot-kube-ps1"
 
 [ ! -d "$HOME/.zplugin/plugins/agkozak---agkozak-zsh-prompt" ] \
   && github_clone_or_update "agkozak/agkozak-zsh-prompt" develop
@@ -124,7 +127,8 @@ case $systeminfo in
 	;;
 	*Msys|*Cygwin)
 		echo .minttyrc
-		github_clone_or_update "agkozak/zenburn.minttyrc" develop
+		# github_clone_or_update "agkozak/zenburn.minttyrc" develop
+    cp .minttyrc "$HOME"
 	;;
 esac
 
@@ -138,10 +142,11 @@ esac
 if command -v tmux > /dev/null 2>&1; then
 	echo .tmux.conf
   cp .tmux.conf ..
-	if [ ! -d "$HOME/.tmux" ]; then
-		echo Installing tpm
-		git clone https://github.com/tmux-plugins/tpm "$HOME/.tmux/plugins/tpm"
-	fi
+	# if [ ! -d "$HOME/.tmux" ]; then
+	# 	echo Installing tpm
+    # command -v git > /dev/null 2>&1 || echo 'Install git.' >&2
+	# 	git clone https://github.com/tmux-plugins/tpm "$HOME/.tmux/plugins/tpm"
+	# fi
 fi
 
 if command -v emacs > /dev/null 2>&1; then
