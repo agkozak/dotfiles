@@ -485,6 +485,9 @@ if [[ -d '/c/wamp64/www' ]]; then
   }
 fi
 
+# which should not be aliased in ZSH
+alias which &> /dev/null && unalias which
+
 # }}}1
 
 # While tinkering with ZSH-z
