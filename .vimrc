@@ -328,7 +328,7 @@ if executable('git') && (executable('curl') || executable('wget') || WINDOWS())
     Plug 'ctrlpvim/ctrlp.vim'
     Plug 'mhinz/vim-startify'
     if ALECompatible()
-      Plug 'w0rp/ale'
+      Plug 'dense-analysis/ale'
     else
       Plug 'scrooloose/syntastic'
     endif
