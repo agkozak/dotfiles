@@ -82,8 +82,8 @@ fi
 [[ $OSTYPE == freebsd* ]] && _Z_NO_RESOLVE_SYMLINKS=1
 
 # shellcheck source=/dev/null
-if [[ -f ${HOME}/.zplugin/plugins/agkozak---z/z.sh ]]; then
-  . "${HOME}/.zplugin/plugins/agkozak---z/z.sh"
+if [[ -f ${HOME}/dotfiles/plugins/bash-z/bash-z.sh ]]; then
+  . "${HOME}/dotfiles/plugins/bash-z/bash-z.sh"
 else
   if [[ ! -d ${HOME}/dotfiles/plugins/z ]]; then
     git clone https://github.com/agkozak/z.git "$HOME/dotfiles/plugins/z"
