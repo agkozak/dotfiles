@@ -14,10 +14,8 @@ case $- in
   *) exit ;;
 esac
 
-if [ -z "$AGKDOT_SYSTEMINFO" ]; then
-  export AGKDOT_SYSTEMINFO
-  AGKDOT_SYSTEMINFO="$(uname -a)"
-fi
+export AGKDOT_SYSTEMINFO
+AGKDOT_SYSTEMINFO="${AGKOZAK_SYSTEMINFO:=$(uname -a)}"
 
 #shellcheck source=/dev/null
 [ -z "$ENV" ] && [ -f "$HOME/.profile" ] && . "$HOME/.profile"
