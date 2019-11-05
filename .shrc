@@ -15,7 +15,7 @@ case $- in
 esac
 
 export AGKDOT_SYSTEMINFO
-AGKDOT_SYSTEMINFO="${AGKOZAK_SYSTEMINFO:=$(uname -a)}"
+AGKDOT_SYSTEMINFO="${AGKDOT_SYSTEMINFO:=$(uname -a)}"
 
 #shellcheck source=/dev/null
 [ -z "$ENV" ] && [ -f "$HOME/.profile" ] && . "$HOME/.profile"
