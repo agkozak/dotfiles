@@ -285,8 +285,7 @@ if (( AGKDOT_NO_ZPLUGIN != 1 )) && is-at-least 5; then
     zplugin load agkozak/agkozak-zsh-prompt
     # AGKOZAK_PROMPT_CHAR=( '❯' '❯' '❮' )
     # AGKOZAK_COLORS_PROMPT_CHAR='magenta'
-    # AGKOZAK_CUSTOM_SYMBOLS=( '⇣⇡' '⇣' '⇡' '+' 'x' '!' '>' '?' )
-    AGKOZAK_SHOW_STASH=1
+    # AGKOZAK_CUSTOM_SYMBOLS=( '⇣⇡' '⇣' '⇡' '+' 'x' '!' '>' '?' 'S' )
 
     # zplugin load agkozak/polyglot
     # if which kubectl &> /dev/null; then
