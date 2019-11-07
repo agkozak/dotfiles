@@ -278,45 +278,41 @@ if (( AGKDOT_NO_ZPLUGIN != 1 )) && is-at-least 5; then
 
     # Load plugins and snippets {{{2
 
-    # AGKOZAK_PROMPT_DEBUG=1
-    # AGKOZAK_MULTILINE=0
-    AGKOZAK_LEFT_PROMPT_ONLY=1
-    zplugin ice ver"develop"
-    zplugin load agkozak/agkozak-zsh-prompt
-    # AGKOZAK_PROMPT_CHAR=( '❯' '❯' '❮' )
     # AGKOZAK_COLORS_PROMPT_CHAR='magenta'
     # AGKOZAK_CUSTOM_SYMBOLS=( '⇣⇡' '⇣' '⇡' '+' 'x' '!' '>' '?' 'S' )
+    AGKOZAK_LEFT_PROMPT_ONLY=1
+    # AGKOZAK_MULTILINE=0
+    # AGKOZAK_PROMPT_CHAR=( '❯' '❯' '❮' )
+    # AGKOZAK_PROMPT_DEBUG=1
+    zplugin light-mode ver"develop" for agkozak/agkozak-zsh-prompt
 
-    # zplugin load agkozak/polyglot
+    # zplugin light agkozak/polyglot
     # if which kubectl &> /dev/null; then
-    #   zplugin load jonmosco/kube-ps1
-    #   zplugin load agkozak/polyglot-kube-ps1
+    #   zplugin light jonmosco/kube-ps1
+    #   zplugin light agkozak/polyglot-kube-ps1
     # fi
 
-    zplugin ice lucid ver"develop" wait
-    zplugin load agkozak/zhooks
-
+    # agkozak/zsh-z
     # In FreeBSD, /home is /usr/home
     ZSHZ_DEBUG=1
     [[ $OSTYPE == freebsd* ]] && typeset -g ZSHZ_NO_RESOLVE_SYMLINKS=1
-    zplugin ice lucid ver"develop" wait
-    zplugin load agkozak/zsh-z
 
-    # zsh-titles causes dittography in Emacs shell and Vim terminal
+    zplugin light-mode lucid ver"develop" wait for \
+      agkozak/zhooks \
+      agkozak/zsh-z
+
+# zsh-titles causes dittography in Emacs shell and Vim terminal
     if (( ! $+EMACS )) && [[ ! $TERM = 'dumb' ]] && (( $+VIM )); then
-      zplugin ice lucid wait
-      zplugin load jreese/zsh-titles
+      zplugin light-mode lucid wait for jreese/zsh-titles
     fi
 
     if [[ $AGKDOT_SYSTEMINFO != *ish* ]]; then
-      zplugin ice lucid wait
-      zplugin load zdharma/zui
-      zplugin ice lucid wait'1'
-      zplugin load zdharma/zbrowse
+      zplugin light-mode lucid wait for load zdharma/zui
+      zplugin light-mode lucid wait'1' for zdharma/zbrowse
     fi
 
     # CRASIS_THEME="safari-256"
-    # zplugin load zdharma/zplugin-crasis
+    # zplugin light zdharma/zplugin-crasis
 
     zplugin snippet OMZ::plugins/extract/extract.plugin.zsh
 
@@ -341,7 +337,12 @@ if (( AGKDOT_NO_ZPLUGIN != 1 )) && is-at-least 5; then
 
 elif is-at-least 4.3.11; then
 
-  source "$HOME/dotfiles/prompts/agkozak-zsh-prompt/agkozak-zsh-prompt.plugin.zsh"
+  if [[ ! -d ${HOME}/dotfiles/prompts/agkozak-zsh-prompt ]]; then
+    ( mkdir -p "${HOME}/dotfiles/prompts" \
+      && cd "${HOME}/dotfiles/prompts" \
+      && git clone 'https://github.com/agkozak/agkozak-zsh-prompt' )
+  fi
+  source "${HOME}/dotfiles/prompts/agkozak-zsh-prompt/agkozak-zsh-prompt.plugin.zsh"
 
 fi
 
