@@ -293,27 +293,25 @@ if (( AGKDOT_NO_ZPLUGIN != 1 )) && is-at-least 5; then
     #   zplugin load agkozak/polyglot-kube-ps1
     # fi
 
-    is-at-least 5.3 && zplugin ice lucid wait'0'
-    zplugin ice ver"develop"
+    zplugin ice lucid ver"develop" wait
     zplugin load agkozak/zhooks
 
     # In FreeBSD, /home is /usr/home
     ZSHZ_DEBUG=1
     [[ $OSTYPE == freebsd* ]] && typeset -g ZSHZ_NO_RESOLVE_SYMLINKS=1
-    is-at-least 5.3 && zplugin ice lucid wait'0'
-    zplugin ice ver"develop"
+    zplugin ice lucid ver"develop" wait
     zplugin load agkozak/zsh-z
 
     # zsh-titles causes dittography in Emacs shell and Vim terminal
     if (( ! $+EMACS )) && [[ ! $TERM = 'dumb' ]] && (( $+VIM )); then
-      is-at-least 5.3 && zplugin ice lucid wait'0'
+      zplugin ice lucid wait
       zplugin load jreese/zsh-titles
     fi
 
     if [[ $AGKDOT_SYSTEMINFO != *ish* ]]; then
-      is-at-least 5.3 && zplugin ice lucid wait'0'
+      zplugin ice lucid wait
       zplugin load zdharma/zui
-      is-at-least 5.3 && zplugin ice lucid wait'1'
+      zplugin ice lucid wait'1'
       zplugin load zdharma/zbrowse
     fi
 
@@ -322,7 +320,7 @@ if (( AGKDOT_NO_ZPLUGIN != 1 )) && is-at-least 5; then
 
     zplugin snippet OMZ::plugins/extract/extract.plugin.zsh
 
-    # is-at-least 5.3 && zplugin ice lucid wait'0'
+    # zplugin ice lucid wait
     zplugin load zsh-users/zsh-history-substring-search
     HISTORY_SUBSTRING_SEARCH_HIGHLIGHT_FOUND='underline'
     HISTORY_SUBSTRING_SEARCH_HIGHLIGHT_NOT_FOUND=''
@@ -332,7 +330,7 @@ if (( AGKDOT_NO_ZPLUGIN != 1 )) && is-at-least 5; then
     bindkey -M vicmd 'j' history-substring-search-down
 
     # Must be loaded last
-    # is-at-least 5.3 && zplugin ice lucid wait'1' atload 'fast-theme free'
+    # zplugin ice lucid wait'1' atload 'fast-theme free'
     # zplugin load zdharma/fast-syntax-highlighting
 
   else
