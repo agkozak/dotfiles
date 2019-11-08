@@ -326,8 +326,8 @@ if (( AGKDOT_NO_ZPLUGIN != 1 )) && is-at-least 5; then
     bindkey -M vicmd 'j' history-substring-search-down
 
     # Must be loaded last
-    # zplugin ice lucid wait'1' atload 'fast-theme free'
-    # zplugin load zdharma/fast-syntax-highlighting
+    zplugin atload'fast-theme free &> /dev/null' lucid wait'1' for \
+      zdharma/fast-syntax-highlighting
 
   else
     print 'Please install git.'
