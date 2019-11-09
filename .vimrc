@@ -117,7 +117,7 @@ if has('gui_running')
     if has('autocmd')
       augroup GUI
         autocmd!
-        au GUIEnter * simalt ~x   " Start full-screen when GUI is enabled
+        autocmd GUIEnter * simalt ~x   " Start full-screen when GUI is enabled
       augroup END
     endif
     " Windows GUI font (Consolas tends to leave artefacts)
