@@ -19,7 +19,7 @@ VISUAL="$EDITOR"
 export ENV
 ENV="$HOME/.shrc"
 
-case $(ls -l $(command -v less)) in
+case $(ls -l "$(command -v less)") in
   *busybox*) ;;
   *)
     export LESS
