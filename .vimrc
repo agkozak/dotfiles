@@ -17,7 +17,8 @@ endfunction
 " ALE Compatibility {{{
 
 function! ALECompatible() abort
-  return ((v:version >= 800 && has('job') && has('timers') && has('channel')) || has('nvim'))
+  return ((v:version >= 800 && has('job') && has('timers') && has('channel'))
+        \ || has('nvim'))
 endfunction
 
 " }}}
@@ -121,11 +122,6 @@ if has('gui_running')
     endif
     " Windows GUI font (Consolas tends to leave artefacts)
     set guifont=DejaVu\ Sans\ Mono:h18:cANSI,Consolas:h18:cANSI
-    " if v:version > 740 || v:version == 740 && has('patch393')
-    "   set renderoptions=type:directx,
-    "     \gamma:1.5,contrast:0.5,geom:1,
-    "     \renmode:5,taamode:1,level:0.5
-    " endif
   else
     set lines=100 columns=200     " Open large window
     set guifont=DejaVu\ Sans\ Mono\ 12
@@ -316,7 +312,8 @@ if executable('git') && (executable('curl') || executable('wget') || WINDOWS())
       set runtimepath=~/.vim,$VIMRUNTIME
 
     " Avoid multiple threads on CloudLinux
-    elseif $VIM !~# 'iVim' && system('uname -a') =~# 'lve'
+    elseif $AGKDOT_SYSTEMINFO =~# 'lve'
+          \ || $VIM !~# 'iVim' && system('uname -a') =~# 'lve'
       let g:plug_threads=1
     endif
 
@@ -337,7 +334,8 @@ if executable('git') && (executable('curl') || executable('wget') || WINDOWS())
     endif
     Plug 'sgur/vim-editorconfig'
     Plug 'majutsushi/tagbar', { 'on': 'TagbarToggle' }
-    if v:version > 703 || v:version == 703 && has('patch1261') && has('patch1264')
+    if v:version > 703
+          \ || v:version == 703 && has('patch1261') && has('patch1264')
       Plug 'jlanzarotta/bufexplorer'
     endif
     Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
@@ -605,7 +603,7 @@ if has('autocmd')
 
     " Jump to last known position in file
     autocmd BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$")
-      \ | execute "normal! g'\"" | endif
+          \ | execute "normal! g'\"" | endif
 
     " Syntax {{{2
 
@@ -728,7 +726,7 @@ function! LinterStatus() abort
         \   '[%dW %dE]',
         \   l:all_non_errors,
         \   l:all_errors
-        \)
+        \ )
 endfunction
 
 " }}}2
