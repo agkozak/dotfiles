@@ -152,7 +152,7 @@ alias -g L='| less'
 alias -g LL='2>&1 | less'
 alias -g M='| most'
 alias -g NE='2> /dev/null'
-alias -g NUL='> /dev/null 2>&1'
+alias -g NUL='&> /dev/null'
 alias -g T='| tail'
 alias -g V='|& vim -'
 
