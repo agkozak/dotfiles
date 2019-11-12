@@ -11,11 +11,6 @@
 #   env ZSH_PROF='' zsh -ic zprof
 (( $+ZSH_PROF )) && zmodload zsh/zprof
 
-# Restore global path when using tmux
-if (( $+TMUX )); then
-  source "$HOME/.zprofile" &> /dev/null
-fi
-
 # For simple script running times, execute
 #
 #     AGKDOT_BENCHMARKS=1
@@ -519,6 +514,7 @@ compile_or_recompile "${HOME}/.zshrc"
 # End .zshrc benchmark {{{1
 
 if (( AGKDOT_BENCHMARKS )); then
+  print ".zshenv loaded in ${AGKDOT_ZSHENV_BENCHMARK}ms total."
   print ".zshrc loaded in ${$(( SECONDS * 1000 ))%.*}ms total."
   typeset -i SECONDS
 fi
