@@ -11,11 +11,6 @@
 #   env ZSH_PROF='' zsh -ic zprof
 (( $+ZSH_PROF )) && zmodload zsh/zprof
 
-# Restore global path when using tmux
-if (( $+TMUX )); then
-  source "$HOME/.zprofile" &> /dev/null
-fi
-
 # For simple script running times, execute
 #
 #     AGKDOT_BENCHMARKS=1
