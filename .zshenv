@@ -2,6 +2,9 @@
 #
 # https://github.com/agkozak/dotfiles
 
+# Benchmarks
+typeset -F SECONDS=0
+
 # if ~/.profile has not been loaded and /etc/zsh/zshenv has
 if [[ -z $ENV ]] && [[ -n $PATH ]]; then
   case $- in
@@ -25,5 +28,8 @@ if whence -w snap &> /dev/null && [[ -f /etc/profile.d/apps-bin-path.sh ]]; then
     emulate zsh
   fi
 fi
+
+# Benchmarks
+typeset -g AGKDOT_ZSHENV_BENCHMARK=${$(( SECONDS * 1000))%.*}
 
 # vim: ai:fdm=marker:ts=2:et:sts=2:sw=2
