@@ -306,6 +306,8 @@ fi
 # shellcheck source=/dev/null
 [ -f "$HOME/.shrc.local" ] && . "$HOME/.shrc.local"
 
-unset AGKDOT_IS_BUSYBOX
+if [ -n "${AGKDOT+x}" ]; then
+  unset AGKDOT_IS_BUSYBOX
+fi
 
 # vim: ft=sh:fdm=marker:ts=2:et:sw=2:ai:sts=2
