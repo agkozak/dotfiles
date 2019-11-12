@@ -190,7 +190,7 @@ alias yta='youtube-dl --audio-format best -x '
 ############################################################
 _agkozak_winpty_alias() {
   while [ "$#" -ne 0 ]; do
-    # shellcheck disable=SC2140
+    # shellcheck disable=SC2139,SC2140
     alias "$1"="winpty $1"
     shift
   done
@@ -284,7 +284,7 @@ update_dotfiles() {
 # }}}1
 
 # Disable flow control -- allows use of Ctrl-Q as tmux/screen prefix
-[ -z $ZSH_VERSION ] && stty -ixon
+[ -z "$ZSH_VERSION" ] && stty -ixon
 
 # End .shrc benchmark {{{
 
