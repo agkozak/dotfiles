@@ -188,7 +188,7 @@ alias yta='youtube-dl --audio-format best -x '
 # Arguments:
 #   $1, $2, etc.  Programs that should be run with winpty
 ############################################################
-_agkozak_winpty_alias() {
+_agkdot_winpty_alias() {
   while [ "$#" -ne 0 ]; do
     # shellcheck disable=SC2140
     alias "$1"="winpty $1"
@@ -198,7 +198,7 @@ _agkozak_winpty_alias() {
 
 case "$AGKDOT_SYSTEMINFO" in
   *Msys|*Cygwin)
-    _agkozak_winpty_alias choco cinst cuninst cup node php
+    _agkdot_winpty_alias choco cinst cuninst cup node php
     alias eslint='winpty $APPDATA/npm/eslint.cmd'
     alias ghci='ghcii.sh'
     alias gvim='/c/Windows/gvim.bat'
@@ -230,7 +230,7 @@ esac
 # Prompt {{{1
 
 # If possible, load the pan-POSIX Polyglot Prompt
-# But not in zsh -- it uses agkozak-zsh-theme
+# But not in zsh -- it uses agkozak-zsh-prompt
 if [ -z "$ZSH_VERSION" ] || [ "$0" = 'bash' ] || [ "$0" = 'ksh' ] \
   || [ "$0" = 'sh' ]; then
   if [ -f "$HOME/dotfiles/prompts/polyglot/polyglot.sh" ]; then
