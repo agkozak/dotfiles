@@ -279,7 +279,7 @@ if (( AGKDOT_NO_ZPLUGIN != 1 )) && is-at-least 5; then
     # AGKOZAK_MULTILINE=0
     # AGKOZAK_PROMPT_CHAR=( '❯' '❯' '❮' )
     # AGKOZAK_PROMPT_DEBUG=1
-    zplugin light-mode ver"develop" for agkozak/agkozak-zsh-prompt
+    zplugin ver"develop" for agkozak/agkozak-zsh-prompt
 
     # zplugin light agkozak/polyglot
     # if which kubectl &> /dev/null; then
@@ -292,22 +292,22 @@ if (( AGKDOT_NO_ZPLUGIN != 1 )) && is-at-least 5; then
     ZSHZ_DEBUG=1
     [[ $OSTYPE == freebsd* ]] && typeset -g ZSHZ_NO_RESOLVE_SYMLINKS=1
 
-    zplugin light-mode lucid ver"develop" wait for \
+    zplugin lucid ver"develop" wait for \
       agkozak/zhooks \
       agkozak/zsh-z
 
     # zsh-titles causes dittography in Emacs shell and Vim terminal
     if (( ! $+EMACS )) && [[ ! $TERM = 'dumb' ]] && (( $+VIM )); then
-      zplugin light-mode lucid wait for jreese/zsh-titles
+      zplugin lucid wait for jreese/zsh-titles
     fi
 
     if [[ $AGKDOT_SYSTEMINFO != *ish* ]]; then
-      zplugin light-mode lucid wait for load zdharma/zui
-      zplugin light-mode lucid wait'1' for zdharma/zbrowse
+      zplugin lucid wait for load zdharma/zui
+      zplugin lucid wait'1' for zdharma/zbrowse
     fi
 
     # CRASIS_THEME="safari-256"
-    # zplugin light zdharma/zplugin-crasis
+    # zplugin load zdharma/zplugin-crasis
 
     zplugin snippet OMZ::plugins/extract/extract.plugin.zsh
 
