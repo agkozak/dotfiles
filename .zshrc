@@ -278,7 +278,7 @@ if (( AGKDOT_NO_ZPLUGIN != 1 )) && is-at-least 5; then
     AGKOZAK_LEFT_PROMPT_ONLY=1
     # AGKOZAK_MULTILINE=0
     # AGKOZAK_PROMPT_CHAR=( '❯' '❯' '❮' )
-    # AGKOZAK_PROMPT_DEBUG=1
+    AGKOZAK_PROMPT_DEBUG=1
     zplugin light-mode ver"develop" for agkozak/agkozak-zsh-prompt
 
     # zplugin light agkozak/polyglot
@@ -297,7 +297,7 @@ if (( AGKDOT_NO_ZPLUGIN != 1 )) && is-at-least 5; then
       agkozak/zsh-z
 
     # zsh-titles causes dittography in Emacs shell and Vim terminal
-    if (( ! $+EMACS )) && [[ ! $TERM = 'dumb' ]] && (( ! $+VIM )); then
+    if (( ! $+EMACS )) && [[ ! $TERM = 'dumb' ]] && (( $+VIM )); then
       zplugin light-mode lucid wait for jreese/zsh-titles
     fi
 
