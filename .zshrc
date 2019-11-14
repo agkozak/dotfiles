@@ -278,7 +278,7 @@ if (( AGKDOT_NO_ZPLUGIN != 1 )) && is-at-least 5; then
     AGKOZAK_LEFT_PROMPT_ONLY=1
     # AGKOZAK_MULTILINE=0
     # AGKOZAK_PROMPT_CHAR=( '❯' '❯' '❮' )
-    AGKOZAK_PROMPT_DEBUG=1
+    # AGKOZAK_PROMPT_DEBUG=1
     zplugin light-mode ver"develop" for agkozak/agkozak-zsh-prompt
 
     # zplugin light agkozak/polyglot
