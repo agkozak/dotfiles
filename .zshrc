@@ -176,7 +176,7 @@ if [[ ! -f '/etc/debian-version' ]] && [[ ! -f '/etc/zsh/zshrc' ]]; then
     PageDown   "${terminfo[knp]}"
   )
 
-  function bind2maps () {
+  function bind2maps() {
     local i sequence widget
     local -a maps
 
@@ -220,11 +220,11 @@ if [[ ! -f '/etc/debian-version' ]] && [[ ! -f '/etc/zsh/zshrc' ]]; then
   #
   # shellcheck disable=SC2004
   if (( ${+terminfo[smkx]} )) && (( ${+terminfo[rmkx]} )); then
-    function zle-line-init () {
+    function zle-line-init() {
       emulate -L zsh
       printf '%s' "${terminfo[smkx]}"
     }
-    function zle-line-finish () {
+    function zle-line-finish() {
       emulate -L zsh
       printf '%s' "${terminfo[rmkx]}"
     }
