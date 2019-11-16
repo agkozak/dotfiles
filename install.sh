@@ -117,9 +117,7 @@ conditional_install csh .cshrc
 
 conditional_install screen .screenrc
 
-systeminfo=$( uname -a )
-
-case $systeminfo in
+case ${AGKDOT_SYSTEMINFO:=$(uname -a)} in
 	*BSD*|*bsd*|DragonFly*)
 		echo .login_conf
 		cp .login_conf "$HOME"
@@ -135,7 +133,7 @@ case $systeminfo in
 	;;
 esac
 
-case $systeminfo in
+case ${AGKDOT_SYSTEMINFO:=$(uname -a)} in
   *Cygwin)
     echo .Xresources
     cp .Xresources.cygwin ../.Xresources
