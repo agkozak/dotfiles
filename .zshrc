@@ -18,12 +18,12 @@
 # before sourcing.
 
 if (( AGKDOT_BENCHMARKS )); then
-  (( AGKDOT_ZSHENV_BENCHMARK )) \
-    && print ".zshenv loaded in ${AGKDOT_ZSHENV_BENCHMARK}ms total."
-  unset AGKDOT_ZSHENV_BENCHMARK
+  if (( AGKDOT_ZSHENV_BENCHMARK )); then
+    print ".zshenv loaded in ${AGKDOT_ZSHENV_BENCHMARK}ms total."
+    unset AGKDOT_ZSHENV_BENCHMARK
+  fi
+  typeset -F SECONDS=0
 fi
-
-(( AGKDOT_BENCHMARKS )) && typeset -F SECONDS=0
 
 # }}}1
 
@@ -125,12 +125,12 @@ setopt INTERACTIVE_COMMENTS # Allow comments in interactive mode
 
 # Job Control {{{2
 
-# Disable nice for background processes in WSL
 if [[ -z ${AGKDOT_SYSTEMINFO} ]]; then
  typeset -gx AGKDOT_SYSTEMINFO
  AGKDOT_SYSTEMINFO=$(uname -a)
 fi
 
+# Disable nice for background processes in WSL
 [[ ${AGKDOT_SYSTEMINFO} == *Microsoft* ]] && unsetopt BG_NICE
 
 # }}}2
@@ -367,7 +367,7 @@ fi
 autoload -Uz compinit
 compinit -u -d "${HOME}/.zcompdump_${ZSH_VERSION}"
 
-(( ! AGKDOT_NO_ZPLUGIN )) && is-at-least 5.0.0  && zplugin cdreplay -q
+(( ! AGKDOT_NO_ZPLUGIN )) && is-at-least 5 && zplugin cdreplay -q
 
 # https://www.zsh.org/mla/users/2015/msg00467.html
 # shellcheck disable=SC2016
@@ -377,7 +377,9 @@ zstyle -e ':completion:*:*:ssh:*:my-accounts' users-hosts \
 # Allow SSH tab completion for mosh hostnames
 compdef mosh=ssh
 
+# rationalise-dot() {{{2
 # https://grml.org/zsh/zsh-lovers.html
+
 rationalise-dot() {
   if [[ $LBUFFER = *.. ]]; then
     LBUFFER+=/..
@@ -390,6 +392,8 @@ zle -N rationalise-dot
 bindkey . rationalise-dot
 # Without the following, typing a period aborts incremental history search
 bindkey -M isearch . self-insert
+
+# }}}2
 
 # Menu-style completion
 zstyle ':completion:*' menu select
@@ -482,9 +486,11 @@ if [[ -d '/c/wamp64/www' ]]; then
   zsh_directory_name() {
     emulate -L zsh
     setopt extendedglob
+
     local -a match mbegin mend
     local pp1=/c/wamp64/www/
     local pp2=wp-content
+
     if [[ $1 = d ]]; then
       if [[ $2 = (#b)($pp1/)([^/]##)(/$pp2)* ]]; then
         typeset -ga reply
@@ -523,13 +529,13 @@ if (( SHLVL == 1 )); then
   cp "${HOME}/.z" "${HOME}/.zbackup/.z_${EPOCHSECONDS}" 2> /dev/null
 fi
 
-if (( ! AGKDOT_NO_ZPLUGIN)) && is-at-least 5.0.0 \
+# Use zsh-syntax-highlighting on Windows
+if (( ! AGKDOT_NO_ZPLUGIN)) && is-at-least 5 \
   && [[ $OSTYPE == (msys|cygwin) ]] \
   || [[ $AGKDOT_SYSTEMINFO == *Microsoft* ]]; then
   zplugin load zsh-users/zsh-syntax-highlighting
 fi
 
-# End .zshrc benchmark {{{1
 # Compile or recompile ~/.zcompdump and ~/.zshrc {{{1
 
 compile_or_recompile "${HOME}/.zcompdump_${ZSH_VERSION}"
@@ -537,6 +543,7 @@ compile_or_recompile "${HOME}/.zshrc"
 
 # }}}1
 
+# End .zshrc benchmark {{{1
 
 if (( AGKDOT_BENCHMARKS )); then
   print ".zshrc loaded in ${$(( SECONDS * 1000 ))%.*}ms total."
