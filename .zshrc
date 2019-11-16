@@ -314,6 +314,8 @@ if (( AGKDOT_NO_ZPLUGIN != 1 )) && is-at-least 5; then
     zplugin lucid wait for zsh-users/zsh-history-substring-search
     HISTORY_SUBSTRING_SEARCH_HIGHLIGHT_FOUND='underline'
     HISTORY_SUBSTRING_SEARCH_HIGHLIGHT_NOT_FOUND=''
+    zle -N history-substring-search-up
+    zle -N history-substring-search-down
     bindkey '^[OA' history-substring-search-up
     bindkey '^[OB' history-substring-search-down
     bindkey -M vicmd 'k' history-substring-search-up
