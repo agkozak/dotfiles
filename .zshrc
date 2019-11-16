@@ -18,7 +18,7 @@
 # before sourcing.
 
 if (( AGKDOT_BENCHMARKS )); then
-  if (( AGKDOT_ZSHENV_BENCHMARK )); then
+  if (( $+AGKDOT_ZSHENV_BENCHMARK )); then
     print ".zshenv loaded in ${AGKDOT_ZSHENV_BENCHMARK}ms total."
     unset AGKDOT_ZSHENV_BENCHMARK
   fi
