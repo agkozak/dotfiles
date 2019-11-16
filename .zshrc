@@ -311,7 +311,7 @@ if (( AGKDOT_NO_ZPLUGIN != 1 )) && is-at-least 5; then
 
     zplugin snippet OMZ::plugins/extract/extract.plugin.zsh
 
-    zplugin lucid wait for zsh-users/zsh-history-substring-search
+    zplugin silent wait for zsh-users/zsh-history-substring-search
     HISTORY_SUBSTRING_SEARCH_HIGHLIGHT_FOUND='underline'
     HISTORY_SUBSTRING_SEARCH_HIGHLIGHT_NOT_FOUND=''
     zle -N history-substring-search-up
