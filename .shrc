@@ -43,7 +43,7 @@ if [ "${AGKDOT_BENCHMARKS:-0}" -eq 1 ]; then
   case $AGKDOT_SYSTEMINFO in
     # BSD and busybox date don't handle nanoseconds
     *BSD*|*bsd*|DragonFly*) ;;
-    *) ! _agkdot_is_busybox && start=$(($(date +%s%N)/1000000)) ;;
+    *) AGKDOT_SHRC_START="$(date +%s%N)" ;;
   esac
 fi
 
@@ -292,14 +292,14 @@ if [ "${AGKDOT_BENCHMARKS:-0}" -eq 1 ]; then
   case $AGKDOT_SYSTEMINFO in
     FreeBSD*) ;;
     *)
-      if ! _agkdot_is_busybox; then
-        finish=$(($(date +%s%N)/1000000))
-        difference=$((finish-start))
-        echo ".shrc loaded in ${difference}ms."
-      fi
+        AGKDOT_SHRC_FINISH="$(date +%s%N)"
+        AGKDOT_DIFFERENCE=$((AGKDOT_SHRC_FINISH-AGKDOT_SHRC_START))
+        echo ".shrc loaded in $((AGKDOT_DIFFERENCE/1000000))ms."
       ;;
   esac
 fi
+
+unset AGKDOT_SHRC_START AGKDOT_SHRC_FINISH AGKDOT_DIFFERENCE
 
 # }}}
 
