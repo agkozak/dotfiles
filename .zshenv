@@ -29,6 +29,8 @@ if whence -w snap &> /dev/null && [[ -f /etc/profile.d/apps-bin-path.sh ]]; then
   fi
 fi
 
+[[ -f ${HOME}/.zshenv.local ]] && source ${HOME}/.zshenv.local
+
 # Benchmarks
 typeset -g AGKDOT_ZSHENV_BENCHMARK=${$(( SECONDS * 1000))%.*}
 
