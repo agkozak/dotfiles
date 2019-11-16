@@ -40,11 +40,13 @@ _agkdot_is_busybox() {
 }
 
 if [ "${AGKDOT_BENCHMARKS:-0}" -eq 1 ]; then
-  case $AGKDOT_SYSTEMINFO in
-    # BSD and busybox date don't handle nanoseconds
-    *BSD*|*bsd*|DragonFly*) ;;
-    *) AGKDOT_SHRC_START="$(date +%s%N)" ;;
-  esac
+  (( AGKDOT_ZSHRC_LOADING )) || {
+    case $AGKDOT_SYSTEMINFO in
+      # BSD and busybox date don't handle nanoseconds
+      *BSD*|*bsd*|DragonFly*) ;;
+      *) AGKDOT_SHRC_START="$(date +%s%N)" ;;
+    esac
+  }
 fi
 
 # }}}
@@ -289,14 +291,16 @@ update_dotfiles() {
 # End .shrc benchmark {{{
 
 if [ "${AGKDOT_BENCHMARKS:-0}" -eq 1 ]; then
-  case $AGKDOT_SYSTEMINFO in
-    FreeBSD*) ;;
-    *)
+  (( AGKDOT_ZSHRC_LOADING )) || {
+    case $AGKDOT_SYSTEMINFO in
+      FreeBSD*) ;;
+      *)
         AGKDOT_SHRC_FINISH="$(date +%s%N)"
         AGKDOT_DIFFERENCE=$((AGKDOT_SHRC_FINISH-AGKDOT_SHRC_START))
         echo ".shrc loaded in $((AGKDOT_DIFFERENCE/1000000))ms."
-      ;;
-  esac
+        ;;
+    esac
+  }
 fi
 
 unset AGKDOT_SHRC_START AGKDOT_SHRC_FINISH AGKDOT_DIFFERENCE

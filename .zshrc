@@ -16,6 +16,13 @@
 #     AGKDOT_BENCHMARKS=1
 #
 # before sourcing.
+
+if (( AGKDOT_BENCHMARKS )); then
+  (( AGKDOT_ZSHENV_BENCHMARK )) \
+    && print ".zshenv loaded in ${AGKDOT_ZSHENV_BENCHMARK}ms total."
+  unset AGKDOT_ZSHENV_BENCHMARK
+fi
+
 (( AGKDOT_BENCHMARKS )) && typeset -F SECONDS=0
 
 # }}}1
@@ -42,9 +49,17 @@ compile_or_recompile() {
 
 # (Compile and) source ~/.shrc {{{1
 
-if [[ -f ${HOME}/.shrc ]]; then
+if [[ -f ${HOME}/.shrc ]];then
   compile_or_recompile "${HOME}/.shrc"
-  source "${HOME}/.shrc"
+  if (( AGKDOT_BENCHMARKS )); then
+    (( $+EPOCHREALTIME )) || zmodload zsh/datetime
+    typeset -g AGKDOT_ZSHRC_START=$(( EPOCHREALTIME * 1000 ))
+    AGKDOT_ZSHRC_LOADING=1 source "${HOME}/.shrc"
+    printf '.shrc loaded in %dms.\n' $(( (EPOCHREALTIME * 1000) - AGKDOT_ZSHRC_START ))
+    unset AGKDOT_ZSHRC_START
+  else
+    source "${HOME}/.shrc"
+  fi
 fi
 
 # }}}1
@@ -524,7 +539,6 @@ compile_or_recompile "${HOME}/.zshrc"
 
 
 if (( AGKDOT_BENCHMARKS )); then
-  print ".zshenv loaded in ${AGKDOT_ZSHENV_BENCHMARK}ms total."
   print ".zshrc loaded in ${$(( SECONDS * 1000 ))%.*}ms total."
   typeset -i SECONDS
 fi
