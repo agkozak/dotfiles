@@ -311,8 +311,7 @@ if (( AGKDOT_NO_ZPLUGIN != 1 )) && is-at-least 5; then
 
     zplugin snippet OMZ::plugins/extract/extract.plugin.zsh
 
-    # zplugin ice lucid wait
-    zplugin load zsh-users/zsh-history-substring-search
+    zplugin lucid wait for zsh-users/zsh-history-substring-search
     HISTORY_SUBSTRING_SEARCH_HIGHLIGHT_FOUND='underline'
     HISTORY_SUBSTRING_SEARCH_HIGHLIGHT_NOT_FOUND=''
     bindkey '^[OA' history-substring-search-up
