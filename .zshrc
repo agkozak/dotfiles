@@ -307,18 +307,18 @@ if (( AGKDOT_NO_ZPLUGIN != 1 )) && is-at-least 5; then
     ZSHZ_DEBUG=1
     [[ $OSTYPE == freebsd* ]] && typeset -g ZSHZ_NO_RESOLVE_SYMLINKS=1
 
-    zplugin ver"develop" wait for \
+    zplugin ver"develop" lucid wait for \
       agkozak/zhooks \
       agkozak/zsh-z
 
     # zsh-titles causes dittography in Emacs shell and Vim terminal
     if (( ! $+EMACS )) && [[ ! $TERM = 'dumb' ]] && (( $+VIM )); then
-      zplugin wait for jreese/zsh-titles
+      zplugin lucid wait for jreese/zsh-titles
     fi
 
     if [[ $AGKDOT_SYSTEMINFO != *ish* ]]; then
-      zplugin wait for zdharma/zui
-      zplugin wait'1' for zdharma/zbrowse
+      zplugin lucid wait for zdharma/zui
+      zplugin lucid wait'1' for zdharma/zbrowse
     fi
 
     zplugin snippet OMZ::plugins/extract/extract.plugin.zsh
@@ -336,7 +336,7 @@ if (( AGKDOT_NO_ZPLUGIN != 1 )) && is-at-least 5; then
     # Some Git activities are too slow to use fast-syntax-highilight on Windows
     if [[ $OSTYPE != (msys|cygwin) ]] && [[ $AGKDOT_SYSTEMINFO != *Microsoft* ]]; then
       # Must be loaded last
-      zplugin atload'fast-theme free &> /dev/null' wait'1' for \
+      zplugin atload'fast-theme free &> /dev/null' lucid wait'1' for \
         zdharma/fast-syntax-highlighting
     fi
 
