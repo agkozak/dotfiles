@@ -74,12 +74,12 @@ alias g='egrep -i'
 # enable color support of ls and also add handy aliases {{{2
 
 case $TERM in
-  *-256color) SHRC_TERM_COLORS=256 ;;
-  vt100|vt220|dumb) SHRC_TERM_COLORS=-1 ;;
+  *-256color) AGKDOT_TERM_COLORS=256 ;;
+  vt100|vt220|dumb) AGKDOT_TERM_COLORS=-1 ;;
   *)
     case $AGKDOT_SYSTEMINFO in
-      FreeBSD*|DragonFly*) SHRC_TERM_COLORS=$(tput Co) ;;
-      *) SHRC_TERM_COLORS=$(tput colors) ;;
+      FreeBSD*|DragonFly*) AGKDOT_TERM_COLORS=$(tput Co) ;;
+      *) AGKDOT_TERM_COLORS=$(tput colors) ;;
     esac
     ;;
 esac
@@ -89,11 +89,11 @@ case $AGKDOT_SYSTEMINFO in
   CYGWIN*GNU/Linux|SunOS*|NetBSD*|OpenBSD*) ;;
   # BSD ls
   Darwin*|*BSD*|*bsd*|*[Dd]ragon[Ff]ly*)
-    [ "$SHRC_TERM_COLORS" -ge 8 ] && LS_OPTIONS='-G'
+    [ "$AGKDOT_TERM_COLORS" -ge 8 ] && LS_OPTIONS='-G'
     ;;
   *)
     LS_OPTIONS='--group-directories-first -F -h -T 0'
-    [ "$SHRC_TERM_COLORS" -ge 8 ] && LS_OPTIONS="$LS_OPTIONS --color"
+    [ "$AGKDOT_TERM_COLORS" -ge 8 ] && LS_OPTIONS="$LS_OPTIONS --color"
     case $AGKDOT_SYSTEMINFO in
       *Msys|*Cygwin) LS_OPTIONS="$LS_OPTIONS --hide=NTUSER* --hide=ntuser*" ;;
     esac
@@ -114,9 +114,9 @@ if [ -n "$INSIDE_EMACS" ]; then
   unset LS_COLORS
 elif [ -z "$LS_COLORS" ]; then
   if command -v dircolors > /dev/null 2>&1; then
-    if [ -r "$HOME/.dircolors" ] && [ "$SHRC_TERM_COLORS" -ge 256 ]; then
+    if [ -r "$HOME/.dircolors" ] && [ "$AGKDOT_TERM_COLORS" -ge 256 ]; then
       eval "$(dircolors -b "$HOME/.dircolors")"
-    elif [ "$SHRC_TERM_COLORS" -ge 8 ]; then
+    elif [ "$AGKDOT_TERM_COLORS" -ge 8 ]; then
       eval "$(dircolors -b)"
     fi
   fi
@@ -125,7 +125,7 @@ fi
 case $AGKDOT_SYSTEMINFO in
   CYGWIN*GNU/Linux|SunOS*|*ish*) ;;
   *)
-    if [ "$SHRC_TERM_COLORS" -ge 8 ]; then
+    if [ "$AGKDOT_TERM_COLORS" -ge 8 ]; then
       alias dir='dir --color=auto'
       alias vdir='vdir --color=auto'
 
@@ -135,6 +135,8 @@ case $AGKDOT_SYSTEMINFO in
     fi
     ;;
 esac
+
+unset AGKDOT_TERM_COLORS
 
 # }}}2
 
