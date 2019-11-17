@@ -125,10 +125,7 @@ setopt INTERACTIVE_COMMENTS # Allow comments in interactive mode
 
 # Job Control {{{2
 
-if [[ -z ${AGKDOT_SYSTEMINFO} ]]; then
- typeset -gx AGKDOT_SYSTEMINFO
- AGKDOT_SYSTEMINFO=$(uname -a)
-fi
+: ${AGKDOT_SYSTEMINFO:=$(uname -a)}
 
 # Disable nice for background processes in WSL
 [[ ${AGKDOT_SYSTEMINFO} == *Microsoft* ]] && unsetopt BG_NICE
