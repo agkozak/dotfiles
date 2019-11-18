@@ -124,7 +124,7 @@ elif [ -z "$LS_COLORS" ]; then
 fi
 
 case $AGKDOT_SYSTEMINFO in
-  CYGWIN*GNU/Linux|SunOS*|*ish*) ;;
+  CYGWIN*GNU/Linux|SunOS*|*ish*|UWIN*) ;;
   *)
     if [ "$AGKDOT_TERM_COLORS" -ge 8 ]; then
       alias dir='dir --color=auto'
@@ -158,6 +158,13 @@ alias lrt='ls -1Fcrt'
 
 command -v hue > /dev/null 2>&1 && alias bri='hue set all -b'
 
+_agkdot_is_uwin() {
+  case $AGKDOT_SYSTEMINFO in
+    UWIN*) return 0 ;;
+    *) return 1 ;;
+  esac
+}
+
 case $KSH_VERSION in
   *R55*) ;; # mksh version R55 erroneously does not allow these aliases
   *)
@@ -167,8 +174,10 @@ case $KSH_VERSION in
 esac
 alias c='clear'
 alias composer='$HOME/bin/composer.phar'
-alias dud='du -d 1 -h'
-alias duf='du -sh *'
+if ! _agkdot_is_uwin; then
+  alias dud='du -d 1 -h'
+  alias duf='du -sh *'
+fi
 # command -v dos2unix > /dev/null 2>&1 || alias dos2unix='perl -p -i -e "s/\\r\\n/\\n/g"'
 # alias fd='find . -type d -name' # Conflicts with fd utility
 alias ff='find . -type f -name'
@@ -176,7 +185,9 @@ alias github-stats='github-stats --token $GITHUB_STATS_TOKEN'
 alias help='man'
 alias p='ps -f'
 alias phpunit='$HOME/bin/phpunit.phar'
-! _agkdot_is_busybox && alias sgrep='grep -R -n -H -C 5 --exclude-dir={.git,.svn,CVS} '
+if ! _agkdot_is_busybox && ! _agkdot_is_uwin; then
+  alias sgrep='grep -R -n -H -C 5 --exclude-dir={.git,.svn,CVS} '
+fi
 alias sortnr='sort -n -r'
 alias t='tail -f'
 alias v='findv'
@@ -261,6 +272,7 @@ HISTSIZE=10000
 case $KSH_VERSION in
   *'PD KSH'*) HISTFILE="$HOME/.pdksh_history" ;;
   *MIRBSD*) HISTFILE="$HOME/.mksh_history" ;;
+  *) HISTFILE="$HOME/.ksh_history" ;;
 esac
 
 # find shorthand {{{
