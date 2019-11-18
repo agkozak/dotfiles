@@ -407,6 +407,8 @@ if executable('git') && (executable('curl') || executable('wget') || WINDOWS())
     set modifiable
     Plug 'KabbAmine/zeavim.vim'
 
+    Plug 'psliwka/vim-smoothie'
+
     call plug#end()
 
   else
