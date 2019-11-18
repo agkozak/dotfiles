@@ -336,7 +336,7 @@ if (( AGKDOT_NO_ZPLUGIN != 1 )) && is-at-least 5; then
 
     # Must be loaded last
     if [[ $OSTYPE == (msys|cygwin) ]] \
-      || [[ $AGKDOT_SYSTEMINFO != *Microsoft* ]]; then
+      || [[ $AGKDOT_SYSTEMINFO == *Microsoft* ]]; then
       # Git highlighting can be very slow on Windows
       zplugin ice \
         atload'unset "FAST_HIGHLIGHT[chroma-git]"; fast-theme free &> /dev/null' \
