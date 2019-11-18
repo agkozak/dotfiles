@@ -46,8 +46,9 @@ compile_or_recompile() {
   done
 }
 
-compile_or_recompile .profile .zprofile .zshenv .zshenv.local .zshrc \
-  .zshrc.local .shrc .shrc.local
+compile_or_recompile "${HOME}/.profile" "${HOME}/.zprofile" "${HOME}/.zshenv" \
+  "${HOME}/.zshenv.local" "${HOME}/.zshrc" "${HOME}/.zshrc.local" \
+  "${HOME}/.shrc" "${HOME}/.shrc.local"
 
 # }}}1
 
@@ -334,15 +335,16 @@ if (( AGKDOT_NO_ZPLUGIN != 1 )) && is-at-least 5; then
     bindkey -M vicmd 'j' history-substring-search-down
 
     # Must be loaded last
-    # Git highlighting can be very slow on Windows
     if [[ $OSTYPE == (msys|cygwin) ]] \
       || [[ $AGKDOT_SYSTEMINFO != *Microsoft* ]]; then
-      zplugin atload'unset "FAST_HIGHLIGHT[chroma-git]"; fast-theme free &> /dev/null' \
-        lucid wait for zdharma/fast-syntax-highlighting
+      # Git highlighting can be very slow on Windows
+      zplugin ice \
+        atload'unset "FAST_HIGHLIGHT[chroma-git]"; fast-theme free &> /dev/null' \
+        lucid wait
     else
-      zplugin atload'fast-theme free &> /dev/null' lucid wait for \
-        zdharma/fast-syntax-highlighting
+      zplugin ice atload'fast-theme free &> /dev/null' lucid wait
     fi
+    zplugin load zdharma/fast-syntax-highlighting
 
   else
     print 'Please install git.'
