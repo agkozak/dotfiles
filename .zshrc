@@ -333,10 +333,14 @@ if (( AGKDOT_NO_ZPLUGIN != 1 )) && is-at-least 5; then
     bindkey -M vicmd 'k' history-substring-search-up
     bindkey -M vicmd 'j' history-substring-search-down
 
-    # Some Git activities are too slow to use fast-syntax-highilight on Windows
-    if [[ $OSTYPE != (msys|cygwin) ]] && [[ $AGKDOT_SYSTEMINFO != *Microsoft* ]]; then
-      # Must be loaded last
-      zplugin atload'fast-theme free &> /dev/null' lucid wait'1' for \
+    # Must be loaded last
+    # Git highlighting can be very slow on Windows
+    if [[ $OSTYPE == (msys|cygwin) ]] \
+      || [[ $AGKDOT_SYSTEMINFO != *Microsoft* ]]; then
+      zplugin atload'unset "FAST_HIGHLIGHT[chroma-git]"; fast-theme free &> /dev/null' \
+        lucid wait for zdharma/fast-syntax-highlighting
+    else
+      zplugin atload'fast-theme free &> /dev/null' lucid wait for \
         zdharma/fast-syntax-highlighting
     fi
 
@@ -524,13 +528,6 @@ alias which &> /dev/null && unalias which
 if (( SHLVL == 1 )); then
   [[ ! -d ${HOME}/.zbackup ]] && mkdir "${HOME}/.zbackup"
   cp "${HOME}/.z" "${HOME}/.zbackup/.z_${EPOCHSECONDS}" 2> /dev/null
-fi
-
-# Use zsh-syntax-highlighting on Windows
-if (( ! AGKDOT_NO_ZPLUGIN)) && is-at-least 5 \
-  && [[ $OSTYPE == (msys|cygwin) ]] \
-  || [[ $AGKDOT_SYSTEMINFO == *Microsoft* ]]; then
-  zplugin load zsh-users/zsh-syntax-highlighting
 fi
 
 # Compile or recompile ~/.zcompdump {{{1
