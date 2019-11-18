@@ -9,14 +9,7 @@ typeset -F SECONDS=0
 if [[ -z $ENV ]] && [[ -n $PATH ]]; then
   case $- in
     *l*) ;;
-    *)
-      if [[ -f ${HOME}/.profile ]]; then
-        if [[ ! -f ${HOME}/.profile/.zwc ]] || [[ ${HOME}/.profile -nt ${HOME}/profile.zwc ]]; then
-          zcompile ${HOME}/.profile &> /dev/null
-        fi
-        source ${HOME}/.profile
-      fi
-      ;;
+    *) [[ -f ${HOME}/.profile ]] && source ${HOME}/.profile ;;
   esac
 fi
 

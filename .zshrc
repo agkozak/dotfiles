@@ -39,18 +39,21 @@ fi
 compile_or_recompile() {
   local file
   for file in "$@"; do
-    if [[ ! -f ${file}.zwc ]] || [[ $file -nt ${file}.zwc ]]; then
+    if [[ -f $file ]] && [[ ! -f ${file}.zwc ]] \
+      || [[ $file -nt ${file}.zwc ]]; then
       zcompile "$file"
     fi
   done
 }
+
+compile_or_recompile .profile .zprofile .zshenv .zshenv.local .zshrc \
+  .zshrc.local .shrc .shrc.local
 
 # }}}1
 
 # (Compile and) source ~/.shrc {{{1
 
 if [[ -f ${HOME}/.shrc ]];then
-  compile_or_recompile "${HOME}/.shrc"
   if (( AGKDOT_BENCHMARKS )); then
     (( $+EPOCHREALTIME )) || zmodload zsh/datetime
     typeset -g AGKDOT_ZSHRC_START=$(( EPOCHREALTIME * 1000 ))
@@ -530,10 +533,9 @@ if (( ! AGKDOT_NO_ZPLUGIN)) && is-at-least 5 \
   zplugin load zsh-users/zsh-syntax-highlighting
 fi
 
-# Compile or recompile ~/.zcompdump and ~/.zshrc {{{1
+# Compile or recompile ~/.zcompdump {{{1
 
 compile_or_recompile "${HOME}/.zcompdump_${ZSH_VERSION}"
-compile_or_recompile "${HOME}/.zshrc"
 
 # }}}1
 
