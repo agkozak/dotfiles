@@ -108,7 +108,7 @@ if command -v nvim > /dev/null 2>&1; then
   fi
 fi
 
-conditional_install zsh .zshenv .zshrc
+conditional_install zsh .zprofile .zshenv .zshrc
 # Remove ~/.zprofile
 [ -f "${HOME}/.zprofile" ] && rm "${HOME}/.zprofile"
 
