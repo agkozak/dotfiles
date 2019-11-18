@@ -79,6 +79,7 @@ case $TERM in
   *)
     case $AGKDOT_SYSTEMINFO in
       FreeBSD*|DragonFly*) AGKDOT_TERM_COLORS=$(tput Co) ;;
+      UWIN*) AGKDOT_TERM_COLORS=$(tput cols) ;;
       *) AGKDOT_TERM_COLORS=$(tput colors) ;;
     esac
     ;;
@@ -86,7 +87,7 @@ esac
 
 case $AGKDOT_SYSTEMINFO in
   # CYGWIN*GNU/Linux is MobaXterm, which uses busybox ls
-  CYGWIN*GNU/Linux|SunOS*|NetBSD*|OpenBSD*) ;;
+  CYGWIN*GNU/Linux|SunOS*|NetBSD*|OpenBSD*|UWIN*) ;;
   # BSD ls
   Darwin*|*BSD*|*bsd*|*[Dd]ragon[Ff]ly*)
     [ "$AGKDOT_TERM_COLORS" -ge 8 ] && LS_OPTIONS='-G'

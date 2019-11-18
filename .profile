@@ -22,9 +22,13 @@ ENV="$HOME/.shrc"
 case $(ls -l "$(command -v less)") in
   *busybox*) ;;
   *)
-    export LESS
-    LESS='-R'
-    ;;
+    case $AGKDOT_SYSTEMINFO in
+      UWIN*) ;;
+      *)
+        export LESS
+        LESS='-R'
+        ;;
+    esac
 esac
 
 if command -v lesspipe > /dev/null 2>&1; then
