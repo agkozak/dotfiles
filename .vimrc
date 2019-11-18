@@ -407,9 +407,9 @@ if executable('git') && (executable('curl') || executable('wget') || WINDOWS())
     set modifiable
     Plug 'KabbAmine/zeavim.vim'
 
-    if ( v:version >= 800 ) && has('timers') || has('nvim')
-      Plug 'psliwka/vim-smoothie'
-    endif
+    " if ( v:version >= 800 ) && has('timers') || has('nvim')
+    "   Plug 'psliwka/vim-smoothie'
+    " endif
 
     call plug#end()
 
