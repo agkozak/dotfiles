@@ -150,21 +150,21 @@ autoload -Uz zmv
 
 # zsh-specific aliases - POSIX aliases are in .shrc {{{1
 
-alias hgrep='fc -fl 0 | grep'
+# alias hgrep='fc -fl 0 | grep'
 
 alias ls='ls ${=LS_OPTIONS}'
 
 # Global Aliases {{{2
 
-alias -g CA='2>&1 | cat -A'
-alias -g G='| grep'
-alias -g H='| head'
+# alias -g CA='2>&1 | cat -A'
+# alias -g G='| grep'
+# alias -g H='| head'
 alias -g L='| less'
-alias -g LL='2>&1 | less'
-alias -g M='| most'
+# alias -g LL='2>&1 | less'
+# alias -g M='| most'
 alias -g NE='2> /dev/null'
 alias -g NUL='&> /dev/null'
-alias -g T='| tail'
+# alias -g T='| tail'
 alias -g V='|& vim -'
 
 # }}}2
@@ -272,7 +272,7 @@ if (( AGKDOT_NO_ZPLUGIN != 1 )) && is-at-least 5; then
   if whence -w git &> /dev/null; then
 
     if [[ ! -d ${HOME}/.zplugin/bin ]]; then
-      print "Installing zplugin..."
+      print 'Installing zplugin...'
       mkdir "${HOME}/.zplugin"
       git clone https://github.com/zdharma/zplugin.git "${HOME}/.zplugin/bin"
       compile_or_recompile "${HOME}/.zplugin/bin/zplugin.zsh"
@@ -336,7 +336,7 @@ if (( AGKDOT_NO_ZPLUGIN != 1 )) && is-at-least 5; then
 
     # Must be loaded last
     if [[ $OSTYPE == (msys|cygwin) ]] \
-      || [[ $AGKDOT_SYSTEMINFO != *Microsoft* ]]; then
+      || [[ $AGKDOT_SYSTEMINFO == *Microsoft* ]]; then
       # Git highlighting can be very slow on Windows
       zplugin ice \
         atload'unset "FAST_HIGHLIGHT[chroma-git]"; fast-theme free &> /dev/null' \
