@@ -309,7 +309,6 @@ update_dotfiles() {
 if [ "$0" = 'ksh' ] || [ -z "$ZSH_VERSION" ]; then
   stty -ixon
 fi
-echo Return code: $?
 
 # End .shrc benchmark {{{
 
