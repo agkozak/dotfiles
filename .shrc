@@ -332,8 +332,8 @@ unset AGKDOT_SHRC_START AGKDOT_SHRC_FINISH AGKDOT_DIFFERENCE
 # }}}
 
 # shellcheck source=/dev/null
-[ -f "$HOME/.shrc.local" ] && . "$HOME/.shrc.local"
+if [ -f "$HOME/.shrc.local" ]; then . "$HOME/.shrc.local"; fi
 
-[ -n "${AGKDOT_IS_BUSYBOX+x}" ] && unset AGKDOT_IS_BUSYBOX
+if [ -n "${AGKDOT_IS_BUSYBOX}" ]; then unset AGKDOT_IS_BUSYBOX; fi
 
 # vim: ft=sh:fdm=marker:ts=2:et:sw=2:ai:sts=2
