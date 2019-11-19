@@ -273,7 +273,7 @@ if (( AGKDOT_NO_ZPLUGIN != 1 )) && is-at-least 5; then
 
     if [[ ! -d ${HOME}/.zplugin/bin ]]; then
       print 'Installing zplugin...'
-      mkdir "${HOME}/.zplugin"
+      mkdir -p "${HOME}/.zplugin"
       git clone https://github.com/zdharma/zplugin.git "${HOME}/.zplugin/bin"
       compile_or_recompile "${HOME}/.zplugin/bin/zplugin.zsh"
     fi
