@@ -304,7 +304,12 @@ update_dotfiles() {
 # }}}1
 
 # Disable flow control -- allows use of Ctrl-Q as tmux/screen prefix
-[ -z "$ZSH_VERSION" ] && stty -ixon
+#
+# zsh might be running in ksh emulation mode
+if [ "$0" = 'ksh' ] || [ -z "$ZSH_VERSION" ]; then
+  stty -ixon
+fi
+echo Return code: $?
 
 # End .shrc benchmark {{{
 

@@ -4,6 +4,9 @@
 #
 # shellcheck disable=SC1090,SC2034,SC2128,SC2148,SC2154
 
+# If zsh is emulating ksh
+[[ $0 == 'ksh' ]] && source ~/.shrc && exit
+
 # Begin .zshrc benchmarks {{{1
 
 # To run zprof, execute
