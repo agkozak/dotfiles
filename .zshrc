@@ -4,8 +4,12 @@
 #
 # shellcheck disable=SC1090,SC2034,SC2128,SC2148,SC2154
 
-# If zsh is emulating ksh
-[[ $0 == 'ksh' ]] && source ~/.shrc && exit
+# If zsh is emulating another shell
+if [[ $0 == 'ksh' ]] || [[ $0 == 'sh' ]]; then
+  source "$HOME/.shrc" && exit
+elif [[ $0 == 'bash' ]]; then
+  source "$HOME/.bashrc" && exit
+fi
 
 # Begin .zshrc benchmarks {{{1
 
