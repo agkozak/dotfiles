@@ -78,8 +78,8 @@ conditional_install bash .bash_profile .bashrc .inputrc
 echo '.editorconfig'
 cp .editorconfig "$HOME"
 
-conditional_install lesspipe .lessfilter
-conditional_install lesspipe.sh .lessfilter
+# conditional_install lesspipe .lessfilter
+# conditional_install lesspipe.sh .lessfilter
 
 conditional_install lynx .lynx.cfg
 

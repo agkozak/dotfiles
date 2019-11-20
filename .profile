@@ -31,13 +31,13 @@ case $(ls -l "$(command -v less)") in
     esac
 esac
 
-if command -v lesspipe > /dev/null 2>&1; then
-  export LESSOPEN
-	LESSOPEN='|~/.lessfilter %s'
-elif command -v lesspipe.sh > /dev/null 2>&1; then
-  export LESSOPEN
-	LESSOPEN="$(command -v lesspipe.sh) %s"
-fi
+# if command -v lesspipe > /dev/null 2>&1; then
+#   export LESSOPEN
+# 	LESSOPEN='| ~/.lessfilter %s'
+# elif command -v lesspipe.sh > /dev/null 2>&1; then
+#   export LESSOPEN
+# 	LESSOPEN='| lesspipe.sh %s'
+# fi
 
 if [ -f "$HOME/.lynx.cfg" ]; then
   export LYNX_CFG
