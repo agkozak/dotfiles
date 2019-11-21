@@ -319,7 +319,8 @@ if (( AGKDOT_NO_ZPLUGIN != 1 )) && is-at-least 5; then
 
     if [[ $AGKDOT_SYSTEMINFO != *ish* ]]; then
       zplugin lucid wait for zdharma/zui
-      zplugin lucid wait'1' for zdharma/zbrowse
+      zplugin atload"bindkey -s '^B' $'zbrowse\n'" lucid wait'1' for \
+        zdharma/zbrowse
     fi
 
     zplugin snippet OMZ::plugins/extract/extract.plugin.zsh
