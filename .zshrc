@@ -291,7 +291,7 @@ if (( AGKDOT_NO_ZPLUGIN != 1 )) && is-at-least 5; then
 
     # AGKOZAK_COLORS_PROMPT_CHAR='magenta'
     # AGKOZAK_CUSTOM_SYMBOLS=( '⇣⇡' '⇣' '⇡' '+' 'x' '!' '>' '?' 'S' )
-    AGKOZAK_LEFT_PROMPT_ONLY=1
+    # AGKOZAK_LEFT_PROMPT_ONLY=1
     # AGKOZAK_MULTILINE=0
     # AGKOZAK_PROMPT_CHAR=( '❯' '❯' '❮' )
     # AGKOZAK_PROMPT_DEBUG=1
@@ -319,8 +319,7 @@ if (( AGKDOT_NO_ZPLUGIN != 1 )) && is-at-least 5; then
 
     if [[ $AGKDOT_SYSTEMINFO != *ish* ]]; then
       zplugin lucid wait for zdharma/zui
-      zplugin atload"bindkey -s '^B' $'zbrowse\n'" lucid wait'1' for \
-        zdharma/zbrowse
+      zplugin lucid wait'1' for zdharma/zbrowse
     fi
 
     zplugin snippet OMZ::plugins/extract/extract.plugin.zsh
