@@ -291,7 +291,7 @@ if (( AGKDOT_NO_ZPLUGIN != 1 )) && is-at-least 5; then
 
     # AGKOZAK_COLORS_PROMPT_CHAR='magenta'
     # AGKOZAK_CUSTOM_SYMBOLS=( '⇣⇡' '⇣' '⇡' '+' 'x' '!' '>' '?' 'S' )
-    # AGKOZAK_LEFT_PROMPT_ONLY=1
+    AGKOZAK_LEFT_PROMPT_ONLY=1
     # AGKOZAK_MULTILINE=0
     # AGKOZAK_PROMPT_CHAR=( '❯' '❯' '❮' )
     # AGKOZAK_PROMPT_DEBUG=1
