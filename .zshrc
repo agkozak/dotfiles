@@ -334,6 +334,8 @@ if (( AGKDOT_NO_ZPLUGIN != 1 )) && is-at-least 5; then
     bindkey -M vicmd 'k' history-substring-search-up
     bindkey -M vicmd 'j' history-substring-search-down
 
+    zplugin light romkatv/zsh-prompt-benchmark
+
     # Must be loaded last
     # if [[ $OSTYPE == (msys|cygwin) ]] \
     #   || [[ $AGKDOT_SYSTEMINFO == *Microsoft* ]]; then
@@ -359,7 +361,6 @@ elif is-at-least 4.3.11; then
       && cd "${HOME}/dotfiles/prompts" \
       && git clone 'https://github.com/agkozak/agkozak-zsh-prompt' )
   fi
-  AGKOZAK_PROMPT_DEBUG=1
   source "${HOME}/dotfiles/prompts/agkozak-zsh-prompt/agkozak-zsh-prompt.plugin.zsh"
 
 fi
