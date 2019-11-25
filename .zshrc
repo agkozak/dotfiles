@@ -359,6 +359,7 @@ elif is-at-least 4.3.11; then
       && cd "${HOME}/dotfiles/prompts" \
       && git clone 'https://github.com/agkozak/agkozak-zsh-prompt' )
   fi
+  AGKOZAK_PROMPT_DEBUG=1
   source "${HOME}/dotfiles/prompts/agkozak-zsh-prompt/agkozak-zsh-prompt.plugin.zsh"
 
 fi
