@@ -273,7 +273,7 @@ if (( AGKDOT_NO_ZPLUGIN != 1 )) && is-at-least 5; then
 
     if [[ ! -d ${HOME}/.zplugin/bin ]]; then
       print 'Installing zplugin...'
-      mkdir "${HOME}/.zplugin"
+      mkdir -p "${HOME}/.zplugin"
       git clone https://github.com/zdharma/zplugin.git "${HOME}/.zplugin/bin"
       compile_or_recompile "${HOME}/.zplugin/bin/zplugin.zsh"
     fi
@@ -291,10 +291,10 @@ if (( AGKDOT_NO_ZPLUGIN != 1 )) && is-at-least 5; then
 
     # AGKOZAK_COLORS_PROMPT_CHAR='magenta'
     # AGKOZAK_CUSTOM_SYMBOLS=( '⇣⇡' '⇣' '⇡' '+' 'x' '!' '>' '?' 'S' )
-    AGKOZAK_LEFT_PROMPT_ONLY=1
+    # AGKOZAK_LEFT_PROMPT_ONLY=1
     # AGKOZAK_MULTILINE=0
     # AGKOZAK_PROMPT_CHAR=( '❯' '❯' '❮' )
-    # AGKOZAK_PROMPT_DEBUG=1
+    AGKOZAK_PROMPT_DEBUG=1
     zplugin ver"develop" for agkozak/agkozak-zsh-prompt
 
     # zplugin light agkozak/polyglot
@@ -324,27 +324,46 @@ if (( AGKDOT_NO_ZPLUGIN != 1 )) && is-at-least 5; then
 
     zplugin snippet OMZ::plugins/extract/extract.plugin.zsh
 
-    zplugin lucid wait for zsh-users/zsh-history-substring-search
-    HISTORY_SUBSTRING_SEARCH_HIGHLIGHT_FOUND='underline'
-    HISTORY_SUBSTRING_SEARCH_HIGHLIGHT_NOT_FOUND=''
-    zle -N history-substring-search-up
-    zle -N history-substring-search-down
-    bindkey '^[OA' history-substring-search-up
-    bindkey '^[OB' history-substring-search-down
-    bindkey -M vicmd 'k' history-substring-search-up
-    bindkey -M vicmd 'j' history-substring-search-down
+    zplugin atload"
+      HISTORY_SUBSTRING_SEARCH_HIGHLIGHT_FOUND='underline'
+      HISTORY_SUBSTRING_SEARCH_HIGHLIGHT_NOT_FOUND=''
+      zle -N history-substring-search-up
+      zle -N history-substring-search-down
+      bindkey '^[OA' history-substring-search-up
+      bindkey '^[OB' history-substring-search-down
+      bindkey -M vicmd 'k' history-substring-search-up
+      bindkey -M vicmd 'j' history-substring-search-down
+      zpcompinit
+      compdef mosh=ssh
+      zpcdreplay" \
+      lucid wait for zsh-users/zsh-history-substring-search
+
+    zplugin light romkatv/zsh-prompt-benchmark
 
     # Must be loaded last
-    if [[ $OSTYPE == (msys|cygwin) ]] \
-      || [[ $AGKDOT_SYSTEMINFO == *Microsoft* ]]; then
-      # Git highlighting can be very slow on Windows
-      zplugin ice \
-        atload'unset "FAST_HIGHLIGHT[chroma-git]"; fast-theme free &> /dev/null' \
-        lucid wait
-    else
-      zplugin ice atload'fast-theme free &> /dev/null' lucid wait
-    fi
-    zplugin load zdharma/fast-syntax-highlighting
+    # if [[ $OSTYPE == (msys|cygwin) ]] \
+    #   || [[ $AGKDOT_SYSTEMINFO == *Microsoft* ]]; then
+    #   # Git highlighting can be very slow on Windows
+    #   zplugin ice \
+    #     atload'
+    #       zpcompinit
+    #       compdef mosh=ssh
+    #       zpcdreplay
+    #       ZSH_HIGHLIGHT_MAXLENGTH=10
+    #       unset "FAST_HIGHLIGHT[chroma-git]"
+    #       fast-theme free &> /dev/null' \
+    #     lucid wait
+    # else
+    #   zplugin ice \
+    #     atload'
+    #       zpcompinit
+    #       compdef mosh=ssh
+    #       zpcdreplay
+    #       ZSH_HIGHLIGHT_MAXLENGTH=300
+    #       fast-theme free &> /dev/null' \
+    #   lucid wait
+    # fi
+    # zplugin load zdharma/fast-syntax-highlighting
 
   else
     print 'Please install git.'
@@ -354,12 +373,30 @@ if (( AGKDOT_NO_ZPLUGIN != 1 )) && is-at-least 5; then
 
 elif is-at-least 4.3.11; then
 
-  if [[ ! -d ${HOME}/dotfiles/prompts/agkozak-zsh-prompt ]]; then
-    ( mkdir -p "${HOME}/dotfiles/prompts" \
-      && cd "${HOME}/dotfiles/prompts" \
-      && git clone 'https://github.com/agkozak/agkozak-zsh-prompt' )
-  fi
-  source "${HOME}/dotfiles/prompts/agkozak-zsh-prompt/agkozak-zsh-prompt.plugin.zsh"
+  () {
+    local i
+    for i in agkozak/agkozak-zsh-prompt \
+             agkozak/zsh-z \
+             agkozak/zhooks; do
+
+      if whence -w git &> /dev/null \
+        && [[ ! -d "$HOME/.zplugin/plugins/${i%/*}---${i#*/}" ]]; then
+        (
+          git clone  "https://github.com/${i%/*}/${i#*/}" \
+            "$HOME/.zplugin/plugins/${i%/*}---${i#*/}"
+          cd "$HOME/.zplugin/plugins/${i%/*}---${i#*/}"
+          git checkout develop
+        )
+      fi
+      source "$HOME/.zplugin/plugins/${i%/*}---${i#*/}/${i#*/}.plugin.zsh"
+    done
+  }
+
+  autoload -Uz compinit
+  compinit -u -d "${HOME}/.zcompdump_${ZSH_VERSION}"
+
+  # Allow SSH tab completion for mosh hostnames
+  compdef mosh=ssh
 
 fi
 
@@ -367,18 +404,10 @@ fi
 
 # Styles and completions {{{1
 
-autoload -Uz compinit
-compinit -u -d "${HOME}/.zcompdump_${ZSH_VERSION}"
-
-(( ! AGKDOT_NO_ZPLUGIN )) && is-at-least 5 && zplugin cdreplay -q
-
 # https://www.zsh.org/mla/users/2015/msg00467.html
 # shellcheck disable=SC2016
 zstyle -e ':completion:*:*:ssh:*:my-accounts' users-hosts \
 	'[[ -f ${HOME}/.ssh/config && $key = hosts ]] && key=my_hosts reply=()'
-
-# Allow SSH tab completion for mosh hostnames
-compdef mosh=ssh
 
 # rationalise-dot() {{{2
 # https://grml.org/zsh/zsh-lovers.html
@@ -524,13 +553,13 @@ fi
 # which should not be aliased in ZSH
 alias which &> /dev/null && unalias which
 
-# }}}1
-
 # While tinkering with ZSH-z
 if (( SHLVL == 1 )); then
   [[ ! -d ${HOME}/.zbackup ]] && mkdir "${HOME}/.zbackup"
   cp "${HOME}/.z" "${HOME}/.zbackup/.z_${EPOCHSECONDS}" 2> /dev/null
 fi
+
+# }}}1
 
 # Compile or recompile ~/.zcompdump {{{1
 

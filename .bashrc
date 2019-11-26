@@ -47,6 +47,11 @@ shopt -s autocd     # cd to directory names without typing cd
 # After each command, redraw lines and columns if window size has changed
 shopt -s checkwinsize
 
+# Omit .exe on completion
+case $OSTYPE in
+  msys|cygwin) shopt -s completion_strip_exe ;;
+esac
+
 shopt -s extglob  # Extended globbing
 
 # If set, the pattern "**" used in a pathname expansion context will
