@@ -357,12 +357,24 @@ if (( AGKDOT_NO_ZPLUGIN != 1 )) && is-at-least 5; then
 
 elif is-at-least 4.3.11; then
 
-  if [[ ! -d ${HOME}/dotfiles/prompts/agkozak-zsh-prompt ]]; then
-    ( mkdir -p "${HOME}/dotfiles/prompts" \
-      && cd "${HOME}/dotfiles/prompts" \
-      && git clone 'https://github.com/agkozak/agkozak-zsh-prompt' )
-  fi
-  source "${HOME}/dotfiles/prompts/agkozak-zsh-prompt/agkozak-zsh-prompt.plugin.zsh"
+  () {
+    local i
+    for i in agkozak/agkozak-zsh-prompt \
+             agkozak/zsh-z \
+             agkozak/zhooks; do
+
+      if whence -w git &> /dev/null \
+        && [[ ! -d "$HOME/.zplugin/plugins/${i%/*}---${i#*/}" ]]; then
+        (
+          git clone  "https://github.com/${i%/*}/${i#*/}" \
+            "$HOME/.zplugin/plugins/${i%/*}---${i#*/}"
+          cd "$HOME/.zplugin/plugins/${i%/*}---${i#*/}"
+          git checkout develop
+        )
+      fi
+      source "$HOME/.zplugin/plugins/${i%/*}---${i#*/}/${i#*/}.plugin.zsh"
+    done
+  }
 
 fi
 

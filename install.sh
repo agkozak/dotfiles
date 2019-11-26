@@ -60,9 +60,6 @@ github_clone_or_update "agkozak/polyglot" develop
 github_clone_or_update "jonmosco/kube-ps1"
 github_clone_or_update "agkozak/polyglot-kube-ps1"
 
-[ ! -d "$HOME/.zplugin/plugins/agkozak---agkozak-zsh-prompt" ] \
-  && github_clone_or_update "agkozak/agkozak-zsh-prompt" develop
-
 cd ..
 
 conditional_install vi .exrc
