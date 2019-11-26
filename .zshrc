@@ -332,7 +332,10 @@ if (( AGKDOT_NO_ZPLUGIN != 1 )) && is-at-least 5; then
       bindkey '^[OA' history-substring-search-up
       bindkey '^[OB' history-substring-search-down
       bindkey -M vicmd 'k' history-substring-search-up
-      bindkey -M vicmd 'j' history-substring-search-down" \
+      bindkey -M vicmd 'j' history-substring-search-down
+      zpcompinit
+      compdef mosh=ssh
+      zpcdreplay" \
       lucid wait for zsh-users/zsh-history-substring-search
 
     zplugin light romkatv/zsh-prompt-benchmark
@@ -342,10 +345,23 @@ if (( AGKDOT_NO_ZPLUGIN != 1 )) && is-at-least 5; then
     #   || [[ $AGKDOT_SYSTEMINFO == *Microsoft* ]]; then
     #   # Git highlighting can be very slow on Windows
     #   zplugin ice \
-    #     atload'unset "FAST_HIGHLIGHT[chroma-git]"; fast-theme free &> /dev/null' \
+    #     atload'
+    #       zpcompinit
+    #       compdef mosh=ssh
+    #       zpcdreplay
+    #       ZSH_HIGHLIGHT_MAXLENGTH=10
+    #       unset "FAST_HIGHLIGHT[chroma-git]"
+    #       fast-theme free &> /dev/null' \
     #     lucid wait
     # else
-    #   zplugin ice atload'fast-theme free &> /dev/null' lucid wait
+    #   zplugin ice \
+    #     atload'
+    #       zpcompinit
+    #       compdef mosh=ssh
+    #       zpcdreplay
+    #       ZSH_HIGHLIGHT_MAXLENGTH=300
+    #       fast-theme free &> /dev/null' \
+    #   lucid wait
     # fi
     # zplugin load zdharma/fast-syntax-highlighting
 
@@ -376,24 +392,22 @@ elif is-at-least 4.3.11; then
     done
   }
 
+  autoload -Uz compinit
+  compinit -u -d "${HOME}/.zcompdump_${ZSH_VERSION}"
+
+  # Allow SSH tab completion for mosh hostnames
+  compdef mosh=ssh
+
 fi
 
 # }}}1
 
 # Styles and completions {{{1
 
-autoload -Uz compinit
-compinit -u -d "${HOME}/.zcompdump_${ZSH_VERSION}"
-
-(( ! AGKDOT_NO_ZPLUGIN )) && is-at-least 5 && zplugin cdreplay -q
-
 # https://www.zsh.org/mla/users/2015/msg00467.html
 # shellcheck disable=SC2016
 zstyle -e ':completion:*:*:ssh:*:my-accounts' users-hosts \
 	'[[ -f ${HOME}/.ssh/config && $key = hosts ]] && key=my_hosts reply=()'
-
-# Allow SSH tab completion for mosh hostnames
-compdef mosh=ssh
 
 # rationalise-dot() {{{2
 # https://grml.org/zsh/zsh-lovers.html
