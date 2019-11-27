@@ -264,8 +264,10 @@ fi
 if (( AGKDOT_NO_ZPLUGIN != 1 )) && is-at-least 5; then
 
   # Optional binary module
-  if [[ -f "$HOME/.zplugin/bin/zmodules/Src/zdharma/zplugin.so" ]]; then
-    module_path+=( "$HOME/.zplugin/bin/zmodules/Src" )
+  if [[ -f "${HOME}/.zplugin/bin/zmodules/Src/zdharma/zplugin.so" ]]; then
+    if [[ -z ${module_path[(re)"${HOME}/.zplugin/bin/zmodules/Src"]} ]]; then
+      module_path=( "${HOME}/.zplugin/bin/zmodules/Src" ${module_path[@]} )
+    fi
     zmodload zdharma/zplugin
   fi
 
