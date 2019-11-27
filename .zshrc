@@ -307,6 +307,7 @@ if (( AGKDOT_NO_ZPLUGIN != 1 )) && is-at-least 5; then
       agkozak/zsh-z
 
     zplugin atinit'zpcompinit; compdef mosh=ssh; zpcdreplay' atload"
+      sleep 1
       HISTORY_SUBSTRING_SEARCH_HIGHLIGHT_FOUND='underline'
       HISTORY_SUBSTRING_SEARCH_HIGHLIGHT_NOT_FOUND=''
       zle -N history-substring-search-up
@@ -314,7 +315,9 @@ if (( AGKDOT_NO_ZPLUGIN != 1 )) && is-at-least 5; then
       bindkey '^[OA' history-substring-search-up
       bindkey '^[OB' history-substring-search-down
       bindkey -M vicmd 'k' history-substring-search-up
-      bindkey -M vicmd 'j' history-substring-search-down" \
+      bindkey -M vicmd 'j' history-substring-search-down
+      bindkey '^P' history-substring-search-up
+      bindkey '^N' history-substring-search-down" \
       silent wait for zsh-users/zsh-history-substring-search
 
     # agkozak-zsh-prompt {{{2
@@ -510,10 +513,6 @@ bindkey '^N' down-history
 bindkey '^R' history-incremental-search-backward
 setopt NO_FLOW_CONTROL                          # Or the next command won't work
 bindkey '^S' history-incremental-search-forward
-
-# More zsh-history-substring-search bindings
-bindkey '^P' history-substring-search-up
-bindkey '^N' history-substring-search-down
 
 # }}}2
 
