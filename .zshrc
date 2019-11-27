@@ -291,6 +291,39 @@ if (( AGKDOT_NO_ZPLUGIN != 1 )) && is-at-least 5; then
 
     # Load plugins and snippets {{{2
 
+    # agkozak-zsh-prompt {{{3
+
+    # AGKOZAK_COLORS_PROMPT_CHAR='magenta'
+    # AGKOZAK_CUSTOM_SYMBOLS=( '⇣⇡' '⇣' '⇡' '+' 'x' '!' '>' '?' 'S' )
+    # AGKOZAK_LEFT_PROMPT_ONLY=1
+    # AGKOZAK_MULTILINE=0
+    # AGKOZAK_PROMPT_CHAR=( '❯' '❯' '❮' )
+    AGKOZAK_PROMPT_DEBUG=1
+
+    # Exit status
+    AGKOZAK_CUSTOM_PROMPT='%(?..%B%F{174}(%?%)%f%b )'
+    # Username and hostname
+    AGKOZAK_CUSTOM_PROMPT+='%(!.%S%B.%B%F{108})%n%1v%(!.%b%s.%f%b) '
+    # Path
+    AGKOZAK_CUSTOM_PROMPT+='%B%F{116}%2v%f%b'
+    # Git status
+    AGKOZAK_CUSTOM_PROMPT+=$'%(3V.%F{228}%3v%f.)\n'
+    # SHLVL and prompt character
+    AGKOZAK_CUSTOM_PROMPT+='[%L] %(4V.:.%#) '
+
+    AGKOZAK_CUSTOM_RPROMPT=''
+
+    if [[ $OSTYPE != (msys|cygwin) ]] \
+      && [[ $AGKDOT_SYSTEMINFO != *Microsoft* ]] \
+      && is-at-least 5.3; then
+      PROMPT='%m%# '
+      zplugin ice atload'_agkozak_precmd' nocd \
+        silent wait ver"develop"
+    fi
+    zplugin load agkozak/agkozak-zsh-prompt
+
+    # }}}3
+
     # zplugin light agkozak/polyglot
     # if which kubectl &> /dev/null; then
     #   zplugin light jonmosco/kube-ps1
@@ -320,76 +353,48 @@ if (( AGKDOT_NO_ZPLUGIN != 1 )) && is-at-least 5; then
       bindkey '^N' history-substring-search-down" \
       silent wait for zsh-users/zsh-history-substring-search
 
-    # agkozak-zsh-prompt {{{2
-
-    # AGKOZAK_COLORS_PROMPT_CHAR='magenta'
-    # AGKOZAK_CUSTOM_SYMBOLS=( '⇣⇡' '⇣' '⇡' '+' 'x' '!' '>' '?' 'S' )
-    # AGKOZAK_LEFT_PROMPT_ONLY=1
-    # AGKOZAK_MULTILINE=0
-    # AGKOZAK_PROMPT_CHAR=( '❯' '❯' '❮' )
-    AGKOZAK_PROMPT_DEBUG=1
-
-    # Exit status
-    AGKOZAK_CUSTOM_PROMPT='%(?..%B%F{174}(%?%)%f%b )'
-    # Username and hostname
-    AGKOZAK_CUSTOM_PROMPT+='%(!.%S%B.%B%F{108})%n%1v%(!.%b%s.%f%b) '
-    # Path
-    AGKOZAK_CUSTOM_PROMPT+='%B%F{116}%2v%f%b'
-    # Git status
-    AGKOZAK_CUSTOM_PROMPT+=$'%(3V.%F{228}%3v%f.)\n'
-    # SHLVL and prompt character
-    AGKOZAK_CUSTOM_PROMPT+='[%L] %(4V.:.%#) '
-
-    AGKOZAK_CUSTOM_RPROMPT=''
-
-    if [[ $OSTYPE != (msys|cygwin) ]] \
-      && [[ $AGKDOT_SYSTEMINFO != *Microsoft* ]];then
-      PROMPT='%m%# '
-      zplugin ice atload'_agkozak_precmd' nocd \
-        silent wait ver"develop"
-    fi
-    zplugin load agkozak/agkozak-zsh-prompt
-
-    # }}}2
-
     # zsh-titles causes dittography in Emacs shell and Vim terminal
     if (( ! $+EMACS )) && [[ $TERM != 'dumb' ]] && (( ! $+VIM_TERMINAL )); then
-      zplugin lucid wait for jreese/zsh-titles
+      is-at-least 5.3 && zplugin ice lucid wait 
+      zplugin load jreese/zsh-titles
     fi
 
     if [[ $AGKDOT_SYSTEMINFO != *ish* ]]; then
-      zplugin lucid wait for zdharma/zui
-      zplugin lucid wait'1' for zdharma/zbrowse
+      is-at-least 5.3 && zplugin ice lucid wait
+      zplugin load zdharma/zui
+      is-at-least 5.3 && zplugin ice lucid wait'1'
+      zplugin load zdharma/zbrowse
     fi
 
     zplugin snippet OMZ::plugins/extract/extract.plugin.zsh
 
-    zplugin wait silent for romkatv/zsh-prompt-benchmark
+    is-at-least 5.3 && zplugin wait silent
+    zplugin load romkatv/zsh-prompt-benchmark
 
     # Must be loaded last
-    # if [[ $OSTYPE == (msys|cygwin) ]] \
-    #   || [[ $AGKDOT_SYSTEMINFO == *Microsoft* ]]; then
-    #   # Git highlighting can be very slow on Windows
-    #   zplugin ice \
-    #     atload'
-    #       zpcompinit
-    #       compdef mosh=ssh
-    #       zpcdreplay
-    #       ZSH_HIGHLIGHT_MAXLENGTH=10
-    #       unset "FAST_HIGHLIGHT[chroma-git]"
-    #       fast-theme free &> /dev/null' \
-    #     lucid wait
-    # else
-    #   zplugin ice \
-    #     atload'
-    #       zpcompinit
-    #       compdef mosh=ssh
-    #       zpcdreplay
-    #       ZSH_HIGHLIGHT_MAXLENGTH=300
-    #       fast-theme free &> /dev/null' \
-    #   lucid wait
-    # fi
-    # zplugin load zdharma/fast-syntax-highlighting
+    if [[ $OSTYPE == (msys|cygwin) ]] \
+      || [[ $AGKDOT_SYSTEMINFO == *Microsoft* ]]; then
+      # Git highlighting can be very slow on Windows
+      is-at-least 5.3 && zplugin ice \
+        atload'
+          zpcompinit
+          compdef mosh=ssh
+          zpcdreplay
+          ZSH_HIGHLIGHT_MAXLENGTH=10
+          unset "FAST_HIGHLIGHT[chroma-git]"
+          fast-theme free &> /dev/null' \
+        lucid wait
+    else
+      is-at-least 5.3 && zplugin ice \
+        atload'
+          zpcompinit
+          compdef mosh=ssh
+          zpcdreplay
+          ZSH_HIGHLIGHT_MAXLENGTH=300
+          fast-theme free &> /dev/null' \
+      lucid wait
+    fi
+    zplugin load zdharma/fast-syntax-highlighting
 
   else
     print 'Please install git.'
@@ -429,6 +434,11 @@ fi
 # }}}1
 
 # Styles and completions {{{1
+
+if (( ! AGKDOT_NO_ZPLUGIN )) && ! is-at-least 5.3; then
+  autoload -Uz compinit
+  compinit -u -d "${HOME}/.zcompdump_${ZSH_VERSION}"
+fi
 
 # https://www.zsh.org/mla/users/2015/msg00467.html
 # shellcheck disable=SC2016
