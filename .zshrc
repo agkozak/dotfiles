@@ -343,6 +343,8 @@ if (( AGKDOT_NO_ZPLUGIN != 1 )) && is-at-least 5; then
 
     zplugin snippet OMZ::plugins/extract/extract.plugin.zsh
 
+    zplugin wait silent for romkatv/zsh-prompt-benchmark
+
     zplugin atload"
       HISTORY_SUBSTRING_SEARCH_HIGHLIGHT_FOUND='underline'
       HISTORY_SUBSTRING_SEARCH_HIGHLIGHT_NOT_FOUND=''
@@ -356,8 +358,6 @@ if (( AGKDOT_NO_ZPLUGIN != 1 )) && is-at-least 5; then
       compdef mosh=ssh
       zpcdreplay" \
       lucid wait for zsh-users/zsh-history-substring-search
-
-    zplugin light romkatv/zsh-prompt-benchmark
 
     # Must be loaded last
     # if [[ $OSTYPE == (msys|cygwin) ]] \
