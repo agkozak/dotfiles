@@ -314,7 +314,8 @@ if (( AGKDOT_NO_ZPLUGIN != 1 )) && is-at-least 5; then
     if [[ $OSTYPE != (msys|cygwin) ]] \
       && [[ $AGKDOT_SYSTEMINFO != *Microsoft* ]];then
       PROMPT='%m%# '
-      zplugin ice atload'_agkozak_precmd' silent wait ver"develop"
+      zplugin ice atload'_agkozak_precmd' nocd \
+        silent wait ver"develop"
     fi
     zplugin load agkozak/agkozak-zsh-prompt
 
