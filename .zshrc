@@ -1,8 +1,6 @@
 # ~/.zshrc
 #
 # https://github.com/agkozak/dotfiles
-#
-# shellcheck disable=SC1090,SC2034,SC2128,SC2148,SC2154
 
 # Begin .zshrc benchmarks {{{1
 
@@ -52,10 +50,12 @@ _agkdot_compile_or_recompile "${HOME}/.profile" "${HOME}/.zprofile" "${HOME}/.zs
 
 # }}}1
 
-# (Compile and) source ~/.shrc {{{1
+# Source ~/.shrc {{{1
 
 if [[ -f ${HOME}/.shrc ]];then
   if (( AGKDOT_BENCHMARKS )); then
+    # Try to use zsh's $EPOCHREALTIME to get the benchmarks here rather than
+    # using date inside of .shrc
     (( $+EPOCHREALTIME )) || zmodload zsh/datetime
     typeset -g AGKDOT_ZSHRC_START=$(( EPOCHREALTIME * 1000 ))
     AGKDOT_ZSHRC_LOADING=1 source "${HOME}/.shrc"
@@ -150,21 +150,21 @@ autoload -Uz zmv
 
 # zsh-specific aliases - POSIX aliases are in .shrc {{{1
 
-# alias hgrep='fc -fl 0 | grep'
+alias hgrep='fc -fl 0 | grep'
 
 alias ls='ls ${=LS_OPTIONS}'
 
 # Global Aliases {{{2
 
 # alias -g CA='2>&1 | cat -A'
-# alias -g G='| grep'
-# alias -g H='| head'
+alias -g G='| grep'
+alias -g H='| head'
 alias -g L='| less'
-# alias -g LL='2>&1 | less'
+alias -g LL='2>&1 | less'
 # alias -g M='| most'
 alias -g NE='2> /dev/null'
 alias -g NUL='&> /dev/null'
-# alias -g T='| tail'
+alias -g T='| tail'
 alias -g V='|& vim -'
 
 # }}}2
@@ -177,7 +177,6 @@ alias -g V='|& vim -'
 if [[ ! -f '/etc/debian-version' ]] && [[ ! -f '/etc/zsh/zshrc' ]]; then
 
   typeset -A key
-  # shellcheck disable=SC2190
   key=(
     BackSpace  "${terminfo[kbs]}"
     Home       "${terminfo[khome]}"
@@ -233,8 +232,6 @@ if [[ ! -f '/etc/debian-version' ]] && [[ ! -f '/etc/zsh/zshrc' ]]; then
 
   # Make sure the terminal is in application mode, when zle is
   # active. Only then are the values from $terminfo valid.
-  #
-  # shellcheck disable=SC2004
   if (( ${+terminfo[smkx]} )) && (( ${+terminfo[rmkx]} )); then
     function zle-line-init() {
       emulate -L zsh
@@ -443,7 +440,6 @@ fi
 # Styles and completions {{{1
 
 # https://www.zsh.org/mla/users/2015/msg00467.html
-# shellcheck disable=SC2016
 zstyle -e ':completion:*:*:ssh:*:my-accounts' users-hosts \
 	'[[ -f ${HOME}/.ssh/config && $key = hosts ]] && key=my_hosts reply=()'
 
@@ -488,7 +484,7 @@ if [[ $ZSH_VERSION != '5.1.1' ]] && [[ $TERM != 'dumb' ]] \
   autoload -Uz url-quote-magic
   zle -N self-insert url-quote-magic
 elif [[ $TERM == 'dumb' ]]; then
-  unset zle_bracketed_paste # Avoid ugly control sequences
+  unset zle_bracketed_paste # Avoid ugly control sequences in dumb terminal
 fi
 
 # Use Esc-K for run-help
