@@ -296,18 +296,18 @@ if (( AGKDOT_NO_ZPLUGIN != 1 )) && is-at-least 5; then
     # AGKOZAK_PROMPT_CHAR=( '❯' '❯' '❮' )
     AGKOZAK_PROMPT_DEBUG=1
 
-    # # Exit status
-    # AGKOZAK_CUSTOM_PROMPT='%(?..%B%F{174}(%?%)%f%b )'
-    # # Username and hostname
-    # AGKOZAK_CUSTOM_PROMPT+='%(!.%S%B.%B%F{108})%n%1v%(!.%b%s.%f%b) '
-    # # Path
-    # AGKOZAK_CUSTOM_PROMPT+='%B%F{116}%2v%f%b'
-    # # Git status
-    # AGKOZAK_CUSTOM_PROMPT+=$'%(3V.%F{223}%3v%f.)\n'
-    # # SHLVL and prompt character
-    # AGKOZAK_CUSTOM_PROMPT+='[%L] %(4V.:.%#) '
+    # Exit status
+    AGKOZAK_CUSTOM_PROMPT='%(?..%B%F{174}(%?%)%f%b )'
+    # Username and hostname
+    AGKOZAK_CUSTOM_PROMPT+='%(!.%S%B.%B%F{108})%n%1v%(!.%b%s.%f%b) '
+    # Path
+    AGKOZAK_CUSTOM_PROMPT+='%B%F{116}%2v%f%b'
+    # Git status
+    AGKOZAK_CUSTOM_PROMPT+=$'%(3V.%F{228}%3v%f.)\n'
+    # SHLVL and prompt character
+    AGKOZAK_CUSTOM_PROMPT+='[%L] %(4V.:.%#) '
 
-    # AGKOZAK_CUSTOM_RPROMPT=''
+    AGKOZAK_CUSTOM_RPROMPT=''
 
     zplugin ver"develop" for agkozak/agkozak-zsh-prompt
 
