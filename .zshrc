@@ -291,6 +291,34 @@ if (( AGKDOT_NO_ZPLUGIN != 1 )) && is-at-least 5; then
 
     # Load plugins and snippets {{{2
 
+    # zplugin light agkozak/polyglot
+    # if which kubectl &> /dev/null; then
+    #   zplugin light jonmosco/kube-ps1
+    #   zplugin light agkozak/polyglot-kube-ps1
+    # fi
+
+    # agkozak/zsh-z
+    # In FreeBSD, /home is /usr/home
+    ZSHZ_DEBUG=1
+    [[ $OSTYPE == freebsd* ]] && typeset -g ZSHZ_NO_RESOLVE_SYMLINKS=1
+
+    zplugin ver"develop" lucid wait for \
+      agkozak/zhooks \
+      agkozak/zsh-z
+
+    zplugin atinit'zpcompinit; compdef mosh=ssh; zpcdreplay' atload"
+      HISTORY_SUBSTRING_SEARCH_HIGHLIGHT_FOUND='underline'
+      HISTORY_SUBSTRING_SEARCH_HIGHLIGHT_NOT_FOUND=''
+      zle -N history-substring-search-up
+      zle -N history-substring-search-down
+      bindkey '^[OA' history-substring-search-up
+      bindkey '^[OB' history-substring-search-down
+      bindkey -M vicmd 'k' history-substring-search-up
+      bindkey -M vicmd 'j' history-substring-search-down" \
+      silent wait for zsh-users/zsh-history-substring-search
+
+    # agkozak-zsh-prompt {{{2
+
     # AGKOZAK_COLORS_PROMPT_CHAR='magenta'
     # AGKOZAK_CUSTOM_SYMBOLS=( '⇣⇡' '⇣' '⇡' '+' 'x' '!' '>' '?' 'S' )
     # AGKOZAK_LEFT_PROMPT_ONLY=1
@@ -319,20 +347,7 @@ if (( AGKDOT_NO_ZPLUGIN != 1 )) && is-at-least 5; then
     fi
     zplugin load agkozak/agkozak-zsh-prompt
 
-    # zplugin light agkozak/polyglot
-    # if which kubectl &> /dev/null; then
-    #   zplugin light jonmosco/kube-ps1
-    #   zplugin light agkozak/polyglot-kube-ps1
-    # fi
-
-    # agkozak/zsh-z
-    # In FreeBSD, /home is /usr/home
-    ZSHZ_DEBUG=1
-    [[ $OSTYPE == freebsd* ]] && typeset -g ZSHZ_NO_RESOLVE_SYMLINKS=1
-
-    zplugin ver"develop" lucid wait for \
-      agkozak/zhooks \
-      agkozak/zsh-z
+    # }}}2
 
     # zsh-titles causes dittography in Emacs shell and Vim terminal
     if (( ! $+EMACS )) && [[ $TERM != 'dumb' ]] && (( ! $+VIM_TERMINAL )); then
@@ -347,20 +362,6 @@ if (( AGKDOT_NO_ZPLUGIN != 1 )) && is-at-least 5; then
     zplugin snippet OMZ::plugins/extract/extract.plugin.zsh
 
     zplugin wait silent for romkatv/zsh-prompt-benchmark
-
-    zplugin atload"
-      HISTORY_SUBSTRING_SEARCH_HIGHLIGHT_FOUND='underline'
-      HISTORY_SUBSTRING_SEARCH_HIGHLIGHT_NOT_FOUND=''
-      zle -N history-substring-search-up
-      zle -N history-substring-search-down
-      bindkey '^[OA' history-substring-search-up
-      bindkey '^[OB' history-substring-search-down
-      bindkey -M vicmd 'k' history-substring-search-up
-      bindkey -M vicmd 'j' history-substring-search-down
-      zpcompinit
-      compdef mosh=ssh
-      zpcdreplay" \
-      lucid wait for zsh-users/zsh-history-substring-search
 
     # Must be loaded last
     # if [[ $OSTYPE == (msys|cygwin) ]] \
