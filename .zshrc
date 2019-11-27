@@ -27,7 +27,7 @@ fi
 
 # }}}1
 
-# compile_or_recompile() {{{1
+# _agkdot_compile_or_recompile() {{{1
 
 ###########################################################
 # If files do not have compiled forms, compile them;
@@ -36,7 +36,7 @@ fi
 # Arguments:
 #   $1, etc.  Shell scripts to be compiled
 ###########################################################
-compile_or_recompile() {
+_agkdot_compile_or_recompile() {
   local file
   for file in "$@"; do
     if [[ -f $file ]] && [[ ! -f ${file}.zwc ]] \
@@ -46,7 +46,7 @@ compile_or_recompile() {
   done
 }
 
-compile_or_recompile "${HOME}/.profile" "${HOME}/.zprofile" "${HOME}/.zshenv" \
+_agkdot_compile_or_recompile "${HOME}/.profile" "${HOME}/.zprofile" "${HOME}/.zshenv" \
   "${HOME}/.zshenv.local" "${HOME}/.zshrc" "${HOME}/.zshrc.local" \
   "${HOME}/.shrc" "${HOME}/.shrc.local"
 
@@ -259,8 +259,9 @@ fi
 
 # }}}1
 
-# zplugin {{{1
+# zplugin for zsh 5+, along with provisions for zsh 4.3.11+ {{{1
 
+# export AGKDOT_NO_ZPLUGIN=1 to circumvent zplugin
 if (( AGKDOT_NO_ZPLUGIN != 1 )) && is-at-least 5; then
 
   # Optional binary module
@@ -277,7 +278,7 @@ if (( AGKDOT_NO_ZPLUGIN != 1 )) && is-at-least 5; then
       print 'Installing zplugin...'
       mkdir -p "${HOME}/.zplugin"
       git clone https://github.com/zdharma/zplugin.git "${HOME}/.zplugin/bin"
-      compile_or_recompile "${HOME}/.zplugin/bin/zplugin.zsh"
+      _agkdot_compile_or_recompile "${HOME}/.zplugin/bin/zplugin.zsh"
     fi
 
     # Configuration hash
@@ -317,8 +318,7 @@ if (( AGKDOT_NO_ZPLUGIN != 1 )) && is-at-least 5; then
       && [[ $AGKDOT_SYSTEMINFO != *Microsoft* ]] \
       && is-at-least 5.3; then
       PROMPT='%m%# '
-      zplugin ice atload'_agkozak_precmd' nocd \
-        silent wait ver"develop"
+      zplugin ice atload'_agkozak_precmd' nocd silent wait ver'develop'
     fi
     zplugin load agkozak/agkozak-zsh-prompt
 
@@ -334,13 +334,14 @@ if (( AGKDOT_NO_ZPLUGIN != 1 )) && is-at-least 5; then
     # In FreeBSD, /home is /usr/home
     ZSHZ_DEBUG=1
     [[ $OSTYPE == freebsd* ]] && typeset -g ZSHZ_NO_RESOLVE_SYMLINKS=1
+    is-at-least 5.3 && zplugin ice lucid ver'develop' wait
+    zplugin load agkozak/zsh-z
 
-    zplugin ver"develop" lucid wait for \
-      agkozak/zhooks \
-      agkozak/zsh-z
 
-    zplugin atinit'zpcompinit; compdef mosh=ssh; zpcdreplay' atload"
-      sleep 1
+    is-at-least 5.3 && zplugin ice lucid wait ver'develop'
+    zplugin load agkozak/zhooks
+
+    zplugin ice atinit'zpcompinit; compdef mosh=ssh; zpcdreplay' atload"
       HISTORY_SUBSTRING_SEARCH_HIGHLIGHT_FOUND='underline'
       HISTORY_SUBSTRING_SEARCH_HIGHLIGHT_NOT_FOUND=''
       zle -N history-substring-search-up
@@ -350,8 +351,8 @@ if (( AGKDOT_NO_ZPLUGIN != 1 )) && is-at-least 5; then
       bindkey -M vicmd 'k' history-substring-search-up
       bindkey -M vicmd 'j' history-substring-search-down
       bindkey '^P' history-substring-search-up
-      bindkey '^N' history-substring-search-down" \
-      silent wait for zsh-users/zsh-history-substring-search
+      bindkey '^N' history-substring-search-down" silent wait
+    zplugin load zsh-users/zsh-history-substring-search
 
     # zsh-titles causes dittography in Emacs shell and Vim terminal
     if (( ! $+EMACS )) && [[ $TERM != 'dumb' ]] && (( ! $+VIM_TERMINAL )); then
@@ -368,33 +369,39 @@ if (( AGKDOT_NO_ZPLUGIN != 1 )) && is-at-least 5; then
 
     zplugin snippet OMZ::plugins/extract/extract.plugin.zsh
 
-    is-at-least 5.3 && zplugin wait silent
+    is-at-least 5.3 && zplugin ice silent wait
     zplugin load romkatv/zsh-prompt-benchmark
 
     # Must be loaded last
-    if [[ $OSTYPE == (msys|cygwin) ]] \
-      || [[ $AGKDOT_SYSTEMINFO == *Microsoft* ]]; then
-      # Git highlighting can be very slow on Windows
-      is-at-least 5.3 && zplugin ice \
-        atload'
-          zpcompinit
-          compdef mosh=ssh
-          zpcdreplay
-          ZSH_HIGHLIGHT_MAXLENGTH=10
-          unset "FAST_HIGHLIGHT[chroma-git]"
-          fast-theme free &> /dev/null' \
-        lucid wait
-    else
-      is-at-least 5.3 && zplugin ice \
-        atload'
-          zpcompinit
-          compdef mosh=ssh
-          zpcdreplay
-          ZSH_HIGHLIGHT_MAXLENGTH=300
-          fast-theme free &> /dev/null' \
-      lucid wait
-    fi
-    zplugin load zdharma/fast-syntax-highlighting
+    # if [[ $OSTYPE == (msys|cygwin) ]] \
+    #   || [[ $AGKDOT_SYSTEMINFO == *Microsoft* ]]; then
+    #   # Git highlighting can be very slow on Windows
+    #   is-at-least 5.3 && zplugin ice \
+    #     atload'
+    #       zpcompinit
+    #       compdef mosh=ssh
+    #       zpcdreplay
+    #       ZSH_HIGHLIGHT_MAXLENGTH=10
+    #       unset "FAST_HIGHLIGHT[chroma-git]"
+    #       fast-theme free &> /dev/null' \
+    #     lucid wait
+    # else
+    #   is-at-least 5.3 && zplugin ice \
+    #     atload'
+    #       zpcompinit
+    #       compdef mosh=ssh
+    #       zpcdreplay
+    #       ZSH_HIGHLIGHT_MAXLENGTH=300
+    #       fast-theme free &> /dev/null' \
+    #   lucid wait
+    # fi
+    # zplugin load zdharma/fast-syntax-highlighting
+
+  if ! is-at-least 5.3; then
+    autoload -Uz compinit
+    compinit -u -d "${HOME}/.zcompdump_${ZSH_VERSION}"
+    compdef mosh=ssh
+  fi
 
   else
     print 'Please install git.'
@@ -434,11 +441,6 @@ fi
 # }}}1
 
 # Styles and completions {{{1
-
-if (( ! AGKDOT_NO_ZPLUGIN )) && ! is-at-least 5.3; then
-  autoload -Uz compinit
-  compinit -u -d "${HOME}/.zcompdump_${ZSH_VERSION}"
-fi
 
 # https://www.zsh.org/mla/users/2015/msg00467.html
 # shellcheck disable=SC2016
@@ -595,7 +597,7 @@ fi
 
 # Compile or recompile ~/.zcompdump {{{1
 
-compile_or_recompile "${HOME}/.zcompdump_${ZSH_VERSION}"
+_agkdot_compile_or_recompile "${HOME}/.zcompdump_${ZSH_VERSION}"
 
 # }}}1
 
@@ -610,7 +612,7 @@ fi
 
 # Clean up environment {{{1
 
-unfunction compile_or_recompile
+unfunction _agkdot_compile_or_recompile
 
 # }}}1
 
