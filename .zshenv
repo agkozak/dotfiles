@@ -31,6 +31,12 @@ fi
 
 # }}}1
 
+# Ubuntu-specific {{{1
+
+skip_global_compinit=1
+
+# }}}1
+
 # source ~/.zshenv.local {{{1
 
 [[ -f ${HOME}/.zshenv.local ]] && source ${HOME}/.zshenv.local
