@@ -598,6 +598,12 @@ fi
 
 # }}}1
 
+# Clean up environment {{{1
+
+unfunction compile_or_recompile
+
+# }}}1
+
 # Source ~/.zshrc.local, if present {{{1
 
 if [[ -f ${HOME}/.zshrc.local ]]; then
