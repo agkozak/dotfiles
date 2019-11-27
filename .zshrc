@@ -309,7 +309,9 @@ if (( AGKDOT_NO_ZPLUGIN != 1 )) && is-at-least 5; then
 
     AGKOZAK_CUSTOM_RPROMPT=''
 
-    zplugin ver"develop" for agkozak/agkozak-zsh-prompt
+    PROMPT='%m%# '
+    zplugin atload'_agkozak_precmd' silent wait ver"develop" \
+      for agkozak/agkozak-zsh-prompt
 
     # zplugin light agkozak/polyglot
     # if which kubectl &> /dev/null; then
