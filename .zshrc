@@ -309,9 +309,12 @@ if (( AGKDOT_NO_ZPLUGIN != 1 )) && is-at-least 5; then
 
     AGKOZAK_CUSTOM_RPROMPT=''
 
-    PROMPT='%m%# '
-    zplugin atload'_agkozak_precmd' silent wait ver"develop" \
-      for agkozak/agkozak-zsh-prompt
+    if [[ $OSTYPE != (msys|cygwin) ]] \
+      && [[ $AGKDOT_SYSTEMINFO != *Microsoft* ]];then
+      PROMPT='%m%# '
+      zplugin ice atload'_agkozak_precmd' silent wait ver"develop"
+    fi
+    zplugin load agkozak/agkozak-zsh-prompt
 
     # zplugin light agkozak/polyglot
     # if which kubectl &> /dev/null; then
