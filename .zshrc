@@ -442,6 +442,8 @@ fi
 # https://www.zsh.org/mla/users/2015/msg00467.html
 zstyle -e ':completion:*:*:ssh:*:my-accounts' users-hosts \
 	'[[ -f ${HOME}/.ssh/config && $key = hosts ]] && key=my_hosts reply=()'
+zstyle -e ':completion:*:*:mosh:*:my-accounts' users-hosts \
+	'[[ -f ${HOME}/.ssh/config && $key = hosts ]] && key=my_hosts reply=()'
 
 # rationalise-dot() {{{2
 # https://grml.org/zsh/zsh-lovers.html
