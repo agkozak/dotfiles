@@ -342,6 +342,7 @@ if (( AGKDOT_NO_ZPLUGIN != 1 )) && is-at-least 5; then
     is-at-least 5.3 && zplugin ice lucid wait ver'develop'
     zplugin load agkozak/zhooks
 
+    if is-at-least 5.3; then
     zplugin ice atinit'zpcompinit; compdef mosh=ssh; zpcdreplay' atload"
       HISTORY_SUBSTRING_SEARCH_HIGHLIGHT_FOUND='underline'
       HISTORY_SUBSTRING_SEARCH_HIGHLIGHT_NOT_FOUND=''
@@ -352,7 +353,8 @@ if (( AGKDOT_NO_ZPLUGIN != 1 )) && is-at-least 5; then
       bindkey -M vicmd 'k' history-substring-search-up
       bindkey -M vicmd 'j' history-substring-search-down
       bindkey '^P' history-substring-search-up
-      bindkey '^N' history-substring-search-down" silent wait
+      bindkey '^N' history-substring-search-down" nocd silent wait
+    fi
     zplugin load zsh-users/zsh-history-substring-search
 
     # zsh-titles causes dittography in Emacs shell and Vim terminal
@@ -402,6 +404,16 @@ if (( AGKDOT_NO_ZPLUGIN != 1 )) && is-at-least 5; then
     autoload -Uz compinit
     compinit -u -d "${HOME}/.zcompdump_${ZSH_VERSION}"
     compdef mosh=ssh
+    HISTORY_SUBSTRING_SEARCH_HIGHLIGHT_FOUND='underline'
+    HISTORY_SUBSTRING_SEARCH_HIGHLIGHT_NOT_FOUND=''
+    zle -N history-substring-search-up
+    zle -N history-substring-search-down
+    bindkey '^[OA' history-substring-search-up
+    bindkey '^[OB' history-substring-search-down
+    bindkey -M vicmd 'k' history-substring-search-up
+    bindkey -M vicmd 'j' history-substring-search-down
+    bindkey '^P' history-substring-search-up
+    bindkey '^N' history-substring-search-down
   fi
 
   else
