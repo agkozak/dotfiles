@@ -526,6 +526,15 @@ bindkey '^S' history-incremental-search-forward
 
 # }}}2
 
+# Show completion "waiting dots" 
+expand-or-complete-with-dots() {
+  print -n '...'
+  zle expand-or-complete
+  zle .redisplay
+}
+zle -N expand-or-complete-with-dots
+bindkey '^I' expand-or-complete-with-dots
+
 # }}}1
 
 # Miscellaneous {{{1
