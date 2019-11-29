@@ -106,6 +106,8 @@ if command -v nvim > /dev/null 2>&1; then
 fi
 
 conditional_install zsh .zprofile .zshenv .zshrc
+# Clean up after some frameworks
+rm -f "$HOME/.zlogin" "$HOME/.zlogin.zwc" "$HOME/.zlogout" "$HOME/zlogout.zwc"
 
 conditional_install csh .cshrc
 
