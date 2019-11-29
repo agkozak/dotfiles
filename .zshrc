@@ -44,9 +44,9 @@ _agkdot_compile_or_recompile() {
   done
 }
 
-_agkdot_compile_or_recompile "${HOME}/.profile" "${HOME}/.zprofile" "${HOME}/.zshenv" \
-  "${HOME}/.zshenv.local" "${HOME}/.zshrc" "${HOME}/.zshrc.local" \
-  "${HOME}/.shrc" "${HOME}/.shrc.local"
+_agkdot_compile_or_recompile "${HOME}/.profile" "${HOME}/.zprofile" \
+  "${HOME}/.zshenv" "${HOME}/.zshenv.local" "${HOME}/.zshrc" \
+  "${HOME}/.zshrc.local" "${HOME}/.shrc" "${HOME}/.shrc.local"
 
 # }}}1
 
@@ -256,7 +256,7 @@ fi
 
 # }}}1
 
-# zplugin for zsh 5+, along with provisions for zsh 4.3.11+ {{{1
+# zplugin for zsh v5.0+, along with provisions for zsh v4.3.11+ {{{1
 
 # export AGKDOT_NO_ZPLUGIN=1 to circumvent zplugin
 if (( AGKDOT_NO_ZPLUGIN != 1 )) && is-at-least 5; then
@@ -303,19 +303,22 @@ if (( AGKDOT_NO_ZPLUGIN != 1 )) && is-at-least 5; then
     # Username and hostname
     AGKOZAK_CUSTOM_PROMPT+='%(!.%S%B.%B%F{108})%n%1v%(!.%b%s.%f%b) '
     # Path
-    AGKOZAK_CUSTOM_PROMPT+='%B%F{116}%2v%f%b'
+    AGKOZAK_CUSTOM_PROMPT+=$'%B%F{116}%2v%f%b\n'
     # Git status
-    AGKOZAK_CUSTOM_PROMPT+=$'%(3V.%F{228}%3v%f.)\n'
+    # AGKOZAK_CUSTOM_PROMPT+=$'%(3V.%F{228}%3v%f.)\n'
     # SHLVL and prompt character
     AGKOZAK_CUSTOM_PROMPT+='[%L] %(4V.:.%#) '
+    AGKOZAK_COLORS_BRANCH_STATUS=228
 
-    AGKOZAK_CUSTOM_RPROMPT=''
+    # AGKOZAK_CUSTOM_RPROMPT=''
 
     if [[ $OSTYPE != (msys|cygwin) ]] \
       && [[ $AGKDOT_SYSTEMINFO != *Microsoft* ]] \
       && is-at-least 5.3; then
       PROMPT='%m%# '
       zplugin ice atload'_agkozak_precmd' nocd silent wait ver'develop'
+    else
+      zplugin ice ver'develop'
     fi
     zplugin load agkozak/agkozak-zsh-prompt
 
