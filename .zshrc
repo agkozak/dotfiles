@@ -338,7 +338,6 @@ if (( AGKDOT_NO_ZPLUGIN != 1 )) && is-at-least 5; then
     is-at-least 5.3 && zplugin ice lucid ver'develop' wait
     zplugin load agkozak/zsh-z
 
-
     is-at-least 5.3 && zplugin ice lucid wait ver'develop'
     zplugin load agkozak/zhooks
 
@@ -359,7 +358,7 @@ if (( AGKDOT_NO_ZPLUGIN != 1 )) && is-at-least 5; then
 
     # zsh-titles causes dittography in Emacs shell and Vim terminal
     if (( ! $+EMACS )) && [[ $TERM != 'dumb' ]] && (( ! $+VIM_TERMINAL )); then
-      is-at-least 5.3 && zplugin ice lucid wait 
+      is-at-least 5.3 && zplugin ice lucid wait
       zplugin load jreese/zsh-titles
     fi
 
@@ -374,31 +373,6 @@ if (( AGKDOT_NO_ZPLUGIN != 1 )) && is-at-least 5; then
 
     is-at-least 5.3 && zplugin ice silent wait
     zplugin load romkatv/zsh-prompt-benchmark
-
-    # Must be loaded last
-    # if [[ $OSTYPE == (msys|cygwin) ]] \
-    #   || [[ $AGKDOT_SYSTEMINFO == *Microsoft* ]]; then
-    #   # Git highlighting can be very slow on Windows
-    #   is-at-least 5.3 && zplugin ice \
-    #     atload'
-    #       zpcompinit
-    #       compdef mosh=ssh
-    #       zpcdreplay
-    #       ZSH_HIGHLIGHT_MAXLENGTH=10
-    #       unset "FAST_HIGHLIGHT[chroma-git]"
-    #       fast-theme free &> /dev/null' \
-    #     lucid wait
-    # else
-    #   is-at-least 5.3 && zplugin ice \
-    #     atload'
-    #       zpcompinit
-    #       compdef mosh=ssh
-    #       zpcdreplay
-    #       ZSH_HIGHLIGHT_MAXLENGTH=300
-    #       fast-theme free &> /dev/null' \
-    #   lucid wait
-    # fi
-    # zplugin load zdharma/fast-syntax-highlighting
 
   if ! is-at-least 5.3; then
     autoload -Uz compinit
@@ -542,7 +516,7 @@ bindkey '^S' history-incremental-search-forward
 
 # }}}2
 
-# Show completion "waiting dots" 
+# Show completion "waiting dots"
 expand-or-complete-with-dots() {
   print -n '...'
   zle expand-or-complete
