@@ -91,7 +91,7 @@ done
 unset i
 
 case $AGKDOT_SYSTEMINFO in
-  *Msys) [ -d /mingw64/bin ] && PATH="$PATH:/mingw64/bin" ;;
+  *Msys) [ -d /mingw64/bin ] && PATH="/mingw64/bin:$PATH" ;;
 esac
 
 # Load RVM into a shell session *as a function*
