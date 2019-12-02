@@ -317,7 +317,7 @@ if (( AGKDOT_NO_ZPLUGIN != 1 )) && is-at-least 5; then
       && [[ $AGKDOT_SYSTEMINFO != *Microsoft* ]] \
       && is-at-least 5.3; then
       PROMPT='%m%# '
-      zplugin ice atload'_agkozak_precmd' nocd silent \
+      zplugin ice atload"print -n $'\r'; _agkozak_precmd" nocd silent \
         wait ver'develop'
     else
       zplugin ice ver'develop'
