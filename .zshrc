@@ -298,14 +298,15 @@ if (( AGKDOT_NO_ZPLUGIN != 1 )) && is-at-least 5; then
     # AGKOZAK_PROMPT_CHAR=( '❯' '❯' '❮' )
     AGKOZAK_PROMPT_DEBUG=1
 
-    # Exit status
-    AGKOZAK_CUSTOM_PROMPT='%(?..%B%F{174}(%?%)%f%b )'
+    AGKOZAK_GLITCH_FIX=1
     # Username and hostname
-    AGKOZAK_CUSTOM_PROMPT+='%(!.%S%B.%B%F{108})%n%1v%(!.%b%s.%f%b) '
+    AGKOZAK_CUSTOM_PROMPT='%(!.%S%B.%B%F{108})%n%1v%(!.%b%s.%f%b) '
     # Path
     AGKOZAK_CUSTOM_PROMPT+=$'%B%F{116}%2v%f%b\n'
     # Git status
     # AGKOZAK_CUSTOM_PROMPT+=$'%(3V.%F{228}%3v%f.)\n'
+    # Exit status
+    AGKOZAK_CUSTOM_PROMPT+='%(?..%B%F{174}(%?%)%f%b )'
     # SHLVL and prompt character
     AGKOZAK_CUSTOM_PROMPT+='[%L] %(4V.:.%#) '
     AGKOZAK_COLORS_BRANCH_STATUS=228
