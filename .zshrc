@@ -357,8 +357,9 @@ if (( AGKDOT_NO_ZPLUGIN != 1 )) && is-at-least 5; then
     fi
     zplugin load zsh-users/zsh-history-substring-search
 
-    # zsh-titles causes dittography in Emacs shell and Vim terminal
-    if (( ! $+EMACS )) && [[ $TERM != 'dumb' ]] && (( ! $+VIM_TERMINAL )); then
+    # zsh-titles causes dittography in Emacs (Eshell/term/ansi-term
+    # and Vim terminal
+    if (( ! $+EMACS )) && [[ $TERM != eterm* ]] && (( ! $+VIM_TERMINAL )); then
       is-at-least 5.3 && zplugin ice lucid wait
       zplugin load jreese/zsh-titles
     fi
