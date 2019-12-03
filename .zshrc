@@ -34,19 +34,19 @@ fi
 # Arguments:
 #   $1, etc.  Shell scripts to be compiled
 ###########################################################
-_agkdot_compile_or_recompile() {
-  local file
-  for file in "$@"; do
-    if [[ -f $file ]] && [[ ! -f ${file}.zwc ]] \
-      || [[ $file -nt ${file}.zwc ]]; then
-      zcompile "$file"
-    fi
-  done
-}
+# _agkdot_compile_or_recompile() {
+#   local file
+#   for file in "$@"; do
+#     if [[ -f $file ]] && [[ ! -f ${file}.zwc ]] \
+#       || [[ $file -nt ${file}.zwc ]]; then
+#       zcompile "$file"
+#     fi
+#   done
+# }
 
-_agkdot_compile_or_recompile "${HOME}/.profile" "${HOME}/.zprofile" \
-  "${HOME}/.zshenv" "${HOME}/.zshenv.local" "${HOME}/.zshrc" \
-  "${HOME}/.zshrc.local" "${HOME}/.shrc" "${HOME}/.shrc.local"
+# _agkdot_compile_or_recompile "${HOME}/.profile" "${HOME}/.zprofile" \
+#   "${HOME}/.zshenv" "${HOME}/.zshenv.local" "${HOME}/.zshrc" \
+#   "${HOME}/.zshrc.local" "${HOME}/.shrc" "${HOME}/.shrc.local"
 
 # }}}1
 
@@ -275,7 +275,7 @@ if (( AGKDOT_NO_ZPLUGIN != 1 )) && is-at-least 5; then
       print 'Installing zplugin...'
       mkdir -p "${HOME}/.zplugin"
       git clone https://github.com/zdharma/zplugin.git "${HOME}/.zplugin/bin"
-      _agkdot_compile_or_recompile "${HOME}/.zplugin/bin/zplugin.zsh"
+      # _agkdot_compile_or_recompile "${HOME}/.zplugin/bin/zplugin.zsh"
     fi
 
     # Configuration hash
@@ -596,7 +596,7 @@ fi
 
 # Compile or recompile ~/.zcompdump {{{1
 
-_agkdot_compile_or_recompile "${HOME}/.zcompdump_${ZSH_VERSION}"
+# _agkdot_compile_or_recompile "${HOME}/.zcompdump_${ZSH_VERSION}"
 
 # }}}1
 
@@ -611,7 +611,7 @@ fi
 
 # Clean up environment {{{1
 
-unfunction _agkdot_compile_or_recompile
+# unfunction _agkdot_compile_or_recompile
 
 # }}}1
 
