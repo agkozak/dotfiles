@@ -107,6 +107,14 @@ case ${AGKDOT_SYSTEMINFO} in
     [ "$AGKDOT_TERM_COLORS" -ge 8 ] && LS_OPTIONS="$LS_OPTIONS --color"
     case ${AGKDOT_SYSTEMINFO} in
       *Msys|*Cygwin) LS_OPTIONS="$LS_OPTIONS --hide=NTUSER* --hide=ntuser*" ;;
+      *Microsoft*)
+        LS_OPTIONS="${LS_OPTIONS} --hide=NTUSER* --hide=ntuser*"
+        # For now, WSL has trouble with Windows symlinks
+        ls() {
+          eval env ls '"$@"' 2>/dev/null
+          return 0
+        }
+        ;;
     esac
     ;;
 esac
