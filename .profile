@@ -90,6 +90,7 @@ done
 
 unset i
 
+
 case $AGKDOT_SYSTEMINFO in
   *Msys) [ -d /mingw64/bin ] && PATH="/mingw64/bin:$PATH" ;;
 esac
@@ -123,6 +124,12 @@ case $AGKDOT_SYSTEMINFO in
 	  ;;
   *raspberrypi*)
 	  command -v chromium-browser > /dev/null 2>&1 && BROWSER='chromium-browser'
+    ;;
+  *Microsoft*)                                                            # WSL
+    [ ! -d "${HOME}/.screen" ] && mkdir "${HOME}/.screen" \
+      && chmod 700 "${HOME}/.screen"
+    export SCREENDIR
+    SCREENDIR="${HOME}/.screen"
     ;;
 esac
 
