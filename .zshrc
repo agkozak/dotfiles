@@ -1,6 +1,9 @@
 # ~/.zshrc
 #
 # https://github.com/agkozak/dotfiles
+#
+# This dotfile is increasingly arranged according to the order of chapters in
+# the Z Shell Manual
 
 # Begin .zshrc benchmarks {{{1
 
@@ -41,13 +44,113 @@ if [[ -f ${HOME}/.shrc ]];then
   fi
 fi
 
+: ${AGKDOT_SYSTEMINFO:=$(uname -a)}
+
 # }}}1
 
-# Options {{{1
-#
-# Arranged according to `man zshoptions`
+# 6.8 ZSH-specific aliases - POSIX aliases are in .shrc {{{1
 
-# Changing Directories {{{2
+# Disable echo escape sequences in MSys2 or Cygwin - variables inherited from
+# Windows may have backslashes in them
+[[ $OSTYPE == (msys|cygwin) ]] && alias echo='echo -E'
+alias hgrep='fc -fl 0 | grep'
+alias ls='ls ${=LS_OPTIONS}'
+
+# which should not be aliased in ZSH
+alias which &> /dev/null && unalias which
+
+# Global Aliases {{{2
+
+# alias -g CA='2>&1 | cat -A'
+alias -g G='| grep'
+alias -g H='| head'
+alias -g L='| less'
+alias -g LL='2>&1 | less'
+# alias -g M='| most'
+alias -g NE='2> /dev/null'
+alias -g NUL='&> /dev/null'
+alias -g T='| tail'
+alias -g V='|& vim -'
+
+# }}}2
+
+# }}}1
+
+# 14.7 Filename Generation {{{1
+
+# 14.7.1 Dynamic Named Directories {{{2
+
+# https://superuser.com/questions/751523/dynamic-directory-hash
+if [[ -d '/c/wamp64/www' ]]; then
+  zsh_directory_name() {
+    emulate -L zsh
+    setopt extendedglob
+
+    local -a match mbegin mend
+    local pp1=/c/wamp64/www/
+    local pp2=wp-content
+
+    if [[ $1 = d ]]; then
+      if [[ $2 = (#b)($pp1/)([^/]##)(/$pp2)* ]]; then
+        typeset -ga reply
+        reply=(wp-content:$match[2] $(( ${#match[1]} + ${#match[2]} + ${#match[3]} )) )
+      else
+        return 1
+      fi
+    elif [[ $1 = n ]]; then
+      [[ $2 != (#b)wp-content:(?*) ]] && return 1
+      typeset -ga reply
+      reply=($pp1/$match[1]/$pp2)
+    elif [[ $1 = c ]]; then
+      local expl
+      local -a dirs
+      dirs=($pp1/*/$pp2)
+      for (( i=1; i<=$#dirs; i++ )); do
+        dirs[$i]=wp-content:${${dirs[$i]#$pp1/}%/$pp2}
+      done
+      _wanted dynamic-dirs expl 'user specific directory' compadd -S\] -a dirs
+      return
+    else
+      return 1
+    fi
+    return 0
+  }
+fi
+
+# }}}2
+
+# 14.7.2 Static Named Directories {{{2
+
+# Static named directories
+[[ -d ${HOME}/public_html/wp-content ]] \
+  && hash -d wp-content="$HOME/public_html/wp-content"
+[[ -d ${HOME}/.zplugin/plugins/agkozak---agkozak-zsh-prompt ]] \
+  && hash -d agk="$HOME/.zplugin/plugins/agkozak---agkozak-zsh-prompt"
+[[ -d ${HOME}/.zplugin/plugins/agkozak---zsh-z ]] \
+  && hash -d z="$HOME/.zplugin/plugins/agkozak---zsh-z"
+
+# }}}2
+
+# }}}1
+
+# 15.6 Parameters Used by the Shell {{{1
+
+# History environment variables
+HISTFILE=${HOME}/.zsh_history
+HISTSIZE=120000  # Larger than $SAVEHIST for HIST_EXPIRE_DUPS_FIRST to work
+SAVEHIST=100000
+
+# 10ms for key sequences
+KEYTIMEOUT=1
+
+# In the line editor, number of matches to show before asking permission
+LISTMAX=9999
+
+# }}}1
+
+# 16 Options {{{1
+
+# 16.2.1 Changing Directories {{{2
 
 setopt AUTO_CD            # Change to a directory just by typing its name
 setopt AUTO_PUSHD         # Make cd push each old directory onto the stack
@@ -56,22 +159,13 @@ setopt PUSHD_IGNORE_DUPS  # Don't push duplicates onto the stack
 
 # }}}2
 
-# Completion {{{2
+# 16.2.2 Completion {{{2
 
 unsetopt LIST_BEEP        # Don't beep on an ambiguous completion
 
-# Expansion and Globbing {{{2
-
-# setopt EXTENDED_GLOB
-
 # }}}2
 
-# History {{{2
-
-# History environment variables
-HISTFILE=${HOME}/.zsh_history
-HISTSIZE=120000  # Larger than $SAVEHIST for HIST_EXPIRE_DUPS_FIRST to work
-SAVEHIST=100000
+# 16.2.4 History {{{2
 
 setopt EXTENDED_HISTORY       # Save time stamps and durations
 setopt HIST_EXPIRE_DUPS_FIRST # Expire duplicates first
@@ -96,57 +190,29 @@ setopt SHARE_HISTORY        # Constantly share history between shell instances
 
 # }}}2
 
-# Input/Output {{{2
+# 16.2.6 Input/Output {{{2
 
+unsetopt FLOW_CONTROL       # Free up Ctrl-Q and Ctrl-S 
 setopt INTERACTIVE_COMMENTS # Allow comments in interactive mode
 
 # }}}2
 
-# Job Control {{{2
-
-: ${AGKDOT_SYSTEMINFO:=$(uname -a)}
+# 16.2.7 Job Control {{{2
 
 # Disable nice for background processes in WSL
 [[ ${AGKDOT_SYSTEMINFO} == *Microsoft* ]] && unsetopt BG_NICE
 
 # }}}2
 
-# }}}1
+# 16.2.12 Zle {{{2
 
-# Some autoloaded functions {{{1
-
-# Test for minimal ZSH version
-autoload -Uz is-at-least
-
-# Function for batch moving and renaming of files
-autoload -Uz zmv
-
-# }}}1
-
-# zsh-specific aliases - POSIX aliases are in .shrc {{{1
-
-alias hgrep='fc -fl 0 | grep'
-
-alias ls='ls ${=LS_OPTIONS}'
-
-# Global Aliases {{{2
-
-# alias -g CA='2>&1 | cat -A'
-alias -g G='| grep'
-alias -g H='| head'
-alias -g L='| less'
-alias -g LL='2>&1 | less'
-# alias -g M='| most'
-alias -g NE='2> /dev/null'
-alias -g NUL='&> /dev/null'
-alias -g T='| tail'
-alias -g V='|& vim -'
+unsetopt BEEP
 
 # }}}2
 
 # }}}1
 
-# The Debian solution to Del/Home/End/etc. keybindings {{{1
+# # The Debian solution to Del/Home/End/etc. keybindings {{{1
 
 # No need to load the following code if I'm using Debian
 if [[ ! -f '/etc/debian-version' ]] && [[ ! -f '/etc/zsh/zshrc' ]]; then
@@ -232,6 +298,12 @@ fi
 # }}}1
 
 # zplugin for zsh v5.0+, along with provisions for zsh v4.3.11+ {{{1
+
+# 26.12.1 Test for minimal ZSH version {{{2
+
+autoload -Uz is-at-least
+
+# }}}2
 
 # export AGKDOT_NO_ZPLUGIN=1 to circumvent zplugin
 if (( AGKDOT_NO_ZPLUGIN != 1 )) && is-at-least 5; then
@@ -409,7 +481,7 @@ fi
 
 # }}}1
 
-# Styles and completions {{{1
+# 20 Completion System {{{1
 
 # https://www.zsh.org/mla/users/2015/msg00467.html
 zstyle -e ':completion:*:*:ssh:*:my-accounts' users-hosts \
@@ -438,28 +510,8 @@ bindkey -M isearch . self-insert
 # Menu-style completion
 zstyle ':completion:*' menu select
 
-# use the vi navigation keys (hjkl) besides cursor keys in menu completion
-zmodload zsh/complist
-bindkey -M menuselect 'h' vi-backward-char        # left
-bindkey -M menuselect 'k' vi-up-line-or-history   # up
-bindkey -M menuselect 'l' vi-forward-char         # right
-bindkey -M menuselect 'j' vi-down-line-or-history # bottom
-
 # Use dircolors $LS_COLORS for completion when possible
 zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
-
-# Allow pasting URLs as CLI arguments
-if [[ $ZSH_VERSION != '5.1.1' ]] && [[ $TERM != 'dumb' ]] \
-  && (( ! $+INSIDE_EMACS )); then
-  if is-at-least 5.1; then
-    autoload -Uz bracketed-paste-magic
-    zle -N bracketed-paste bracketed-paste-magic
-  fi
-  autoload -Uz url-quote-magic
-  zle -N self-insert url-quote-magic
-elif [[ $TERM == 'dumb' ]]; then
-  unset zle_bracketed_paste # Avoid ugly control sequences in dumb terminal
-fi
 
 # Use Esc-K for run-help
 bindkey -M vicmd 'K' run-help
@@ -482,10 +534,7 @@ zstyle ':completion:*' format 'Completing %d'
 # In menu-style completion, give a status bar
 zstyle ':completion:*' select-prompt '%SScrolling active: current selection at %p%s'
 
-# In the line editor, number of matches to show before asking permission
-LISTMAX=9999
-
-# vi mode and exceptions {{{2
+# vi mode exceptions {{{2
 
 # bindkey -v    # `set -o vi` is in .shrc
 
@@ -493,12 +542,11 @@ LISTMAX=9999
 bindkey '^P' up-history
 bindkey '^N' down-history
 bindkey '^R' history-incremental-search-backward
-setopt NO_FLOW_CONTROL                          # Or the next command won't work
-bindkey '^S' history-incremental-search-forward
+bindkey '^S' history-incremental-search-forward   # FLOW_CONTROL must be off
 
 # }}}2
 
-# Show completion "waiting dots"
+# Show completion "waiting dots" {{{2
 expand-or-complete-with-dots() {
   print -n '...'
   zle expand-or-complete
@@ -507,68 +555,46 @@ expand-or-complete-with-dots() {
 zle -N expand-or-complete-with-dots
 bindkey '^I' expand-or-complete-with-dots
 
+# }}}2
+
+# }}}1
+
+# 22.7 The zsh/complist Module {{{1
+# use the vi navigation keys (hjkl) besides cursor keys in menu completion
+zmodload zsh/complist
+bindkey -M menuselect 'h' vi-backward-char        # left
+bindkey -M menuselect 'k' vi-up-line-or-history   # up
+bindkey -M menuselect 'l' vi-forward-char         # right
+bindkey -M menuselect 'j' vi-down-line-or-history # bottom
+
+# }}}1
+
+# 26 User Contributions {{{1
+
+# 26.7.1 Allow pasting URLs as CLI arguments
+if [[ $ZSH_VERSION != '5.1.1' ]] && [[ $TERM != 'dumb' ]] \
+  && (( ! $+INSIDE_EMACS )); then
+  if is-at-least 5.1; then
+    autoload -Uz bracketed-paste-magic
+    zle -N bracketed-paste bracketed-paste-magic
+  fi
+  autoload -Uz url-quote-magic
+  zle -N self-insert url-quote-magic
+elif [[ $TERM == 'dumb' ]]; then
+  unset zle_bracketed_paste # Avoid ugly control sequences in dumb terminal
+fi
+
+# 26.12.1 Function for batch moving and renaming of files
+autoload -Uz zmv
+
 # }}}1
 
 # Miscellaneous {{{1
 
-# Disable echo escape sequences in MSys2 or Cygwin
-[[ $OSTYPE == (msys|cygwin) ]] && alias echo='echo -E'
-
-# 10ms for key sequences
-KEYTIMEOUT=1
-
-# Static named directories
-[[ -d ${HOME}/public_html/wp-content ]] \
-  && hash -d wp-content="$HOME/public_html/wp-content"
-[[ -d ${HOME}/.zplugin/plugins/agkozak---agkozak-zsh-prompt ]] \
-  && hash -d agk="$HOME/.zplugin/plugins/agkozak---agkozak-zsh-prompt"
-[[ -d ${HOME}/.zplugin/plugins/agkozak---zsh-z ]] \
-  && hash -d z="$HOME/.zplugin/plugins/agkozak---zsh-z"
-
-# Dynamic named directories
-# https://superuser.com/questions/751523/dynamic-directory-hash
-if [[ -d '/c/wamp64/www' ]]; then
-  zsh_directory_name() {
-    emulate -L zsh
-    setopt extendedglob
-
-    local -a match mbegin mend
-    local pp1=/c/wamp64/www/
-    local pp2=wp-content
-
-    if [[ $1 = d ]]; then
-      if [[ $2 = (#b)($pp1/)([^/]##)(/$pp2)* ]]; then
-        typeset -ga reply
-        reply=(wp-content:$match[2] $(( ${#match[1]} + ${#match[2]} + ${#match[3]} )) )
-      else
-        return 1
-      fi
-    elif [[ $1 = n ]]; then
-      [[ $2 != (#b)wp-content:(?*) ]] && return 1
-      typeset -ga reply
-      reply=($pp1/$match[1]/$pp2)
-    elif [[ $1 = c ]]; then
-      local expl
-      local -a dirs
-      dirs=($pp1/*/$pp2)
-      for (( i=1; i<=$#dirs; i++ )); do
-        dirs[$i]=wp-content:${${dirs[$i]#$pp1/}%/$pp2}
-      done
-      _wanted dynamic-dirs expl 'user specific directory' compadd -S\] -a dirs
-      return
-    else
-      return 1
-    fi
-    return 0
-  }
-fi
-
-# which should not be aliased in ZSH
-alias which &> /dev/null && unalias which
-
 # While tinkering with ZSH-z
-if (( SHLVL == 1 )); then
-  [[ ! -d ${HOME}/.zbackup ]] && mkdir "${HOME}/.zbackup"
+
+if (( SHLVL == 1 )) && (( ! $+TMUX )); then
+  [[ ! -d ${HOME}/.zbackup ]] && mkdir -p "${HOME}/.zbackup"
   cp "${HOME}/.z" "${HOME}/.zbackup/.z_${EPOCHSECONDS}" 2> /dev/null
 fi
 
