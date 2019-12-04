@@ -266,7 +266,14 @@ case ${AGKDOT_SYSTEMINFO} in
       unset i
     }
 
-    exe_alias explorer subl
+    exe_alias chocolatey \
+              choco \
+              cinst \
+              cup \
+              explorer \
+              shexview \
+              subl \
+              wsl
     ;;
 esac
 
