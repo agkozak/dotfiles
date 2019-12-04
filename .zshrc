@@ -364,16 +364,16 @@ if (( AGKDOT_NO_ZPLUGIN != 1 )) && is-at-least 5; then
 
     AGKOZAK_CUSTOM_RPROMPT=''
 
-    if [[ $OSTYPE != (msys|cygwin) ]] \
-      && [[ $AGKDOT_SYSTEMINFO != *Microsoft* ]] \
-      && (( ! $+INSIDE_EMACS )) \
-      && is-at-least 5.3; then
+    # if [[ $OSTYPE != (msys|cygwin) ]] \
+    #   && [[ $AGKDOT_SYSTEMINFO != *Microsoft* ]] \
+    #   && (( ! $+INSIDE_EMACS )) \
+    #   && is-at-least 5.3; then
       PROMPT='%m%# '
-      zplugin ice atload'_agkozak_precmd' nocd silent \
+      zplugin ice atload'!_agkozak_precmd' nocd silent \
         wait ver'develop'
-    else
-      zplugin ice ver'develop'
-    fi
+    # else
+    #   zplugin ice ver'develop'
+    # fi
     zplugin load agkozak/agkozak-zsh-prompt
 
     # }}}3
