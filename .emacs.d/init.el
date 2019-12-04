@@ -47,8 +47,8 @@
   "b" 'switch-to-buffer
   "w" 'save-buffer)
 
-;; (require 'exec-path-from-shell)
-;; (exec-path-from-shell-initialize)
+; ;; (require 'exec-path-from-shell)
+; ;; (exec-path-from-shell-initialize)
 
 (require 'evil-commentary)
 (evil-commentary-mode)
@@ -57,8 +57,8 @@
 (quelpa '(zenburn-theme :repo "holomorph/emacs-zenburn" :fetcher github))
 (require 'zenburn-theme)
 
-;; Suppress echoing in term and ansi-term (tmux-related)
-(setq comint-process-echoes t)
+; ;; Suppress echoing in term and ansi-term (tmux-related)
+; (setq comint-process-echoes t)
 
 ;; Starting term and ansi-term in Emacs mode fixes zsh vi mode
 (evil-set-initial-state 'term-mode 'emacs)
@@ -67,17 +67,17 @@
 (global-linum-mode t)
 (setq linum-format "%d ")
 
-(byte-recompile-directory (expand-file-name "~/.emacs.d") 0)
+; (byte-recompile-directory (expand-file-name "~/.emacs.d") 0)
 
 (custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
+;  ;; custom-set-variables was added by Custom.
+;  ;; If you edit it by hand, you could mess it up, so be careful.
+;  ;; Your init file should contain only one such instance.
+;  ;; If there is more than one, they won't work right.
  '(package-selected-packages (quote (evil-leader evil))))
 (custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
+;  ;; custom-set-faces was added by Custom.
+;  ;; If you edit it by hand, you could mess it up, so be careful.
+;  ;; Your init file should contain only one such instance.
+;  ;; If there is more than one, they won't work right.
  )
