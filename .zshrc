@@ -598,6 +598,12 @@ if (( SHLVL == 1 )) && (( ! $+TMUX )); then
   cp "${HOME}/.z" "${HOME}/.zbackup/.z_${EPOCHSECONDS}" 2> /dev/null
 fi
 
+zsh_update() {
+  update_dotfiles
+  zplugin self-update
+  zplugin update --all
+}
+
 # }}}1
 
 # End .zshrc benchmark {{{1
