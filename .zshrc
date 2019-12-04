@@ -272,14 +272,20 @@ if (( AGKDOT_NO_ZPLUGIN != 1 )) && is-at-least 5; then
     # AGKOZAK_PROMPT_CHAR=( '❯' '❯' '❮' )
     AGKOZAK_PROMPT_DEBUG=1
 
+    if (( ! $+VIM_TERMINAL )) && (( ! $+INSIDE_EMACS )); then
+      AGKOZAK_COLORS_USER_HOST=108
+      AGKOZAK_COLORS_PATH=116
+      AGKOZAK_COLORS_BRANCH_STATUS=228
+      AGKOZAK_COLORS_EXIT_STATUS=174
+    fi
     # Username and hostname
-    AGKOZAK_CUSTOM_PROMPT='%(!.%S%B.%B%F{108})%n%1v%(!.%b%s.%f%b) '
+    AGKOZAK_CUSTOM_PROMPT='%(!.%S%B.%B%F{${AGKOZAK_COLORS_USER_HOST}})%n%1v%(!.%b%s.%f%b) '
     # Path
-    AGKOZAK_CUSTOM_PROMPT+='%B%F{116}%2v%f%b'
+    AGKOZAK_CUSTOM_PROMPT+='%B%F{${AGKOZAK_COLORS_PATH}}%2v%f%b'
     # Git status
-    AGKOZAK_CUSTOM_PROMPT+=$'%(3V.%F{228}%3v%f.)\n'
+    AGKOZAK_CUSTOM_PROMPT+=$'%(3V.%F{${AGKOZAK_COLORS_BRANCH_STATUS}}%3v%f.)\n'
     # Exit status
-    AGKOZAK_CUSTOM_PROMPT+='%(?..%B%F{174}(%?%)%f%b )'
+    AGKOZAK_CUSTOM_PROMPT+='%(?..%B%F{${AGKOZAK_COLORS_EXIT_STATUS}}(%?%)%f%b )'
     # SHLVL and prompt character
     AGKOZAK_CUSTOM_PROMPT+='[%L] %(4V.:.%#) '
     AGKOZAK_COLORS_BRANCH_STATUS=228
@@ -288,9 +294,10 @@ if (( AGKDOT_NO_ZPLUGIN != 1 )) && is-at-least 5; then
 
     if [[ $OSTYPE != (msys|cygwin) ]] \
       && [[ $AGKDOT_SYSTEMINFO != *Microsoft* ]] \
+      && (( ! $+INSIDE_EMACS )) \
       && is-at-least 5.3; then
       PROMPT='%m%# '
-      zplugin ice atload"_agkozak_precmd" nocd silent \
+      zplugin ice atload'_agkozak_precmd' nocd silent \
         wait ver'develop'
     else
       zplugin ice ver'develop'
