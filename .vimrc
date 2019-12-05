@@ -77,9 +77,9 @@ set statusline+=%r                                " Readonly flag
 set statusline+=%y                                " File type
 set statusline+=%{SL('fugitive#statusline')}
 set statusline+=%#ErrorMsg#
-if ALECompatible()
+if exists("*LinterStatus")
   set statusline+=%{SL('LinterStatus')}
-else
+elseif exists("*SyntasticStatuslineFlag")
   set statusline+=%{SL('SyntasticStatuslineFlag')}
 endif
 set statusline+=%*
