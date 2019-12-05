@@ -110,18 +110,25 @@ case ${AGKDOT_SYSTEMINFO} in
       *Microsoft*)
         LS_OPTIONS="${LS_OPTIONS} --hide=NTUSER* --hide=ntuser*"
         # For now, WSL has trouble with Windows symlinks
-        ls() {
-          eval env ls '"$@"' 2>/dev/null
-          return 0
-        }
-        ;;
+        case $0 in
+          zsh) ;;
+          *)
+            ls() {
+              eval env ls "${LS_OPTIONS}" '"$@"' 2>/dev/null
+              return 0
+            }
+            ;;
+        esac
     esac
     ;;
 esac
 
-alias ls='ls $LS_OPTIONS'
-
 case ${AGKDOT_SYSTEMINFO} in
+  *Microsoft*) ;;
+  *) alias ls='ls $LS_OPTIONS' ;;
+esac
+
+  case ${AGKDOT_SYSTEMINFO} in
   SunOS*)
     if [ -x /usr/gnu/bin/ls ]; then
       alias ls='/usr/gnu/bin/ls --group-directories-first -F -h -T 0 --color'

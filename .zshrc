@@ -54,7 +54,15 @@ fi
 # Windows may have backslashes in them
 [[ $OSTYPE == (msys|cygwin) ]] && alias echo='echo -E'
 alias hgrep='fc -fl 0 | grep'
-alias ls='ls ${=LS_OPTIONS}'
+
+if [[ ${AGKDOT_SYSTEMINFO} == *Microsoft* ]]; then
+  ls() {
+    env ls ${=LS_OPTIONS} "$@" 2> /dev/null
+    return 0
+  }
+else
+  alias ls='ls ${=LS_OPTIONS}'
+fi
 
 # which should not be aliased in ZSH
 alias which &> /dev/null && unalias which
