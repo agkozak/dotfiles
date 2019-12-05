@@ -297,6 +297,37 @@ fi
 
 # }}}1
 
+# agkozak-zsh-prompt {{{1
+
+# AGKOZAK_COLORS_PROMPT_CHAR='magenta'
+# AGKOZAK_CUSTOM_SYMBOLS=( '⇣⇡' '⇣' '⇡' '+' 'x' '!' '>' '?' 'S' )
+# AGKOZAK_LEFT_PROMPT_ONLY=1
+# AGKOZAK_MULTILINE=0
+# AGKOZAK_PROMPT_CHAR=( '❯' '❯' '❮' )
+AGKOZAK_PROMPT_DEBUG=1
+
+if (( ! $+VIM_TERMINAL )) && (( ! $+INSIDE_EMACS )); then
+  AGKOZAK_COLORS_USER_HOST=108
+  AGKOZAK_COLORS_PATH=116
+  AGKOZAK_COLORS_BRANCH_STATUS=228
+  AGKOZAK_COLORS_EXIT_STATUS=174
+fi
+# Username and hostname
+AGKOZAK_CUSTOM_PROMPT='%(!.%S%B.%B%F{${AGKOZAK_COLORS_USER_HOST}})%n%1v%(!.%b%s.%f%b) '
+# Path
+AGKOZAK_CUSTOM_PROMPT+='%B%F{${AGKOZAK_COLORS_PATH}}%2v%f%b'
+# Git status
+AGKOZAK_CUSTOM_PROMPT+=$'%(3V.%F{${AGKOZAK_COLORS_BRANCH_STATUS}}%3v%f.)\n'
+# Exit status
+AGKOZAK_CUSTOM_PROMPT+='%(?..%B%F{${AGKOZAK_COLORS_EXIT_STATUS}}(%?%)%f%b )'
+# SHLVL and prompt character
+AGKOZAK_CUSTOM_PROMPT+='[%L] %(4V.:.%#) '
+AGKOZAK_COLORS_BRANCH_STATUS=228
+
+AGKOZAK_CUSTOM_RPROMPT=''
+
+# }}}1
+
 # zplugin for zsh v5.0+, along with provisions for zsh v4.3.11+ {{{1
 
 # 26.12.1 Test for minimal ZSH version {{{2
@@ -335,42 +366,13 @@ if (( AGKDOT_NO_ZPLUGIN != 1 )) && is-at-least 5; then
 
     # Load plugins and snippets {{{2
 
-    # agkozak-zsh-prompt {{{3
-
-    # AGKOZAK_COLORS_PROMPT_CHAR='magenta'
-    # AGKOZAK_CUSTOM_SYMBOLS=( '⇣⇡' '⇣' '⇡' '+' 'x' '!' '>' '?' 'S' )
-    # AGKOZAK_LEFT_PROMPT_ONLY=1
-    # AGKOZAK_MULTILINE=0
-    # AGKOZAK_PROMPT_CHAR=( '❯' '❯' '❮' )
-    AGKOZAK_PROMPT_DEBUG=1
-
-    if (( ! $+VIM_TERMINAL )) && (( ! $+INSIDE_EMACS )); then
-      AGKOZAK_COLORS_USER_HOST=108
-      AGKOZAK_COLORS_PATH=116
-      AGKOZAK_COLORS_BRANCH_STATUS=228
-      AGKOZAK_COLORS_EXIT_STATUS=174
-    fi
-    # Username and hostname
-    AGKOZAK_CUSTOM_PROMPT='%(!.%S%B.%B%F{${AGKOZAK_COLORS_USER_HOST}})%n%1v%(!.%b%s.%f%b) '
-    # Path
-    AGKOZAK_CUSTOM_PROMPT+='%B%F{${AGKOZAK_COLORS_PATH}}%2v%f%b'
-    # Git status
-    AGKOZAK_CUSTOM_PROMPT+=$'%(3V.%F{${AGKOZAK_COLORS_BRANCH_STATUS}}%3v%f.)\n'
-    # Exit status
-    AGKOZAK_CUSTOM_PROMPT+='%(?..%B%F{${AGKOZAK_COLORS_EXIT_STATUS}}(%?%)%f%b )'
-    # SHLVL and prompt character
-    AGKOZAK_CUSTOM_PROMPT+='[%L] %(4V.:.%#) '
-    AGKOZAK_COLORS_BRANCH_STATUS=228
-
-    AGKOZAK_CUSTOM_RPROMPT=''
-
     # if [[ $OSTYPE != (msys|cygwin) ]] \
     #   && [[ $AGKDOT_SYSTEMINFO != *Microsoft* ]] \
     #   && (( ! $+INSIDE_EMACS )) \
     #   && is-at-least 5.3; then
       PROMPT='%m%# '
       zplugin ice atload'!_agkozak_precmd' nocd silent \
-        wait ver'develop'
+        wait'0a' ver'develop'
     # else
     #   zplugin ice ver'develop'
     # fi
@@ -388,10 +390,10 @@ if (( AGKDOT_NO_ZPLUGIN != 1 )) && is-at-least 5; then
     # In FreeBSD, /home is /usr/home
     ZSHZ_DEBUG=1
     [[ $OSTYPE == freebsd* ]] && typeset -g ZSHZ_NO_RESOLVE_SYMLINKS=1
-    is-at-least 5.3 && zplugin ice lucid ver'develop' wait
+    is-at-least 5.3 && zplugin ice lucid ver'develop' wait'0b'
     zplugin load agkozak/zsh-z
 
-    is-at-least 5.3 && zplugin ice lucid wait ver'develop'
+    is-at-least 5.3 && zplugin ice lucid wait'0g' ver'develop'
     zplugin load agkozak/zhooks
 
     if is-at-least 5.3; then
@@ -405,7 +407,7 @@ if (( AGKDOT_NO_ZPLUGIN != 1 )) && is-at-least 5; then
       bindkey -M vicmd 'k' history-substring-search-up
       bindkey -M vicmd 'j' history-substring-search-down
       bindkey '^P' history-substring-search-up
-      bindkey '^N' history-substring-search-down" nocd silent wait
+      bindkey '^N' history-substring-search-down" nocd silent wait'0c'
     fi
     zplugin load zsh-users/zsh-history-substring-search
 
@@ -420,15 +422,15 @@ if (( AGKDOT_NO_ZPLUGIN != 1 )) && is-at-least 5; then
     # fi
 
     if [[ $AGKDOT_SYSTEMINFO != *ish* ]]; then
-      is-at-least 5.3 && zplugin ice lucid wait
+      is-at-least 5.3 && zplugin ice lucid wait'0d'
       zplugin load zdharma/zui
-      is-at-least 5.3 && zplugin ice lucid wait'1'
+      is-at-least 5.3 && zplugin ice lucid wait'(( $+ZUI ))'
       zplugin load zdharma/zbrowse
     fi
 
     zplugin snippet OMZ::plugins/extract/extract.plugin.zsh
 
-    is-at-least 5.3 && zplugin ice silent wait
+    is-at-least 5.3 && zplugin ice silent wait'0f'
     zplugin load romkatv/zsh-prompt-benchmark
 
     if ! is-at-least 5.3; then
@@ -456,22 +458,34 @@ if (( AGKDOT_NO_ZPLUGIN != 1 )) && is-at-least 5; then
 elif is-at-least 4.3.11; then
 
   () {
-    local i
+    local i zplugin_dir="${HOME}/.zplugin"
     for i in agkozak/agkozak-zsh-prompt \
              agkozak/zsh-z \
-             agkozak/zhooks; do
+             agkozak/zhooks \
+             zsh-users/zsh-history-substring-search\
+             zdharma/zui \
+             zdharma/zbrowse \
+             romkatv/zsh-prompt-benchmark; do
 
       if whence -w git &> /dev/null \
-        && [[ ! -d "$HOME/.zplugin/plugins/${i%/*}---${i#*/}" ]]; then
+        && [[ ! -d "${zplugin_dir}/plugins/${i%/*}---${i#*/}" ]]; then
         (
           git clone  "https://github.com/${i%/*}/${i#*/}" \
-            "$HOME/.zplugin/plugins/${i%/*}---${i#*/}"
-          cd "$HOME/.zplugin/plugins/${i%/*}---${i#*/}"
+            "${zplugin_dir}/plugins/${i%/*}---${i#*/}"
+          cd "${zplugin_dir}/plugins/${i%/*}---${i#*/}"
           git checkout develop
         )
       fi
-      source "$HOME/.zplugin/plugins/${i%/*}---${i#*/}/${i#*/}.plugin.zsh"
+      source "${zplugin_dir}/plugins/${i%/*}---${i#*/}/${i#*/}.plugin.zsh"
     done
+ 
+    if [[ ! -d "${zplugin_dir}/snippets/OMZ::plugins--extract/extract.plugin.zsh" ]]; then
+    mkdir -p "${zplugin_dir}/snippets/OMZ::plugins--extract/extract.plugin.zsh"
+    curl https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/plugins/extract.plugin.zsh/extract.plugin.zsh \
+      > "${zplugin_dir}/snippets/OMZ::plugins--extract/extract.plugin.zsh/extract.plugin.zsh"
+    fi
+    source "${zplugin_dir}/snippets/OMZ::plugins--extract/extract.plugin.zsh/extract.plugin.zsh"
+
   }
 
   autoload -Uz compinit
