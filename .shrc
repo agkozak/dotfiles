@@ -116,7 +116,12 @@ esac
 
 case ${AGKDOT_SYSTEMINFO} in
   # For the time being, WSL doesn't like Windows symlinks
-  *Microsoft*) alias ls='ls $LS_OPTIONS 2> /dev/null' ;;
+  *Microsoft*)
+    case $(/bin/ls -l /bin/ls) in
+      *busybox*) ;;
+      *) alias ls='ls $LS_OPTIONS 2> /dev/null' ;;
+    esac
+    ;;
   *) alias ls='ls $LS_OPTIONS' ;;
 esac
 
