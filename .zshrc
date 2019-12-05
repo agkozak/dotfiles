@@ -371,17 +371,19 @@ if (( AGKDOT_NO_ZPLUGIN != 1 )) && is-at-least 5; then
     source "${HOME}/.zplugin/bin/zplugin.zsh"
 
     # Load plugins and snippets {{{2
+ 
+    # Is Turbo Mode appropriate?
+    _agkdot_turbo() {
+      is-at-least 5.3 && [[ $TERM != 'dumb' ]]
+    }
 
-    # if [[ $OSTYPE != (msys|cygwin) ]] \
-    #   && [[ $AGKDOT_SYSTEMINFO != *Microsoft* ]] \
-    #   && (( ! $+INSIDE_EMACS )) \
-    #   && is-at-least 5.3; then
+    if _agkdot_turbo; then
       PROMPT='%m%# '
       zplugin ice atload'!_agkozak_precmd' nocd silent \
         wait'0a' ver'develop'
-    # else
-    #   zplugin ice ver'develop'
-    # fi
+    else
+      zplugin ice ver'develop'
+    fi
     zplugin load agkozak/agkozak-zsh-prompt
 
     # }}}3
@@ -396,13 +398,13 @@ if (( AGKDOT_NO_ZPLUGIN != 1 )) && is-at-least 5; then
     # In FreeBSD, /home is /usr/home
     ZSHZ_DEBUG=1
     [[ $OSTYPE == freebsd* ]] && typeset -g ZSHZ_NO_RESOLVE_SYMLINKS=1
-    is-at-least 5.3 && zplugin ice lucid ver'develop' wait'0b'
+    _agkdot_turbo && zplugin ice lucid ver'develop' wait'0b'
     zplugin load agkozak/zsh-z
 
-    is-at-least 5.3 && zplugin ice lucid wait'0g' ver'develop'
+    _agkdot_turbo && zplugin ice lucid wait'0g' ver'develop'
     zplugin load agkozak/zhooks
 
-    if is-at-least 5.3; then
+    if _agkdot_turbo; then
     zplugin ice atinit'zpcompinit; compdef mosh=ssh; zpcdreplay' atload"
       HISTORY_SUBSTRING_SEARCH_HIGHLIGHT_FOUND='underline'
       HISTORY_SUBSTRING_SEARCH_HIGHLIGHT_NOT_FOUND=''
@@ -417,22 +419,22 @@ if (( AGKDOT_NO_ZPLUGIN != 1 )) && is-at-least 5; then
     fi
     zplugin load zsh-users/zsh-history-substring-search
 
-    is-at-least 5.3 && zplugin ice lucid ver'tmux' wait
+    _agkdot_turbo && zplugin ice lucid ver'tmux' wait
     zplugin load agkozak/zsh-titles
 
     if [[ $AGKDOT_SYSTEMINFO != *ish* ]]; then
-      is-at-least 5.3 && zplugin ice lucid wait'0d'
+      _agkdot_turbo && zplugin ice lucid wait'0d'
       zplugin load zdharma/zui
-      is-at-least 5.3 && zplugin ice lucid wait'(( $+ZUI ))'
+      _agkdot_turbo && zplugin ice lucid wait'(( $+ZUI ))'
       zplugin load zdharma/zbrowse
     fi
 
     zplugin snippet OMZ::plugins/extract/extract.plugin.zsh
 
-    is-at-least 5.3 && zplugin ice silent wait'0f'
+    _agkdot_turbo && zplugin ice silent wait'0f'
     zplugin load romkatv/zsh-prompt-benchmark
 
-    if ! is-at-least 5.3; then
+    if ! _agkdot_turbo; then
       autoload -Uz compinit
       compinit -u -d "${HOME}/.zcompdump_${ZSH_VERSION}"
       compdef mosh=ssh
