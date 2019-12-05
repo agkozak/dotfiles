@@ -54,7 +54,13 @@ fi
 # Windows may have backslashes in them
 [[ $OSTYPE == (msys|cygwin) ]] && alias echo='echo -E'
 alias hgrep='fc -fl 0 | grep'
-alias ls='ls ${=LS_OPTIONS}'
+
+# For the time being, WSL doesn't like Windows symlinks
+if [[ ${AGKDOT_SYSTEMINFO} == *Microsoft* ]]; then
+  alias ls='ls ${=LS_OPTIONS} 2> /dev/null'
+else
+  alias ls='ls ${=LS_OPTIONS}'
+fi
 
 # which should not be aliased in ZSH
 alias which &> /dev/null && unalias which

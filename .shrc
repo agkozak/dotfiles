@@ -109,17 +109,16 @@ case ${AGKDOT_SYSTEMINFO} in
       *Msys|*Cygwin) LS_OPTIONS="$LS_OPTIONS --hide=NTUSER* --hide=ntuser*" ;;
       *Microsoft*)
         LS_OPTIONS="${LS_OPTIONS} --hide=NTUSER* --hide=ntuser*"
-        # # For now, WSL has trouble with Windows symlinks
-        # ls() {
-        #   eval env ls '"$@"' 2>/dev/null
-        #   return 0
-        # }
         ;;
     esac
     ;;
 esac
 
-alias ls='ls $LS_OPTIONS'
+case ${AGKDOT_SYSTEMINFO} in
+  # For the time being, WSL doesn't like Windows symlinks
+  *Microsoft*) alias ls='ls $LS_OPTIONS 2> /dev/null' ;;
+  *) alias ls='ls $LS_OPTIONS' ;;
+esac
 
 case ${AGKDOT_SYSTEMINFO} in
   SunOS*)
