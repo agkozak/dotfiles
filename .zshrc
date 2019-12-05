@@ -409,9 +409,12 @@ if (( AGKDOT_NO_ZPLUGIN != 1 )) && is-at-least 5; then
     fi
     zplugin load zsh-users/zsh-history-substring-search
 
-    # zsh-titles causes dittography in Emacs (Eshell/term/ansi-term
-    # and Vim terminal
-    if (( ! $+INSIDE_EMACS )) && [[ $TERM != eterm* ]] && (( ! $+VIM_TERMINAL )); then
+    # zsh-titles causes dittography in Emacs (Eshell/term/ansi-term),
+    # Vim terminal, and Gnome Terminal with WSL (TODO: see if these issues can
+    # be fixed)
+    if (( ! $+INSIDE_EMACS )) && [[ $TERM != eterm* ]] && (( ! $+VIM_TERMINAL )) \
+      || [[ ${AGKDOT_SYSTEMINFO} != *Microsoft* ]] \
+      && (( ! $+GNOME_TERMINAL_SCREEN )); then
       is-at-least 5.3 && zplugin ice lucid wait
       zplugin load jreese/zsh-titles
     fi
