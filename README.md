@@ -1,5 +1,5 @@
 <p align="center">
-    <img src="img/logo.svg">
+    <img src="img/logo.png">
 </p>
 
 # ALEXANDROS KOZAK'S DOTFILES
