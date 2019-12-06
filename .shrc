@@ -273,7 +273,8 @@ case ${AGKDOT_SYSTEMINFO} in
     ############################################################
     exe_alias() {
       for i in "$@"; do
-        alias $i="${i}.exe"
+        # shellcheck disable=SC2139,SC2140
+        alias "$i"="${i}.exe"
       done
       unset i
     }
