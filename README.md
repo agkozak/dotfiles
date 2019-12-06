@@ -24,7 +24,14 @@ I have tested these dotfiles primarily on
     - Solaris 11
     - OpenIndiana
 
-## Installation
+# Notes
+
+* `.profile` and `.shrc` are POSIX-compliant. They provide settings common to most shells and are sourced by the relevant `zsh` and `bash` dotfiles.
+* Everything is in `vi`-mode, although in `zsh` there are additional key bindings borrowed from `emacs`-mode.
+* The `tmux` and `screen` prefix key is `Ctrl-Q` (flow control has been disabled to allow this key binding). If you don't need flow control, `Ctrl-Q` is ideal: it does not interfere with any known application's key combinations.
+* [Zenburn](https://github.com/jnurmine/Zenburn) colors are used whenever possible (in Vim, obviously, as well as in `tmux`, `ls`, and `mintty` -- also see my [Zenburn Color Schemes for Windows Terminal](https://github.com/agkozak/windows-terminal-zenburn)).
+
+# Installation
 
 Clone this repository to a `~/dotfiles` directory (the directory name is hard-coded at the moment) and run the installation script:
 
@@ -39,3 +46,5 @@ That will copy relevant configuration files to your home directory. The files co
     update_dotfiles
 
 in any POSIX-compliant shell. `update_dotfiles` is a function that pulls in the latest commits to my dotfiles repository and does what is necessary to update the system.
+
+My `.zshrc` also provides a `zsh_update` function that runs `update_dotfiles` updates `zplugin` and any plugins or snippets.
