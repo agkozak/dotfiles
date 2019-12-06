@@ -165,16 +165,16 @@ unset AGKDOT_TERM_COLORS
 
 # some more ls aliases {{{2
 
-# alias ll='ls -alF'
-# alias la='ls -A'
-# alias l='ls -CF'
+alias ll='ls -alF'
+alias la='ls -A'
+alias l='ls -CF'
 
-# alias lr='ls -tRFh'   # sorted by date, recursive, show type, human-readable
-# alias lt='ls -ltFh'   # long list, sorted by date, show type, human-readable
+alias lr='ls -tRFh'   # sorted by date, recursive, show type, human-readable
+alias lt='ls -ltFh'   # long list, sorted by date, show type, human-readable
 alias ldot='ls -ld .*'
-# alias lS='ls -1FSsh'
-# alias lart='ls -1Fcart'
-# alias lrt='ls -1Fcrt'
+alias lS='ls -1FSsh'
+alias lart='ls -1Fcart'
+alias lrt='ls -1Fcrt'
 
 # }}}2
 
