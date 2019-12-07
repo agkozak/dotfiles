@@ -386,6 +386,8 @@ if (( AGKDOT_NO_ZPLUGIN != 1 )) && is-at-least 5; then
     fi
     zplugin load agkozak/agkozak-zsh-prompt
 
+    # }}}3
+
     # zplugin light agkozak/polyglot
     # if which kubectl &> /dev/null; then
     #   zplugin light jonmosco/kube-ps1
@@ -433,7 +435,7 @@ if (( AGKDOT_NO_ZPLUGIN != 1 )) && is-at-least 5; then
     zplugin load romkatv/zsh-prompt-benchmark
 
     _agkdot_turbo && zplugin ice silent wait'0h'
-    zplugin load agkozak/clipboard
+    zplugin load zpm-zsh/clipboard
 
     if ! _agkdot_turbo; then
       autoload -Uz compinit
