@@ -345,7 +345,7 @@ if executable('git') && (executable('curl') || executable('wget') || WINDOWS())
       Plug 'mbadran/headlights'
     endif
     Plug 'ciaranm/securemodelines'
-    " Plug 'jiangmiao/auto-pairs'
+    Plug 'vim-scripts/auto-pairs-gentle'
 
     " Git
     Plug 'tpope/vim-fugitive'
