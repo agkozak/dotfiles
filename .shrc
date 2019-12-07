@@ -279,11 +279,7 @@ case ${AGKDOT_SYSTEMINFO} in
       unset i
     }
 
-    exe_alias chocolatey \
-              choco \
-              cinst \
-              cup \
-              explorer \
+    exe_alias explorer \
               shexview \
               subl \
               wsl
