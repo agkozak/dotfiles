@@ -345,7 +345,7 @@ if executable('git') && (executable('curl') || executable('wget') || WINDOWS())
       Plug 'mbadran/headlights'
     endif
     Plug 'ciaranm/securemodelines'
-    if ( v:version ==# 704 ) && has('patch849')
+    if ( v:version > 704 ) || ( v:version == 704 && has('patch849') )
       Plug 'vim-scripts/auto-pairs-gentle'
     endif
 
