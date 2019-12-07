@@ -108,7 +108,10 @@ case ${AGKDOT_SYSTEMINFO} in
     case ${AGKDOT_SYSTEMINFO} in
       *Msys|*Cygwin) LS_OPTIONS="$LS_OPTIONS --hide=NTUSER* --hide=ntuser*" ;;
       *Microsoft*)
-        LS_OPTIONS="${LS_OPTIONS} -L --hide=NTUSER* --hide=ntuser*"
+        case $(/bin/ls -l /bin/ls) in
+          *busybox*) unset LS_OPTIONS ;;
+          *) LS_OPTIONS="${LS_OPTIONS} -L --hide=NTUSER* --hide=ntuser*" ;;
+        esac
         ;;
     esac
     ;;
