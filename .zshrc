@@ -401,7 +401,7 @@ if (( AGKDOT_NO_ZPLUGIN != 1 )) && is-at-least 5; then
     _agkdot_turbo && zplugin ice lucid ver'develop' wait'0b'
     zplugin load agkozak/zsh-z
 
-    _agkdot_turbo && zplugin ice lucid wait'0g' ver'develop'
+    _agkdot_turbo && zplugin ice atload'!' lucid wait'0g' ver'develop'
     zplugin load agkozak/zhooks
 
     if _agkdot_turbo; then
