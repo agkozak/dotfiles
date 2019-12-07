@@ -386,8 +386,6 @@ if (( AGKDOT_NO_ZPLUGIN != 1 )) && is-at-least 5; then
     fi
     zplugin load agkozak/agkozak-zsh-prompt
 
-    # }}}3
-
     # zplugin light agkozak/polyglot
     # if which kubectl &> /dev/null; then
     #   zplugin light jonmosco/kube-ps1
