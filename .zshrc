@@ -434,8 +434,8 @@ if (( AGKDOT_NO_ZPLUGIN != 1 )) && is-at-least 5; then
     _agkdot_turbo && zplugin ice silent wait'0f'
     zplugin load romkatv/zsh-prompt-benchmark
 
-    _agkdot_turbo && zplugin ice silent ver'wsl' wait'0h'
-    zplugin load agkozak/clipboard
+    _agkdot_turbo && zplugin ice silent wait'0h'
+    zplugin load zpm-zsh/clipboard
 
     if ! _agkdot_turbo; then
       autoload -Uz compinit
