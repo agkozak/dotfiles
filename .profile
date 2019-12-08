@@ -137,9 +137,10 @@ esac
 
 # umask {{{1
 
-if [ "$(umask)" = "000" ]; then            # For WSL
-  umask 022
-fi
+AGKDOT_UMASK="$(umask)"
+case ${AGKDOT_UMASK} in
+  000|0000) umask 022 ;;                             # For WSL
+esac
 
 # }}}1
 
