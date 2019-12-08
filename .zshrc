@@ -419,8 +419,8 @@ if (( AGKDOT_NO_ZPLUGIN != 1 )) && is-at-least 5; then
     fi
     zplugin load zsh-users/zsh-history-substring-search
 
-    _agkdot_turbo && zplugin ice lucid ver'tmux' wait
-    zplugin load agkozak/zsh-titles
+    _agkdot_turbo && zplugin ice lucid wait
+    zplugin load jreese/zsh-titles
 
     if [[ $AGKDOT_SYSTEMINFO != *ish* ]]; then
       _agkdot_turbo && zplugin ice lucid wait'0d'
