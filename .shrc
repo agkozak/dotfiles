@@ -138,13 +138,11 @@ esac
 
 if [ -n "$INSIDE_EMACS" ]; then
   unset LS_COLORS
-elif [ -z "$LS_COLORS" ]; then
-  if command -v dircolors > /dev/null 2>&1; then
-    if [ -r "$HOME/.dircolors" ] && [ "$AGKDOT_TERM_COLORS" -ge 256 ]; then
-      eval "$(dircolors -b "$HOME/.dircolors")"
-    elif [ "$AGKDOT_TERM_COLORS" -ge 8 ]; then
-      eval "$(dircolors -b)"
-    fi
+elif command -v dircolors > /dev/null 2>&1; then
+  if [ -r "$HOME/.dircolors" ] && [ "$AGKDOT_TERM_COLORS" -ge 256 ]; then
+    eval "$(dircolors -b "$HOME/.dircolors")"
+  elif [ "$AGKDOT_TERM_COLORS" -ge 8 ]; then
+    eval "$(dircolors -b)"
   fi
 fi
 
