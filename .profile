@@ -34,15 +34,15 @@ export ENV
 ENV="${HOME}/.shrc"
 
 export LESS
-# Only BusyBox should have /usr/bin/less as a symlink
-if [ -h /usr/bin/less ]; then
-  LESS='-FIM'
-else
-  case ${AGKDOT_SYSTEMINFO} in
-    UWIN*) LESS='-i' ;;
-    *) LESS='-FiR' ;;
-  esac
-fi
+case $(ls -l "$(command -v less)") in
+  *busybox*) LESS='-FIM' ;;
+  *)
+    case ${AGKDOT_SYSTEMINFO} in
+      UWIN*) LESS='-i' ;;
+      *) LESS='-FiR' ;;
+    esac
+    ;;
+esac
 
 if command -v lesspipe > /dev/null 2>&1; then
   export LESSOPEN

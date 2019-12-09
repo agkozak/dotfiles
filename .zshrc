@@ -419,7 +419,7 @@ if (( AGKDOT_NO_ZPLUGIN != 1 )) && is-at-least 5; then
     fi
     zplugin load zsh-users/zsh-history-substring-search
 
-    _agkdot_turbo && zplugin ice lucid wait
+    _agkdot_turbo && zplugin ice lucid ver'avoid-subshell' wait
     zplugin load agkozak/zsh-titles
 
     if [[ $AGKDOT_SYSTEMINFO != *ish* ]]; then
