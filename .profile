@@ -5,6 +5,14 @@
 # shellcheck shell=sh
 # shellcheck disable=SC2034
 
+# For SUSE {{{1
+
+if [ -d '/etc/YaST2' ]; then
+  [ -z "${PROFILEREAD}" ] && . '/etc/profile' || true
+fi
+
+# }}}1
+
 # AGKDOT_SYSTEMINFO {{{1
 
 export AGKDOT_SYSTEMINFO
@@ -25,25 +33,24 @@ VISUAL="$EDITOR"
 export ENV
 ENV="$HOME/.shrc"
 
-case $(ls -l "$(command -v less)") in
-  *busybox*) ;;
-  *)
-    case $AGKDOT_SYSTEMINFO in
-      UWIN*) ;;
-      *)
-        export LESS
-        LESS='-R'
-        ;;
-    esac
-esac
+export LESS
+# Only BusyBox should have /usr/bin/less as a symlink
+if [ -h /usr/bin/less ]; then
+  LESS='-FIM'
+else
+  case $AGKDOT_SYSTEMINFO in
+    UWIN*) LESS='-i' ;;
+    *) LESS='-FiR' ;;
+  esac
+fi
 
-# if command -v lesspipe > /dev/null 2>&1; then
-#   export LESSOPEN
-# 	LESSOPEN='| ~/.lessfilter %s'
-# elif command -v lesspipe.sh > /dev/null 2>&1; then
-#   export LESSOPEN
-# 	LESSOPEN='| lesspipe.sh %s'
-# fi
+if command -v lesspipe > /dev/null 2>&1; then
+  export LESSOPEN
+	LESSOPEN='| lesspipe %s'
+elif command -v lesspipe.sh > /dev/null 2>&1; then
+  export LESSOPEN
+	LESSOPEN='| lesspipe.sh %s'
+fi
 
 if [ -f "$HOME/.lynx.cfg" ]; then
   export LYNX_CFG
