@@ -96,7 +96,7 @@ case $TERM in
 esac
 
 # Only BusyBox /bin/ls should be a symlink, and BusyBox ls has very few options
-if [ -h '/bin/ls' ]; then
+if [ ! -h '/bin/ls' ]; then
   case ${AGKDOT_SYSTEMINFO} in
     # Solaris ls has very few desirable options, but sometimes GNU ls is also installed
     SunOS*) [ -x '/usr/gnu/bin/ls' ] \
