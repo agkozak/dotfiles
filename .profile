@@ -28,17 +28,17 @@ if command -v vim > /dev/null 2>&1; then
 else
   EDITOR='vi'
 fi
-VISUAL="$EDITOR"
+VISUAL="${EDITOR}"
 
 export ENV
-ENV="$HOME/.shrc"
+ENV="${HOME}/.shrc"
 
 export LESS
 # Only BusyBox should have /usr/bin/less as a symlink
 if [ -h /usr/bin/less ]; then
   LESS='-FIM'
 else
-  case $AGKDOT_SYSTEMINFO in
+  case ${AGKDOT_SYSTEMINFO} in
     UWIN*) LESS='-i' ;;
     *) LESS='-FiR' ;;
   esac
@@ -54,18 +54,18 @@ fi
 
 if [ -f "$HOME/.lynx.cfg" ]; then
   export LYNX_CFG
-  LYNX_CFG="$HOME/.lynx.cfg"
+  LYNX_CFG="${HOME}/.lynx.cfg"
 fi
 
 export MANPAGER
-MANPAGER='less -X'
+MANPAGER='less'
 
 # Always use Unicode line-drawing characters, not VT100-style ones
 export NCURSES_NO_UTF8_ACS
 NCURSES_NO_UTF8_ACS=1
 
 export PAGER
-PAGER=less
+PAGER='less'
 
 # More modern utilities on Solaris
 # case $systeminfo in
@@ -73,40 +73,34 @@ PAGER=less
 # esac
 
 export PATH
+set --  '/mingw64/bin' \
+        "${HOME}/.gem/ruby/2.4.0/bin" \
+        "${HOME}/.local/bin" \
+        "${HOME}/go/bin" \
+        "${HOME}/.cabal/bin" \
+        "${HOME}/.config/composer/vendor/bin" \
+        "${HOME}/.composer/vendor/bin" \
+        "${HOME}/.luarocks/bin" \
+        "${HOME}/ruby/gems/bin" \
+        "${HOME}/.rvim/bin" \
+        "${HOME}/bin"
 
-# Construct $PATH
-for i in "$HOME/.gem/ruby/2.4.0/bin" \
-  "$HOME/.local/bin" \
-  "$HOME/go/bin" \
-	"$HOME/.cabal/bin" \
-	"$HOME/.config/composer/vendor/bin" \
-	"$HOME/.composer/vendor/bin" \
-  "$HOME/.luarocks/bin" \
-	"$HOME/ruby/gems/bin" \
-	"$HOME/.rvim/bin" \
-	"$HOME/bin"; do
-  if [ -d "$i" ]; then
-    case :$PATH: in
-      *:$i:*) ;;
-      *)
-        PATH="$i:$PATH"
-        ;;
-    esac
-  fi
+while [ $# -gt 0 ]; do
+  [ -d "$1" ] && PATH="$1:${PATH}"
+  shift
 done
-
-unset i
-
-
-case $AGKDOT_SYSTEMINFO in
-  *Msys) [ -d /mingw64/bin ] && PATH="/mingw64/bin:$PATH" ;;
-esac
 
 # Load RVM into a shell session *as a function*
 # shellcheck source=/dev/null
-[ -s "$HOME/.rvm/scripts/rvm" ] && . "$HOME/.rvm/scripts/rvm"
+[ -s "${HOME}/.rvm/scripts/rvm" ] && . "${HOME}/.rvm/scripts/rvm"
 
 case $AGKDOT_SYSTEMINFO in
+	*Cygwin)
+		export CYGWIN
+    # `ln` creates native symlinks in Windows -- only works for administrator
+    CYGWIN='winsymlinks:native'
+		unset PYTHONHOME SSL_CERT_DIR SSL_CERT_FILE
+	  ;;
 	Darwin*|FreeBSD*)
 		export CLICOLOR LSCOLORS SSL_CERT_DIR SSL_CERT_FILE
 		CLICOLOR=1
@@ -114,29 +108,23 @@ case $AGKDOT_SYSTEMINFO in
 		SSL_CERT_DIR=/etc/ssl/certs
 		SSL_CERT_FILE=/etc/ssl/cert.pem
 	  ;;
-	*Msys)
-		export MSYS SSL_CERT_DIR SSL_CERT_FILE
-		# `ln` creates native symlinks in Windows -- only works for administrator
-		MSYS="winsymlinks:nativestrict"
-    unset PYTHONHOME
-		[ ! -f /usr/bin/zsh ] && SHELL=/usr/bin/bash
-		SSL_CERT_DIR=/mingw64/ssl/certs
-		SSL_CERT_FILE=/mingw64/ssl/cert.pem
-	  ;;
-	*Cygwin)
-		export CYGWIN
-    # `ln` creates native symlinks in Windows -- only works for administrator
-    CYGWIN="winsymlinks:native"
-		unset PYTHONHOME SSL_CERT_DIR SSL_CERT_FILE
-	  ;;
-  *raspberrypi*)
-	  command -v chromium-browser > /dev/null 2>&1 && BROWSER='chromium-browser'
-    ;;
   *Microsoft*)                                                            # WSL
     [ ! -d "${HOME}/.screen" ] && mkdir "${HOME}/.screen" \
       && chmod 700 "${HOME}/.screen"
     export SCREENDIR
     SCREENDIR="${HOME}/.screen"
+    ;;
+	*Msys)
+		export MSYS SSL_CERT_DIR SSL_CERT_FILE
+		# `ln` creates native symlinks in Windows -- only works for administrator
+		MSYS='winsymlinks:nativestrict'
+    unset PYTHONHOME
+		[ ! -f '/usr/bin/zsh' ] && SHELL='/usr/bin/bash'
+		SSL_CERT_DIR='/mingw64/ssl/certs'
+		SSL_CERT_FILE='/mingw64/ssl/cert.pem'
+	  ;;
+  *raspberrypi*)
+	  command -v chromium-browser > /dev/null 2>&1 && BROWSER='chromium-browser'
     ;;
 esac
 
@@ -144,9 +132,8 @@ esac
 
 # umask {{{1
 
-AGKDOT_UMASK="$(umask)"
-case ${AGKDOT_UMASK} in
-  000|0000) umask 022 ;;                             # For WSL
+case $(umask) in
+  000|0000) umask 022 ;;                                              # For WSL
 esac
 
 # }}}1
