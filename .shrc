@@ -119,8 +119,8 @@ fi
 case ${AGKDOT_SYSTEMINFO} in
   # For the time being, WSL doesn't like Windows symlinks
   *Microsoft*)
-    [ "${AGKDOT_IS_BUSYBOX_LS}" -eq 0 ] && alias ls='ls $LS_OPTIONS 2> /dev/null' ;;
-  *) alias ls='ls $LS_OPTIONS' ;;
+    [ "${AGKDOT_IS_BUSYBOX_LS}" -eq 0 ] && alias ls='ls ${LS_OPTIONS} 2> /dev/null' ;;
+  *) alias ls='ls ${LS_OPTIONS}' ;;
 esac
 
 if [ -n "$INSIDE_EMACS" ]; then
@@ -137,8 +137,16 @@ case ${AGKDOT_SYSTEMINFO} in
   SunOS*|*ish*|UWIN*) ;;
   *)
     if [ "${AGKDOT_IS_BUSYBOX_LS}" -eq 0 ] && [ "${AGKDOT_TERM_COLORS}" -ge 8 ]; then
-      alias dir='dir --color=auto'
-      alias vdir='vdir --color=auto'
+      case ${AGKDOT_SYSTEMINFO} in
+        *Microsoft*)
+          alias dir='dir --color=auto 2> /dev/null'
+          alias vdir='vdir --color=auto 2> /dev/null'
+          ;;
+        *)
+          alias dir='dir --color=auto'
+          alias vdir='vdir --color=auto'
+          ;;
+      esac
 
       alias grep='grep --color=auto'
       alias fgrep='fgrep --color=auto'
