@@ -142,7 +142,7 @@ elif command -v dircolors > /dev/null 2>&1; then
   fi
 fi
 
-if [ -z "${AGKDOT_BUSYBOX_LS:-0}"  ]; then
+if [ -z "${AGKDOT_BUSYBOX_LS}"  ]; then
   case ${AGKDOT_SYSTEMINFO} in
     SunOS*|*ish*|UWIN*) ;;
     *)
