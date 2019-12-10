@@ -145,7 +145,7 @@ if [ -z "${AGKDOT_BUSYBOX_LS}"  ]; then
   case ${AGKDOT_SYSTEMINFO} in
     SunOS*|*ish*|UWIN*) ;;
     *)
-      if [ "${AGKDOT_TERM_COLORS}" -ge 8 ]; then
+      if ! _agkdot_is_busybox && [ "${AGKDOT_TERM_COLORS}" -ge 8 ]; then
         alias dir='dir --color=auto'
         alias vdir='vdir --color=auto'
 
