@@ -95,37 +95,40 @@ case $TERM in
     ;;
 esac
 
-# Only BusyBox /bin/ls should be a symlink, and BusyBox ls has very few options
-if [ ! -h '/bin/ls' ]; then
-  case ${AGKDOT_SYSTEMINFO} in
-    # Solaris ls has very few desirable options, but sometimes GNU ls is also installed
-    SunOS*) [ -x '/usr/gnu/bin/ls' ] \
-      && alias ls='/usr/gnu/bin/ls --group-directories-first -F -h -T 0 --color'
-      ;;
-    # Some antiquated versions of ls
-    NetBSD*|OpenBSD*|UWIN*) ;;
-    # FreeBSD ls
-    Darwin*|*[Bb][Ss][Dd]*|*[Dd]ragon[Ff]ly*)
-      [ "$AGKDOT_TERM_COLORS" -ge 8 ] && LS_OPTIONS='-G'
-      ;;
-    # GNU ls
-    *)
-      LS_OPTIONS='--group-directories-first -F -h -T 0'
-      [ "${AGKDOT_TERM_COLORS}" -ge 8 ] && LS_OPTIONS="${LS_OPTIONS} --color"
-      case ${AGKDOT_SYSTEMINFO} in
-        *Msys|*Cygwin)
-          LS_OPTIONS="${LS_OPTIONS} --hide=NTUSER* --hide=ntuser*"
-          ;;
-      esac
-      ;;
-  esac
-fi
+case $(ls -l "$(command -v ls)") in
+  *busybox*) AGKDOT_BUSYBOX_LS=1 ;;
+  *)
+    AGKDOT_BUSYBOX_LS=0
+    case ${AGKDOT_SYSTEMINFO} in
+      # Solaris ls has very few desirable options, but sometimes GNU ls is also installed
+      SunOS*) [ -x '/usr/gnu/bin/ls' ] \
+        && alias ls='/usr/gnu/bin/ls --group-directories-first -F -h -T 0 --color'
+        ;;
+      # Some antiquated versions of ls
+      NetBSD*|OpenBSD*|UWIN*) ;;
+      # FreeBSD ls
+      Darwin*|*[Bb][Ss][Dd]*|*[Dd]ragon[Ff]ly*)
+        [ "$AGKDOT_TERM_COLORS" -ge 8 ] && LS_OPTIONS='-G'
+        ;;
+      # GNU ls
+      *)
+        LS_OPTIONS='--group-directories-first -F -h -T 0'
+        [ "${AGKDOT_TERM_COLORS}" -ge 8 ] && LS_OPTIONS="${LS_OPTIONS} --color"
+        case ${AGKDOT_SYSTEMINFO} in
+          *Msys|*Cygwin)
+            LS_OPTIONS="${LS_OPTIONS} --hide=NTUSER* --hide=ntuser*"
+            ;;
+        esac
+        ;;
+    esac
+    ;;
+esac
 
-# Set the ls alias
+  # Set the ls alias
 case ${AGKDOT_SYSTEMINFO} in
   # For the time being, WSL doesn't like Windows symlinks
   *Microsoft*)
-    [ ! -h '/bin/ls' ] && alias ls='ls $LS_OPTIONS 2> /dev/null' ;;
+    [ -z "${AGKDOT_BUSYBOX_LS}" ] && alias ls='ls $LS_OPTIONS 2> /dev/null' ;;
   *) alias ls='ls $LS_OPTIONS' ;;
 esac
 
@@ -139,7 +142,7 @@ elif command -v dircolors > /dev/null 2>&1; then
   fi
 fi
 
-if [ ! -h '/bin/ls' ]; then
+if [ -z "${AGKDOT_BUSYBOX_LS:-0}"  ]; then
   case ${AGKDOT_SYSTEMINFO} in
     SunOS*|*ish*|UWIN*) ;;
     *)
@@ -155,7 +158,7 @@ if [ ! -h '/bin/ls' ]; then
   esac
 fi
 
-unset AGKDOT_TERM_COLORS
+unset AGKDOT_BUSYBOX_LS AGKDOT_TERM_COLORS
 
 # }}}2
 

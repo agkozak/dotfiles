@@ -8,6 +8,7 @@
 # For SUSE {{{1
 
 if [ -d '/etc/YaST2' ]; then
+  # shellcheck disable=SC1091,SC2015
   [ -z "${PROFILEREAD}" ] && . '/etc/profile' || true
 fi
 
