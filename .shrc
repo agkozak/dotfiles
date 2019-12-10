@@ -95,7 +95,7 @@ case $TERM in
     ;;
 esac
 
-case $(ls -l "$(command -v ls)") in
+case $(ls -l /bin/ls) in
   *busybox*) AGKDOT_BUSYBOX_LS=1 ;;
   *)
     case ${AGKDOT_SYSTEMINFO} in
