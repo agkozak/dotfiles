@@ -35,7 +35,7 @@ export ENV
 ENV="${HOME}/.shrc"
 
 export LESS
-case $(ls -l "$(command -v less)") in
+case $(ls -l /usr/bin/less) in
   *busybox*) LESS='-FIM' ;;
   *)
     case ${AGKDOT_SYSTEMINFO} in
@@ -133,6 +133,7 @@ esac
 
 # umask {{{1
 
+# TODO: Consider setting in wsl.conf
 case $(umask) in
   000|0000) umask 022 ;;                                              # For WSL
 esac
