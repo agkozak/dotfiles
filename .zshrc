@@ -379,7 +379,7 @@ if (( AGKDOT_NO_ZPLUGIN != 1 )) && is-at-least 5; then
 
     if _agkdot_turbo; then
       PROMPT='%m%# '
-      zplugin ice atload'!_agkozak_precmd' nocd silent \
+      zplugin ice atload'_agkozak_precmd' nocd silent \
         wait'0a' ver'develop'
     else
       zplugin ice ver'develop'
@@ -401,7 +401,7 @@ if (( AGKDOT_NO_ZPLUGIN != 1 )) && is-at-least 5; then
     _agkdot_turbo && zplugin ice lucid ver'develop' wait'0c'
     zplugin load agkozak/zsh-z
 
-    _agkdot_turbo && zplugin ice atload'!' lucid wait'0g' ver'develop'
+    _agkdot_turbo && zplugin ice lucid wait'0g' ver'develop'
     zplugin load agkozak/zhooks
 
     if _agkdot_turbo; then
@@ -419,7 +419,7 @@ if (( AGKDOT_NO_ZPLUGIN != 1 )) && is-at-least 5; then
     fi
     zplugin load zsh-users/zsh-history-substring-search
 
-    _agkdot_turbo && zplugin ice atload'!_zsh_title__precmd' lucid \
+    _agkdot_turbo && zplugin ice atload'_zsh_title__precmd' lucid \
       ver'avoid-subshell' wait'0b'
     zplugin load agkozak/zsh-titles
 
