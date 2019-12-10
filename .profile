@@ -40,7 +40,7 @@ case $(ls -l "$(command -v less)") in
   *)
     case ${AGKDOT_SYSTEMINFO} in
       UWIN*) LESS='-i' ;;
-      *) LESS='-FiR' ;;
+      *) LESS='-FiRX' ;;
     esac
     ;;
 esac
