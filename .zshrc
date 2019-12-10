@@ -419,7 +419,7 @@ if (( AGKDOT_NO_ZPLUGIN != 1 )) && is-at-least 5; then
     fi
     zplugin load zsh-users/zsh-history-substring-search
 
-    _agkdot_turbo && zplugin ice atload'_zsh_title__precmd' lucid \
+    _agkdot_turbo && zplugin ice atload'_zsh_title__precmd' lucid nocd \
       ver'avoid-subshell' wait'0b'
     zplugin load agkozak/zsh-titles
 
