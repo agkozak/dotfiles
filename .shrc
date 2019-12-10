@@ -98,7 +98,6 @@ esac
 case $(ls -l "$(command -v ls)") in
   *busybox*) AGKDOT_BUSYBOX_LS=1 ;;
   *)
-    AGKDOT_BUSYBOX_LS=0
     case ${AGKDOT_SYSTEMINFO} in
       # Solaris ls has very few desirable options, but sometimes GNU ls is also installed
       SunOS*) [ -x '/usr/gnu/bin/ls' ] \
