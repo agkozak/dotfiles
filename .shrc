@@ -174,7 +174,7 @@ alias lrt='ls -1Fcrt'
 
 # }}}2
 
-command -v hue > /dev/null 2>&1 && alias bri='hue set all -b'
+alias bri='hue set all -b'
 
 _agkdot_is_uwin() {
   case ${AGKDOT_SYSTEMINFO} in
@@ -208,9 +208,9 @@ alias phpunit='${HOME}/bin/phpunit.phar'
 # fi
 # alias sortnr='sort -n -r'
 # alias t='tail -f'
+alias vi='${EDITOR}'  # Make vi an alias for vim, if it is available
 alias v='findv'
 alias vv='findv --verbose'
-command -v vim > /dev/null 2>&1 && alias vi='vim'
 alias wp='$HOME/bin/wp-cli.phar'
 alias yta='youtube-dl --audio-format best -x '
 
