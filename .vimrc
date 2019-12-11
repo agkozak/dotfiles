@@ -339,16 +339,13 @@ if executable('git') && (executable('curl') || executable('wget') || WINDOWS())
       Plug 'jlanzarotta/bufexplorer'
     endif
     Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
-    Plug 'tweekmonster/startuptime.vim'
+    Plug 'tweekmonster/startuptime.vim', { 'on': 'StartupTime' }
     Plug 'tpope/vim-commentary'
     if has('gui') && has('python')
       Plug 'mbadran/headlights'
     endif
     Plug 'ciaranm/securemodelines'
-    if ( v:version > 704 ) || ( v:version == 704 && has('patch849') )
-      Plug 'vim-scripts/auto-pairs-gentle'
-    endif
-
+    
     " Git
     Plug 'tpope/vim-fugitive'
     Plug 'airblade/vim-gitgutter'
@@ -380,7 +377,7 @@ if executable('git') && (executable('curl') || executable('wget') || WINDOWS())
     " Plug 'dsawardekar/wordpress.vim', { 'branch': 'develop' }
 
     " PowerShell
-    if executable('cmd')
+    if executable('powershell.exe')
       Plug 'PProvost/vim-ps1'
     endif
 
@@ -397,22 +394,14 @@ if executable('git') && (executable('curl') || executable('wget') || WINDOWS())
     Plug 'davidoc/taskpaper.vim'
 
     " .tmux.conf
-    Plug 'tmux-plugins/vim-tmux'
+    Plug 'tmux-plugins/vim-tmux', { 'for': 'tmux' }
 
     " Apache logs
     Plug 'vim-scripts/httplog'
 
     " zsh
-    Plug 'agkozak/vim-zsh', { 'for': 'zsh', 'branch': 'develop' }
+    " Plug 'agkozak/vim-zsh', { 'for': 'zsh', 'branch': 'develop' }
     Plug 'zplugin/zplugin-vim-syntax', { 'for': 'zsh' }
-
-    " Zeal
-    set modifiable
-    Plug 'KabbAmine/zeavim.vim'
-
-    " if ( v:version >= 800 ) && has('timers') || has('nvim')
-    "   Plug 'psliwka/vim-smoothie'
-    " endif
 
     call plug#end()
 

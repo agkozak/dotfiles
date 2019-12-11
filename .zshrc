@@ -377,13 +377,13 @@ if (( AGKDOT_NO_ZPLUGIN != 1 )) && is-at-least 5; then
       is-at-least 5.3 && [[ $TERM != 'dumb' ]]
     }
 
-    if _agkdot_turbo; then
-      PROMPT='%m%# '
-      zplugin ice atload'_agkozak_precmd' nocd silent \
-        wait'0a' ver'develop'
-    else
-      zplugin ice ver'develop'
-    fi
+    # if _agkdot_turbo; then
+    #   PROMPT='%m%# '
+    #   zplugin ice atload'_agkozak_precmd' nocd silent \
+    #     wait'0a' ver'develop'
+    # else
+    zplugin ice ver'develop'
+    # fi
     zplugin load agkozak/agkozak-zsh-prompt
 
     # }}}3

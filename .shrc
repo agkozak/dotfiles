@@ -33,32 +33,27 @@ export AGKDOT_SYSTEMINFO
 
 # Begin .shrc benchmark {{{1
 
-_agkdot_is_busybox() {
-  [ "${AGKDOT_IS_BUSYBOX:-0}" -eq 1 ] && return 0
-  case $0 in
-    sh|-sh|ash|-ash)
-      if command -v readlink > /dev/null 2>&1; then
-        case $(exec 2>/dev/null; readlink "/proc/$$/exe") in
-          */busybox) AGKDOT_IS_BUSYBOX=1 && return 0 ;;
-          *) return 1 ;;
-        esac
-      fi
-      ;;
-    *) return 1 ;;
-  esac
-}
-
 if [ "${AGKDOT_BENCHMARKS:-0}" -eq 1 ]; then
   [ "${AGKDOT_ZSHRC_LOADING:-0}" -eq 1 ] || {
     case ${AGKDOT_SYSTEMINFO} in
-      # BSD and busybox date don't handle nanoseconds
+      # BSD date doesn't handle nanoseconds
       *BSD*|*bsd*|DragonFly*) ;;
-      *) ! _agkdot_is_busybox && AGKDOT_SHRC_START="$(date +%s%N)" ;;
+      *) AGKDOT_SHRC_START="$(date +%s%N)" ;;
     esac
   }
 fi
 
 # }}}1
+
+# case $(ls -l /bin/grep 2> /dev/null) in
+#   *busybox*) AGKDOT_IS_BUSYBOX_GREP=1 ;;
+#   *) AGKDOT_IS_BUSYBOX_GREP=0 ;;
+# esac
+
+case $(ls -l /bin/ls 2> /dev/null) in
+  *busybox*) AGKDOT_IS_BUSYBOX_LS=1 ;;
+  *) AGKDOT_IS_BUSYBOX_LS=0 ;;
+esac
 
 # Raspberry Pi LXTerminal {{{1
 
@@ -95,67 +90,71 @@ case $TERM in
     ;;
 esac
 
-case $(ls -l /bin/ls) in
-  *busybox*) AGKDOT_BUSYBOX_LS=1 ;;
-  *)
-    case ${AGKDOT_SYSTEMINFO} in
-      # Solaris ls has very few desirable options, but sometimes GNU ls is also installed
-      SunOS*) [ -x '/usr/gnu/bin/ls' ] \
-        && alias ls='/usr/gnu/bin/ls --group-directories-first -F -h -T 0 --color'
-        ;;
-      # Some antiquated versions of ls
-      NetBSD*|OpenBSD*|UWIN*) ;;
-      # FreeBSD ls
-      Darwin*|*[Bb][Ss][Dd]*|*[Dd]ragon[Ff]ly*)
-        [ "$AGKDOT_TERM_COLORS" -ge 8 ] && LS_OPTIONS='-G'
-        ;;
-      # GNU ls
-      *)
-        LS_OPTIONS='--group-directories-first -F -h -T 0'
-        [ "${AGKDOT_TERM_COLORS}" -ge 8 ] && LS_OPTIONS="${LS_OPTIONS} --color"
-        case ${AGKDOT_SYSTEMINFO} in
-          *Msys|*Cygwin)
-            LS_OPTIONS="${LS_OPTIONS} --hide=NTUSER* --hide=ntuser*"
-            ;;
-        esac
-        ;;
-    esac
-    ;;
-esac
+if [ "${AGKDOT_IS_BUSYBOX_LS}" -eq 0 ]; then
+  case ${AGKDOT_SYSTEMINFO} in
+    # Solaris ls has very few desirable options, but sometimes GNU ls is also installed
+    SunOS*) [ -x '/usr/gnu/bin/ls' ] \
+      && alias ls='/usr/gnu/bin/ls --group-directories-first -F -h -T 0 --color'
+      ;;
+    # Some antiquated versions of ls
+    NetBSD*|OpenBSD*|UWIN*) ;;
+    # FreeBSD ls
+    Darwin*|*[Bb][Ss][Dd]*|*[Dd]ragon[Ff]ly*)
+      [ "$AGKDOT_TERM_COLORS" -ge 8 ] && LS_OPTIONS='-G'
+      ;;
+    # GNU ls
+    *)
+      LS_OPTIONS='--group-directories-first -F -h -T 0'
+      [ "${AGKDOT_TERM_COLORS}" -ge 8 ] && LS_OPTIONS="${LS_OPTIONS} --color"
+      case ${AGKDOT_SYSTEMINFO} in
+        *Msys|*Cygwin)
+          LS_OPTIONS="${LS_OPTIONS} --hide=NTUSER* --hide=ntuser*"
+          ;;
+      esac
+      ;;
+  esac
+fi
 
-  # Set the ls alias
+# Set the ls alias
 case ${AGKDOT_SYSTEMINFO} in
   # For the time being, WSL doesn't like Windows symlinks
   *Microsoft*)
-    [ -z "${AGKDOT_BUSYBOX_LS}" ] && alias ls='ls $LS_OPTIONS 2> /dev/null' ;;
-  *) alias ls='ls $LS_OPTIONS' ;;
+    [ "${AGKDOT_IS_BUSYBOX_LS}" -eq 0 ] && alias ls='ls ${LS_OPTIONS} 2> /dev/null' ;;
+  *) alias ls='ls ${LS_OPTIONS}' ;;
 esac
 
 if [ -n "$INSIDE_EMACS" ]; then
   unset LS_COLORS
-elif command -v dircolors > /dev/null 2>&1; then
-  if [ -r "${HOME}/.dircolors" ] && [ "${AGKDOT_TERM_COLORS}" -ge 256 ]; then
+# If dircolors is available, install.sh will have installed ~/.dircolors
+elif [ -f "${HOME}/.dircolors" ]; then
+  if [ "${AGKDOT_TERM_COLORS}" -ge 256 ]; then
     eval "$(dircolors -b "${HOME}/.dircolors")"
   elif [ "${AGKDOT_TERM_COLORS}" -ge 8 ]; then
     eval "$(dircolors -b)"
   fi
 fi
 
-if [ -z "${AGKDOT_BUSYBOX_LS}"  ]; then
-  case ${AGKDOT_SYSTEMINFO} in
-    SunOS*|*ish*|UWIN*) ;;
-    *)
-      if ! _agkdot_is_busybox && [ "${AGKDOT_TERM_COLORS}" -ge 8 ]; then
-        alias dir='dir --color=auto'
-        alias vdir='vdir --color=auto'
+case ${AGKDOT_SYSTEMINFO} in
+  SunOS*|*ish*|UWIN*) ;;
+  *)
+    if [ "${AGKDOT_IS_BUSYBOX_LS}" -eq 0 ] && [ "${AGKDOT_TERM_COLORS}" -ge 8 ]; then
+      case ${AGKDOT_SYSTEMINFO} in
+        *Microsoft*)
+          alias dir='dir --color=auto 2> /dev/null'
+          alias vdir='vdir --color=auto 2> /dev/null'
+          ;;
+        *)
+          alias dir='dir --color=auto'
+          alias vdir='vdir --color=auto'
+          ;;
+      esac
 
-        alias grep='grep --color=auto'
-        alias fgrep='fgrep --color=auto'
-        alias egrep='egrep --color=auto'
-      fi
-      ;;
-  esac
-fi
+      alias grep='grep --color=auto'
+      alias fgrep='fgrep --color=auto'
+      alias egrep='egrep --color=auto'
+    fi
+    ;;
+esac
 
 unset AGKDOT_BUSYBOX_LS AGKDOT_TERM_COLORS
 
@@ -176,7 +175,7 @@ alias lrt='ls -1Fcrt'
 
 # }}}2
 
-command -v hue > /dev/null 2>&1 && alias bri='hue set all -b'
+alias bri='hue set all -b'
 
 _agkdot_is_uwin() {
   case ${AGKDOT_SYSTEMINFO} in
@@ -205,14 +204,14 @@ alias github-stats='github-stats --token ${GITHUB_STATS_TOKEN}'
 # alias help='man'
 # alias p='ps -f'
 alias phpunit='${HOME}/bin/phpunit.phar'
-# if ! _agkdot_is_busybox && ! _agkdot_is_uwin; then
+# if [ "${AGKDOT_IS_BUSYBOX_GREP}" -eq 0 ]  && ! _agkdot_is_uwin; then
 #   alias sgrep='grep -R -n -H -C 5 --exclude-dir={.git,.svn,CVS} '
 # fi
 # alias sortnr='sort -n -r'
 # alias t='tail -f'
+alias vi='${EDITOR}'  # Make vi an alias for vim, if it is available
 alias v='findv'
 alias vv='findv --verbose'
-command -v vim > /dev/null 2>&1 && alias vi='vim'
 alias wp='$HOME/bin/wp-cli.phar'
 alias yta='youtube-dl --audio-format best -x '
 
@@ -371,11 +370,9 @@ if [ "${AGKDOT_BENCHMARKS:-0}" -eq 1 ]; then
     case ${AGKDOT_SYSTEMINFO} in
       FreeBSD*) ;;
       *)
-        if ! _agkdot_is_busybox; then
-          AGKDOT_SHRC_FINISH="$(date +%s%N)"
-          AGKDOT_DIFFERENCE=$(( AGKDOT_SHRC_FINISH - AGKDOT_SHRC_START ))
-          echo ".shrc loaded in $((AGKDOT_DIFFERENCE/1000000))ms."
-        fi
+        AGKDOT_SHRC_FINISH="$(date +%s%N)"
+        AGKDOT_DIFFERENCE=$(( AGKDOT_SHRC_FINISH - AGKDOT_SHRC_START ))
+        echo ".shrc loaded in $((AGKDOT_DIFFERENCE/1000000))ms."
         ;;
     esac
   }
@@ -389,12 +386,6 @@ unset AGKDOT_SHRC_START AGKDOT_SHRC_FINISH AGKDOT_DIFFERENCE
 
 # shellcheck source=/dev/null
 if [ -f "${HOME}/.shrc.local" ]; then . "${HOME}/.shrc.local"; fi
-
-# }}}1
-
-# Clean up environment {{{1
-
-if [ -n "${AGKDOT_IS_BUSYBOX}" ]; then unset AGKDOT_IS_BUSYBOX; fi
 
 # }}}1
 
