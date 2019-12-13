@@ -311,8 +311,8 @@ if executable('git') && (executable('curl') || executable('wget') || WINDOWS())
     if CMDEXE() || WINDOWS()
       set runtimepath=~/.vim,$VIMRUNTIME
 
-    " Avoid multiple threads on CloudLinux
-    elseif $AGKDOT_SYSTEMINFO =~# 'lve'
+    " Avoid multiple threads on CloudLinux and iSH
+    elseif $AGKDOT_SYSTEMINFO =~# 'lve' || $AGKDOT_SYSTEMINFO =~# 'iSH'
           \ || $VIM !~# 'iVim' && system('uname -a') =~# 'lve'
       let g:plug_threads=1
     endif
