@@ -72,6 +72,10 @@ fi
 
 conditional_install bash .bash_profile .bashrc .inputrc
 
+if [ -d "${HOME}/dotfiles/plugins/bash-z" ]; then
+  ( cd "${HOME}/dotfiles/plugins/bash-z" && git pull )
+fi
+
 echo '.editorconfig'
 cp .editorconfig "$HOME"
 
