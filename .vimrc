@@ -77,9 +77,9 @@ set statusline+=%r                                " Readonly flag
 set statusline+=%y                                " File type
 set statusline+=%{SL('fugitive#statusline')}
 set statusline+=%#ErrorMsg#
-if exists("*LinterStatus")
+if exists('*LinterStatus')
   set statusline+=%{SL('LinterStatus')}
-elseif exists("*SyntasticStatuslineFlag")
+elseif exists('*SyntasticStatuslineFlag')
   set statusline+=%{SL('SyntasticStatuslineFlag')}
 endif
 set statusline+=%*
@@ -263,22 +263,6 @@ set wildmenu                " Show list instead of just completing
 
 " }}}2
 
-" => 21, 22, etc.  {{{2
-
-" In case Windows gvim is launched from a POSIX environment
-if has('gui_running') && WINDOWS() && &shell =~ 'sh'
-"   let g:plug_home='~/.vim/plugged'
-"   set shell=cmd
-"   set shellquote=
-"   set shellxquote=(
-"   set shellcmdflag=/c
-"   set shellredir=>%s\ 2>&1
-"   set shellpipe=>%s\ 2>&1
-"   set noshellslash
-endif
-
-" }}}2
-
 " => 26 multi-byte characters {{{2
 
 if has('multi_byte')
@@ -291,10 +275,6 @@ endif
 
 " Better Unix / Windows compatibility
 set viewoptions=folds,options,cursor,unix,slash
-
-" if WINDOWS()
-"   set viminfo+=n$USERPROFILE/.viminfo   " All platforms should use .viminfo
-" endif
 
 " }}}2
 
@@ -350,7 +330,11 @@ if executable('git') && (executable('curl') || executable('wget') || WINDOWS())
     
     " Git
     Plug 'tpope/vim-fugitive'
-    Plug 'airblade/vim-gitgutter'
+    if has('nvim') || has('patch-8.0.902')
+      Plug 'mhinz/vim-signify'
+    else
+      Plug 'mhinz/vim-signify', { 'branch': 'legacy' }
+    endif
     Plug 'junegunn/gv.vim'
 
     " PHP
@@ -554,13 +538,6 @@ let g:tagbar_autofocus = 1
 
 " Colorizer
 let g:colorizer_auto_filetype='css,scss,html'
-
-" Git Gutter
-if CMDEXE() || WINDOWS()
-  if executable('rg')
-    let g:gitgutter_grep='rg'
-  endif
-endif
 
 " }}}1
 
