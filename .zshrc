@@ -321,16 +321,14 @@ fi
 # Username and hostname
 AGKOZAK_CUSTOM_PROMPT='%(!.%S%B.%B%F{${AGKOZAK_COLORS_USER_HOST}})%n%1v%(!.%b%s.%f%b) '
 # Path
-AGKOZAK_CUSTOM_PROMPT+='%B%F{${AGKOZAK_COLORS_PATH}}%2v%f%b'
-# Git status
-AGKOZAK_CUSTOM_PROMPT+=$'%(3V.%F{${AGKOZAK_COLORS_BRANCH_STATUS}}%3v%f.)\n'
+AGKOZAK_CUSTOM_PROMPT+=$'%B%F{${AGKOZAK_COLORS_PATH}}%2v%f%b\n'
 # Exit status
 AGKOZAK_CUSTOM_PROMPT+='%(?..%B%F{${AGKOZAK_COLORS_EXIT_STATUS}}(%?%)%f%b )'
 # SHLVL and prompt character
 AGKOZAK_CUSTOM_PROMPT+='[%L] %(4V.:.%#) '
 AGKOZAK_COLORS_BRANCH_STATUS=228
 
-AGKOZAK_CUSTOM_RPROMPT=''
+# AGKOZAK_CUSTOM_RPROMPT=''
 
 # }}}1
 
@@ -379,10 +377,10 @@ if (( AGKDOT_NO_ZPLUGIN != 1 )) && is-at-least 5; then
 
     # if _agkdot_turbo; then
     #   PROMPT='%m%# '
-    #   zplugin ice atload'_agkozak_precmd' nocd silent \
+    #   zplugin ice atload"!_agkozak_precmd" nocd silent \
     #     wait'0a' ver'develop'
     # else
-    zplugin ice ver'develop'
+    zplugin ice ver'glitch-fix'
     # fi
     zplugin load agkozak/agkozak-zsh-prompt
 
