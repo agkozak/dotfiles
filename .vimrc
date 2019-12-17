@@ -609,31 +609,17 @@ if has('autocmd')
     " Use JSON syntax highlighting for CSON files
     autocmd BufNewFile,BufReadPost *.cson set filetype=coffee
 
-    " Highlight git commit messages correctly in Windows
-    " autocmd BufNewFile,BufReadPost COMMIT_EDITMSG set syn=gitcommit
-    " autocmd BufNewFile,BufReadPost MERGE_MSG set syn=gitcommit
-
     " Treat *.md files as Markdown, not Modula-2
     autocmd BufNewFile,BufReadPost *.md setlocal filetype=markdown linebreak
 
     " mintty config file syntax
     autocmd BufNewFile,BufReadPost .minttyrc set filetype=dosini
 
-    " Make WordPress syntax default PHP syntax
-    " Use in project .vimrc when applicable
-    " autocmd BufEnter *.php :set syn=wordpress
-
-    " Shell scripts
-    " autocmd BufNewFile,BufReadPost *.sh set filetype=sh
-
     " .todo extension is TaskPaper
     autocmd BufNewFile,BufReadPost *.todo set filetype=taskpaper
 
     " JetBrains IDE color schemes
     autocmd BufNewFile,BufReadPost *.icls set filetype=xml
-
-    " ZPML
-    autocmd BufNewFile,BufReadPost *.zpml set filetype=zsh
 
     " }}}2
   augroup END
