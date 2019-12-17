@@ -265,14 +265,16 @@ set wildmenu                " Show list instead of just completing
 
 " => 21, 22, etc.  {{{2
 
-if CMDEXE() || WINDOWS()    " In case gVim is launched from bash
-  set shell=cmd
-  set shellquote=
-  set shellxquote=(
-  set shellcmdflag=/c
-  set shellredir=>%s\ 2>&1
-  set shellpipe=>
-  set noshellslash
+" In case Windows gvim is launched from a POSIX environment
+if has('gui_running') && WINDOWS() && &shell =~ 'sh'
+"   let g:plug_home='~/.vim/plugged'
+"   set shell=cmd
+"   set shellquote=
+"   set shellxquote=(
+"   set shellcmdflag=/c
+"   set shellredir=>%s\ 2>&1
+"   set shellpipe=>%s\ 2>&1
+"   set noshellslash
 endif
 
 " }}}2
@@ -290,9 +292,9 @@ endif
 " Better Unix / Windows compatibility
 set viewoptions=folds,options,cursor,unix,slash
 
-if WINDOWS()
-  set viminfo+=n$USERPROFILE/.viminfo   " All platforms should use .viminfo
-endif
+" if WINDOWS()
+"   set viminfo+=n$USERPROFILE/.viminfo   " All platforms should use .viminfo
+" endif
 
 " }}}2
 
