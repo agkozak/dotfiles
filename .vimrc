@@ -453,7 +453,8 @@ if &term !=# 'cygwin' && &term !=# 'win32'
   endif
 
 else
-  syntax off
+  colorscheme industry
+  syntax on
 endif
 
 " }}}1
