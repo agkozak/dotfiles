@@ -475,33 +475,34 @@ elif is-at-least 4.3.11; then
   ##########################################################
   kplugin() {
     ! whence -w git &> /dev/null && return 1
-    case $1 in
+    local kplugin_dir="${HOME}/.zplugin" cmd=$1
+    [[ -d ${kplugin_dir} ]] || mkdir -p ${kplugin_dir}
+    case ${cmd} in
       load)
-        if [[ ! -d "${HOME}/.zplugin/plugins/${2%/*}---${2#*/}" ]]; then
-          (
-            git clone "https://github.com/${2%/*}/${2#*/}" \
-              "${HOME}/.zplugin/plugins/${2%/*}---${2#*/}"
-            cd "${HOME}/.zplugin/plugins/${2%/*}---${2#*/}"
-            (( $+3 )) && git checkout $3
-          )
+        local user=${2%/*} repo=${2#*/} branch=$3
+        if [[ ! -d "${kplugin_dir}/plugins/${user}---${repo}" ]]; then
+          git clone "https://github.com/${user}/${repo}" \
+            "${kplugin_dir}/plugins/${user}---${repo}"
+          if (( $+branch )); then
+            local cur_dir=$PWD
+            cd "${kplugin_dir}/plugins/${user}---${repo}" || return 1
+            git checkout ${branch}
+            cd $cur_dir
+          fi
+          print
         fi
-        if (( $+4 )); then
-          source "${HOME}/.zplugin/plugins/${2%/*}---${2#*/}/$4"
-        else
-          source "${HOME}/.zplugin/plugins/${2%/*}---${2#*/}/${2#*/}.plugin.zsh"
-        fi
+        source ${kplugin_dir}/plugins/${user}---${repo}/*.plugin.zsh
         ;;
       snippet)
         if [[ $2 == OMZ::* ]]; then
-          if [[ ! -d ${HOME}/.zplugin/snippets/${2%%/*}--${2#*/} ]]; then
-            mkdir -p "${HOME}/.zplugin/snippets/${2%%/*}--${2#*/}"
+          if [[ ! -d ${kplugin_dir}/snippets/${2%%/*}--${2#*/} ]]; then
+            mkdir -p "${kplugin_dir}/snippets/${2%%/*}--${2#*/}"
             curl "https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/${2#OMZ::}" \
-              > "${HOME}/.zplugin/snippets/${2%%/*}--${2#*/}/${2##*/}"
-            echo foo
+              > "${kplugin_dir}/snippets/${2%%/*}--${2#*/}/${2##*/}"
           fi
-          source "${HOME}/.zplugin/snippets/${2%%/*}--${2#*/}/${2##*/}"
+          source "${kplugin_dir}/snippets/${2%%/*}--${2#*/}/${2##*/}"
         else
-          source $2
+          return 1
         fi
         ;;
       *) return 1 ;;
@@ -514,7 +515,7 @@ elif is-at-least 4.3.11; then
   kplugin load agkozak/zsh-z develop
 
   kplugin load agkozak/zhooks develop
-  kplugin load jreese/zsh-titles master titles.plugin.zsh
+  kplugin load jreese/zsh-titles
   kplugin load zsh-users/zsh-history-substring-search
 
   if [[ $AGKDOT_SYSTEMINFO != *ish* ]]; then
