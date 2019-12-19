@@ -198,7 +198,7 @@ setopt SHARE_HISTORY        # Constantly share history between shell instances
 
 # 16.2.6 Input/Output {{{2
 
-unsetopt FLOW_CONTROL       # Free up Ctrl-Q and Ctrl-S 
+unsetopt FLOW_CONTROL       # Free up Ctrl-Q and Ctrl-S
 setopt INTERACTIVE_COMMENTS # Allow comments in interactive mode
 
 # }}}2
@@ -369,7 +369,7 @@ if (( AGKDOT_NO_ZPLUGIN != 1 )) && is-at-least 5; then
     source "${HOME}/.zplugin/bin/zplugin.zsh"
 
     # Load plugins and snippets {{{2
- 
+
     # Is Turbo Mode appropriate?
     _agkdot_turbo() {
       is-at-least 5.3 && [[ $TERM != 'dumb' ]]
@@ -459,36 +459,75 @@ if (( AGKDOT_NO_ZPLUGIN != 1 )) && is-at-least 5; then
 
 elif is-at-least 4.3.11; then
 
-  () {
-    local i zplugin_dir="${HOME}/.zplugin"
-    for i in agkozak/agkozak-zsh-prompt \
-             agkozak/zsh-z \
-             agkozak/zhooks \
-             zsh-users/zsh-history-substring-search\
-             zdharma/zui \
-             zdharma/zbrowse \
-             romkatv/zsh-prompt-benchmark; do
-
-      if whence -w git &> /dev/null \
-        && [[ ! -d "${zplugin_dir}/plugins/${i%/*}---${i#*/}" ]]; then
-        (
-          git clone  "https://github.com/${i%/*}/${i#*/}" \
-            "${zplugin_dir}/plugins/${i%/*}---${i#*/}"
-          cd "${zplugin_dir}/plugins/${i%/*}---${i#*/}"
-          git checkout develop
-        )
-      fi
-      source "${zplugin_dir}/plugins/${i%/*}---${i#*/}/${i#*/}.plugin.zsh"
-    done
- 
-    if [[ ! -d "${zplugin_dir}/snippets/OMZ::plugins--extract/extract.plugin.zsh" ]]; then
-    mkdir -p "${zplugin_dir}/snippets/OMZ::plugins--extract/extract.plugin.zsh"
-    curl https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/plugins/extract.plugin.zsh/extract.plugin.zsh \
-      > "${zplugin_dir}/snippets/OMZ::plugins--extract/extract.plugin.zsh/extract.plugin.zsh"
-    fi
-    source "${zplugin_dir}/snippets/OMZ::plugins--extract/extract.plugin.zsh/extract.plugin.zsh"
-
+  ##########################################################
+  # A function for downloading repositories and snippets and
+  # sourcing them.
+  #
+  # Arguments:
+  #   If $1 is `load', the name of a Github repository
+  #   follows as $2, followed optionally by $3 as the branch
+  #   to use, and again optionally by $4 as the file to
+  #   source.
+  #
+  #   If $2 is `snippet', the name of an Oh My ZSH file is
+  #   given in the form OMZ::/path/to/file.plugin.zsh.
+  #   Alternatively, the web address for the raw contents of
+  #   any ZSH code may be given.
+  ##########################################################
+  kplugin() {
+    ! whence -w git &> /dev/null && return 1
+    case $1 in
+      load)
+        if [[ ! -d "${HOME}/.zplugin/plugins/${2%/*}---${2#*/}" ]]; then
+          (
+            git clone "https://github.com/${2%/*}/${2#*/}" \
+              "${HOME}/.zplugin/plugins/${2%/*}---${2#*/}"
+            cd "${HOME}/.zplugin/plugins/${2%/*}---${2#*/}"
+            (( $+3 )) && git checkout $3
+          )
+        fi
+        if (( $+4 )); then
+          source "${HOME}/.zplugin/plugins/${2%/*}---${2#*/}/$4"
+        else
+          source "${HOME}/.zplugin/plugins/${2%/*}---${2#*/}/${2#*/}.plugin.zsh"
+        fi
+        ;;
+      snippet)
+        if [[ $2 == OMZ::* ]]; then
+          if [[ ! -d ${HOME}/.zplugin/snippets/${2%%/*}--${2#*/} ]]; then
+            mkdir -p "${HOME}/.zplugin/snippets/${2%%/*}--${2#*/}"
+            curl "https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/${2#OMZ::}" \
+              > "${HOME}/.zplugin/snippets/${2%%/*}--${2#*/}/${2##*/}"
+            echo foo
+          fi
+          source "${HOME}/.zplugin/snippets/${2%%/*}--${2#*/}/${2##*/}"
+        else
+          source $2
+        fi
+        ;;
+      *) return 1 ;;
+    esac
   }
+
+  kplugin load agkozak/agkozak-zsh-prompt glitch-fix
+
+  [[ $OSTYPE == freebsd* ]] && typeset -g ZSHZ_NO_RESOLVE_SYMLINKS=1
+  kplugin load agkozak/zsh-z develop
+
+  kplugin load agkozak/zhooks develop
+  kplugin load jreese/zsh-titles master titles.plugin.zsh
+  kplugin load zsh-users/zsh-history-substring-search
+
+  if [[ $AGKDOT_SYSTEMINFO != *ish* ]]; then
+    kplugin load zdharma/zui
+    kplugin load zdharma/zbrowse
+  fi
+
+  kplugin load romkatv/zsh-prompt-benchmark
+
+  kplugin load zpm-zsh/clipboard
+
+  kplugin snippet OMZ::plugins/extract/extract.plugin.zsh
 
   autoload -Uz compinit
   compinit -u -d "${HOME}/.zcompdump_${ZSH_VERSION}"
@@ -496,6 +535,16 @@ elif is-at-least 4.3.11; then
   # Allow SSH tab completion for mosh hostnames
   compdef mosh=ssh
 
+  HISTORY_SUBSTRING_SEARCH_HIGHLIGHT_FOUND='underline'
+  HISTORY_SUBSTRING_SEARCH_HIGHLIGHT_NOT_FOUND=''
+  zle -N history-substring-search-up
+  zle -N history-substring-search-down
+  bindkey '^[OA' history-substring-search-up
+  bindkey '^[OB' history-substring-search-down
+  bindkey -M vicmd 'k' history-substring-search-up
+  bindkey -M vicmd 'j' history-substring-search-down
+  bindkey '^P' history-substring-search-up
+  bindkey '^N' history-substring-search-down
 fi
 
 # }}}1
@@ -558,8 +607,8 @@ zstyle ':completion:*' select-prompt '%SScrolling active: current selection at %
 # bindkey -v    # `set -o vi` is in .shrc
 
 # Borrowed from emacs mode
-bindkey '^P' up-history
-bindkey '^N' down-history
+# bindkey '^P' up-history
+# bindkey '^N' down-history
 bindkey '^R' history-incremental-search-backward
 bindkey '^S' history-incremental-search-forward   # FLOW_CONTROL must be off
 
