@@ -90,29 +90,29 @@ alias -g V='|& vim -'
 if [[ -d '/c/wamp64/www' ]]; then
   zsh_directory_name() {
     emulate -L zsh
-    setopt extendedglob
+    setopt EXTENDED_GLOB
 
     local -a match mbegin mend
     local pp1=/c/wamp64/www/
     local pp2=wp-content
 
-    if [[ $1 = d ]]; then
-      if [[ $2 = (#b)($pp1/)([^/]##)(/$pp2)* ]]; then
+    if [[ $1 == 'd' ]]; then
+      if [[ $2 == (#b)(${pp1}/)([^/]##)(/${pp2})* ]]; then
         typeset -ga reply
-        reply=(wp-content:$match[2] $(( ${#match[1]} + ${#match[2]} + ${#match[3]} )) )
+        reply=(wp-content:${match[2]} $(( $#match[1] + $#match[2] + $#match[3] )) )
       else
         return 1
       fi
-    elif [[ $1 = n ]]; then
+    elif [[ $1 == 'n' ]]; then
       [[ $2 != (#b)wp-content:(?*) ]] && return 1
       typeset -ga reply
-      reply=($pp1/$match[1]/$pp2)
-    elif [[ $1 = c ]]; then
+      reply=(${pp1}/${match[1]}/${pp2})
+    elif [[ $1 == 'c' ]]; then
       local expl
       local -a dirs
-      dirs=($pp1/*/$pp2)
-      for (( i=1; i<=$#dirs; i++ )); do
-        dirs[$i]=wp-content:${${dirs[$i]#$pp1/}%/$pp2}
+      dirs=(${pp1}/*/${pp2})
+      for (( i == 1; i <= $#dirs; i++ )); do
+        dirs[$i]=wp-content:${${dirs[$i]#${pp1}/}%/${pp2}}
       done
       _wanted dynamic-dirs expl 'user specific directory' compadd -S\] -a dirs
       return
@@ -129,11 +129,11 @@ fi
 
 # Static named directories
 [[ -d ${HOME}/public_html/wp-content ]] \
-  && hash -d wp-content="$HOME/public_html/wp-content"
+  && hash -d wp-content="${HOME}/public_html/wp-content"
 [[ -d ${HOME}/.zplugin/plugins/agkozak---agkozak-zsh-prompt ]] \
-  && hash -d agk="$HOME/.zplugin/plugins/agkozak---agkozak-zsh-prompt"
+  && hash -d agk="${HOME}/.zplugin/plugins/agkozak---agkozak-zsh-prompt"
 [[ -d ${HOME}/.zplugin/plugins/agkozak---zsh-z ]] \
-  && hash -d z="$HOME/.zplugin/plugins/agkozak---zsh-z"
+  && hash -d z="${HOME}/.zplugin/plugins/agkozak---zsh-z"
 
 # }}}2
 
@@ -242,7 +242,7 @@ if [[ ! -f '/etc/debian-version' ]] && [[ ! -f '/etc/zsh/zshrc' ]]; then
     local i sequence widget
     local -a maps
 
-    while [[ "$1" != "--" ]]; do
+    while [[ $1 != '--' ]]; do
       maps+=( "$1" )
       shift
     done
@@ -251,12 +251,11 @@ if [[ ! -f '/etc/debian-version' ]] && [[ ! -f '/etc/zsh/zshrc' ]]; then
     sequence="${key[$1]}"
     widget="$2"
 
-    [[ -z "$sequence" ]] && return 1
+    [[ -z $sequence ]] && return 1
 
     for i in "${maps[@]}"; do
       bindkey -M "$i" "$sequence" "$widget"
     done
-    unset i
   }
 
   bind2maps emacs             -- BackSpace   backward-delete-char
@@ -332,7 +331,7 @@ AGKOZAK_COLORS_BRANCH_STATUS=228
 
 # }}}1
 
-# zplugin for zsh v5.0+, along with provisions for zsh v4.3.11+ {{{1
+# Use zplugin for zsh v5.0+, along with provisions for zsh v4.3.11+ {{{1
 
 # 26.12.1 Test for minimal ZSH version {{{2
 
@@ -372,7 +371,7 @@ if (( AGKDOT_NO_ZPLUGIN != 1 )) && is-at-least 5; then
 
     # Is Turbo Mode appropriate?
     _agkdot_turbo() {
-      is-at-least 5.3 && [[ $TERM != 'dumb' ]]
+      is-at-least 5.3 && [[ ${TERM} != 'dumb' ]]
     }
 
     # if _agkdot_turbo; then
@@ -394,7 +393,7 @@ if (( AGKDOT_NO_ZPLUGIN != 1 )) && is-at-least 5; then
     # agkozak/zsh-z
     # In FreeBSD, /home is /usr/home
     ZSHZ_DEBUG=1
-    [[ $OSTYPE == freebsd* ]] && typeset -g ZSHZ_NO_RESOLVE_SYMLINKS=1
+    [[ ${OSTYPE} == freebsd* ]] && typeset -g ZSHZ_NO_RESOLVE_SYMLINKS=1
     _agkdot_turbo && zplugin ice lucid ver'develop' wait'0c'
     zplugin load agkozak/zsh-z
 
@@ -420,7 +419,7 @@ if (( AGKDOT_NO_ZPLUGIN != 1 )) && is-at-least 5; then
       wait'!0i'
     zplugin load jreese/zsh-titles
 
-    if [[ $AGKDOT_SYSTEMINFO != *ish* ]]; then
+    if [[ ${AGKDOT_SYSTEMINFO} != *ish* ]]; then
       _agkdot_turbo && zplugin ice lucid wait'0e'
       zplugin load zdharma/zui
       _agkdot_turbo && zplugin ice lucid wait'(( $+ZUI ))'
@@ -561,7 +560,7 @@ zstyle -e ':completion:*:*:mosh:*:my-accounts' users-hosts \
 # https://grml.org/zsh/zsh-lovers.html
 
 rationalise-dot() {
-  if [[ $LBUFFER = *.. ]]; then
+  if [[ ${LBUFFER} = *.. ]]; then
     LBUFFER+=/..
   else
     LBUFFER+=.
@@ -640,7 +639,7 @@ bindkey -M menuselect 'j' vi-down-line-or-history # bottom
 # 26 User Contributions {{{1
 
 # 26.7.1 Allow pasting URLs as CLI arguments
-if [[ $ZSH_VERSION != '5.1.1' ]] && [[ $TERM != 'dumb' ]] \
+if [[ ${ZSH_VERSION} != '5.1.1' ]] && [[ ${TERM} != 'dumb' ]] \
   && (( ! $+INSIDE_EMACS )); then
   if is-at-least 5.1; then
     autoload -Uz bracketed-paste-magic
@@ -648,7 +647,7 @@ if [[ $ZSH_VERSION != '5.1.1' ]] && [[ $TERM != 'dumb' ]] \
   fi
   autoload -Uz url-quote-magic
   zle -N self-insert url-quote-magic
-elif [[ $TERM == 'dumb' ]]; then
+elif [[ ${TERM} == 'dumb' ]]; then
   unset zle_bracketed_paste # Avoid ugly control sequences in dumb terminal
 fi
 
@@ -670,6 +669,7 @@ zsh_update() {
   update_dotfiles
   zplugin self-update
   zplugin update --all
+  source "${HOME}/.zshrc"
 }
 
 # }}}1

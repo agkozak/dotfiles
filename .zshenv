@@ -10,7 +10,7 @@ typeset -F SECONDS=0
 
 # if ~/.profile has not been loaded and /etc/zsh/zshenv has {{{1
 
-if [[ -z $ENV ]] && [[ -n $PATH ]]; then
+if [[ -z ${ENV} ]] && [[ -n ${PATH} ]]; then
   case $- in
     *l*) ;;
     *) [[ -f ${HOME}/.profile ]] && source ${HOME}/.profile ;;
@@ -22,7 +22,8 @@ fi
 # Add snap binary and desktop directories to environment {{{1
 
 if whence -w snap &> /dev/null && [[ -f /etc/profile.d/apps-bin-path.sh ]]; then
-  if [[ ! $PATH == */snap/bin* ]] || [[ ! $XDG_DATA_DIRS == */snapd/* ]]; then
+  if [[ ! ${PATH} == */snap/bin* ]] \
+    || [[ ! ${XDG_DATA_DIRS} == */snapd/* ]]; then
     emulate sh
     source /etc/profile.d/apps-bin-path.sh
     emulate zsh
