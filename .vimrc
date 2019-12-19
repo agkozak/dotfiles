@@ -481,21 +481,7 @@ endif
 " => Plugin-specific settings {{{1
 
 " Startify
-" Make Startify get along with NERDTree and CtrlP
-" if has('autocmd')
-"   augroup Startify
-"     autocmd!
-"     autocmd User Startified setlocal buftype=
-"   augroup END
-" endif
 let g:startify_custom_header = [ '' ]
-
-" Prevent Startify from showing a mixture of slashes and backslashes in Windows
-" TODO: prevents vim-plug from working
-" augroup Startify
-"   autocmd!
-"   autocmd FileType startify setlocal shellslash
-" augroup END
 
 " phpcomplete.vim
 if has('autocmd')
