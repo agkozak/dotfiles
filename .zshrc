@@ -28,6 +28,27 @@ fi
 
 # }}}1
 
+# Compile dotfiles {{{1
+
+for i in .zshenv \
+         .profile \
+         .profile.local \
+         .zprofile \
+         .zshenv.local \
+         .zprofile \
+         .zshrc \
+         .shrc \
+         .shrc.local \
+         .zshrc.local; do
+  if [[ -e "${HOME}/${i}" ]] && [[ ! -e "${HOME}/${i}.zwc" ]] \
+    || [[ "${HOME}/${i}" -nt "${HOME}/${i}.zwc" ]]; then
+    zcompile "${HOME}/${i}"
+  fi
+done
+unset i
+
+# }}}1
+
 # Source ~/.shrc {{{1
 
 if [[ -f ${HOME}/.shrc ]];then
