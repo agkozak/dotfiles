@@ -8,12 +8,6 @@ typeset -F SECONDS=0
 
 # }}}1
 
-# Options {{{1
-
-setopt NO_GLOBAL_RCS
-
-# }}}1
-
 # if ~/.profile has not been loaded and /etc/zsh/zshenv has {{{1
 
 if [[ -z ${ENV} ]] && [[ -n ${PATH} ]]; then
@@ -40,7 +34,7 @@ fi
 
 # Ubuntu-specific {{{1
 
-# skip_global_compinit=1
+skip_global_compinit=1
 
 # }}}1
 
