@@ -82,6 +82,12 @@ alias -g V='|& vim -'
 
 # }}}1
 
+# 9.1 Autoloading Functions {{{1
+
+autoload -Uz is-at-least compinit edit-command-line zmv
+
+# }}}1
+
 # 14.7 Filename Generation {{{1
 
 # 14.7.1 Dynamic Named Directories {{{2
@@ -311,7 +317,8 @@ fi
 # AGKOZAK_PROMPT_CHAR=( '❯' '❯' '❮' )
 AGKOZAK_PROMPT_DEBUG=1
 
-if (( ! $+VIM_TERMINAL )) && (( ! $+INSIDE_EMACS )); then
+[[ ${modules[zsh/terminfo]} == 'loaded' ]] || zmodload zsh/terminfo
+if (( ${terminfo[colors]:-0} >= 256 )); then
   AGKOZAK_COLORS_USER_HOST=108
   AGKOZAK_COLORS_PATH=116
   AGKOZAK_COLORS_BRANCH_STATUS=228
@@ -332,12 +339,6 @@ AGKOZAK_COLORS_BRANCH_STATUS=228
 # }}}1
 
 # Use zplugin for zsh v5.0+, along with provisions for zsh v4.3.11+ {{{1
-
-# 26.12.1 Test for minimal ZSH version {{{2
-
-autoload -Uz is-at-least
-
-# }}}2
 
 # export AGKDOT_NO_ZPLUGIN=1 to circumvent zplugin
 if (( AGKDOT_NO_ZPLUGIN != 1 )) && is-at-least 5; then
@@ -376,9 +377,9 @@ if (( AGKDOT_NO_ZPLUGIN != 1 )) && is-at-least 5; then
 
     # if _agkdot_turbo; then
     #   PROMPT='%m%# '
-    #   zplugin ice atload'_agkozak_precmd' nocd silent ver'develop' wait'!0a'
+    #   zplugin ice atload'_agkozak_precmd' nocd silent ver'glitch-fix' wait'!0a'
     # else
-      zplugin ice ver'develop'
+      zplugin ice ver'glitch-fix'
     # fi
     zplugin load agkozak/agkozak-zsh-prompt
 
@@ -401,7 +402,7 @@ if (( AGKDOT_NO_ZPLUGIN != 1 )) && is-at-least 5; then
     zplugin load agkozak/zhooks
 
     if _agkdot_turbo; then
-    zplugin ice atinit'zpcompinit; compdef mosh=ssh; zpcdreplay' atload"
+    zplugin ice atload'compinit; compdef mosh=ssh; zpcdreplay' atload"
       HISTORY_SUBSTRING_SEARCH_HIGHLIGHT_FOUND='underline'
       HISTORY_SUBSTRING_SEARCH_HIGHLIGHT_NOT_FOUND=''
       zle -N history-substring-search-up
@@ -435,7 +436,6 @@ if (( AGKDOT_NO_ZPLUGIN != 1 )) && is-at-least 5; then
     zplugin load zpm-zsh/clipboard
 
     if ! _agkdot_turbo; then
-      autoload -Uz compinit
       compinit -u -d "${HOME}/.zcompdump_${ZSH_VERSION}"
       compdef mosh=ssh
       HISTORY_SUBSTRING_SEARCH_HIGHLIGHT_FOUND='underline'
@@ -475,47 +475,46 @@ elif is-at-least 4.3.11; then
   ##########################################################
   kplugin() {
     ! whence -w git &> /dev/null && return 1
-    local kplugin_dir="${HOME}/.zplugin" cmd=$1
-    [[ -d ${kplugin_dir} ]] || mkdir -p ${kplugin_dir}
-    case ${cmd} in
+    case $1 in
       load)
-        local user=${2%/*} repo=${2#*/} branch=$3
-        if [[ ! -d "${kplugin_dir}/plugins/${user}---${repo}" ]]; then
-          git clone "https://github.com/${user}/${repo}" \
-            "${kplugin_dir}/plugins/${user}---${repo}"
-          if (( $+branch )); then
-            local cur_dir=$PWD
-            cd "${kplugin_dir}/plugins/${user}---${repo}" || return 1
-            git checkout ${branch}
-            cd $cur_dir
-          fi
-          print
+        if [[ ! -d "${HOME}/.zplugin/plugins/${2%/*}---${2#*/}" ]]; then
+          (
+            git clone "https://github.com/${2%/*}/${2#*/}" \
+              "${HOME}/.zplugin/plugins/${2%/*}---${2#*/}"
+            cd "${HOME}/.zplugin/plugins/${2%/*}---${2#*/}"
+            (( $+3 )) && git checkout $3
+          )
         fi
-        source ${kplugin_dir}/plugins/${user}---${repo}/*.plugin.zsh
+        if (( $+4 )); then
+          source "${HOME}/.zplugin/plugins/${2%/*}---${2#*/}/$4"
+        else
+          source "${HOME}/.zplugin/plugins/${2%/*}---${2#*/}/${2#*/}.plugin.zsh"
+        fi
         ;;
       snippet)
         if [[ $2 == OMZ::* ]]; then
-          if [[ ! -d ${kplugin_dir}/snippets/${2%%/*}--${2#*/} ]]; then
-            mkdir -p "${kplugin_dir}/snippets/${2%%/*}--${2#*/}"
+          if [[ ! -d ${HOME}/.zplugin/snippets/${2%%/*}--${2#*/} ]]; then
+            mkdir -p "${HOME}/.zplugin/snippets/${2%%/*}--${2#*/}"
             curl "https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/${2#OMZ::}" \
-              > "${kplugin_dir}/snippets/${2%%/*}--${2#*/}/${2##*/}"
+              > "${HOME}/.zplugin/snippets/${2%%/*}--${2#*/}/${2##*/}"
+            echo foo
           fi
-          source "${kplugin_dir}/snippets/${2%%/*}--${2#*/}/${2##*/}"
+          source "${HOME}/.zplugin/snippets/${2%%/*}--${2#*/}/${2##*/}"
         else
-          return 1
+          source $2
         fi
         ;;
       *) return 1 ;;
     esac
   }
 
-  kplugin load agkozak/agkozak-zsh-prompt develop
+  kplugin load agkozak/agkozak-zsh-prompt glitch-fix
 
   [[ $OSTYPE == freebsd* ]] && typeset -g ZSHZ_NO_RESOLVE_SYMLINKS=1
   kplugin load agkozak/zsh-z develop
 
   kplugin load agkozak/zhooks develop
-  kplugin load jreese/zsh-titles
+  kplugin load jreese/zsh-titles master titles.plugin.zsh
   kplugin load zsh-users/zsh-history-substring-search
 
   if [[ $AGKDOT_SYSTEMINFO != *ish* ]]; then
@@ -529,7 +528,6 @@ elif is-at-least 4.3.11; then
 
   kplugin snippet OMZ::plugins/extract/extract.plugin.zsh
 
-  autoload -Uz compinit
   compinit -u -d "${HOME}/.zcompdump_${ZSH_VERSION}"
 
   # Allow SSH tab completion for mosh hostnames
@@ -585,7 +583,6 @@ zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
 bindkey -M vicmd 'K' run-help
 
 # Allow v to edit the command line
-autoload -Uz edit-command-line
 zle -N edit-command-line
 bindkey -M vicmd 'v' edit-command-line
 
@@ -651,9 +648,6 @@ if [[ ${ZSH_VERSION} != '5.1.1' ]] && [[ ${TERM} != 'dumb' ]] \
 elif [[ ${TERM} == 'dumb' ]]; then
   unset zle_bracketed_paste # Avoid ugly control sequences in dumb terminal
 fi
-
-# 26.12.1 Function for batch moving and renaming of files
-autoload -Uz zmv
 
 # }}}1
 
