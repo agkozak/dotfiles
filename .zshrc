@@ -416,7 +416,7 @@ if (( AGKDOT_NO_ZPLUGIN != 1 )) && is-at-least 5; then
     # In FreeBSD, /home is /usr/home
     ZSHZ_DEBUG=1
     [[ ${OSTYPE} == freebsd* ]] && typeset -g ZSHZ_NO_RESOLVE_SYMLINKS=1
-    _agkdot_turbo && zplugin ice lucid ver'develop' wait'0c'
+    _agkdot_turbo && zplugin ice lucid ver'develop' wait
     zplugin load agkozak/zsh-z
 
     if _agkdot_turbo; then
@@ -430,22 +430,22 @@ if (( AGKDOT_NO_ZPLUGIN != 1 )) && is-at-least 5; then
       bindkey -M vicmd 'k' history-substring-search-up
       bindkey -M vicmd 'j' history-substring-search-down
       bindkey '^P' history-substring-search-up
-      bindkey '^N' history-substring-search-down" nocd silent wait'0d'
+      bindkey '^N' history-substring-search-down" nocd silent wait
     fi
     zplugin load zsh-users/zsh-history-substring-search
 
     _agkdot_turbo && zplugin ice atload'_zsh_title__precmd' lucid nocd \
-      wait'!0i'
+      wait
     zplugin load jreese/zsh-titles
 
     if [[ ${AGKDOT_SYSTEMINFO} != *ish* ]]; then
-      _agkdot_turbo && zplugin ice lucid wait'0e'
+      _agkdot_turbo && zplugin ice lucid wait
       zplugin load zdharma/zui
       _agkdot_turbo && zplugin ice lucid wait'(( $+ZUI ))'
       zplugin load zdharma/zbrowse
     fi
 
-    _agkdot_turbo && zplugin ice silent wait'0h'
+    _agkdot_turbo && zplugin ice silent wait
     zplugin load zpm-zsh/clipboard
 
     zplugin ice trigger-load'!zhooks' ver'develop'
