@@ -398,9 +398,9 @@ if (( AGKDOT_NO_ZPLUGIN != 1 )) && is-at-least 5; then
 
     # if _agkdot_turbo; then
     #   PROMPT='%m%# '
-    #   zplugin ice atload'_agkozak_precmd' nocd silent ver'glitch-fix' wait'!0a'
+    #   zplugin ice atload'_agkozak_precmd' nocd silent ver'develop' wait'!0a'
     # else
-      zplugin ice ver'glitch-fix'
+      zplugin ice ver'develop'
     # fi
     zplugin load agkozak/agkozak-zsh-prompt
 
