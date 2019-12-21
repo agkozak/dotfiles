@@ -451,7 +451,7 @@ if (( AGKDOT_NO_ZPLUGIN != 1 )) && is-at-least 5; then
     zplugin ice trigger-load'!zhooks' ver'develop'
     zplugin load agkozak/zhooks
 
-    zplugin ice trigger-load'!extract;!x'
+    zplugin ice trigger-load'!extract;x'
     zplugin snippet OMZ::plugins/extract/extract.plugin.zsh
 
     zplugin ice trigger-load'!zsh-prompt-benchmark'
