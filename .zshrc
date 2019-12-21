@@ -626,8 +626,8 @@ zstyle ':completion:*' select-prompt '%SScrolling active: current selection at %
 # bindkey -v    # `set -o vi` is in .shrc
 
 # Borrowed from emacs mode
-# bindkey '^P' up-history
-# bindkey '^N' down-history
+(( $+functions[history-substring-search-up] )) || bindkey '^P' up-history
+(( $+functions[history-substring-search-down] )) || bindkey '^N' down-history
 bindkey '^R' history-incremental-search-backward
 bindkey '^S' history-incremental-search-forward   # FLOW_CONTROL must be off
 
