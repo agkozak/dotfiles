@@ -419,9 +419,6 @@ if (( AGKDOT_NO_ZPLUGIN != 1 )) && is-at-least 5; then
     _agkdot_turbo && zplugin ice lucid ver'develop' wait'0c'
     zplugin load agkozak/zsh-z
 
-    _agkdot_turbo && zplugin ice lucid wait'0g' ver'develop'
-    zplugin load agkozak/zhooks
-
     if _agkdot_turbo; then
     zplugin ice atload'compinit; compdef mosh=ssh; zpcdreplay' atload"
       HISTORY_SUBSTRING_SEARCH_HIGHLIGHT_FOUND='underline'
@@ -448,13 +445,17 @@ if (( AGKDOT_NO_ZPLUGIN != 1 )) && is-at-least 5; then
       zplugin load zdharma/zbrowse
     fi
 
-    zplugin snippet OMZ::plugins/extract/extract.plugin.zsh
-
-    _agkdot_turbo && zplugin ice silent wait'0f'
-    zplugin load romkatv/zsh-prompt-benchmark
-
     _agkdot_turbo && zplugin ice silent wait'0h'
     zplugin load zpm-zsh/clipboard
+
+    zplugin ice trigger-load'!zhooks' ver'develop'
+    zplugin load agkozak/zhooks
+
+    zplugin ice trigger-load'!extract;x'
+    zplugin snippet OMZ::plugins/extract/extract.plugin.zsh
+
+    zplugin ice trigger-load'!zsh-prompt-benchmark'
+    zplugin load romkatv/zsh-prompt-benchmark
 
     if ! _agkdot_turbo; then
       compinit -u -d "${HOME}/.zcompdump_${ZSH_VERSION}"
