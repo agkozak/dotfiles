@@ -538,8 +538,6 @@ elif is-at-least 4.3.11; then
   kplugin load jreese/zsh-titles master titles.plugin.zsh
   kplugin load zsh-users/zsh-history-substring-search
 
-  kplugin load romkatv/zsh-prompt-benchmark
-
   kplugin load zpm-zsh/clipboard
 
   kplugin snippet OMZ::plugins/extract/extract.plugin.zsh
