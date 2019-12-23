@@ -393,7 +393,7 @@ if (( AGKDOT_NO_ZPLUGIN != 1 )) && is-at-least 5; then
 
     # Is Turbo Mode appropriate?
     _agkdot_turbo() {
-      is-at-least 5.3 && [[ ${TERM} != 'dumb' ]]
+      is-at-least 5.3 && [[ ${TERM} != 'dumb' ]] && [[ $OSTYPE != solaris* ]]
     }
 
     # if _agkdot_turbo; then
