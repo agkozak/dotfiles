@@ -20,7 +20,7 @@
 
 if (( AGKDOT_BENCHMARKS )); then
   if (( $+AGKDOT_ZSHENV_BENCHMARK )); then
-    print ".zshenv loaded in ${AGKDOT_ZSHENV_BENCHMARK}ms total."
+    print ".zshenv loaded in ${AGKDOT_ZSHENV_BENCHMARK}ms total." >&2
     unset AGKDOT_ZSHENV_BENCHMARK
   fi
   typeset -F SECONDS=0
@@ -58,7 +58,7 @@ if [[ -f ${HOME}/.shrc ]];then
     (( $+EPOCHREALTIME )) || zmodload zsh/datetime
     typeset -g AGKDOT_ZSHRC_START=$(( EPOCHREALTIME * 1000 ))
     AGKDOT_ZSHRC_LOADING=1 source "${HOME}/.shrc"
-    printf '.shrc loaded in %dms.\n' $(( (EPOCHREALTIME * 1000) - AGKDOT_ZSHRC_START ))
+    printf '.shrc loaded in %dms.\n' $(( (EPOCHREALTIME * 1000) - AGKDOT_ZSHRC_START )) >&2
     unset AGKDOT_ZSHRC_START
   else
     source "${HOME}/.shrc"
@@ -375,7 +375,7 @@ if (( AGKDOT_NO_ZPLUGIN != 1 )) && is-at-least 5; then
   if whence -w git &> /dev/null; then
 
     if [[ ! -d ${HOME}/.zplugin/bin ]]; then
-      print 'Installing zplugin...'
+      print 'Installing zplugin...' &>2
       mkdir -p "${HOME}/.zplugin"
       git clone https://github.com/zdharma/zplugin.git "${HOME}/.zplugin/bin"
     fi
@@ -398,9 +398,9 @@ if (( AGKDOT_NO_ZPLUGIN != 1 )) && is-at-least 5; then
 
     # if _agkdot_turbo; then
     #   PROMPT='%m%# '
-    #   zplugin ice atload'_agkozak_precmd' nocd silent ver'glitch-fix' wait'!0a'
+    #   zplugin ice atload'_agkozak_precmd' nocd silent ver'develop' wait'!0a'
     # else
-      zplugin ice ver'glitch-fix'
+      zplugin ice ver'develop'
     # fi
     zplugin load agkozak/agkozak-zsh-prompt
 
@@ -418,6 +418,9 @@ if (( AGKDOT_NO_ZPLUGIN != 1 )) && is-at-least 5; then
     [[ ${OSTYPE} == freebsd* ]] && typeset -g ZSHZ_NO_RESOLVE_SYMLINKS=1
     _agkdot_turbo && zplugin ice lucid ver'develop' wait'0c'
     zplugin load agkozak/zsh-z
+
+    _agkdot_turbo && zplugin ice lucid wait'0g' ver'develop'
+    zplugin load agkozak/zhooks
 
     if _agkdot_turbo; then
     zplugin ice atload'compinit; compdef mosh=ssh; zpcdreplay' atload"
@@ -445,17 +448,13 @@ if (( AGKDOT_NO_ZPLUGIN != 1 )) && is-at-least 5; then
       zplugin load zdharma/zbrowse
     fi
 
-    _agkdot_turbo && zplugin ice silent wait'0h'
-    zplugin load zpm-zsh/clipboard
-
-    zplugin ice trigger-load'!zhooks' ver'develop'
-    zplugin load agkozak/zhooks
-
-    zplugin ice trigger-load'!extract;!x'
     zplugin snippet OMZ::plugins/extract/extract.plugin.zsh
 
-    zplugin ice trigger-load'!zsh-prompt-benchmark'
+    _agkdot_turbo && zplugin ice silent wait'0f'
     zplugin load romkatv/zsh-prompt-benchmark
+
+    _agkdot_turbo && zplugin ice silent wait'0h'
+    zplugin load zpm-zsh/clipboard
 
     if ! _agkdot_turbo; then
       compinit -u -d "${HOME}/.zcompdump_${ZSH_VERSION}"
@@ -473,7 +472,7 @@ if (( AGKDOT_NO_ZPLUGIN != 1 )) && is-at-least 5; then
     fi
 
   else
-    print 'Please install git.'
+    print 'Please install git.' &>2
   fi
 
   # }}}2
@@ -621,8 +620,8 @@ zstyle ':completion:*' select-prompt '%SScrolling active: current selection at %
 # bindkey -v    # `set -o vi` is in .shrc
 
 # Borrowed from emacs mode
-# bindkey '^P' up-history
-# bindkey '^N' down-history
+(( $+functions[history-substring-search-up] )) || bindkey '^P' up-history
+(( $+functions[history-substring-search-down] )) || bindkey '^N' down-history
 bindkey '^R' history-incremental-search-backward
 bindkey '^S' history-incremental-search-forward   # FLOW_CONTROL must be off
 
@@ -689,7 +688,7 @@ zsh_update() {
 # End .zshrc benchmark {{{1
 
 if (( AGKDOT_BENCHMARKS )); then
-  print ".zshrc loaded in ${$(( SECONDS * 1000 ))%.*}ms total."
+  print ".zshrc loaded in ${$(( SECONDS * 1000 ))%.*}ms total." >&2
   typeset -i SECONDS
 fi
 
