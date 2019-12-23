@@ -20,7 +20,7 @@
 
 if (( AGKDOT_BENCHMARKS )); then
   if (( $+AGKDOT_ZSHENV_BENCHMARK )); then
-    print ".zshenv loaded in ${AGKDOT_ZSHENV_BENCHMARK}ms total."
+    print ".zshenv loaded in ${AGKDOT_ZSHENV_BENCHMARK}ms total." >&2
     unset AGKDOT_ZSHENV_BENCHMARK
   fi
   typeset -F SECONDS=0
@@ -58,7 +58,7 @@ if [[ -f ${HOME}/.shrc ]];then
     (( $+EPOCHREALTIME )) || zmodload zsh/datetime
     typeset -g AGKDOT_ZSHRC_START=$(( EPOCHREALTIME * 1000 ))
     AGKDOT_ZSHRC_LOADING=1 source "${HOME}/.shrc"
-    printf '.shrc loaded in %dms.\n' $(( (EPOCHREALTIME * 1000) - AGKDOT_ZSHRC_START ))
+    printf '.shrc loaded in %dms.\n' $(( (EPOCHREALTIME * 1000) - AGKDOT_ZSHRC_START )) >&2
     unset AGKDOT_ZSHRC_START
   else
     source "${HOME}/.shrc"
@@ -375,7 +375,7 @@ if (( AGKDOT_NO_ZPLUGIN != 1 )) && is-at-least 5; then
   if whence -w git &> /dev/null; then
 
     if [[ ! -d ${HOME}/.zplugin/bin ]]; then
-      print 'Installing zplugin...'
+      print 'Installing zplugin...' &>2
       mkdir -p "${HOME}/.zplugin"
       git clone https://github.com/zdharma/zplugin.git "${HOME}/.zplugin/bin"
     fi
@@ -472,7 +472,7 @@ if (( AGKDOT_NO_ZPLUGIN != 1 )) && is-at-least 5; then
     fi
 
   else
-    print 'Please install git.'
+    print 'Please install git.' &>2
   fi
 
   # }}}2
@@ -693,7 +693,7 @@ zsh_update() {
 # End .zshrc benchmark {{{1
 
 if (( AGKDOT_BENCHMARKS )); then
-  print ".zshrc loaded in ${$(( SECONDS * 1000 ))%.*}ms total."
+  print ".zshrc loaded in ${$(( SECONDS * 1000 ))%.*}ms total." >&2
   typeset -i SECONDS
 fi
 
