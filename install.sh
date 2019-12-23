@@ -154,7 +154,7 @@ if command -v emacs > /dev/null 2>&1; then
   if [ ! -d "$HOME/.emacs.d" ]; then
     mkdir "$HOME/.emacs.d"
   fi
-  echo Installing ~/.emacs./init.el
+  echo Installing ~/.emacs.d/init.el
   cp ./.emacs.d/init.el "$HOME/.emacs.d"
 fi
 
