@@ -130,16 +130,12 @@ endif
 
 " }}}2
 
-" 11 messages and info {{{2
-
-set ruler
-
-" }}}2
-
-" => 12 messages and info {{{2
+" 12 messages and info {{{2
 
 " Abbrev. of messages (avoids 'hit enter'); suppresses startup credits
 set shortmess+=atTI
+
+set ruler
 
 " }}}2
 
@@ -253,6 +249,12 @@ if $USER !=# 'root'
 endif
 
 " ===================================================== AUTOMATIC BACKUPS
+
+" }}}2
+
+" => 20 the swap file {{{2
+
+set updatetime=750
 
 " }}}2
 
