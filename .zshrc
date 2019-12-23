@@ -522,7 +522,7 @@ elif is-at-least 4.3.11; then
           fi
           source "${HOME}/.zplugin/snippets/${2%%/*}--${2#*/}/${2##*/}"
         else
-          source $2
+          return 1
         fi
         ;;
       *) return 1 ;;
