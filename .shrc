@@ -81,11 +81,18 @@ case $TERM in
   *-256color) AGKDOT_TERM_COLORS=256 ;;
   vt100|vt220|dumb) AGKDOT_TERM_COLORS=-1 ;;
   *)
-    case ${AGKDOT_SYSTEMINFO} in
-      FreeBSD*|DragonFly*) AGKDOT_TERM_COLORS="$(tput Co)" ;;
-      UWIN*) AGKDOT_TERM_COLORS="$(tput cols)" ;;
-      *) AGKDOT_TERM_COLORS="$(tput colors)" ;;
-    esac
+    # Faster routine for zsh
+    if [ -n "$ZSH_VERSION" ]; then
+      # shellcheck disable=SC2154
+      [ -n "${terminfo[colors]}" ] || zmodload zsh/terminfo
+      AGKDOT_TERM_COLORS="${terminfo[colors]:-0}"
+    else
+      case ${AGKDOT_SYSTEMINFO} in
+        FreeBSD*|DragonFly*) AGKDOT_TERM_COLORS="$(tput Co)" ;;
+        UWIN*) AGKDOT_TERM_COLORS="$(tput cols)" ;;
+        *) AGKDOT_TERM_COLORS="$(tput colors)" ;;
+      esac
+    fi
     ;;
 esac
 
