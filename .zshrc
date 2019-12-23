@@ -539,11 +539,6 @@ elif is-at-least 4.3.11; then
   kplugin load jreese/zsh-titles master titles.plugin.zsh
   kplugin load zsh-users/zsh-history-substring-search
 
-  if [[ $AGKDOT_SYSTEMINFO != *ish* ]]; then
-    kplugin load zdharma/zui
-    kplugin load zdharma/zbrowse
-  fi
-
   kplugin load romkatv/zsh-prompt-benchmark
 
   kplugin load zpm-zsh/clipboard
