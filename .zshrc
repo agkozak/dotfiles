@@ -77,7 +77,7 @@ fi
 alias hgrep='fc -fl 0 | grep'
 
 # For the time being, WSL doesn't like Windows symlinks
-if [[ ${AGKDOT_SYSTEMINFO} == *Microsoft* ]]; then
+if [[ $AGKDOT_SYSTEMINFO == *Microsoft* ]]; then
   alias ls='ls ${=LS_OPTIONS} 2> /dev/null'
 else
   alias ls='ls ${=LS_OPTIONS}'
@@ -169,7 +169,7 @@ fi
 # 15.6 Parameters Used by the Shell {{{1
 
 # History environment variables
-HISTFILE=${HOME}/.zsh_history
+HISTFILE="${HOME}/.zsh_history"
 HISTSIZE=120000  # Larger than $SAVEHIST for HIST_EXPIRE_DUPS_FIRST to work
 SAVEHIST=100000
 
@@ -233,7 +233,7 @@ setopt INTERACTIVE_COMMENTS # Allow comments in interactive mode
 # 16.2.7 Job Control {{{2
 
 # Disable nice for background processes in WSL
-[[ ${AGKDOT_SYSTEMINFO} == *Microsoft* ]] && unsetopt BG_NICE
+[[ $AGKDOT_SYSTEMINFO == *Microsoft* ]] && unsetopt BG_NICE
 
 # }}}2
 
@@ -372,7 +372,7 @@ if (( AGKDOT_NO_ZPLUGIN != 1 )) && is-at-least 5; then
     zmodload zdharma/zplugin
   fi
 
-  if whence -w git &> /dev/null; then
+  if whence git &> /dev/null; then
 
     if [[ ! -d ${HOME}/.zplugin/bin ]]; then
       print 'Installing zplugin...' &>2
@@ -393,7 +393,7 @@ if (( AGKDOT_NO_ZPLUGIN != 1 )) && is-at-least 5; then
 
     # Is Turbo Mode appropriate?
     _agkdot_turbo() {
-      is-at-least 5.3 && [[ ${TERM} != 'dumb' ]] && [[ $OSTYPE != (solaris*|cygwin) ]]
+      is-at-least 5.3 && [[ $TERM != 'dumb' ]] && [[ $OSTYPE != (solaris*|cygwin) ]]
     }
 
     # if _agkdot_turbo; then
@@ -415,7 +415,7 @@ if (( AGKDOT_NO_ZPLUGIN != 1 )) && is-at-least 5; then
     # agkozak/zsh-z
     # In FreeBSD, /home is /usr/home
     ZSHZ_DEBUG=1
-    [[ ${OSTYPE} == freebsd* ]] && typeset -g ZSHZ_NO_RESOLVE_SYMLINKS=1
+    [[ $OSTYPE == freebsd* ]] && typeset -g ZSHZ_NO_RESOLVE_SYMLINKS=1
     _agkdot_turbo && zplugin ice lucid ver'develop' wait'0c'
     zplugin load agkozak/zsh-z
 
@@ -441,7 +441,7 @@ if (( AGKDOT_NO_ZPLUGIN != 1 )) && is-at-least 5; then
       wait'!0i'
     zplugin load jreese/zsh-titles
 
-    if [[ ${AGKDOT_SYSTEMINFO} != *ish* ]]; then
+    if [[ $AGKDOT_SYSTEMINFO != *ish* ]]; then
       _agkdot_turbo && zplugin ice lucid wait'0e'
       zplugin load zdharma/zui
       _agkdot_turbo && zplugin ice lucid wait'(( $+ZUI ))'
@@ -495,7 +495,7 @@ elif is-at-least 4.3.11; then
   #   any ZSH code may be given.
   ##########################################################
   kplugin() {
-    ! whence -w git &> /dev/null && return 1
+    ! whence git &> /dev/null && return 1
     case $1 in
       load)
         if [[ ! -d "${HOME}/.zplugin/plugins/${2%/*}---${2#*/}" ]]; then
@@ -651,7 +651,7 @@ bindkey -M menuselect 'j' vi-down-line-or-history # bottom
 # 26 User Contributions {{{1
 
 # 26.7.1 Allow pasting URLs as CLI arguments
-if [[ ${ZSH_VERSION} != '5.1.1' ]] && [[ ${TERM} != 'dumb' ]] \
+if [[ $ZSH_VERSION != '5.1.1' ]] && [[ $TERM != 'dumb' ]] \
   && (( ! $+INSIDE_EMACS )); then
   if is-at-least 5.1; then
     autoload -Uz bracketed-paste-magic
@@ -659,7 +659,7 @@ if [[ ${ZSH_VERSION} != '5.1.1' ]] && [[ ${TERM} != 'dumb' ]] \
   fi
   autoload -Uz url-quote-magic
   zle -N self-insert url-quote-magic
-elif [[ ${TERM} == 'dumb' ]]; then
+elif [[ $TERM == 'dumb' ]]; then
   unset zle_bracketed_paste # Avoid ugly control sequences in dumb terminal
 fi
 
