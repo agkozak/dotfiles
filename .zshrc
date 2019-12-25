@@ -442,7 +442,11 @@ if (( AGKDOT_NO_ZPLUGIN != 1 )) && is-at-least 5; then
     zplugin load jreese/zsh-titles
 
     if [[ $AGKDOT_SYSTEMINFO != *ish* ]]; then
-      _agkdot_turbo && zplugin ice lucid ver'glitch' wait'0e'
+      if _agkdot_turbo; then
+        zplugin ice lucid ver'glitch' wait'0e'
+      else
+        zplugin ice ver'glitch'
+      fi
       zplugin load agkozak/zui
       _agkdot_turbo && zplugin ice lucid wait'(( $+ZUI ))'
       zplugin load zdharma/zbrowse
