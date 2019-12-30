@@ -338,13 +338,15 @@ fi
 # AGKOZAK_PROMPT_CHAR=( '❯' '❯' '❮' )
 AGKOZAK_PROMPT_DEBUG=1
 
+# Make sure the zsh/terminfo module is loaded
 [[ ${modules[zsh/terminfo]} == 'loaded' ]] || zmodload zsh/terminfo
+# If there are 256 colors, use the following colors; otherwise use the defaults
 if (( ${terminfo[colors]:-0} >= 256 )); then
   AGKOZAK_COLORS_USER_HOST=108
   AGKOZAK_COLORS_PATH=116
   AGKOZAK_COLORS_BRANCH_STATUS=228
   AGKOZAK_COLORS_EXIT_STATUS=174
-  AGKOZAK_COLORS_CMD_EXEC_TIME=243
+  AGKOZAK_COLORS_CMD_EXEC_TIME=245
 fi
 AGKOZAK_CUSTOM_PROMPT=''
 # Exit status
@@ -361,6 +363,7 @@ AGKOZAK_CUSTOM_PROMPT+=$'%(3V.%F{${AGKOZAK_COLORS_BRANCH_STATUS}}%3v%f.)\n'
 AGKOZAK_CUSTOM_PROMPT+='[%L] %(4V.:.%#) '
 AGKOZAK_COLORS_BRANCH_STATUS=228
 
+# No right prompt
 AGKOZAK_CUSTOM_RPROMPT=''
 
 # }}}1
