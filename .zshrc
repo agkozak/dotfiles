@@ -344,11 +344,14 @@ if (( ${terminfo[colors]:-0} >= 256 )); then
   AGKOZAK_COLORS_PATH=116
   AGKOZAK_COLORS_BRANCH_STATUS=228
   AGKOZAK_COLORS_EXIT_STATUS=174
+  AGKOZAK_COLORS_CMD_EXEC_TIME=236
 fi
 # Username and hostname
 AGKOZAK_CUSTOM_PROMPT='%(!.%S%B.%B%F{${AGKOZAK_COLORS_USER_HOST}})%n%1v%(!.%b%s.%f%b) '
 # Path
-AGKOZAK_CUSTOM_PROMPT+=$'%B%F{${AGKOZAK_COLORS_PATH}}%2v%f%b\n'
+AGKOZAK_CUSTOM_PROMPT+='%B%F{${AGKOZAK_COLORS_PATH}}%2v%f%b'
+# Command execution time
+AGKOZAK_CUSTOM_PROMPT+=$'%(8V! %F{${AGKOZAK_COLORS_CMD_EXEC_TIME}}%b...%8vs%b%f!)\n'
 # Exit status
 AGKOZAK_CUSTOM_PROMPT+='%(?..%B%F{${AGKOZAK_COLORS_EXIT_STATUS}}(%?%)%f%b )'
 # SHLVL and prompt character
