@@ -405,12 +405,12 @@ if (( AGKDOT_NO_ZPLUGIN != 1 )) && is-at-least 5; then
       is-at-least 5.3 && [[ $TERM != 'dumb' ]] && [[ $OSTYPE != (solaris*|cygwin) ]]
     }
 
-    # if _agkdot_turbo; then
-    #   PROMPT='%m%# '
-    #   zplugin ice atload'_agkozak_precmd' nocd silent ver'develop' wait'!0a'
-    # else
+    if _agkdot_turbo; then
+      PROMPT='%m%# '
+      zplugin ice atload'_agkozak_precmd' nocd silent ver'develop' wait'!0a'
+    else
       zplugin ice ver'develop'
-    # fi
+    fi
     zplugin load agkozak/agkozak-zsh-prompt
 
     # }}}3
@@ -452,11 +452,9 @@ if (( AGKDOT_NO_ZPLUGIN != 1 )) && is-at-least 5; then
 
     if [[ $AGKDOT_SYSTEMINFO != *ish* ]]; then
       if _agkdot_turbo; then
-        zplugin ice lucid ver'glitch' wait'0e'
-      else
-        zplugin ice ver'glitch'
+        zplugin ice lucid wait'0e'
       fi
-      zplugin load agkozak/zui
+      zplugin load zdharma/zui
       _agkdot_turbo && zplugin ice lucid wait'(( $+ZUI ))'
       zplugin load zdharma/zbrowse
     fi
