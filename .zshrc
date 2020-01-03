@@ -406,7 +406,8 @@ if (( AGKDOT_NO_ZPLUGIN != 1 )) && is-at-least 5; then
     }
 
     if _agkdot_turbo; then
-      PROMPT='%m%# '
+      PROMPT=$'%m\n'
+      PROMPT+='%# '
       zplugin ice atload'_agkozak_precmd' nocd silent ver'develop' wait'!0a'
     else
       zplugin ice ver'develop'
