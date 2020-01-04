@@ -619,7 +619,10 @@ zstyle -e ':completion:*:approximate:*' \
   max-errors 'reply=($((($#PREFIX+$#SUFFIX)/3))numeric)'
 
 # Have the completion system announce what it is completing
-zstyle ':completion:*' format 'Completing %d'
+zstyle ':completion:*' format '%BCompleting %d%b'
+
+# List different kinds of completions separately
+zstyle ':completion:*' group-name ''
 
 # In menu-style completion, give a status bar
 zstyle ':completion:*' select-prompt '%SScrolling active: current selection at %p%s'
