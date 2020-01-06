@@ -74,22 +74,30 @@ PAGER='less'
 # esac
 
 export PATH
-set --  '/mingw64/bin' \
-        "${HOME}/.gem/ruby/2.4.0/bin" \
-        "${HOME}/.local/bin" \
-        "${HOME}/go/bin" \
-        "${HOME}/.cabal/bin" \
-        "${HOME}/.config/composer/vendor/bin" \
-        "${HOME}/.composer/vendor/bin" \
-        "${HOME}/.luarocks/bin" \
-        "${HOME}/ruby/gems/bin" \
-        "${HOME}/.rvim/bin" \
-        "${HOME}/bin"
 
-while [ $# -gt 0 ]; do
-  [ -d "$1" ] && PATH="$1:${PATH}"
-  shift
-done
+_agkdot_construct_path() {
+  while [ $# -gt 0 ]; do
+    if [ -d "$1" ]; then
+      case $PATH in
+        $1:*|*:$1:*|*:$1) ;;
+        *) PATH="$1:${PATH}" ;;
+      esac
+    fi
+    shift
+  done
+}
+
+_agkdot_construct_path  '/mingw64/bin' \
+                        "${HOME}/.gem/ruby/2.4.0/bin" \
+                        "${HOME}/.local/bin" \
+                        "${HOME}/go/bin" \
+                        "${HOME}/.cabal/bin" \
+                        "${HOME}/.config/composer/vendor/bin" \
+                        "${HOME}/.composer/vendor/bin" \
+                        "${HOME}/.luarocks/bin" \
+                        "${HOME}/ruby/gems/bin" \
+                        "${HOME}/.rvim/bin" \
+                        "${HOME}/bin"
 
 # Load RVM into a shell session *as a function*
 # shellcheck source=/dev/null
