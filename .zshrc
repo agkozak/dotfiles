@@ -40,8 +40,8 @@ for i in .zshenv \
          .shrc \
          .shrc.local \
          .zshrc.local; do
-  if [[ -e "${HOME}/${i}" ]] && [[ ! -e "${HOME}/${i}.zwc" ]] \
-    || [[ "${HOME}/${i}" -nt "${HOME}/${i}.zwc" ]]; then
+  if [[ -e ${HOME}/${i} ]] && [[ ! -e ${HOME}/${i}.zwc ]] \
+    || [[ ${HOME}/${i} -nt ${HOME}/${i}.zwc ]]; then
     zcompile "${HOME}/${i}"
   fi
 done
@@ -585,7 +585,7 @@ zstyle -e ':completion:*:*:(ssh|mosh):*:my-accounts' users-hosts \
 # https://grml.org/zsh/zsh-lovers.html
 
 rationalise-dot() {
-  if [[ ${LBUFFER} = *.. ]]; then
+  if [[ $LBUFFER = *.. ]]; then
     LBUFFER+=/..
   else
     LBUFFER+=.

@@ -9,7 +9,7 @@
 
 if [ -d '/etc/YaST2' ]; then
   # shellcheck disable=SC1091,SC2015
-  [ -z "${PROFILEREAD}" ] && . '/etc/profile' || true
+  [ -z "$PROFILEREAD" ] && . '/etc/profile' || true
 fi
 
 # }}}1
@@ -29,7 +29,7 @@ if command -v vim > /dev/null 2>&1; then
 else
   EDITOR='vi'
 fi
-VISUAL="${EDITOR}"
+VISUAL="$EDITOR"
 
 export ENV
 ENV="${HOME}/.shrc"
@@ -38,7 +38,7 @@ export LESS
 case $(ls -l /usr/bin/less) in
   *busybox*) LESS='-FIMR' ;;
   *)
-    case ${AGKDOT_SYSTEMINFO} in
+    case $AGKDOT_SYSTEMINFO in
       UWIN*) LESS='-i' ;;
       *) LESS='-FiRX' ;;
     esac

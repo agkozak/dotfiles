@@ -27,7 +27,7 @@ export AGKDOT_SYSTEMINFO
 # Source ~/.profile {{{1
 
 #shellcheck source=/dev/null
-[ -z "${ENV}" ] && [ -f "${HOME}/.profile" ] && . "${HOME}/.profile"
+[ -z "$ENV" ] && [ -f "${HOME}/.profile" ] && . "${HOME}/.profile"
 
 # }}}1
 
@@ -35,7 +35,7 @@ export AGKDOT_SYSTEMINFO
 
 if [ "${AGKDOT_BENCHMARKS:-0}" -eq 1 ]; then
   [ "${AGKDOT_ZSHRC_LOADING:-0}" -eq 1 ] || {
-    case ${AGKDOT_SYSTEMINFO} in
+    case $AGKDOT_SYSTEMINFO in
       # BSD date doesn't handle nanoseconds
       *BSD*|*bsd*|DragonFly*) ;;
       *) AGKDOT_SHRC_START="$(date +%s%N)" ;;
@@ -59,7 +59,7 @@ fi
 # It's important to set this up early so that dircolors uses the right number of
 # colors
 
-if [ "${XDG_CURRENT_DESKTOP}" = 'LXDE' ] && [ "${TERM}" = 'xterm' ]; then
+if [ "$XDG_CURRENT_DESKTOP" = 'LXDE' ] && [ "$TERM" = 'xterm' ]; then
   TERM='xterm-256color'                              # LXTerminal can't set TERM
 fi
 
@@ -87,7 +87,7 @@ case $TERM in
       [ -n "${terminfo[colors]}" ] || zmodload zsh/terminfo
       AGKDOT_TERM_COLORS="${terminfo[colors]:-0}"
     else
-      case ${AGKDOT_SYSTEMINFO} in
+      case $AGKDOT_SYSTEMINFO in
         FreeBSD*|DragonFly*) AGKDOT_TERM_COLORS="$(tput Co)" ;;
         UWIN*) AGKDOT_TERM_COLORS="$(tput cols)" ;;
         *) AGKDOT_TERM_COLORS="$(tput colors)" ;;
@@ -97,7 +97,7 @@ case $TERM in
 esac
 
 if [ "${AGKDOT_IS_BUSYBOX_LS:-0}" -eq 0 ]; then
-  case ${AGKDOT_SYSTEMINFO} in
+  case $AGKDOT_SYSTEMINFO in
     # Solaris ls has very few desirable options, but sometimes GNU ls is also installed
     SunOS*) [ -x '/usr/gnu/bin/ls' ] \
       && alias ls='/usr/gnu/bin/ls --group-directories-first -F -h -T 0 --color'
@@ -106,13 +106,13 @@ if [ "${AGKDOT_IS_BUSYBOX_LS:-0}" -eq 0 ]; then
     NetBSD*|OpenBSD*|UWIN*) ;;
     # FreeBSD ls
     Darwin*|*[Bb][Ss][Dd]*|*[Dd]ragon[Ff]ly*)
-      [ "${AGKDOT_TERM_COLORS}" -ge 8 ] && LS_OPTIONS='-G'
+      [ "$AGKDOT_TERM_COLORS" -ge 8 ] && LS_OPTIONS='-G'
       ;;
     # GNU ls
     *)
       LS_OPTIONS='--group-directories-first -F -h -T 0'
-      [ "${AGKDOT_TERM_COLORS}" -ge 8 ] && LS_OPTIONS="${LS_OPTIONS} --color"
-      case ${AGKDOT_SYSTEMINFO} in
+      [ "$AGKDOT_TERM_COLORS" -ge 8 ] && LS_OPTIONS="${LS_OPTIONS} --color"
+      case $AGKDOT_SYSTEMINFO in
         *Msys|*Cygwin)
           LS_OPTIONS="${LS_OPTIONS} --hide=NTUSER* --hide=ntuser*"
           ;;
@@ -122,29 +122,29 @@ if [ "${AGKDOT_IS_BUSYBOX_LS:-0}" -eq 0 ]; then
 fi
 
 # Set the ls alias
-case ${AGKDOT_SYSTEMINFO} in
+case $AGKDOT_SYSTEMINFO in
   # For the time being, WSL doesn't like Windows symlinks
   *Microsoft*)
     [ "${AGKDOT_IS_BUSYBOX_LS:-0}" -eq 0 ] && alias ls='ls ${LS_OPTIONS} 2> /dev/null' ;;
   *) alias ls='ls ${LS_OPTIONS}' ;;
 esac
 
-if [ -n "${INSIDE_EMACS}" ]; then
+if [ -n "$INSIDE_EMACS" ]; then
   unset LS_COLORS
 # If dircolors is available, install.sh will have installed ~/.dircolors
 elif [ -f "${HOME}/.dircolors" ]; then
-  if [ "${AGKDOT_TERM_COLORS}" -ge 256 ]; then
+  if [ "$AGKDOT_TERM_COLORS" -ge 256 ]; then
     eval "$(dircolors -b "${HOME}/.dircolors")"
-  elif [ "${AGKDOT_TERM_COLORS}" -ge 8 ]; then
+  elif [ "$AGKDOT_TERM_COLORS" -ge 8 ]; then
     eval "$(dircolors -b)"
   fi
 fi
 
-case ${AGKDOT_SYSTEMINFO} in
+case $AGKDOT_SYSTEMINFO in
   SunOS*|*ish*|UWIN*) ;;
   *)
-    if [ "${AGKDOT_IS_BUSYBOX_LS:-0}" -eq 0 ] && [ "${AGKDOT_TERM_COLORS}" -ge 8 ]; then
-      case ${AGKDOT_SYSTEMINFO} in
+    if [ "${AGKDOT_IS_BUSYBOX_LS:-0}" -eq 0 ] && [ "$AGKDOT_TERM_COLORS" -ge 8 ]; then
+      case $AGKDOT_SYSTEMINFO in
         *Microsoft*)
           alias dir='dir --color=auto 2> /dev/null'
           alias vdir='vdir --color=auto 2> /dev/null'
@@ -184,13 +184,13 @@ alias lrt='ls -1Fcrt'
 alias bri='hue set all -b'
 
 _agkdot_is_uwin() {
-  case ${AGKDOT_SYSTEMINFO} in
+  case $AGKDOT_SYSTEMINFO in
     UWIN*) return 0 ;;
     *) return 1 ;;
   esac
 }
 
-case ${KSH_VERSION} in
+case $KSH_VERSION in
   *R55*) ;; # mksh version R55 erroneously does not allow these aliases
   *)
     alias ..='cd ..'
@@ -210,7 +210,7 @@ alias github-stats='github-stats --token ${GITHUB_STATS_TOKEN}'
 # alias help='man'
 # alias p='ps -f'
 alias phpunit='${HOME}/bin/phpunit.phar'
-# if [ "${AGKDOT_IS_BUSYBOX_GREP}" -eq 0 ]  && ! _agkdot_is_uwin; then
+# if [ "$AGKDOT_IS_BUSYBOX_GREP" -eq 0 ]  && ! _agkdot_is_uwin; then
 #   alias sgrep='grep -R -n -H -C 5 --exclude-dir={.git,.svn,CVS} '
 # fi
 # alias sortnr='sort -n -r'
@@ -237,7 +237,7 @@ _agkdot_winpty_alias() {
   done
 }
 
-case ${AGKDOT_SYSTEMINFO} in
+case $AGKDOT_SYSTEMINFO in
   *Msys|*Cygwin)
     _agkdot_winpty_alias choco cinst cuninst cup node php
     alias eslint='winpty ${APPDATA}/npm/eslint.cmd'
@@ -246,7 +246,7 @@ case ${AGKDOT_SYSTEMINFO} in
     ;;
 esac
 
-case ${AGKDOT_SYSTEMINFO} in
+case $AGKDOT_SYSTEMINFO in
   *Msys)
     alias npm='winpty /c/Program\ Files/nodejs/npm.cmd'
     alias wp='winpty php $HOME/bin/wp-cli.phar --no-color'
@@ -266,7 +266,7 @@ esac
 
 # WSL aliases {{{3
 
-case ${AGKDOT_SYSTEMINFO} in
+case $AGKDOT_SYSTEMINFO in
   *Microsoft*)
     ############################################################
     # Create aliases for Windows .exe programs
@@ -299,7 +299,7 @@ esac
 
 # If possible, load the pan-POSIX Polyglot Prompt
 # But not in zsh -- it uses agkozak-zsh-prompt
-if [ -z "${ZSH_VERSION}" ] || [ "$0" = 'bash' ] || [ "$0" = 'ksh' ] \
+if [ -z "$ZSH_VERSION" ] || [ "$0" = 'bash' ] || [ "$0" = 'ksh' ] \
   || [ "$0" = 'sh' ]; then
   if [ -f "${HOME}/dotfiles/prompts/polyglot/polyglot.sh" ]; then
     # shellcheck source=/dev/null
@@ -319,13 +319,13 @@ fi
 # vi-style line editing
 set -o vi
 
-case ${KSH_VERSION} in *93*) set -o globstar ;; esac
+case $KSH_VERSION in *93*) set -o globstar ;; esac
 
 HISTSIZE=10000
 
 # If it's not really zsh emulating ksh
-if [ -z "${ZSH_VERSION}" ]; then
-  case ${KSH_VERSION} in
+if [ -z "$ZSH_VERSION" ]; then
+  case $KSH_VERSION in
     *'PD KSH'*) HISTFILE="${HOME}/.pdksh_history" ;;
     *MIRBSD*) HISTFILE="${HOME}/.mksh_history" ;;
     *) HISTFILE="${HOME}/.ksh_history" ;;
@@ -345,7 +345,7 @@ f() {
 # Pull in updates from the dotfiles repo and install them {{{1
 
 update_dotfiles() {
-  CUR_DIR="${PWD}"
+  CUR_DIR="$PWD"
   cd "${HOME}/dotfiles" || exit
   git pull && ./install.sh
   for i in $(find . -name '.git' | cut -c 3-); do
@@ -354,7 +354,7 @@ update_dotfiles() {
     git pull
     cd "${HOME}/dotfiles" || exit
   done
-  cd "${CUR_DIR}" || exit
+  cd "$CUR_DIR" || exit
   unset CUR_DIR i
 }
 
@@ -363,7 +363,7 @@ update_dotfiles() {
 # Disable flow control -- allows use of Ctrl-Q as tmux/screen prefix {{{1
 
 # zsh might be running in ksh emulation mode
-if [ "$0" = 'ksh' ] || [ -z "${ZSH_VERSION}" ]; then
+if [ "$0" = 'ksh' ] || [ -z "$ZSH_VERSION" ]; then
   stty -ixon
 fi
 
@@ -373,7 +373,7 @@ fi
 
 if [ "${AGKDOT_BENCHMARKS:-0}" -eq 1 ]; then
   [ "${AGKDOT_ZSHRC_LOADING:-0}" -eq 1 ] || {
-    case ${AGKDOT_SYSTEMINFO} in
+    case $AGKDOT_SYSTEMINFO in
       FreeBSD*) ;;
       *)
         AGKDOT_SHRC_FINISH="$(date +%s%N)"
