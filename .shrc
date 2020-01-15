@@ -248,6 +248,9 @@ case $AGKDOT_SYSTEMINFO in
     alias composer='php $(cygpath -w "${HOME}/bin/composer.phar")'
     alias npm='winpty /cygdrive/c/Program\ Files/nodejs/npm.cmd'
     ;;
+  *CYGWIN_NT-10.0-WOW*)
+    alias tmux='tmux -S "$HOME/.tmsock"'
+    ;;
   *raspberrypi*)
     alias temp='/opt/vc/bin/vcgencmd measure_temp | egrep "[0-9.]{4,}" -o'
     ;;
