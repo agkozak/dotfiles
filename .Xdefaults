@@ -7,7 +7,7 @@ rxvt*transpscrollbar:true
 rxvt*saveLines:32767
 
 ! https://gist.github.com/cqpx/1436584
-URxvt*termName: rxvt-256color
+URxvt*terminalName: rxvt-unicode-256color
 URxvt*xftAntialias: true
 URxvt*background: #3f3f3f
 URxvt*foreground: #dcdccc
@@ -34,3 +34,5 @@ URxvt*color15: #ffffff
 
 URxvt.font:     xft:bitstream vera sans mono:size=16:antialias=true
 URxvt.boldFont: xft:bitstream vera sans mono:bold:size=16:antialias=true
+
+XTerm*termName: xterm-256color
