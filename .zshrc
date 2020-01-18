@@ -157,10 +157,10 @@ fi
 # Static named directories
 [[ -d ${HOME}/public_html/wp-content ]] \
   && hash -d wp-content="${HOME}/public_html/wp-content"
-[[ -d ${HOME}/.zplugin/plugins/agkozak---agkozak-zsh-prompt ]] \
-  && hash -d agk="${HOME}/.zplugin/plugins/agkozak---agkozak-zsh-prompt"
-[[ -d ${HOME}/.zplugin/plugins/agkozak---zsh-z ]] \
-  && hash -d z="${HOME}/.zplugin/plugins/agkozak---zsh-z"
+[[ -d ${HOME}/.zinit/plugins/agkozak---agkozak-zsh-prompt ]] \
+  && hash -d agk="${HOME}/.zinit/plugins/agkozak---agkozak-zsh-prompt"
+[[ -d ${HOME}/.zinit/plugins/agkozak---zsh-z ]] \
+  && hash -d z="${HOME}/.zinit/plugins/agkozak---zsh-z"
 
 # }}}2
 
@@ -371,25 +371,25 @@ AGKOZAK_CUSTOM_RPROMPT=''
 
 # }}}1
 
-# Use zplugin for zsh v5.0+, along with provisions for zsh v4.3.11+ {{{1
+# Use Zinit for zsh v5.0+, along with provisions for zsh v4.3.11+ {{{1
 
-# export AGKDOT_NO_ZPLUGIN=1 to circumvent zplugin
-if (( AGKDOT_NO_ZPLUGIN != 1 )) && is-at-least 5; then
+# export AGKDOT_NO_ZINIT=1 to circumvent Zinit
+if (( AGKDOT_NO_ZINIT != 1 )) && is-at-least 5; then
 
   # Optional binary module
-  if [[ -f "${HOME}/.zplugin/bin/zmodules/Src/zdharma/zplugin.so" ]]; then
-    if [[ -z ${module_path[(re)"${HOME}/.zplugin/bin/zmodules/Src"]} ]]; then
-      module_path=( "${HOME}/.zplugin/bin/zmodules/Src" ${module_path[@]} )
+  if [[ -f "${HOME}/.zinit/bin/zmodules/Src/zdharma/zplugin.so" ]]; then
+    if [[ -z ${module_path[(re)"${HOME}/.zinit/bin/zmodules/Src"]} ]]; then
+      module_path=( "${HOME}/.zinit/bin/zmodules/Src" ${module_path[@]} )
     fi
     zmodload zdharma/zplugin
   fi
 
   if whence git &> /dev/null; then
 
-    if [[ ! -d ${HOME}/.zplugin/bin ]]; then
-      print 'Installing zplugin...' &>2
-      mkdir -p "${HOME}/.zplugin"
-      git clone https://github.com/zdharma/zplugin.git "${HOME}/.zplugin/bin"
+    if [[ ! -d ${HOME}/.zinit/bin ]]; then
+      print 'Installing zinit...' &>2
+      mkdir -p "${HOME}/.zinit"
+      git clone https://github.com/zdharma/zinit.git "${HOME}/.zinit/bin"
     fi
 
     # Configuration hash
@@ -398,8 +398,8 @@ if (( AGKDOT_NO_ZPLUGIN != 1 )) && is-at-least 5; then
     # Location of .zcompdump file
     ZPLGM[ZCOMPDUMP_PATH]="${HOME}/.zcompdump_${ZSH_VERSION}"
 
-    # zplugin and its plugins and snippets
-    source "${HOME}/.zplugin/bin/zplugin.zsh"
+    # Zinit and its plugins and snippets
+    source "${HOME}/.zinit/bin/zinit.zsh"
 
     # Load plugins and snippets {{{2
 
@@ -410,32 +410,32 @@ if (( AGKDOT_NO_ZPLUGIN != 1 )) && is-at-least 5; then
 
     # if _agkdot_turbo; then
     #   PROMPT='%m%# '
-    #   zplugin ice atload'_agkozak_precmd' nocd silent ver'develop' wait'!0a'
+    #   zinit ice atload'_agkozak_precmd' nocd silent ver'develop' wait'!0a'
     # else
-      zplugin ice ver'develop'
+      zinit ice ver'develop'
     # fi
-    zplugin load agkozak/agkozak-zsh-prompt
+    zinit load agkozak/agkozak-zsh-prompt
 
     # }}}3
 
-    # zplugin light agkozak/polyglot
+    # zinit light agkozak/polyglot
     # if which kubectl &> /dev/null; then
-    #   zplugin light jonmosco/kube-ps1
-    #   zplugin light agkozak/polyglot-kube-ps1
+    #   zinit light jonmosco/kube-ps1
+    #   zinit light agkozak/polyglot-kube-ps1
     # fi
 
     # agkozak/zsh-z
     # In FreeBSD, /home is /usr/home
     ZSHZ_DEBUG=1
     [[ $OSTYPE == freebsd* ]] && typeset -g ZSHZ_NO_RESOLVE_SYMLINKS=1
-    _agkdot_turbo && zplugin ice lucid ver'develop' wait'0c'
-    zplugin load agkozak/zsh-z
+    _agkdot_turbo && zinit ice lucid ver'develop' wait'0c'
+    zinit load agkozak/zsh-z
 
-    _agkdot_turbo && zplugin ice lucid wait'0g' ver'develop'
-    zplugin load agkozak/zhooks
+    _agkdot_turbo && zinit ice lucid wait'0g' ver'develop'
+    zinit load agkozak/zhooks
 
     if _agkdot_turbo; then
-    zplugin ice atload'compinit; compdef mosh=ssh; zpcdreplay' atload"
+    zinit ice atload'compinit; compdef mosh=ssh; zpcdreplay' atload"
       HISTORY_SUBSTRING_SEARCH_HIGHLIGHT_FOUND='underline'
       HISTORY_SUBSTRING_SEARCH_HIGHLIGHT_NOT_FOUND=''
       zle -N history-substring-search-up
@@ -447,28 +447,28 @@ if (( AGKDOT_NO_ZPLUGIN != 1 )) && is-at-least 5; then
       bindkey '^P' history-substring-search-up
       bindkey '^N' history-substring-search-down" nocd silent wait'0d'
     fi
-    zplugin load zsh-users/zsh-history-substring-search
+    zinit load zsh-users/zsh-history-substring-search
 
-    _agkdot_turbo && zplugin ice atload'_zsh_title__precmd' lucid nocd \
+    _agkdot_turbo && zinit ice atload'_zsh_title__precmd' lucid nocd \
       wait'!0i'
-    zplugin load jreese/zsh-titles
+    zinit load jreese/zsh-titles
 
     if [[ $AGKDOT_SYSTEMINFO != *ish* ]]; then
       if _agkdot_turbo; then
-        zplugin ice lucid wait'0e'
+        zinit ice lucid wait'0e'
       fi
-      zplugin load zdharma/zui
-      _agkdot_turbo && zplugin ice lucid wait'(( $+ZUI ))'
-      zplugin load zdharma/zbrowse
+      zinit load zdharma/zui
+      _agkdot_turbo && zinit ice lucid wait'(( $+ZUI ))'
+      zinit load zdharma/zbrowse
     fi
 
-    zplugin snippet OMZ::plugins/extract/extract.plugin.zsh
+    zinit snippet OMZ::plugins/extract/extract.plugin.zsh
 
-    _agkdot_turbo && zplugin ice silent wait'0f'
-    zplugin load romkatv/zsh-prompt-benchmark
+    _agkdot_turbo && zinit ice silent wait'0f'
+    zinit load romkatv/zsh-prompt-benchmark
 
-    _agkdot_turbo && zplugin ice silent wait'0h'
-    zplugin load zpm-zsh/clipboard
+    _agkdot_turbo && zinit ice silent wait'0h'
+    zinit load zpm-zsh/clipboard
 
     if ! _agkdot_turbo; then
       compinit -u -d "${HOME}/.zcompdump_${ZSH_VERSION}"
@@ -508,33 +508,33 @@ elif is-at-least 4.3.11; then
   #   Alternatively, the web address for the raw contents of
   #   any ZSH code may be given.
   ##########################################################
-  kplugin() {
+  kinit() {
     ! whence git &> /dev/null && return 1
     case $1 in
       load)
-        if [[ ! -d "${HOME}/.zplugin/plugins/${2%/*}---${2#*/}" ]]; then
+        if [[ ! -d "${HOME}/.zinit/plugins/${2%/*}---${2#*/}" ]]; then
           (
             git clone "https://github.com/${2%/*}/${2#*/}" \
-              "${HOME}/.zplugin/plugins/${2%/*}---${2#*/}"
-            cd "${HOME}/.zplugin/plugins/${2%/*}---${2#*/}"
+              "${HOME}/.zinit/plugins/${2%/*}---${2#*/}"
+            cd "${HOME}/.zinit/plugins/${2%/*}---${2#*/}"
             (( $+3 )) && git checkout $3
           )
         fi
         if (( $+4 )); then
-          source "${HOME}/.zplugin/plugins/${2%/*}---${2#*/}/$4"
+          source "${HOME}/.zinit/plugins/${2%/*}---${2#*/}/$4"
         else
-          source "${HOME}/.zplugin/plugins/${2%/*}---${2#*/}/${2#*/}.plugin.zsh"
+          source "${HOME}/.zinit/plugins/${2%/*}---${2#*/}/${2#*/}.plugin.zsh"
         fi
         ;;
       snippet)
         if [[ $2 == OMZ::* ]]; then
-          if [[ ! -d ${HOME}/.zplugin/snippets/${2%%/*}--${2#*/} ]]; then
-            mkdir -p "${HOME}/.zplugin/snippets/${2%%/*}--${2#*/}"
+          if [[ ! -d ${HOME}/.zinit/snippets/${2%%/*}--${2#*/} ]]; then
+            mkdir -p "${HOME}/.zinit/snippets/${2%%/*}--${2#*/}"
             curl "https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/${2#OMZ::}" \
-              > "${HOME}/.zplugin/snippets/${2%%/*}--${2#*/}/${2##*/}"
+              > "${HOME}/.zinit/snippets/${2%%/*}--${2#*/}/${2##*/}"
             echo foo
           fi
-          source "${HOME}/.zplugin/snippets/${2%%/*}--${2#*/}/${2##*/}"
+          source "${HOME}/.zinit/snippets/${2%%/*}--${2#*/}/${2##*/}"
         else
           return 1
         fi
@@ -543,18 +543,18 @@ elif is-at-least 4.3.11; then
     esac
   }
 
-  kplugin load agkozak/agkozak-zsh-prompt glitch-fix
+  kinit load agkozak/agkozak-zsh-prompt glitch-fix
 
   [[ $OSTYPE == freebsd* ]] && typeset -g ZSHZ_NO_RESOLVE_SYMLINKS=1
-  kplugin load agkozak/zsh-z develop
+  kinit load agkozak/zsh-z develop
 
-  kplugin load agkozak/zhooks develop
-  kplugin load jreese/zsh-titles master titles.plugin.zsh
-  kplugin load zsh-users/zsh-history-substring-search
+  kinit load agkozak/zhooks develop
+  kinit load jreese/zsh-titles master titles.plugin.zsh
+  kinit load zsh-users/zsh-history-substring-search
 
-  kplugin load zpm-zsh/clipboard
+  kinit load zpm-zsh/clipboard
 
-  kplugin snippet OMZ::plugins/extract/extract.plugin.zsh
+  kinit snippet OMZ::plugins/extract/extract.plugin.zsh
 
   compinit -u -d "${HOME}/.zcompdump_${ZSH_VERSION}"
 
@@ -691,8 +691,8 @@ fi
 
 zsh_update() {
   update_dotfiles
-  zplugin self-update
-  zplugin update --all
+  zinit self-update
+  zinit update --all
   source "${HOME}/.zshrc"
 }
 

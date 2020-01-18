@@ -389,7 +389,7 @@ if executable('git') && (executable('curl') || executable('wget') || WINDOWS())
 
     " zsh
     " Plug 'agkozak/vim-zsh', { 'for': 'zsh', 'branch': 'develop' }
-    Plug 'zplugin/zplugin-vim-syntax', { 'for': 'zsh' }
+    Plug 'zinit-zsh/zplugin-vim-syntax', { 'for': 'zsh' }
 
     call plug#end()
 
