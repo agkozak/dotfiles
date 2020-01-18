@@ -428,7 +428,11 @@ if (( AGKDOT_NO_ZINIT != 1 )) && is-at-least 5; then
     # In FreeBSD, /home is /usr/home
     ZSHZ_DEBUG=1
     [[ $OSTYPE == freebsd* ]] && typeset -g ZSHZ_NO_RESOLVE_SYMLINKS=1
-    _agkdot_turbo && zinit ice lucid ver'develop' wait'0c'
+    if _agkdot_turbo; then
+      zinit ice lucid ver'develop' wait'0c'
+    else
+      zinit ice ver'develop'
+    fi
     zinit load agkozak/zsh-z
 
     _agkdot_turbo && zinit ice lucid wait'0g' ver'develop'
