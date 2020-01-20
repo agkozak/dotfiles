@@ -393,10 +393,10 @@ if (( AGKDOT_NO_ZINIT != 1 )) && is-at-least 5; then
     fi
 
     # Configuration hash
-    typeset -A ZPLGM
+    typeset -A ZINIT
 
     # Location of .zcompdump file
-    ZPLGM[ZCOMPDUMP_PATH]="${HOME}/.zcompdump_${ZSH_VERSION}"
+    ZINIT[ZCOMPDUMP_PATH]="${HOME}/.zcompdump_${ZSH_VERSION}"
 
     # Zinit and its plugins and snippets
     source "${HOME}/.zinit/bin/zinit.zsh"
