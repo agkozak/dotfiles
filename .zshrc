@@ -537,7 +537,6 @@ elif is-at-least 4.3.11; then
             mkdir -p "${HOME}/.zinit/snippets/${2%%/*}--${2#*/}"
             curl "https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/${2#OMZ::}" \
               > "${HOME}/.zinit/snippets/${2%%/*}--${2#*/}/${2##*/}"
-            echo foo
           fi
           source "${HOME}/.zinit/snippets/${2%%/*}--${2#*/}/${2##*/}"
         else
