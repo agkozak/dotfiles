@@ -389,7 +389,8 @@ if (( AGKDOT_NO_ZINIT != 1 )) && is-at-least 5; then
     if [[ ! -d ${HOME}/.zinit/bin ]]; then
       print 'Installing zinit...' &>2
       mkdir -p "${HOME}/.zinit"
-      git clone https://github.com/zdharma/zinit.git "${HOME}/.zinit/bin"
+      git clone https://github.com/agkozak/zinit.git "${HOME}/.zinit/bin"
+      ( cd "${HOME}/.zinit/bin" && git checkout windows-busybox )
     fi
 
     # Configuration hash
@@ -461,9 +462,9 @@ if (( AGKDOT_NO_ZINIT != 1 )) && is-at-least 5; then
       if _agkdot_turbo; then
         zinit ice lucid wait'0e'
       fi
-      zinit load zdharma/zui
+      zinit load agkozak/zui
       _agkdot_turbo && zinit ice lucid wait'(( $+ZUI ))'
-      zinit load zdharma/zbrowse
+      zinit load agkozak/zbrowse
     fi
 
     zinit snippet OMZ::plugins/extract/extract.plugin.zsh
