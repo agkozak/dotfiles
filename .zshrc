@@ -389,7 +389,7 @@ if (( AGKDOT_NO_ZINIT != 1 )) && is-at-least 5; then
     if [[ ! -d ${HOME}/.zinit/bin ]]; then
       print 'Installing zinit...' &>2
       mkdir -p "${HOME}/.zinit"
-      git clone https://github.com/agkozak/zinit.git "${HOME}/.zinit/bin"
+      git clone https://github.com/zdharma/zinit.git "${HOME}/.zinit/bin"
       ( cd "${HOME}/.zinit/bin" && git checkout windows-busybox )
     fi
 
@@ -462,9 +462,9 @@ if (( AGKDOT_NO_ZINIT != 1 )) && is-at-least 5; then
       if _agkdot_turbo; then
         zinit ice lucid wait'0e'
       fi
-      zinit load agkozak/zui
+      zinit load zdharma/zui
       _agkdot_turbo && zinit ice lucid wait'(( $+ZUI ))'
-      zinit load agkozak/zbrowse
+      zinit load zdharma/zbrowse
     fi
 
     zinit snippet OMZ::plugins/extract/extract.plugin.zsh
@@ -547,7 +547,7 @@ elif is-at-least 4.3.11; then
     esac
   }
 
-  kinit load agkozak/agkozak-zsh-prompt glitch-fix
+  kinit load agkozak/agkozak-zsh-prompt develop
 
   [[ $OSTYPE == freebsd* ]] && typeset -g ZSHZ_NO_RESOLVE_SYMLINKS=1
   kinit load agkozak/zsh-z develop
