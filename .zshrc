@@ -390,7 +390,6 @@ if (( AGKDOT_NO_ZINIT != 1 )) && is-at-least 5; then
       print 'Installing zinit...' &>2
       mkdir -p "${HOME}/.zinit"
       git clone https://github.com/zdharma/zinit.git "${HOME}/.zinit/bin"
-      ( cd "${HOME}/.zinit/bin" && git checkout windows-busybox )
     fi
 
     # Configuration hash
