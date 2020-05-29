@@ -374,7 +374,7 @@ AGKOZAK_CUSTOM_RPROMPT=''
 # Use Zinit for zsh v5.0+, along with provisions for zsh v4.3.11+ {{{1
 
 # export AGKDOT_NO_ZINIT=1 to circumvent Zinit
-if (( AGKDOT_NO_ZINIT != 1 )) && is-at-least 5; then
+if (( AGKDOT_NO_ZINIT != 1 )) && is-at-least 5.0.8; then
 
   # Optional binary module
   if [[ -f "${HOME}/.zinit/bin/zmodules/Src/zdharma/zplugin.so" ]]; then
