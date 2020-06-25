@@ -374,7 +374,7 @@ AGKOZAK_CUSTOM_RPROMPT=''
 # Use Zinit for zsh v5.0+, along with provisions for zsh v4.3.11+ {{{1
 
 # export AGKDOT_NO_ZINIT=1 to circumvent Zinit
-if (( AGKDOT_NO_ZINIT != 1 )) && is-at-least 5; then
+if (( AGKDOT_NO_ZINIT != 1 )) && is-at-least 5.0.8; then
 
   # Optional binary module
   if [[ -f "${HOME}/.zinit/bin/zmodules/Src/zdharma/zplugin.so" ]]; then
@@ -512,7 +512,7 @@ elif is-at-least 4.3.11; then
   #   Alternatively, the web address for the raw contents of
   #   any ZSH code may be given.
   ##########################################################
-  kinit() {
+  agkdot_init() {
     ! whence git &> /dev/null && return 1
     case $1 in
       load)
@@ -546,18 +546,18 @@ elif is-at-least 4.3.11; then
     esac
   }
 
-  kinit load agkozak/agkozak-zsh-prompt develop
+  agkdot_init load agkozak/agkozak-zsh-prompt develop
 
   [[ $OSTYPE == freebsd* ]] && typeset -g ZSHZ_NO_RESOLVE_SYMLINKS=1
-  kinit load agkozak/zsh-z develop
+  agkdot_init load agkozak/zsh-z develop
 
-  kinit load agkozak/zhooks develop
-  kinit load jreese/zsh-titles master titles.plugin.zsh
-  kinit load zsh-users/zsh-history-substring-search
+  agkdot_init load agkozak/zhooks develop
+  agkdot_init load jreese/zsh-titles master titles.plugin.zsh
+  agkdot_init load zsh-users/zsh-history-substring-search
 
-  kinit load zpm-zsh/clipboard
+  agkdot_init load zpm-zsh/clipboard
 
-  kinit snippet OMZ::plugins/extract/extract.plugin.zsh
+  agkdot_init snippet OMZ::plugins/extract/extract.plugin.zsh
 
   compinit -u -d "${HOME}/.zcompdump_${ZSH_VERSION}"
 
