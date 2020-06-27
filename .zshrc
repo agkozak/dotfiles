@@ -434,6 +434,7 @@ if (( AGKDOT_NO_ZINIT != 1 )) && is-at-least 5.0.8; then
       zinit ice ver'develop'
     fi
     zinit load agkozak/zsh-z
+    ZSHZ_UNCOMMON=1
 
     _agkdot_turbo && zinit ice lucid wait'0g' ver'develop'
     zinit load agkozak/zhooks
@@ -550,6 +551,7 @@ elif is-at-least 4.3.11; then
 
   [[ $OSTYPE == freebsd* ]] && typeset -g ZSHZ_NO_RESOLVE_SYMLINKS=1
   agkdot_init load agkozak/zsh-z develop
+  ZSHZ_UNCOMMON=1
 
   agkdot_init load agkozak/zhooks develop
   agkdot_init load jreese/zsh-titles master titles.plugin.zsh
