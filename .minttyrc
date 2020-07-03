@@ -2,7 +2,7 @@
 
 BoldAsFont=yes
 Font=DejaVu Sans Mono
-FontHeight=18
+FontHeight=16
 Term=xterm-256color
 Transparency=low
 OpaqueWhenFocused=yes

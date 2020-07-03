@@ -103,9 +103,15 @@ if [[ -f ${HOME}/dotfiles/plugins/bash-z/bash-z.sh ]]; then
   . "${HOME}/dotfiles/plugins/bash-z/bash-z.sh"
 else
   if [[ ! -d ${HOME}/dotfiles/plugins/z ]]; then
-    git clone https://github.com/agkozak/z.git "$HOME/dotfiles/plugins/z"
+    if type git &> /dev/null; then
+      git clone https://github.com/agkozak/z.git "$HOME/dotfiles/plugins/z"
+    else
+      echo 'Please install Git.'
+    fi
   fi
-  . "${HOME}/dotfiles/plugins/z/z.sh"
+  if [[ -f ${HOME}/dotfiles/plugins/z/z.sh ]]; then
+    . "${HOME}/dotfiles/plugins/z/z.sh"
+  fi
 fi
 
 # if type kubectl &> /dev/null; then
