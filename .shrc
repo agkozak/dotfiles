@@ -38,7 +38,7 @@ if [ "${AGKDOT_BENCHMARKS:-0}" -eq 1 ]; then
     case $AGKDOT_SYSTEMINFO in
       # BSD date doesn't handle nanoseconds
       *BSD*|*bsd*|DragonFly*) ;;
-      *) AGKDOT_SHRC_START="$(date +%s%N)" ;;
+      *) AGKDOT_SHRC_START="$(/bin/date +%s%N)" ;;
     esac
   }
 fi
@@ -370,9 +370,9 @@ fi
 if [ "${AGKDOT_BENCHMARKS:-0}" -eq 1 ]; then
   [ "${AGKDOT_ZSHRC_LOADING:-0}" -eq 1 ] || {
     case $AGKDOT_SYSTEMINFO in
-      FreeBSD*) ;;
+      *BSD*|*bsd*|DragonFly*) ;;
       *)
-        AGKDOT_SHRC_FINISH="$(date +%s%N)"
+        AGKDOT_SHRC_FINISH="$(/bin/date +%s%N)"
         AGKDOT_DIFFERENCE=$(( AGKDOT_SHRC_FINISH - AGKDOT_SHRC_START ))
         echo ".shrc loaded in $((AGKDOT_DIFFERENCE/1000000))ms."
         ;;
