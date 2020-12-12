@@ -75,7 +75,7 @@ set statusline+=%w                                " Preview window flag
 set statusline+=%m                                " Modified flag
 set statusline+=%r                                " Readonly flag
 set statusline+=%y                                " File type
-set statusline+=%{SL('fugitive#statusline')}
+set statusline+=%{SL('FugitiveStatusline')}
 set statusline+=%#ErrorMsg#
 if exists('*LinterStatus')
   set statusline+=%{SL('LinterStatus')}
