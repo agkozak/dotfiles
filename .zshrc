@@ -40,8 +40,9 @@ for i in .zshenv \
          .shrc \
          .shrc.local \
          .zshrc.local; do
-  if [[ -e ${HOME}/${i} ]] && [[ ! -e ${HOME}/${i}.zwc ]] \
-    || [[ ${HOME}/${i} -nt ${HOME}/${i}.zwc ]]; then
+  if [[ -e ${HOME}/${i} &&
+        ! -e ${HOME}/${i}.zwc ||
+        ${HOME}/${i} -nt ${HOME}/${i}.zwc ]]; then
     zcompile "${HOME}/${i}"
   fi
 done
@@ -155,12 +156,12 @@ fi
 # 14.7.2 Static Named Directories {{{2
 
 # Static named directories
-[[ -d ${HOME}/public_html/wp-content ]] \
-  && hash -d wp-content="${HOME}/public_html/wp-content"
-[[ -d ${HOME}/.zinit/plugins/agkozak---agkozak-zsh-prompt ]] \
-  && hash -d agk="${HOME}/.zinit/plugins/agkozak---agkozak-zsh-prompt"
-[[ -d ${HOME}/.zinit/plugins/agkozak---zsh-z ]] \
-  && hash -d z="${HOME}/.zinit/plugins/agkozak---zsh-z"
+[[ -d ${HOME}/public_html/wp-content ]] &&
+  hash -d wp-content="${HOME}/public_html/wp-content"
+[[ -d ${HOME}/.zinit/plugins/agkozak---agkozak-zsh-prompt ]] &&
+  hash -d agk="${HOME}/.zinit/plugins/agkozak---agkozak-zsh-prompt"
+[[ -d ${HOME}/.zinit/plugins/agkozak---zsh-z ]] &&
+  hash -d z="${HOME}/.zinit/plugins/agkozak---zsh-z"
 
 # }}}2
 
@@ -248,7 +249,7 @@ unsetopt BEEP
 # # The Debian solution to Del/Home/End/etc. keybindings {{{1
 
 # No need to load the following code if I'm using Debian
-if [[ ! -f '/etc/debian-version' ]] && [[ ! -f '/etc/zsh/zshrc' ]]; then
+if [[ ! -f '/etc/debian-version' && ! -f '/etc/zsh/zshrc' ]]; then
 
   typeset -A key
   key=(
@@ -305,7 +306,7 @@ if [[ ! -f '/etc/debian-version' ]] && [[ ! -f '/etc/zsh/zshrc' ]]; then
 
   # Make sure the terminal is in application mode, when zle is
   # active. Only then are the values from $terminfo valid.
-  if (( ${+terminfo[smkx]} )) && (( ${+terminfo[rmkx]} )); then
+  if (( ${+terminfo[smkx]} && ${+terminfo[rmkx]} )); then
     function zle-line-init() {
       emulate -L zsh
       printf '%s' "${terminfo[smkx]}"
@@ -405,7 +406,7 @@ if (( AGKDOT_NO_ZINIT != 1 )) && is-at-least 5.0.8; then
 
     # Is Turbo Mode appropriate?
     _agkdot_turbo() {
-      is-at-least 5.3 && [[ $TERM != 'dumb' ]] && [[ $OSTYPE != (solaris*|cygwin) ]]
+      is-at-least 5.3 && [[ $TERM != 'dumb' && $OSTYPE != (solaris*|cygwin) ]]
     }
 
     # if _agkdot_turbo; then
@@ -455,8 +456,7 @@ if (( AGKDOT_NO_ZINIT != 1 )) && is-at-least 5.0.8; then
     fi
     zinit load zsh-users/zsh-history-substring-search
 
-    _agkdot_turbo && zinit ice atload'_zsh_title__precmd' lucid nocd \
-      wait'!0i'
+    _agkdot_turbo && zinit ice atload'_zsh_title__precmd' lucid nocd wait'!0i'
     zinit load jreese/zsh-titles
 
     if [[ $AGKDOT_SYSTEMINFO != *ish* ]]; then
@@ -673,8 +673,8 @@ bindkey -M menuselect 'j' vi-down-line-or-history # bottom
 # 26 User Contributions {{{1
 
 # 26.7.1 Allow pasting URLs as CLI arguments
-if [[ $ZSH_VERSION != '5.1.1' ]] && [[ $TERM != 'dumb' ]] \
-  && (( ! $+INSIDE_EMACS )); then
+if [[ $ZSH_VERSION != '5.1.1' && $TERM != 'dumb' ]] &&
+  (( ! $+INSIDE_EMACS )); then
   if is-at-least 5.1; then
     autoload -Uz bracketed-paste-magic
     zle -N bracketed-paste bracketed-paste-magic
@@ -691,7 +691,7 @@ fi
 
 # While tinkering with ZSH-z
 
-if (( SHLVL == 1 )) && (( ! $+TMUX )); then
+if (( SHLVL == 1  && ! $+TMUX )); then
   [[ ! -d ${HOME}/.zbackup ]] && mkdir -p "${HOME}/.zbackup"
   cp "${HOME}/.z" "${HOME}/.zbackup/.z_${EPOCHSECONDS}" 2> /dev/null
 fi
