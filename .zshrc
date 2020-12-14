@@ -77,15 +77,15 @@ fi
 [[ $OSTYPE == (msys|cygwin) ]] && alias echo='echo -E'
 alias hgrep='fc -fl 0 | grep'
 
-# For the time being, WSL doesn't like Windows symlinks
-if [[ $AGKDOT_SYSTEMINFO == *Microsoft* ]]; then
-  alias ls='ls ${=LS_OPTIONS} 2> /dev/null'
-else
-  alias ls='ls ${=LS_OPTIONS}'
-fi
+# At the moment, WSL1 doesn't like Windows symlinks
+# if [[ $AGKDOT_SYSTEMINFO == *Microsoft* ]]; then
+#   alias ls='ls ${=LS_OPTIONS} 2> /dev/null'
+# else
+#   alias ls='ls ${=LS_OPTIONS}'
+# fi
 
 # which should not be aliased in ZSH
-alias which &> /dev/null && unalias which
+(( ${+aliases[which]} )) && unalias which
 
 # Global Aliases {{{2
 
@@ -385,7 +385,7 @@ if (( AGKDOT_NO_ZINIT != 1 )) && is-at-least 5.0.8; then
     zmodload zdharma/zplugin
   fi
 
-  if whence git &> /dev/null; then
+  if (( ${+commands[git]} )); then
 
     if [[ ! -d ${HOME}/.zinit/bin ]]; then
       print 'Installing zinit...' &>2
@@ -515,7 +515,7 @@ elif is-at-least 4.3.11; then
   #   any ZSH code may be given.
   ##########################################################
   agkdot_init() {
-    ! whence git &> /dev/null && return 1
+    ! (( ${+commands[git]} )) && return 1
     case $1 in
       load)
         if [[ ! -d "${HOME}/.zinit/plugins/${2%/*}---${2#*/}" ]]; then
