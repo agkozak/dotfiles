@@ -35,7 +35,7 @@ export ENV
 ENV="${HOME}/.shrc"
 
 export LESS
-case $(ls -l $(which less)) in
+case $(ls -l "$(command -v less)") in
   *busybox*) LESS='-FIMR' ;;
   *)
     case $AGKDOT_SYSTEMINFO in
