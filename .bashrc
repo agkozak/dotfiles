@@ -16,6 +16,7 @@ if (( AGKDOT_BENCHMARKS )); then
       ;;
     4)
       if [[ ${BASH_VERSINFO[1]} -lt 2 ]]; then
+        [[ $OSTYPE == freebsd* ]] && return
         ((AGKDOT_BASHRC_START=$(date +%s%N)/1000000))
       else
         printf -v AGKDOT_BASHRC_START '%(%s)T' -1
@@ -131,6 +132,7 @@ if (( AGKDOT_BENCHMARKS )); then
       ;;
     4)
       if [[ ${BASH_VERSINFO[1]} -lt 2 ]]; then
+        [[ $OSTYPE == freebsd* ]] && return
         ((AGKDOT_BASHRC_FINISH=$(date +%s%N)/1000000))
       else
         printf -v AGKDOT_BASHRC_FINISH '%(%s)T' -1
