@@ -296,8 +296,8 @@ esac
 
 # If possible, load the pan-POSIX Polyglot Prompt
 # But not in zsh -- it uses agkozak-zsh-prompt
-if [ -z "$ZSH_VERSION" ] || [ "$0" = 'bash' ] || [ "$0" = 'ksh' ] \
-  || [ "$0" = 'sh' ]; then
+if [ -z "$ZSH_VERSION" ] || [ "$0" = 'bash' ] || [ "$0" = 'ksh' ]  ||
+  [ "$0" = 'sh' ]; then
   if [ -f "${HOME}/dotfiles/prompts/polyglot/polyglot.sh" ]; then
     # shellcheck source=/dev/null
     . "${HOME}/dotfiles/prompts/polyglot/polyglot.sh"
