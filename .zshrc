@@ -81,7 +81,7 @@ alias hgrep='fc -fl 0 | grep'
 # if [[ $AGKDOT_SYSTEMINFO == *Microsoft* ]]; then
 #   alias ls='ls ${=LS_OPTIONS} 2> /dev/null'
 # else
-#   alias ls='ls ${=LS_OPTIONS}'
+alias ls='ls ${=LS_OPTIONS}'
 # fi
 
 # which should not be aliased in ZSH
