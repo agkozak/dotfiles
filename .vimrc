@@ -340,7 +340,9 @@ if executable('git') && (executable('curl') || executable('wget') || WINDOWS())
     Plug 'junegunn/gv.vim'
 
     " PHP
-    Plug 'stanangeloff/php.vim', { 'for': 'php' }
+    if v:version < 802  " stanangeloff/php.vim is no longer being updated
+      Plug 'stanangeloff/php.vim', { 'for': 'php' }
+    endif
     Plug 'shawncplus/phpcomplete.vim', { 'for': 'php' }
     Plug 'tobyS/vmustache', { 'for': 'php' }  " Required for PDV
     Plug 'tobyS/pdv', { 'for': 'php' }        " PHP Documentor for Vim
@@ -349,20 +351,11 @@ if executable('git') && (executable('curl') || executable('wget') || WINDOWS())
     Plug 'othree/html5.vim'
 
     " CSS/SCSS/Sass
-    " Plug 'JulesWang/css.vim', { 'for': 'css' }
     Plug 'hail2u/vim-css3-syntax', { 'for': 'css' }
     Plug 'cakebaker/scss-syntax.vim', { 'for': 'scss' }
     Plug 'tpope/vim-haml'
-    " if v:version > 800
-      " Plug 'chrisbra/Colorizer'
-    " else
-      Plug 'ap/vim-css-color', { 'for': 'css' }
-    " endif
+    Plug 'ap/vim-css-color', { 'for': 'css' }
     Plug 'csscomb/vim-csscomb', { 'for': 'css' }
-    " Plug 'bolasblack/csslint.vim', { 'for': 'css' }
-
-    " WordPress
-    " Plug 'dsawardekar/wordpress.vim', { 'branch': 'develop' }
 
     " PowerShell
     if executable('powershell.exe')
@@ -388,7 +381,6 @@ if executable('git') && (executable('curl') || executable('wget') || WINDOWS())
     Plug 'vim-scripts/httplog'
 
     " zsh
-    " Plug 'agkozak/vim-zsh', { 'for': 'zsh', 'branch': 'develop' }
     Plug 'zinit-zsh/zinit-vim-syntax', { 'for': 'zsh' }
 
     call plug#end()
