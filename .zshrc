@@ -592,7 +592,7 @@ zstyle -e ':completion:*:*:(ssh|mosh):*:my-accounts' users-hosts \
 # https://grml.org/zsh/zsh-lovers.html
 
 rationalise-dot() {
-  if [[ $LBUFFER = *.. ]]; then
+  if [[ $LBUFFER == *.. ]]; then
     LBUFFER+=/..
   else
     LBUFFER+=.
