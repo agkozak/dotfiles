@@ -194,12 +194,15 @@ set nofoldenable            " Disable code folding
 " => 18 mapping {{{2
 
 " Use <C-L> to clear the highlighting of :set hlsearch.
-nnoremap <silent> <C-L> :nohlsearch<C-R>=has('diff')?'<Bar>diffupdate':''<CR><CR><C-L>
+nnoremap <silent> <C-L>
+  \ :nohlsearch<C-R>=has('diff')?'<Bar>diffupdate':''<CR><CR><C-L>
 
-" Use `jj` as an alias for Escape.
+" Use `jj' as an alias for Escape.
 inoremap jj <Esc>
 
+" `\cc' toggles the vertical ruler
 nnoremap <Leader>cc :call ColorColumnToggle()<CR>
+
 " Edit .vimrc
 nnoremap <leader>ev :vsplit $MYVIMRC<CR>
 if ! ALECompatible()
