@@ -688,11 +688,3 @@ endif
 " }}}1
 
 " vim: fdm=marker:ts=2:et:sw=2:ai:sts=2
-.local, if it exists
-if filereadable(glob('~/.vimrc.local'))
-  source ~/.vimrc.local
-endif
-
-" }}}1
-
-" vim: fdm=marker:ts=2:et:sw=2:ai:sts=2
