@@ -60,6 +60,7 @@ set number                  " Line numbers on
 " => 5 syntax, highlighting and spelling {{{2
 
 set hlsearch                " Highlight search terms
+set colorcolumn=80          " Start session with vertical ruler on at 80 chars
 
 " }}}2
 
