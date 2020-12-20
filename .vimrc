@@ -203,16 +203,24 @@ inoremap jj <Esc>
 " `\cc' toggles the vertical ruler
 nnoremap <Leader>cc :call ColorColumnToggle()<CR>
 
-" Edit .vimrc
+" `\ev' edits .vimrc
 nnoremap <leader>ev :vsplit $MYVIMRC<CR>
+
+" `\sc' runs Syntastic, if it is available
 if ! ALECompatible()
   nnoremap <Leader>sc :SyntasticCheck<CR>
 endif
-" Show syntax highlighting group
+
+" `\sh' shows the  syntax highlighting group of the word the cursor is on
 nnoremap <Leader>sh :call <SID>SynStack()<CR>
+
+" `\st' launches Startify
 nnoremap <Leader>st :Startify<CR>
+
+" `\tt' toggles Tagbar
 nnoremap <Leader>t :TagbarToggle<CR>
-" nnoremap <Leader>zc :call ZenburnContrastToggle()<CR>
+
+" `\<TAB>' toggles NERDTree
 nnoremap <Leader><Tab> :NERDTreeToggle<CR>
 
 set ttimeoutlen=50          " Make <Esc> faster
@@ -548,17 +556,6 @@ function! <SID>SynStack() abort
   echo map(synstack(line('.'), col('.')), 'synIDattr(v:val, "name")')
 endfunction
 
-" Toggle Zenburn Contrast (high by default)
-function! ZenburnContrastToggle() abort
-  if g:zenburn_high_Contrast
-    let g:zenburn_high_Contrast=0
-    colorscheme zenburn
-  else
-    let g:zenburn_high_Contrast=1
-    colorscheme zenburn
-  endif
-endfunction
-
 if has('autocmd')
   augroup VariousAutocmd
     autocmd!
@@ -684,6 +681,14 @@ endfunction
 " .vimrc.local {{{1
 
 " Source ~/.vimrc.local, if it exists
+if filereadable(glob('~/.vimrc.local'))
+  source ~/.vimrc.local
+endif
+
+" }}}1
+
+" vim: fdm=marker:ts=2:et:sw=2:ai:sts=2
+.local, if it exists
 if filereadable(glob('~/.vimrc.local'))
   source ~/.vimrc.local
 endif
