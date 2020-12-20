@@ -588,14 +588,14 @@ endif
 
 " Reload .vimrc when it changes
 " From http://stackoverflow.com/questions/2400264/is-it-possible-to-apply-vim-configurations-without-restarting/2403926#2403926
-if has('autocmd')
-  augroup myvimrc
-    autocmd!
-    if $MYVIMRC !=# ''
-      autocmd BufWritePost .vimrc source $MYVIMRC
-    endif
-  augroup END
-endif
+" if has('autocmd')
+"   augroup myvimrc
+"     autocmd!
+"     if $MYVIMRC !=# ''
+"       autocmd BufWritePost .vimrc source $MYVIMRC
+"     endif
+"   augroup END
+" endif
 
 " Enable fenced code block syntax highlighting in Markdown documents
 let g:markdown_fenced_languages = ['html', 'javascript', 'css', 'python', 'bash=sh', 'sh']
