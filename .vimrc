@@ -4,18 +4,19 @@
 
 " => Environment {{{1
 
-silent function! CMDEXE() abort       " Is the shell cmd.exe?
+silent function! CMDEXE() abort         " Returns true when the shell is cmd.exe
   return (&shell =~? 'cmd')
 endfunction
 
-silent function! WINDOWS() abort      " Not true of Cygwin/MSys2/WSL
-  return (has('win32') || has('win64'))
+silent function! WINDOWS() abort        " Returns true when the environment is
+  return (has('win32') || has('win64')) " Windows (but not Cygwin/MSYS2/WSL)
 endfunction
 
 " }}}1
 
 " ALE Compatibility {{{
 
+" Tests to see if ale can be used for syntax checking
 function! ALECompatible() abort
   return ((v:version >= 800 && has('job') && has('timers') && has('channel'))
         \ || has('nvim'))
@@ -30,7 +31,8 @@ endfunction
 
 " => 1 important {{{2
 
-" See https://github.com/vim/vim/issues/3014
+" Because of a bug, `set nocompatible' was necessary for a little while. See
+" https://github.com/vim/vim/issues/3014
 if v:version == 801 && has('patch37') && !has('patch55')
 " vint: -ProhibitSetNoCompatible
   set nocompatible
@@ -50,7 +52,7 @@ set smartcase               " Case sensitive when uppercase present
 
 set scrolloff=1             " Number of lines to keep above and below cursor
 set display+=lastline       " Improve display of very long, wrapping lines
-if &listchars ==# 'eol:$'   " Determine how `set list` displays white space
+if &listchars ==# 'eol:$'   " Determine how `set list' displays white space
   set listchars=tab:>\ ,trail:-,extends:>,precedes:<,nbsp:+
 endif
 set number                  " Line numbers on
@@ -60,7 +62,7 @@ set number                  " Line numbers on
 " => 5 syntax, highlighting and spelling {{{2
 
 set hlsearch                " Highlight search terms
-set colorcolumn=80          " Start session with vertical ruler on at 80 chars
+set colorcolumn=80          " Vertical ruler at 80 characters
 
 " }}}2
 
