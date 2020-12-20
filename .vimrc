@@ -117,16 +117,16 @@ endif
 if has('gui_running')
   set guioptions-=T               " Remove toolbar
   if WINDOWS()
-    if has('autocmd')
-      augroup GUI
-        autocmd!
-        autocmd GUIEnter * simalt ~x   " Start full-screen when GUI is enabled
-      augroup END
-    endif
+    " if has('autocmd')
+    "   augroup GUI
+    "     autocmd!
+    "     autocmd GUIEnter * simalt ~x   " Start full-screen when GUI is enabled
+    "   augroup END
+    " endif
     " Windows GUI font (Consolas tends to leave artefacts)
     set guifont=DejaVu\ Sans\ Mono:h18:cANSI,Consolas:h18:cANSI
   else
-    set lines=100 columns=200     " Open large window
+    " set lines=100 columns=200     " Open large window
     set guifont=DejaVu\ Sans\ Mono\ 12
   endif
 endif
