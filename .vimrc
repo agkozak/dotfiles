@@ -4,18 +4,19 @@
 
 " => Environment {{{1
 
-silent function! CMDEXE() abort       " Is the shell cmd.exe?
+silent function! CMDEXE() abort         " Returns true when the shell is cmd.exe
   return (&shell =~? 'cmd')
 endfunction
 
-silent function! WINDOWS() abort      " Not true of Cygwin/MSYS2/WSL
-  return (has('win32') || has('win64'))
+silent function! WINDOWS() abort        " Returns true when the environment is
+  return (has('win32') || has('win64')) " Windows (but not Cygwin/MSYS2/WSL)
 endfunction
 
 " }}}1
 
 " ALE Compatibility {{{
 
+" Tests to see if ale can be used for syntax checking
 function! ALECompatible() abort
   return ((v:version >= 800 && has('job') && has('timers') && has('channel'))
         \ || has('nvim'))
@@ -30,7 +31,8 @@ endfunction
 
 " => 1 important {{{2
 
-" See https://github.com/vim/vim/issues/3014
+" Because of a bug, `set nocompatible' was necessary for a little while. See
+" https://github.com/vim/vim/issues/3014
 if v:version == 801 && has('patch37') && !has('patch55')
 " vint: -ProhibitSetNoCompatible
   set nocompatible
@@ -50,7 +52,7 @@ set smartcase               " Case sensitive when uppercase present
 
 set scrolloff=1             " Number of lines to keep above and below cursor
 set display+=lastline       " Improve display of very long, wrapping lines
-if &listchars ==# 'eol:$'   " Determine how `set list` displays white space
+if &listchars ==# 'eol:$'   " Determine how `set list' displays white space
   set listchars=tab:>\ ,trail:-,extends:>,precedes:<,nbsp:+
 endif
 set number                  " Line numbers on
@@ -60,6 +62,7 @@ set number                  " Line numbers on
 " => 5 syntax, highlighting and spelling {{{2
 
 set hlsearch                " Highlight search terms
+set colorcolumn=80          " Vertical ruler at 80 characters
 
 " }}}2
 
@@ -114,16 +117,16 @@ endif
 if has('gui_running')
   set guioptions-=T               " Remove toolbar
   if WINDOWS()
-    if has('autocmd')
-      augroup GUI
-        autocmd!
-        autocmd GUIEnter * simalt ~x   " Start full-screen when GUI is enabled
-      augroup END
-    endif
+    " if has('autocmd')
+    "   augroup GUI
+    "     autocmd!
+    "     autocmd GUIEnter * simalt ~x   " Start full-screen when GUI is enabled
+    "   augroup END
+    " endif
     " Windows GUI font (Consolas tends to leave artefacts)
     set guifont=DejaVu\ Sans\ Mono:h18:cANSI,Consolas:h18:cANSI
   else
-    set lines=100 columns=200     " Open large window
+    " set lines=100 columns=200     " Open large window
     set guifont=DejaVu\ Sans\ Mono\ 12
   endif
 endif
@@ -191,22 +194,33 @@ set nofoldenable            " Disable code folding
 " => 18 mapping {{{2
 
 " Use <C-L> to clear the highlighting of :set hlsearch.
-nnoremap <silent> <C-L> :nohlsearch<C-R>=has('diff')?'<Bar>diffupdate':''<CR><CR><C-L>
+nnoremap <silent> <C-L>
+  \ :nohlsearch<C-R>=has('diff')?'<Bar>diffupdate':''<CR><CR><C-L>
 
-" Use `jj` as an alias for Escape.
+" Use `jj' as an alias for Escape.
 inoremap jj <Esc>
 
+" `\cc' toggles the vertical ruler
 nnoremap <Leader>cc :call ColorColumnToggle()<CR>
-" Edit .vimrc
+
+" `\ev' edits .vimrc
 nnoremap <leader>ev :vsplit $MYVIMRC<CR>
+
+" `\sc' runs Syntastic, if it is available
 if ! ALECompatible()
   nnoremap <Leader>sc :SyntasticCheck<CR>
 endif
-" Show syntax highlighting group
+
+" `\sh' shows the  syntax highlighting group of the word the cursor is on
 nnoremap <Leader>sh :call <SID>SynStack()<CR>
+
+" `\st' launches Startify
 nnoremap <Leader>st :Startify<CR>
+
+" `\tt' toggles Tagbar
 nnoremap <Leader>t :TagbarToggle<CR>
-" nnoremap <Leader>zc :call ZenburnContrastToggle()<CR>
+
+" `\<TAB>' toggles NERDTree
 nnoremap <Leader><Tab> :NERDTreeToggle<CR>
 
 set ttimeoutlen=50          " Make <Esc> faster
@@ -542,17 +556,6 @@ function! <SID>SynStack() abort
   echo map(synstack(line('.'), col('.')), 'synIDattr(v:val, "name")')
 endfunction
 
-" Toggle Zenburn Contrast (high by default)
-function! ZenburnContrastToggle() abort
-  if g:zenburn_high_Contrast
-    let g:zenburn_high_Contrast=0
-    colorscheme zenburn
-  else
-    let g:zenburn_high_Contrast=1
-    colorscheme zenburn
-  endif
-endfunction
-
 if has('autocmd')
   augroup VariousAutocmd
     autocmd!
@@ -588,14 +591,14 @@ endif
 
 " Reload .vimrc when it changes
 " From http://stackoverflow.com/questions/2400264/is-it-possible-to-apply-vim-configurations-without-restarting/2403926#2403926
-if has('autocmd')
-  augroup myvimrc
-    autocmd!
-    if $MYVIMRC !=# ''
-      autocmd BufWritePost .vimrc source $MYVIMRC
-    endif
-  augroup END
-endif
+" if has('autocmd')
+"   augroup myvimrc
+"     autocmd!
+"     if $MYVIMRC !=# ''
+"       autocmd BufWritePost .vimrc source $MYVIMRC
+"     endif
+"   augroup END
+" endif
 
 " Enable fenced code block syntax highlighting in Markdown documents
 let g:markdown_fenced_languages = ['html', 'javascript', 'css', 'python', 'bash=sh', 'sh']
