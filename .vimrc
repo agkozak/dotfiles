@@ -8,7 +8,7 @@ silent function! CMDEXE() abort       " Is the shell cmd.exe?
   return (&shell =~? 'cmd')
 endfunction
 
-silent function! WINDOWS() abort      " Not true of Cygwin/MSys2/WSL
+silent function! WINDOWS() abort      " Not true of Cygwin/MSYS2/WSL
   return (has('win32') || has('win64'))
 endfunction
 
@@ -427,7 +427,7 @@ endif
 
 " => UI {{{1
 
-" Rule out certain Cygwin/MSys2 shells in ConEmu
+" Rule out certain Cygwin/MSYS2 shells in ConEmu
 " Rule out cmd.exe and Powershell in the Windows Console
 if &term !=# 'cygwin' && &term !=# 'win32'
 
@@ -439,10 +439,10 @@ if &term !=# 'cygwin' && &term !=# 'win32'
   endif
 
   syntax on
-  let g:zenburn_high_Contrast = 1
   if has('iVim')
     silent! colorscheme desert
   else
+    let g:zenburn_high_Contrast = 1
     silent! colorscheme zenburn
   endif
 
