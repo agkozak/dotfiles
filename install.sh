@@ -41,8 +41,8 @@ github_clone_or_update() {
   echo
   printf 'GitHub repository %s:\n' "$1"
   if [ ! -d "$AGKDOT_REPO" ]; then
-    (git clone https://github.com/"$1".git; cd "$AGKDOT_REPO" || return; [ -n "$2" ] \
-      && git checkout "$2")
+    (git clone https://github.com/"$1".git; cd "$AGKDOT_REPO" ||
+      return; [ -n "$2" ] && git checkout "$2")
   else
     (cd "$AGKDOT_REPO" || return; git pull; [ "$2" != '' ] && git checkout "$2")
   fi
