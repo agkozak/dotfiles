@@ -199,6 +199,12 @@ unsetopt LIST_BEEP        # Don't beep on an ambiguous completion
 
 # }}}2
 
+# 16.2.3 Expansion and Globbing {{{2
+
+setopt EQUALS             # Perform = filename expansion
+
+# }}}2
+
 # 16.2.4 History {{{2
 
 setopt EXTENDED_HISTORY       # Save time stamps and durations
