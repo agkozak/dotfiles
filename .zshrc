@@ -412,7 +412,10 @@ if (( AGKDOT_NO_ZINIT != 1 )) && is-at-least 5.0.8; then
 
     # Is Turbo Mode appropriate?
     _agkdot_turbo() {
-      is-at-least 5.3 && [[ $TERM != 'dumb' && $OSTYPE != (solaris*|cygwin) ]]
+      is-at-least 5.3 &&
+        [[ $TERM != 'dumb' &&
+           $OSTYPE != (solaris*|cygwin) &&
+           $EUID != 0 ]]  # Lazyloading doesn't always work well when root
     }
 
     # if _agkdot_turbo; then
