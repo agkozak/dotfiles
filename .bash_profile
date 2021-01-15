@@ -2,7 +2,7 @@
 #
 # https://github.com/agkozak/dotfiles
 #
-# shellcheck shell=bash disable=SC1090,SC1091
+# shellcheck shell=bash disable=SC1090,SC1091,SC2039
 
 # Source global definitions in CloudLinux if shell is interactive
 if [[ -z $PS1 ]]; then
