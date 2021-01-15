@@ -106,7 +106,7 @@ _agkdot_construct_path  '/mingw64/bin' \
 case $AGKDOT_SYSTEMINFO in
 	*Cygwin)
 		export CYGWIN
-    # `ln` creates native symlinks in Windows -- only works for administrator
+    # Have `ln' create native symlinks in Windows - only works for administrator
     CYGWIN='winsymlinks:native'
 		unset PYTHONHOME SSL_CERT_DIR SSL_CERT_FILE
 	  ;;
@@ -118,14 +118,14 @@ case $AGKDOT_SYSTEMINFO in
 		SSL_CERT_FILE=/etc/ssl/cert.pem
 	  ;;
   *Microsoft*)                                                            # WSL
-    [ ! -d "${HOME}/.screen" ] && mkdir "${HOME}/.screen" \
-      && chmod 700 "${HOME}/.screen"
+    [ ! -d "${HOME}/.screen" ] && mkdir "${HOME}/.screen" &&
+      chmod 700 "${HOME}/.screen"
     export SCREENDIR
     SCREENDIR="${HOME}/.screen"
     ;;
 	*Msys)
 		export MSYS SSL_CERT_DIR SSL_CERT_FILE
-		# `ln` creates native symlinks in Windows -- only works for administrator
+		# Have `ln' create native symlinks in Windows - only works for administrator
 		MSYS='winsymlinks:nativestrict'
     unset PYTHONHOME
 		[ ! -f '/usr/bin/zsh' ] && SHELL='/usr/bin/bash'

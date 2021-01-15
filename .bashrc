@@ -2,7 +2,7 @@
 #
 # https://github.com/agkozak/dotfiles
 #
-# shellcheck shell=bash
+# shellcheck shell=bash disable=SC2039
 
 # Begin .bashrc benchmark {{{1
 
@@ -37,7 +37,7 @@ esac
 # Source ~/.shrc {{{1
 
 # shellcheck source=/dev/null
-[[ -f ${HOME}/.shrc ]] && . "${HOME}/.shrc"
+[[ -f "${HOME}/.shrc" ]] && . "${HOME}/.shrc"
 
 # }}}1
 
