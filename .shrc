@@ -6,7 +6,7 @@
 # the environment variable ENV is set to this file. It is sourced at the
 # beginnning of .zshrc and .bashrc
 #
-# shellcheck shell=sh
+# shellcheck shell=sh disable=SC2034
 
 # Only run this script when shell is interactive {{{1
 
@@ -323,7 +323,13 @@ fi
 # vi-style line editing
 set -o vi
 
-case $KSH_VERSION in *93*) set -o globstar ;; esac
+case $KSH_VERSION in
+  *93*)
+    set -o globstar
+    # Search path for autoloadable functions
+    FPATH='/usr/share/ksh/functions:~/.func'
+    ;;
+esac
 
 HISTSIZE=10000
 
