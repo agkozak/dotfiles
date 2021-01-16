@@ -16,8 +16,10 @@ fi
 
 # AGKDOT_SYSTEMINFO {{{1
 
-export AGKDOT_SYSTEMINFO
-AGKDOT_SYSTEMINFO=$(uname -a)
+if [ -z "$AGKDOT_SYSTEMINFO" ]; then
+  export AGKDOT_SYSTEMINFO
+  AGKDOT_SYSTEMINFO=$(uname -a)
+fi
 
 # }}}1
 
