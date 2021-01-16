@@ -47,12 +47,15 @@ case $(ls -l "$(command -v less)") in
     ;;
 esac
 
-if command -v lesspipe > /dev/null 2>&1; then
-  export LESSOPEN
+export LESSOPEN
+if command -v lessfile > /dev/null 2>&1; then
+  eval "$(lessfile)"  # Sets LESSOPEN and uses ~/.lessfilter
+elif command -v lesspipe > /dev/null 2>&1; then
 	LESSOPEN='| lesspipe %s'
 elif command -v lesspipe.sh > /dev/null 2>&1; then
-  export LESSOPEN
 	LESSOPEN='| lesspipe.sh %s'
+else
+  LESSOPEN="| ${HOME}/.lessfilter %s"
 fi
 
 if [ -f "$HOME/.lynx.cfg" ]; then
