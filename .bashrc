@@ -2,22 +2,19 @@
 #
 # https://github.com/agkozak/dotfiles
 #
-# shellcheck shell=bash disable=SC2039
+# shellcheck shell=bash
 
 # Begin .bashrc benchmark {{{1
 
 if (( AGKDOT_BENCHMARKS )); then
   case ${BASH_VERSINFO[0]} in
     1|2|3)
-      case $OSTYPE in
-        freebsd*) ;;
-        *) ((AGKDOT_BASHRC_START=$(date +%s%N)/1000000)) ;;
-      esac
+      [[ $OSTYPE == freebsd* ]] || ((AGKDOT_BASHRC_START=$(date +%s%N)/1000000))
       ;;
     4)
       if [[ ${BASH_VERSINFO[1]} -lt 2 ]]; then
-        [[ $OSTYPE == freebsd* ]] && return
-        ((AGKDOT_BASHRC_START=$(date +%s%N)/1000000))
+        [[ $OSTYPE == freebsd* ]] ||
+          ((AGKDOT_BASHRC_START=$(date +%s%N)/1000000))
       else
         printf -v AGKDOT_BASHRC_START '%(%s)T' -1
       fi
@@ -37,7 +34,7 @@ esac
 # Source ~/.shrc {{{1
 
 # shellcheck source=/dev/null
-[[ -f "${HOME}/.shrc" ]] && . "${HOME}/.shrc"
+[[ -f ${HOME}/.shrc ]] && . "${HOME}/.shrc"
 
 # }}}1
 
@@ -107,7 +104,7 @@ else
     if type git &> /dev/null; then
       git clone https://github.com/agkozak/z.git "$HOME/dotfiles/plugins/z"
     else
-      echo 'Please install Git.'
+      >&2 echo 'Please install Git.'
     fi
   fi
   if [[ -f ${HOME}/dotfiles/plugins/z/z.sh ]]; then
@@ -125,22 +122,20 @@ fi
 if (( AGKDOT_BENCHMARKS )); then
   case ${BASH_VERSINFO[0]} in
     1|2|3)
-      case $OSTYPE in
-        freebsd*) ;;
-        *) ((AGKDOT_BASHRC_FINISH=$(date +%s%N)/1000000)) ;;
-      esac
+      [[ $OSTYPE == freebsd* ]] ||
+        ((AGKDOT_BASHRC_FINISH=$(date +%s%N)/1000000))
       ;;
     4)
       if [[ ${BASH_VERSINFO[1]} -lt 2 ]]; then
-        [[ $OSTYPE == freebsd* ]] && return
-        ((AGKDOT_BASHRC_FINISH=$(date +%s%N)/1000000))
+        [[ $OSTYPE == freebsd* ]] ||
+          ((AGKDOT_BASHRC_FINISH=$(date +%s%N)/1000000))
       else
         printf -v AGKDOT_BASHRC_FINISH '%(%s)T' -1
       fi
       ;;
     *) AGKDOT_BASHRC_FINISH=$EPOCHSECONDS ;;
   esac
-  echo ".bashrc loaded in $((AGKDOT_BASHRC_FINISH-AGKDOT_BASHRC_START))ms total."
+  >&2 echo ".bashrc loaded in $((AGKDOT_BASHRC_FINISH-AGKDOT_BASHRC_START))ms total."
 fi
 
 unset AGKDOT_BASHRC_START AGKDOT_BASHRC_FINISH
