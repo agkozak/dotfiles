@@ -79,9 +79,6 @@ fi
 echo '.editorconfig'
 cp .editorconfig "$HOME"
 
-conditional_install lesspipe .lessfilter
-conditional_install lesspipe.sh .lessfilter
-
 conditional_install lynx .lynx.cfg
 
 echo .profile
