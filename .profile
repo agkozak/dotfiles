@@ -90,20 +90,20 @@ _agkdot_construct_path() {
 }
 
 _agkdot_construct_path  '/mingw64/bin' \
-                        "${HOME}/.gem/ruby/2.4.0/bin" \
+                        # "${HOME}/.gem/ruby/2.4.0/bin" \
                         "${HOME}/.local/bin" \
-                        "${HOME}/go/bin" \
+                        # "${HOME}/go/bin" \
                         "${HOME}/.cabal/bin" \
                         "${HOME}/.config/composer/vendor/bin" \
                         "${HOME}/.composer/vendor/bin" \
-                        "${HOME}/.luarocks/bin" \
-                        "${HOME}/ruby/gems/bin" \
-                        "${HOME}/.rvim/bin" \
+                        # "${HOME}/.luarocks/bin" \
+                        # "${HOME}/ruby/gems/bin" \
+                        # "${HOME}/.rvim/bin" \
                         "${HOME}/bin"
 
 # Load RVM into a shell session *as a function*
 # shellcheck source=/dev/null
-[ -s "${HOME}/.rvm/scripts/rvm" ] && . "${HOME}/.rvm/scripts/rvm"
+# [ -s "${HOME}/.rvm/scripts/rvm" ] && . "${HOME}/.rvm/scripts/rvm"
 
 case $AGKDOT_SYSTEMINFO in
 	*Cygwin)
