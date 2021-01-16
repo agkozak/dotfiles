@@ -2,7 +2,7 @@
 #
 # https://github.com/agkozak/dotfiles
 #
-# shellcheck shell=bash
+# shellcheck shell=bash disable=SC2039
 
 # Begin .bashrc benchmark {{{1
 
@@ -13,10 +13,7 @@ fi
 # }}}1
 
 # If not running interactively, don't do anything
-case $- in
-  *i*) ;;
-  *) return ;;
-esac
+[[ $- == *i* ]] || return
 
 # Source ~/.shrc {{{1
 
