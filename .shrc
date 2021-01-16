@@ -117,15 +117,7 @@ if [ "${AGKDOT_IS_BUSYBOX_LS:-0}" -eq 0 ]; then
   esac
 fi
 
-# Set the ls alias
-case $AGKDOT_SYSTEMINFO in
-  # For the time being, WSL doesn't like Windows symlinks
-  *Microsoft*)
-    [ "${AGKDOT_IS_BUSYBOX_LS:-0}" -eq 0 ] &&
-      alias ls='ls ${LS_OPTIONS} 2> /dev/null'
-    ;;
-  *) alias ls='ls ${LS_OPTIONS}' ;;
-esac
+alias ls='ls ${LS_OPTIONS}'
 
 if [ -n "$INSIDE_EMACS" ]; then
   unset LS_COLORS
