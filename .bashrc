@@ -6,11 +6,8 @@
 
 # Begin .bashrc benchmark {{{1
 
-if (( AGKDOT_BENCHMARKS )); then
-  if [[ $OSTYPE != freebsd* ]]; then
-    printf -v AGKDOT_BASHRC_START '%(%s)T' -1 &> /dev/null ||
-      (( AGKDOT_BASHRC_START=$(date +%s%N)/1000000 ))
-  fi
+if (( AGKDOT_BENCHMARKS )) && [[ $OSTYPE != freebsd* ]]; then
+  (( AGKDOT_BASHRC_START=$(date +%s%N)/1000000 ))
 fi
 
 # }}}1
@@ -109,11 +106,8 @@ fi
 
 # End .bashrc benchmark {{{
 
-if (( AGKDOT_BENCHMARKS )); then
-  if [[ $OSTYPE != freebsd* ]]; then
-    printf -v AGKDOT_BASHRC_FINISH '%(%s)T' -1 &> /dev/null ||
-      (( AGKDOT_BASHRC_FINISH=$(date +%s%N)/1000000 ))
-  fi
+if (( AGKDOT_BENCHMARKS )) && [[ $OSTYPE != freebsd* ]]; then
+  (( AGKDOT_BASHRC_FINISH=$(date +%s%N)/1000000 ))
   >&2 echo ".bashrc loaded in $((AGKDOT_BASHRC_FINISH-AGKDOT_BASHRC_START))ms total."
 fi
 
