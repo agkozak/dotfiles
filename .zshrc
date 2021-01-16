@@ -394,7 +394,7 @@ if (( AGKDOT_NO_ZINIT != 1 )) && is-at-least 5.0.8; then
   if (( ${+commands[git]} )); then
 
     if [[ ! -d ${HOME}/.zinit/bin ]]; then
-      print 'Installing zinit...' &>2
+      print 'Installing zinit...' >&2
       mkdir -p "${HOME}/.zinit"
       git clone https://github.com/zdharma/zinit.git "${HOME}/.zinit/bin"
     fi
@@ -497,7 +497,7 @@ if (( AGKDOT_NO_ZINIT != 1 )) && is-at-least 5.0.8; then
     fi
 
   else
-    print 'Please install git.' &>2
+    print 'Please install git.' >&2
   fi
 
   # }}}2
