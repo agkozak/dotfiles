@@ -28,6 +28,9 @@ fi
 
 # }}}1
 
+# Transitional
+unalias ls dir vdir &> /dev/null
+
 # Compile dotfiles {{{1
 
 for i in .zshenv \
@@ -76,11 +79,6 @@ fi
 # Windows may have backslashes in them
 [[ $OSTYPE == (msys|cygwin) ]] && alias echo='echo -E'
 alias hgrep='fc -fl 0 | grep'
-
-for i in ls dir vdir; do
-  (( ${+aliases[$i]} )) && unalias $i
-done
-unset i
 
 ls() {
   command ls ${=LS_OPTIONS} $@
