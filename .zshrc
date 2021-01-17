@@ -77,6 +77,11 @@ fi
 [[ $OSTYPE == (msys|cygwin) ]] && alias echo='echo -E'
 alias hgrep='fc -fl 0 | grep'
 
+for i in ls dir vdir; do
+  (( ${+aliases[$i]} )) && unalias $i
+done
+unset i
+
 ls() {
   command ls ${=LS_OPTIONS} $@
 }
