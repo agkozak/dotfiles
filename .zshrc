@@ -77,7 +77,18 @@ fi
 [[ $OSTYPE == (msys|cygwin) ]] && alias echo='echo -E'
 alias hgrep='fc -fl 0 | grep'
 
-alias ls='ls ${=LS_OPTIONS}'
+ls() {
+  command ls ${=LS_OPTIONS} $@
+}
+
+if [[ ! -h /bin/ls && ${terminfo[colors]:-0} -ge 8 ]]; then
+  dir() {
+    command dir --color=auto $@
+  }
+  vdir() {
+    command vdir --color=auto $@
+  }
+fi
 
 # which should not be aliased in ZSH
 (( ${+aliases[which]} )) && unalias which

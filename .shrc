@@ -117,7 +117,7 @@ if [ "${AGKDOT_IS_BUSYBOX_LS:-0}" -eq 0 ]; then
   esac
 fi
 
-alias ls='ls ${LS_OPTIONS}'
+[ -z "$ZSH_VERSION" ] && alias ls='ls ${LS_OPTIONS}'
 
 if [ -n "$INSIDE_EMACS" ]; then
   unset LS_COLORS
@@ -135,16 +135,8 @@ case $AGKDOT_SYSTEMINFO in
   *)
     if [ "${AGKDOT_IS_BUSYBOX_LS:-0}" -eq 0 ] &&
        [ "$AGKDOT_TERM_COLORS"        -ge 8 ]; then
-      case $AGKDOT_SYSTEMINFO in
-        *Microsoft*)
-          alias dir='dir --color=auto 2> /dev/null'
-          alias vdir='vdir --color=auto 2> /dev/null'
-          ;;
-        *)
-          alias dir='dir --color=auto'
-          alias vdir='vdir --color=auto'
-          ;;
-      esac
+      [ -z "$ZSH_VERSION" ] && alias dir='dir --color=auto'
+      [ -z "$ZSH_VERSION" ] && alias vdir='vdir --color=auto'
 
       alias grep='grep --color=auto'
       alias fgrep='fgrep --color=auto'
