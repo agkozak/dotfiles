@@ -81,14 +81,13 @@ ls() {
   command ls ${=LS_OPTIONS} $@
 }
 
-if [[ ! -h /bin/ls && ${terminfo[colors]:-0} -ge 8 ]]; then
-  dir() {
-    command dir --color=auto $@
-  }
-  vdir() {
-    command vdir --color=auto $@
-  }
-fi
+(( ${+commands[dir]} )) && dir() {
+  command dir ${=LS_OPTIONS} $@
+}
+
+(( ${+commands[dir]} )) && vdir() {
+  command vdir ${=LS_OPTIONS} $@
+}
 
 # which should not be aliased in ZSH
 (( ${+aliases[which]} )) && unalias which
