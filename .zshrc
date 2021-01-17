@@ -28,9 +28,6 @@ fi
 
 # }}}1
 
-# Transitional
-unalias ls dir vdir &> /dev/null
-
 # Compile dotfiles {{{1
 
 for i in .zshenv \
@@ -80,21 +77,7 @@ fi
 [[ $OSTYPE == (msys|cygwin) ]] && alias echo='echo -E'
 alias hgrep='fc -fl 0 | grep'
 
-ls() {
-  if [[ $OSTYPE == solaris* && -x /usr/gnu/bin/ls ]]; then
-    /usr/gnu/bin/ls ${=LS_OPTIONS} $@
-  else
-    command ls ${=LS_OPTIONS} $@
-  fi
-}
-
-(( ${+commands[dir]} )) && dir() {
-  command dir ${=LS_OPTIONS} $@
-}
-
-(( ${+commands[dir]} )) && vdir() {
-  command vdir ${=LS_OPTIONS} $@
-}
+alias ls='ls ${=LS_OPTIONS}'
 
 # which should not be aliased in ZSH
 (( ${+aliases[which]} )) && unalias which

@@ -95,13 +95,8 @@ if [ "${AGKDOT_IS_BUSYBOX_LS:-0}" -eq 0 ]; then
     # Solaris ls has very few desirable options, but sometimes GNU ls is also
     # installed
     SunOS*)
-      if [ -x '/usr/gnu/bin/ls' ]; then
-        if [ -z "$ZSH_VERSION" ]; then
-          alias ls='/usr/gnu/bin/ls --group-directories-first -F -h -T 0 --color=auto'
-        else
-          LS_OPTIONS='--group-directories-first -F -h -T 0 --color=auto'
-        fi
-      fi
+      [ -x '/usr/gnu/bin/ls' ] &&
+        alias ls='/usr/gnu/bin/ls --group-directories-first -F -h -T 0 --color'
       ;;
     # Some antiquated versions of ls
     NetBSD*|OpenBSD*|UWIN*) ;;
@@ -122,12 +117,7 @@ if [ "${AGKDOT_IS_BUSYBOX_LS:-0}" -eq 0 ]; then
   esac
 fi
 
-case $AGKDOT_SYSTEMINFO in
-  SunOS*) ;;
-  *)
-    [ -z "$ZSH_VERSION" ] && alias ls='ls ${LS_OPTIONS}'
-    ;;
-esac
+alias ls='ls ${LS_OPTIONS}'
 
 if [ -n "$INSIDE_EMACS" ]; then
   unset LS_COLORS
@@ -145,8 +135,16 @@ case $AGKDOT_SYSTEMINFO in
   *)
     if [ "${AGKDOT_IS_BUSYBOX_LS:-0}" -eq 0 ] &&
        [ "$AGKDOT_TERM_COLORS"        -ge 8 ]; then
-      [ -z "$ZSH_VERSION" ] && alias dir='dir --color=auto'
-      [ -z "$ZSH_VERSION" ] && alias vdir='vdir --color=auto'
+      case $AGKDOT_SYSTEMINFO in
+        *Microsoft*)
+          alias dir='dir --color=auto 2> /dev/null'
+          alias vdir='vdir --color=auto 2> /dev/null'
+          ;;
+        *)
+          alias dir='dir --color=auto'
+          alias vdir='vdir --color=auto'
+          ;;
+      esac
 
       alias grep='grep --color=auto'
       alias fgrep='fgrep --color=auto'
