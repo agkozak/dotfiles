@@ -77,12 +77,7 @@ fi
 [[ $OSTYPE == (msys|cygwin) ]] && alias echo='echo -E'
 alias hgrep='fc -fl 0 | grep'
 
-# At the moment, WSL1 doesn't like Windows symlinks
-# if [[ $AGKDOT_SYSTEMINFO == *Microsoft* ]]; then
-#   alias ls='ls ${=LS_OPTIONS} 2> /dev/null'
-# else
 alias ls='ls ${=LS_OPTIONS}'
-# fi
 
 # which should not be aliased in ZSH
 (( ${+aliases[which]} )) && unalias which
