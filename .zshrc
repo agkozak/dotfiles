@@ -81,7 +81,11 @@ fi
 alias hgrep='fc -fl 0 | grep'
 
 ls() {
-  command ls ${=LS_OPTIONS} $@
+  if [[ $OSTYPE == solaris* && -x /usr/gnu/bin/ls ]]; then
+    /usr/gnu/bin/ls ${=LS_OPTIONS} $@
+  else
+    command ls ${=LS_OPTIONS} $@
+  fi
 }
 
 (( ${+commands[dir]} )) && dir() {
