@@ -89,13 +89,15 @@ alias -g G='| grep'
 alias -g H='| head'
 
 # Workaround for MSYS2/Cygwin
-less() {
-  if [[ -n $@ ]]; then
-    command less $@
-  else
-    (command less)
-  fi
-}
+if [[ $OSTYPE == (msys|cygwin) ]]; then
+  less() {
+    if [[ -n $@ ]]; then
+      command less $@
+    else
+      (command less)
+    fi
+  }
+fi
 
 alias -g L='| less'
 
