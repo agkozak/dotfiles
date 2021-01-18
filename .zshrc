@@ -88,13 +88,14 @@ alias ls='ls ${=LS_OPTIONS}'
 alias -g G='| grep'
 alias -g H='| head'
 
-# Workaround for MSYS2/Cygwin
+# Prevent pipes to `less' from being pushed into the background on MSYS2 and
+# Cygwin
 if [[ $OSTYPE == (msys|cygwin) ]]; then
   less() {
-    if [[ -n $@ ]]; then
+    if [[ -t 0 ]]; then
       command less $@
     else
-      (command less)
+      (command less $@)
     fi
   }
 fi
