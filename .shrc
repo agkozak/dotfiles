@@ -96,7 +96,7 @@ if [ "${AGKDOT_IS_BUSYBOX_LS:-0}" -eq 0 ]; then
     # installed
     SunOS*)
       [ -x '/usr/gnu/bin/ls' ] &&
-        alias ls='/usr/gnu/bin/ls --group-directories-first -F -h -T 0 --color'
+        alias ls='/usr/gnu/bin/ls --group-directories-first -F -h --color'
       ;;
     # Some antiquated versions of ls
     NetBSD*|OpenBSD*|UWIN*) ;;
@@ -106,7 +106,7 @@ if [ "${AGKDOT_IS_BUSYBOX_LS:-0}" -eq 0 ]; then
       ;;
     # GNU ls
     *)
-      LS_OPTIONS='--group-directories-first -F -h -T 0'
+      LS_OPTIONS='--group-directories-first -F -h'
       [ "$AGKDOT_TERM_COLORS" -ge 8 ] && LS_OPTIONS="${LS_OPTIONS} --color"
       case $AGKDOT_SYSTEMINFO in
         *Msys|*Cygwin)
