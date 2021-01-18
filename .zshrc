@@ -20,7 +20,9 @@
 
 if (( AGKDOT_BENCHMARKS )); then
   if (( $+AGKDOT_ZSHENV_BENCHMARK )); then
-    print ".zshenv loaded in ${AGKDOT_ZSHENV_BENCHMARK}ms total." >&2
+    (( ${terminfo[colors]:-0} >= 8 )) && >&2 print -Pn '%F{red}'
+    >&2 print -n ".zshenv loaded in ${AGKDOT_ZSHENV_BENCHMARK}ms total."
+    (( ${terminfo[colors]:-0} >= 8 )) && >&2 print -P '%f'
     unset AGKDOT_ZSHENV_BENCHMARK
   fi
   typeset -F SECONDS=0
@@ -43,6 +45,7 @@ for i in .zshenv \
   if [[ -e ${HOME}/${i} &&
         ! -e ${HOME}/${i}.zwc ||
         ${HOME}/${i} -nt ${HOME}/${i}.zwc ]]; then
+        (( AGKDOT_BENCHMARKS )) && >&2 print -P "%F{red}Compiling ${i}%f"
     zcompile "${HOME}/${i}"
   fi
 done
@@ -59,7 +62,9 @@ if [[ -f ${HOME}/.shrc ]];then
     (( $+EPOCHREALTIME )) || zmodload zsh/datetime
     typeset -g AGKDOT_ZSHRC_START=$(( EPOCHREALTIME * 1000 ))
     AGKDOT_ZSHRC_LOADING=1 source "${HOME}/.shrc"
-    printf '.shrc loaded in %dms.\n' $(( (EPOCHREALTIME * 1000) - AGKDOT_ZSHRC_START )) >&2
+    (( ${terminfo[colors]:-0} >= 8 )) && >&2 print -Pn '%F{red}'
+    >&2 printf '.shrc loaded in %dms.' $(( (EPOCHREALTIME * 1000) - AGKDOT_ZSHRC_START ))
+    (( ${terminfo[colors]:-0} >= 8 )) && >&2 print -P '%f'
     unset AGKDOT_ZSHRC_START
   else
     source "${HOME}/.shrc"
@@ -722,7 +727,9 @@ zsh_update() {
 # End .zshrc benchmark {{{1
 
 if (( AGKDOT_BENCHMARKS )); then
-  print ".zshrc loaded in ${$(( SECONDS * 1000 ))%.*}ms total." >&2
+  (( ${terminfo[colors]:-0} >= 8 )) && >&2 print -Pn '%F{red}'
+  >&2 print -n ".zshrc loaded in ${$(( SECONDS * 1000 ))%.*}ms total."
+  (( ${terminfo[colors]:-0} >= 8 )) && >&2 print -P '%f'
   typeset -i SECONDS
 fi
 
