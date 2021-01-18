@@ -137,18 +137,18 @@ case $AGKDOT_SYSTEMINFO in
        [ "$AGKDOT_TERM_COLORS"        -ge 8 ]; then
       case $AGKDOT_SYSTEMINFO in
         *Microsoft*)
-          alias dir='dir --color=auto 2> /dev/null'
-          alias vdir='vdir --color=auto 2> /dev/null'
+          alias dir='dir --color 2> /dev/null'
+          alias vdir='vdir --color 2> /dev/null'
           ;;
         *)
-          alias dir='dir --color=auto'
-          alias vdir='vdir --color=auto'
+          alias dir='dir --color'
+          alias vdir='vdir --color'
           ;;
       esac
 
-      alias grep='grep --color=auto'
-      alias fgrep='fgrep --color=auto'
-      alias egrep='egrep --color=auto'
+      alias grep='grep --color'
+      alias fgrep='fgrep --color'
+      alias egrep='egrep --color'
     fi
     ;;
 esac
