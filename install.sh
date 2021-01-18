@@ -165,4 +165,6 @@ fi
 
 conditional_install mysql .editrc
 
+conditional_install less .lessfilter
+
 # vim: ft=sh:fdm=marker:ts=2:sts=2:sw=2:et
