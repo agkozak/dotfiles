@@ -88,12 +88,16 @@ alias ls='ls ${=LS_OPTIONS}'
 alias -g G='| grep'
 alias -g H='| head'
 
-# Workaround for zsh in MSYS2/Cygwin
-if [[ $OSTYPE == (msys|cygwin) ]]; then
-  alias -g L='| (less)'
-else
-  alias -g L='| less'
-fi
+# Workaround for MSYS2/Cygwin
+less() {
+  if [[ -n $@ ]]; then
+    command less $@
+  else
+    (command less)
+  fi
+}
+
+alias -g L='| less'
 
 alias -g LL='2>&1 | less'
 # alias -g M='| most'
