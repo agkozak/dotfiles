@@ -138,8 +138,13 @@ esac
 # umask {{{1
 
 # TODO: Consider setting in wsl.conf
-case $(umask) in
-  000|0000) umask 022 ;;                                              # For WSL
+case $AGKDOT_SYSTEMINFO in
+  *[Mm]icrosoft*)
+    case $(umask) in
+      000|0000) umask 022 ;;
+    esac
+    ;;
+  *) ;;
 esac
 
 # }}}1
