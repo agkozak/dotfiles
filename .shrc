@@ -109,7 +109,7 @@ if [ "${AGKDOT_IS_BUSYBOX_LS:-0}" -eq 0 ]; then
       LS_OPTIONS='--group-directories-first -F -h -T 0'
       [ "$AGKDOT_TERM_COLORS" -ge 8 ] && LS_OPTIONS="${LS_OPTIONS} --color"
       case $AGKDOT_SYSTEMINFO in
-        *Msys|*Cygwin)
+        *Msys|*Cygwin|*[Mm]icrosoft*)
           LS_OPTIONS="${LS_OPTIONS} --hide=NTUSER* --hide=ntuser*"
           ;;
       esac
@@ -135,17 +135,8 @@ case $AGKDOT_SYSTEMINFO in
   *)
     if [ "${AGKDOT_IS_BUSYBOX_LS:-0}" -eq 0 ] &&
        [ "$AGKDOT_TERM_COLORS"        -ge 8 ]; then
-      case $AGKDOT_SYSTEMINFO in
-        *Microsoft*)
-          alias dir='dir --color 2> /dev/null'
-          alias vdir='vdir --color 2> /dev/null'
-          ;;
-        *)
-          alias dir='dir --color'
-          alias vdir='vdir --color'
-          ;;
-      esac
-
+      alias dir='dir --color'
+      alias vdir='vdir --color'
       alias grep='grep --color'
       alias fgrep='fgrep --color'
       alias egrep='egrep --color'
