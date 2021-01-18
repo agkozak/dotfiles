@@ -478,14 +478,14 @@ if (( AGKDOT_NO_ZINIT != 1 )) && is-at-least 5.0.8; then
     _agkdot_turbo && zinit ice atload'_zsh_title__precmd' lucid nocd wait'!0i'
     zinit load jreese/zsh-titles
 
-    if [[ $AGKDOT_SYSTEMINFO != *ish* ]]; then
-      if _agkdot_turbo; then
-        zinit ice lucid wait'0e'
-      fi
-      zinit load zdharma/zui
-      _agkdot_turbo && zinit ice lucid wait'(( $+ZUI ))'
-      zinit load zdharma/zbrowse
-    fi
+    # if [[ $AGKDOT_SYSTEMINFO != *ish* ]]; then
+    #   if _agkdot_turbo; then
+    #     zinit ice lucid wait'0e'
+    #   fi
+    #   zinit load zdharma/zui
+    #   _agkdot_turbo && zinit ice lucid wait'(( $+ZUI ))'
+    #   zinit load zdharma/zbrowse
+    # fi
 
     zinit snippet OMZ::plugins/extract/extract.plugin.zsh
 
