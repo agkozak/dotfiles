@@ -21,7 +21,7 @@ fi
 
 # Add snap binary and desktop directories to environment {{{1
 
-if (( ${+commands[snap]} )) && [[ -f /etc/profile.d/apps-bin-path.sh ]]; then
+if (( ${+command[snap]} )) && [[ -f /etc/profile.d/apps-bin-path.sh ]]; then
   if [[ ! $PATH == */snap/bin* || ! $XDG_DATA_DIRS == */snapd/* ]]; then
     emulate sh
     source /etc/profile.d/apps-bin-path.sh
@@ -45,7 +45,7 @@ skip_global_compinit=1
 
 # Benchmarks {{{1
 
-typeset -g AGKDOT_ZSHENV_BENCHMARK=${$(( SECONDS * 1000))%.*}
+typeset -g AGKDOT_ZSHENV_BENCHMARK=${$(( SECONDS * 1000))%\.*}
 
 # }}}1
 
