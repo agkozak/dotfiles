@@ -38,7 +38,7 @@ if [ ! -h /bin/date ] && [ "${AGKDOT_BENCHMARKS:-0}" -eq 1 ]; then
   [ "${AGKDOT_ZSHRC_LOADING:-0}" -eq 1 ] || {
     case $AGKDOT_SYSTEMINFO in
       # BSD date doesn't handle nanoseconds
-      *BSD*|*bsd*|DragonFly*) ;;
+      *BSD*|DragonFly*) ;;
       *) AGKDOT_SHRC_START="$(/bin/date +%s%N)" ;;
     esac
   }
@@ -101,7 +101,7 @@ if [ "${AGKDOT_IS_BUSYBOX_LS:-0}" -eq 0 ]; then
     # Some antiquated versions of ls
     NetBSD*|OpenBSD*|UWIN*) ;;
     # FreeBSD ls
-    Darwin*|*[Bb][Ss][Dd]*|*[Dd]ragon[Ff]ly*)
+    Darwin*|*BSD*|*DragonFly*)
       [ "$AGKDOT_TERM_COLORS" -ge 8 ] && LS_OPTIONS='-G'
       ;;
     # GNU ls
@@ -244,7 +244,7 @@ case $AGKDOT_SYSTEMINFO in
     alias temp='/opt/vc/bin/vcgencmd measure_temp | egrep "[0-9.]{4,}" -o'
     ;;
   FreeBSD*)
-    alias tmux='TERM=xterm-256color tmux'
+    # alias tmux='TERM=xterm-256color tmux'
     alias mutt='TERM=xterm-256color mutt'
     ;;
 esac
@@ -259,7 +259,7 @@ case $AGKDOT_SYSTEMINFO in
     # Arguments:
     #   $@  A list of Windows programs
     ############################################################
-    exe_alias() {
+    _agkdot_exe_alias() {
       for i in "$@"; do
         # shellcheck disable=SC2139,SC2140
         alias "$i"="${i}.exe"
@@ -267,10 +267,10 @@ case $AGKDOT_SYSTEMINFO in
       unset i
     }
 
-    exe_alias explorer \
-              shexview \
-              subl \
-              wsl
+    _agkdot_exe_alias explorer \
+                      shexview \
+                      subl \
+                      wsl
     ;;
 esac
 
