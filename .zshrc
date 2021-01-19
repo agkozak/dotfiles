@@ -20,6 +20,9 @@
 
 ############################################################
 # Print a benchmark message (in red, if possible) to STDERR
+#
+# Arguments:
+#   $1 The message
 ############################################################
 _agkdot_benchmark_message() {
   (( ${terminfo[colors]:-0} >= 8 )) && >&2 print -Pn '%F{red}'
