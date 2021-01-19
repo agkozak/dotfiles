@@ -18,11 +18,19 @@
 #
 # before sourcing.
 
+############################################################
+# Print a benchmark message (in red, if possible) to STDERR
+############################################################
+_agkdot_benchmark_message() {
+  (( ${terminfo[colors]:-0} >= 8 )) && >&2 print -Pn '%F{red}'
+  >&2 print -- $@
+  (( ${terminfo[colors]:-0} >= 8 )) && >&2 print -Pn '%f'
+}
+
 if (( AGKDOT_BENCHMARKS )); then
   if (( $+AGKDOT_ZSHENV_BENCHMARK )); then
-    (( ${terminfo[colors]:-0} >= 8 )) && >&2 print -Pn '%F{red}'
-    >&2 print ".zshenv loaded in ${AGKDOT_ZSHENV_BENCHMARK}ms total."
-    (( ${terminfo[colors]:-0} >= 8 )) && >&2 print -Pn '%f'
+    _agkdot_benchmark_message \
+      ".zshenv loaded in ${AGKDOT_ZSHENV_BENCHMARK}ms total."
     unset AGKDOT_ZSHENV_BENCHMARK
   fi
   typeset -F SECONDS=0
@@ -62,9 +70,8 @@ if [[ -f ${HOME}/.shrc ]];then
     (( $+EPOCHREALTIME )) || zmodload zsh/datetime
     typeset -g AGKDOT_ZSHRC_START=$(( EPOCHREALTIME * 1000 ))
     AGKDOT_ZSHRC_LOADING=1 source "${HOME}/.shrc"
-    (( ${terminfo[colors]:-0} >= 8 )) && >&2 print -Pn '%F{red}'
-    >&2 printf '.shrc loaded in %dms.\n' $(( (EPOCHREALTIME * 1000) - AGKDOT_ZSHRC_START ))
-    (( ${terminfo[colors]:-0} >= 8 )) && >&2 print -Pn '%f'
+    _agkdot_benchmark_message \
+      ".shrc loaded in ${$(( (EPOCHREALTIME * 1000) - AGKDOT_ZSHRC_START ))%\.*}ms."
     unset AGKDOT_ZSHRC_START
   else
     source "${HOME}/.shrc"
@@ -727,9 +734,8 @@ zsh_update() {
 # End .zshrc benchmark {{{1
 
 if (( AGKDOT_BENCHMARKS )); then
-  (( ${terminfo[colors]:-0} >= 8 )) && >&2 print -Pn '%F{red}'
-  >&2 print ".zshrc loaded in ${$(( SECONDS * 1000 ))%.*}ms total."
-  (( ${terminfo[colors]:-0} >= 8 )) && >&2 print -Pn '%f'
+  _agkdot_benchmark_message \
+    ".zshrc loaded in ${$(( SECONDS * 1000 ))%.*}ms total."
   typeset -i SECONDS
 fi
 
