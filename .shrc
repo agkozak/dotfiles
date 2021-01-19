@@ -122,7 +122,7 @@ alias ls='ls ${LS_OPTIONS}'
 if [ -n "$INSIDE_EMACS" ]; then
   unset LS_COLORS
 # If dircolors is available, install.sh will have installed ~/.dircolors
-elif [ -z "$LS_COLORS" ]; then
+elif [ -z "$LS_COLORS" ] && command -v dircolors > /dev/null 2>&1; then
   if [ -f "${HOME}/.dircolors" ] && [ "$AGKDOT_TERM_COLORS" -ge 256 ]; then
     eval "$(dircolors -b "${HOME}/.dircolors")"
   elif [ "$AGKDOT_TERM_COLORS" -ge 8 ]; then
