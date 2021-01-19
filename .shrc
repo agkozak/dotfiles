@@ -284,10 +284,26 @@ esac
 
 # If possible, load the pan-POSIX Polyglot Prompt
 # But not in zsh -- it uses agkozak-zsh-prompt
+
+############################################################
+# Are we using FreeBSD sh?
+############################################################
+_agkdot_is_bsd_sh() {
+  case $AGKDOT_SYSTEMINFO in
+    FreeBSD*)
+      case ${0#-} in
+        sh) return 0 ;;
+        *) return 1 ;;
+      esac
+      ;;
+    *) return 1 ;;
+  esac
+}
+
 if [ -z "$ZSH_VERSION" ] ||
    [ "$0" = 'bash' ]     ||
    [ "$0" = 'ksh' ]      ||
-   [ "$0" = 'sh' ]; then
+   [ "$0" = 'sh' ] && ! _agkdot_is_bsd_sh; then
   if [ -f "${HOME}/dotfiles/prompts/polyglot/polyglot.sh" ]; then
     # shellcheck source=/dev/null
     . "${HOME}/dotfiles/prompts/polyglot/polyglot.sh"
