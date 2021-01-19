@@ -21,12 +21,10 @@ fi
 
 # Add snap binary and desktop directories to environment {{{1
 
-if (( ${+commands[snap]} )) && [[ -f /etc/profile.d/apps-bin-path.sh ]]; then
-  if [[ ! $PATH == */snap/bin* || ! $XDG_DATA_DIRS == */snapd/* ]]; then
-    emulate sh
+if (( ${+commands[snap]} )) &&
+   [[ $PATH != */snap/bin* || $XDG_DATA_DIRS != */snapd/* ]]; then
+  [[ -f /etc/profile.d/apps-bin-path.sh ]] &&
     source /etc/profile.d/apps-bin-path.sh
-    emulate zsh
-  fi
 fi
 
 # }}}1
