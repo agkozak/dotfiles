@@ -31,6 +31,16 @@ export AGKDOT_SYSTEMINFO
 
 # }}}1
 
+# Source /etc/shrc (NetBSD) {{{1
+case $AGKDOT_SYSTEMINFO in
+  NetBSD*)
+    # shellcheck source=/dev/null
+    [ -f /etc/shrc ] && . /etc/shrc
+    ;;
+esac
+
+# }}}1
+
 # Begin .shrc benchmark {{{1
 
 # BusyBox date doesn't handle nanoseconds
