@@ -247,7 +247,7 @@ case $AGKDOT_SYSTEMINFO in
     alias npm='winpty /cygdrive/c/Program\ Files/nodejs/npm.cmd'
     ;;
   *CYGWIN_NT-10.0-WOW*|*[Mm]icrosoft*)
-    alias tmux='tmux -S "$HOME/.tmsock"'
+    alias tmux='tmux -S "${HOME}/.tmsock"'
     ;;
   *raspberrypi*)
     alias temp='/opt/vc/bin/vcgencmd measure_temp | egrep "[0-9.]{4,}" -o'
