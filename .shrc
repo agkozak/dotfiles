@@ -366,7 +366,7 @@ update_dotfiles() {
     i=${i#\./}
     [ "$i" = '.git' ] && continue
     i=${i%/\.git}
-    printf 'Updating %s: ' "$i"
+    printf 'Updating %s: ' "${i##*/}"
     cd "$i" || exit
     cd ..
     git pull
