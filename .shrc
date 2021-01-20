@@ -94,6 +94,7 @@ if [ "${AGKDOT_IS_BUSYBOX_LS:-0}" -eq 0 ]; then
   case $AGKDOT_SYSTEMINFO in
     # Solaris ls has very few desirable options, but sometimes GNU ls is also
     # installed
+    *openindiana*) LS_OPTIONS='--color' ;;
     SunOS*)
       [ -x '/usr/gnu/bin/ls' ] &&
         alias ls='/usr/gnu/bin/ls --group-directories-first -F -h -T 0 --color'
@@ -123,11 +124,16 @@ if [ -n "$INSIDE_EMACS" ]; then
   unset LS_COLORS
 # If dircolors is available, install.sh will have installed ~/.dircolors
 elif [ -z "$LS_COLORS" ] && command -v dircolors > /dev/null 2>&1; then
-  if [ -f "${HOME}/.dircolors" ] && [ "$AGKDOT_TERM_COLORS" -ge 256 ]; then
-    eval "$(dircolors -b "${HOME}/.dircolors")"
-  elif [ "$AGKDOT_TERM_COLORS" -ge 8 ]; then
-    eval "$(dircolors -b)"
-  fi
+  case $AGKDOT_SYSTEMINFO in
+    *openindiana*) eval "$(dircolors -b)" ;;
+    *)
+      if [ -f "${HOME}/.dircolors" ] && [ "$AGKDOT_TERM_COLORS" -ge 256 ]; then
+        eval "$(dircolors -b "${HOME}/.dircolors")"
+      elif [ "$AGKDOT_TERM_COLORS" -ge 8 ]; then
+        eval "$(dircolors -b)"
+      fi
+      ;;
+  esac
 fi
 
 case $AGKDOT_SYSTEMINFO in
