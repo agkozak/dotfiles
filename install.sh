@@ -15,7 +15,7 @@ conditional_install() {
   if command -v "$1" > /dev/null 2>&1; then
     shift
     until [ $# = 0 ]; do
-      if [ ! -e "$1" ]; then
+      if [ ! -e "${HOME}/$1" ]; then
         printf 'Installing %s\n' "$1"
       elif [ -n "$(find -L "./$1" -prune -newer "${HOME}/$1" > /dev/null 2>&1)" ]; then
         printf 'Upgrading %s\n' "$1"
@@ -32,19 +32,32 @@ conditional_install() {
 # Clone a repo or update it with a pull.
 #
 # Arguments
-#   $1 Username/Repository
-#   $2 Branch (if other than master)
+#   [Optional] Command that must exist for installation to
+#     take place
+#   Username/Repository
+#   [Optional] Branch (if other than master)
 ###########################################################
 github_clone_or_update() {
-  command -v git > /dev/null 2>&1 || echo 'Install git.' >&2
+  case $1 in
+    */*) ;;
+    *) command -v "$1" > /dev/null 2>&1 || return ;;
+  esac
+  command -v git > /dev/null 2>&1 || echo 'Install git.' >&2 && return 1
   AGKDOT_REPO=$(echo "$1" | awk -F/ '{ printf "%s", $2 }')
   echo
   printf 'GitHub repository %s:\n' "$1"
   if [ ! -d "$AGKDOT_REPO" ]; then
-    (git clone https://github.com/"$1".git; cd "$AGKDOT_REPO" ||
-      return; [ -n "$2" ] && git checkout "$2")
+    AGKDOT_CUR_DIR="$PWD"
+    git clone https://github.com/"$1".git || return 1
+    cd "$AGKDOT_REPO" || return 1
+    [ -n "$2" ] && git checkout "$2"
+    cd "$AGKDOT_CUR_DIR" || return 1
   else
-    (cd "$AGKDOT_REPO" || return; git pull; [ "$2" != '' ] && git checkout "$2")
+    AGKDOT_CUR_DIR="$PWD"
+    cd "$AGKDOT_REPO" || return 1
+    git pull || return 1
+    [ -n "$2" ] && git checkout "$2"
+    cd "$AGKDOT_CUR_DIR" || return 1
   fi
   echo
   unset AGKDOT_REPO
@@ -56,37 +69,59 @@ github_clone_or_update() {
 
 cd prompts || exit
 
-github_clone_or_update "agkozak/polyglot" develop
-github_clone_or_update "jonmosco/kube-ps1"
-github_clone_or_update "agkozak/polyglot-kube-ps1"
+github_clone_or_update agkozak/polyglot develop
+github_clone_or_update kubectl jonmosco/kube-ps1
+github_clone_or_update kubectl agkozak/polyglot-kube-ps1
 
-cd ..
+cd .. || exit
 
-conditional_install vi .exrc
-
-if command -v dircolors > /dev/null 2>&1; then
-	echo '.dircolors'
-	github_clone_or_update "agkozak/dircolors-zenburn"
-  cp dircolors-zenburn/dircolors "$HOME/.dircolors"
+if [ -d "${HOME}/dotfiles/plugins/bash-z" ]; then
+  AGKDOT_CUR_DIR="$PWD"
+  cd "${HOME}/dotfiles/plugins/bash-z" || exit
+  git pull
+  cd "$AGKDOT_CUR_DIR" || exit
+  unset AGKDOT_CUR_DIR
 fi
+
+github_clone_or_update dircolors agkozak/dircolors-zenburn &&
+  cp dircolors-zenburn/dircolors "$HOME/.dircolors"
 
 conditional_install bash .bash_profile .bashrc .inputrc
 
-if [ -d "${HOME}/dotfiles/plugins/bash-z" ]; then
-  ( cd "${HOME}/dotfiles/plugins/bash-z" && git pull )
-fi
+conditional_install csh .cshrc
 
 echo '.editorconfig'
 cp .editorconfig "$HOME"
 
+if command -v emacs > /dev/null 2>&1; then
+  if [ ! -d "$HOME/.emacs.d" ]; then
+    mkdir "$HOME/.emacs.d"
+  fi
+  echo Installing ~/.emacs.d/init.el
+  cp ./.emacs.d/init.el "$HOME/.emacs.d"
+fi
+
+conditional_install less .lessfilter
+
 conditional_install lynx .lynx.cfg
 
-echo .profile
-echo .shrc
-cp .profile .shrc ..
+conditional_install mysql .editrc
 
-if [ -e "$HOME/.vimrc" ] \
-  && ! cmp ./.vimrc "$HOME/.vimrc" > /dev/null 2>&1; then
+if command -v phpstorm > /dev/null 2>&1        ||
+  [ -d '/c/Program Files/JetBrains' ]          ||
+  [ -d '/cygdrive/c/Program Files/JetBrains' ] ||
+  [ -d '/mnt/c/Program Files/JetBrains' ]; then
+  echo Installing .ideavimrc
+  cp .ideavimrc "$HOME"
+fi
+
+conditional_install screen .screenrc
+
+conditional_install sh .profile .shrc
+
+conditional_install tmux .tmux.conf
+
+if [ -e "$HOME/.vimrc" ] && ! cmp ./.vimrc "$HOME/.vimrc" > /dev/null 2>&1; then
   conditional_install vim .vimrc .exrc
   vim +PlugInstall +qall
 else
@@ -106,27 +141,20 @@ if command -v nvim > /dev/null 2>&1; then
   fi
 fi
 
+conditional_install vi .exrc
+
 conditional_install zsh .zprofile .zshenv .zshrc
-# Clean up after some frameworks
-rm -f "$HOME/.zlogin" "$HOME/.zlogin.zwc" "$HOME/.zlogout" "$HOME/zlogout.zwc"
-
-conditional_install csh .cshrc
-
-conditional_install screen .screenrc
 
 case ${AGKDOT_SYSTEMINFO:=$(uname -a)} in
-	*BSD*|*bsd*|DragonFly*)
-		echo .login_conf
-		cp .login_conf "$HOME"
+	*BSD*|DragonFly*)
+    conditional_install sh .login_conf
 	;;
 	*raspberrypi*)
 		echo .config/lxterminal
 		cp .config/lxterminal/lxterminal.conf "$HOME/.config/lxterminal"
 	;;
 	*Msys|*Cygwin)
-		echo .minttyrc
-		# github_clone_or_update "agkozak/zenburn.minttyrc" develop
-    cp .minttyrc "$HOME"
+    conditional_install mintty .minttyrc
 	;;
 esac
 
@@ -137,34 +165,7 @@ case ${AGKDOT_SYSTEMINFO:=$(uname -a)} in
     ;;
 esac
 
-if command -v tmux > /dev/null 2>&1; then
-	echo .tmux.conf
-  cp .tmux.conf ..
-	# if [ ! -d "$HOME/.tmux" ]; then
-	# 	echo Installing tpm
-    # command -v git > /dev/null 2>&1 || echo 'Install git.' >&2
-	# 	git clone https://github.com/tmux-plugins/tpm "$HOME/.tmux/plugins/tpm"
-	# fi
-fi
-
-if command -v emacs > /dev/null 2>&1; then
-  if [ ! -d "$HOME/.emacs.d" ]; then
-    mkdir "$HOME/.emacs.d"
-  fi
-  echo Installing ~/.emacs.d/init.el
-  cp ./.emacs.d/init.el "$HOME/.emacs.d"
-fi
-
-if command -v phpstorm > /dev/null 2>&1 \
-  || [ -d '/c/Program Files/JetBrains' ] \
-  || [ -d '/cygdrive/c/Program Files/JetBrains' ] \
-  || [ -d '/mnt/c/Program Files/JetBrains' ]; then
-  echo Installing .ideavimrc
-  cp .ideavimrc "$HOME"
-fi
-
-conditional_install mysql .editrc
-
-conditional_install less .lessfilter
+# Clean up after some frameworks
+rm -f "$HOME/.zlogin" "$HOME/.zlogin.zwc" "$HOME/.zlogout" "$HOME/zlogout.zwc"
 
 # vim: ft=sh:fdm=marker:ts=2:sts=2:sw=2:et
