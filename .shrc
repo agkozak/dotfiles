@@ -359,9 +359,14 @@ f() {
 
 update_dotfiles() {
   CUR_DIR="$PWD"
+  printf '%s' 'Updating dotfiles: '
   cd "${HOME}/dotfiles" || exit
   git pull && ./install.sh
-  for i in $(find . -name '.git' | cut -c 3-); do
+  for i in $(find . -name '.git'); do
+    i=${i#\./}
+    [ "$i" = '.git' ] && continue
+    i=${i%/\.git}
+    printf 'Updating %s: ' "$i"
     cd "$i" || exit
     cd ..
     git pull
