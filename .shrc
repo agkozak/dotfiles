@@ -189,7 +189,11 @@ alias bri='hue set all -b'
 # One less subshell when possible
 if [ -n "$ZSH_VERSION" ] && [ -h =less ] ||
    [ -h "$(command -v less)" ]; then
-  alias less='less -IMR'          # BusyBox less doesn't pay attention to $LESS
+  case $AGKDOT_SYSTEMINFO in
+    *Msys|*Cygwin)
+      alias less='less -IMR'  # BusyBox less doesn't pay attention to $LESS
+      ;;
+  esac
 fi
 
 _agkdot_is_uwin() {
@@ -426,6 +430,7 @@ if [ ! -h /bin/date ] && [ "${AGKDOT_BENCHMARKS:-0}" -eq 1 ]; then
 fi
 
 unset AGKDOT_SHRC_START AGKDOT_SHRC_FINISH AGKDOT_DIFFERENCE
+unset -f _agkdot_is_bsd_sh _agkdot_is_uwin _agkdot_winpty_alias
 
 # }}}1
 

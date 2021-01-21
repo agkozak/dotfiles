@@ -90,6 +90,8 @@ _agkdot_construct_path  '/mingw64/bin' \
                         "${HOME}/.composer/vendor/bin" \
                         "${HOME}/bin"
 
+unset -f _agkdot_construct_path
+
 case $AGKDOT_SYSTEMINFO in
 	*Cygwin)
 		export CYGWIN
