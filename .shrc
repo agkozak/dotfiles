@@ -363,7 +363,7 @@ HISTSIZE=10000
 if [ -z "$ZSH_VERSION" ]; then
   case $KSH_VERSION in
     *'PD KSH'*) HISTFILE="${HOME}/.pdksh_history" ;;
-    *MIRBSD*) HISTFILE="${HOME}/.mksh_history" ;;
+    *'LEGACY KSH'*|*'MIRBSD KSH'*) HISTFILE="${HOME}/.mksh_history" ;;
     *) HISTFILE="${HOME}/.ksh_history" ;;
   esac
 fi
