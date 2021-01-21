@@ -7,8 +7,8 @@
 
 # For SUSE {{{1
 
-if [ -d /etc/YaST2 ] && [ -z "$PROFILEREAD" ]; then
-  . /etc/profile || true
+if [ -d /etc/YaST2 ] && [ -z "$PROFILEREAD" ] && [ -f /etc/profile ]; then
+  . /etc/profile
 fi
 
 # }}}1
