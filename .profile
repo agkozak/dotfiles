@@ -3,13 +3,12 @@
 # https://github.com/agkozak/dotfiles
 #
 # shellcheck shell=sh
-# shellcheck disable=SC2034
+# shellcheck disable=SC1090,SC1091,SC2034
 
 # For SUSE {{{1
 
-if [ -d '/etc/YaST2' ]; then
-  # shellcheck disable=SC1091,SC2015
-  [ -z "$PROFILEREAD" ] && . '/etc/profile' || true
+if [ -d /etc/YaST2 ] && [ -z "$PROFILEREAD" ]; then
+  . /etc/profile || true
 fi
 
 # }}}1
@@ -27,7 +26,7 @@ fi
 
 export EDITOR VISUAL
 if command -v vim > /dev/null 2>&1; then
-  EDITOR='vim'
+  EDITOR=vim
 else
   EDITOR='vi'
 fi
@@ -37,19 +36,29 @@ export ENV
 ENV="${HOME}/.shrc"
 
 export LESS
-case $(ls -l "$(command -v less)") in
-  *busybox*) LESS='-FIMR' ;;
-  *)
-    case $AGKDOT_SYSTEMINFO in
-      UWIN*) LESS='-i' ;;
-      *) LESS='-FiRX' ;;
-    esac
-    ;;
-esac
+# case $(ls -l "$(command -v less)") in
+#   *busybox*) LESS='-FIMR' ;;
+#   *)
+#     case $AGKDOT_SYSTEMINFO in
+#       UWIN*) LESS='-i' ;;
+#       *) LESS='-FiRX' ;;
+#     esac
+#     ;;
+# esac
+
+# Minus one subshell - see if it works
+if [ -h "$(command -v less)" ]; then
+  LESS=-FIMR
+else
+  case $AGKDOT_SYSTEMINFO in
+    UWIN*) LESS=-i ;;
+    *) LESS=-FiRX ;;
+  esac
+fi
 
 export LESSOPEN
 if command -v lessfile > /dev/null 2>&1; then
-  eval "$(lessfile)"  # Sets LESSOPEN and uses ~/.lessfilter
+  eval "$(lessfile)"                      # Sets LESSOPEN and uses ~/.lessfilter
 elif command -v lesspipe > /dev/null 2>&1; then
 	LESSOPEN='| lesspipe %s'
 elif command -v lesspipe.sh > /dev/null 2>&1; then
@@ -62,9 +71,6 @@ if [ -f "$HOME/.lynx.cfg" ]; then
   export LYNX_CFG
   LYNX_CFG="${HOME}/.lynx.cfg"
 fi
-
-export MANPAGER
-MANPAGER='less'
 
 # Always use Unicode line-drawing characters, not VT100-style ones
 export NCURSES_NO_UTF8_ACS
@@ -103,17 +109,14 @@ case $AGKDOT_SYSTEMINFO in
 	*Cygwin)
 		export CYGWIN
     # Have `ln' create native symlinks in Windows - only works for administrator
-    CYGWIN='winsymlinks:native'
+    CYGWIN=winsymlinks:native
 		unset PYTHONHOME SSL_CERT_DIR SSL_CERT_FILE
 	  ;;
 	Darwin*|FreeBSD*)
-		export CLICOLOR LSCOLORS SSL_CERT_DIR SSL_CERT_FILE
-		CLICOLOR=1
-		LSCOLORS='ExfxcxdxBxegedAbagacad'
 		SSL_CERT_DIR=/etc/ssl/certs
 		SSL_CERT_FILE=/etc/ssl/cert.pem
 	  ;;
-  *Microsoft*)                                                            # WSL
+  *Microsoft*)                                                            # WSL1
     [ ! -d "${HOME}/.screen" ] && mkdir "${HOME}/.screen" &&
       chmod 700 "${HOME}/.screen"
     export SCREENDIR
@@ -122,14 +125,14 @@ case $AGKDOT_SYSTEMINFO in
 	*Msys)
 		export MSYS SSL_CERT_DIR SSL_CERT_FILE
 		# Have `ln' create native symlinks in Windows - only works for administrator
-		MSYS='winsymlinks:nativestrict'
+		MSYS=winsymlinks:nativestrict
     unset PYTHONHOME
-		[ ! -f '/usr/bin/zsh' ] && SHELL='/usr/bin/bash'
-		SSL_CERT_DIR='/mingw64/ssl/certs'
-		SSL_CERT_FILE='/mingw64/ssl/cert.pem'
+		[ ! -f /usr/bin/zsh ] && SHELL=/usr/bin/bash
+		SSL_CERT_DIR=/mingw64/ssl/certs
+		SSL_CERT_FILE=/mingw64/ssl/cert.pem
 	  ;;
   *raspberrypi*)
-	  command -v chromium-browser > /dev/null 2>&1 && BROWSER='chromium-browser'
+	  command -v chromium-browser > /dev/null 2>&1 && BROWSER=chromium-browser
     ;;
 esac
 
@@ -152,7 +155,6 @@ esac
 # Source ~/.profile.local {{{1
 
 if [ -f "$HOME/.profile.local" ]; then
-	# shellcheck source=/dev/null
 	. "$HOME/.profile.local"
 fi
 
