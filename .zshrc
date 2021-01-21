@@ -106,6 +106,7 @@ alias -g H='| head'
 # Prevent pipes to `less' from being pushed into the background on MSYS2 and
 # Cygwin
 if [[ $OSTYPE == (msys|cygwin) ]]; then
+  (( ${+aliases[less]} )) && unalias less
   less() {
     if [[ -t 0 ]]; then
       command less $@
