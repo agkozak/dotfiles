@@ -29,7 +29,7 @@ fi
 
 # }}}1
 
-# Ubuntu-specific {{{1
+# Ubuntu-specific: Don't run compinit in /etc/zshrc; run it later {{{1
 
 skip_global_compinit=1
 

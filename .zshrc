@@ -279,7 +279,7 @@ unsetopt BEEP
 # # The Debian solution to Del/Home/End/etc. keybindings {{{1
 
 # No need to load the following code if I'm using Debian
-if [[ ! -f '/etc/debian-version' && ! -f '/etc/zsh/zshrc' ]]; then
+if [[ ! -f /etc/debian-version ]]; then
 
   typeset -A key
   key=(
