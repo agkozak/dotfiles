@@ -126,6 +126,8 @@ if [ "${AGKDOT_IS_BUSYBOX_LS:-0}" -eq 0 ]; then
       esac
       ;;
   esac
+else
+  LS_OPTIONS=--color
 fi
 
 alias ls='ls ${LS_OPTIONS}'
@@ -183,6 +185,8 @@ alias lrt='ls -1Fcrt'
 # }}}2
 
 alias bri='hue set all -b'
+
+[ -h "$(command -v less)" ] && alias less='less -IMR'                 # BusyBox
 
 _agkdot_is_uwin() {
   case $AGKDOT_SYSTEMINFO in

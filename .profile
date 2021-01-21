@@ -36,25 +36,10 @@ export ENV
 ENV="${HOME}/.shrc"
 
 export LESS
-# case $(ls -l "$(command -v less)") in
-#   *busybox*) LESS='-FIMR' ;;
-#   *)
-#     case $AGKDOT_SYSTEMINFO in
-#       UWIN*) LESS='-i' ;;
-#       *) LESS='-FiRX' ;;
-#     esac
-#     ;;
-# esac
-
-# Minus one subshell - see if it works
-if [ -h "$(command -v less)" ]; then
-  LESS=-FIMR
-else
-  case $AGKDOT_SYSTEMINFO in
-    UWIN*) LESS=-i ;;
-    *) LESS=-FiRX ;;
-  esac
-fi
+case $AGKDOT_SYSTEMINFO in
+  UWIN*) LESS=-i ;;
+  *) LESS=-FiRX ;;
+esac
 
 export LESSOPEN
 if command -v lessfile > /dev/null 2>&1; then
