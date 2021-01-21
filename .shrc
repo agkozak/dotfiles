@@ -102,13 +102,9 @@ fi
 
 if [ "${AGKDOT_IS_BUSYBOX_LS:-0}" -eq 0 ]; then
   case $AGKDOT_SYSTEMINFO in
-    # Solaris ls has very few desirable options, but sometimes GNU ls is also
-    # installed
-    SunOS*) LS_OPTIONS='--color' ;;
-    # Some antiquated versions of ls
     NetBSD*|OpenBSD*|UWIN*) ;;
-    # FreeBSD ls
-    Darwin*|*BSD*|*DragonFly*)
+    SunOS*|FreeBSD*) LS_OPTIONS='--color' ;;
+    Darwin*|*DragonFly*)
       if [ "$AGKDOT_TERM_COLORS" -ge 8 ]; then
         CLICLOR=1
         LSCOLORS='ExfxcxdxBxegedAbagacad'
