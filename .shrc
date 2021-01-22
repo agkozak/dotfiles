@@ -42,15 +42,15 @@ esac
 
 # Begin .shrc benchmark {{{1
 
-# BusyBox date doesn't handle nanoseconds
-if [ ! -h /bin/date ] && [ "${AGKDOT_BENCHMARKS:-0}" -eq 1 ]; then
-  [ "${AGKDOT_ZSHRC_LOADING:-0}" -eq 1 ] || {
-    case $AGKDOT_SYSTEMINFO in
-      # BSD date doesn't handle nanoseconds
-      *BSD*|DragonFly*) ;;
-      *) AGKDOT_SHRC_START="$(/bin/date +%s%N)" ;;
-    esac
-  }
+if [ "${AGKDOT_BENCHMARKS:-0}" -eq 1 ]    &&
+   [ "${AGKDOT_ZSHRC_LOADING:-0}" -ne 1 ] &&
+   # BusyBox date doesn't work in nanoseconds
+   [ ! -h /bin/date ]; then
+  case $AGKDOT_SYSTEMINFO in
+    # Neither does BSD date
+    *BSD*|DragonFly*) ;;
+    *) AGKDOT_SHRC_START="$(/bin/date +%s%N)" ;;
+  esac
 fi
 
 # }}}1
@@ -419,17 +419,10 @@ fi
 
 # End .shrc benchmark {{{1
 
-if [ ! -h /bin/date ] && [ "${AGKDOT_BENCHMARKS:-0}" -eq 1 ]; then
-  [ "${AGKDOT_ZSHRC_LOADING:-0}" -eq 1 ] || {
-    case $AGKDOT_SYSTEMINFO in
-      *BSD*|*bsd*|DragonFly*) ;;
-      *)
-        AGKDOT_SHRC_FINISH="$(/bin/date +%s%N)"
-        AGKDOT_DIFFERENCE=$(( AGKDOT_SHRC_FINISH - AGKDOT_SHRC_START ))
-        echo ".shrc loaded in $((AGKDOT_DIFFERENCE/1000000))ms."
-        ;;
-    esac
-  }
+if [ -n "$AGKDOT_SHRC_START" ]; then
+  AGKDOT_SHRC_FINISH="$(/bin/date +%s%N)"
+  AGKDOT_DIFFERENCE=$(( AGKDOT_SHRC_FINISH - AGKDOT_SHRC_START ))
+  echo ".shrc loaded in $((AGKDOT_DIFFERENCE/1000000))ms."
 fi
 
 unset AGKDOT_SHRC_START AGKDOT_SHRC_FINISH AGKDOT_DIFFERENCE
