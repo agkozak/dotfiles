@@ -82,18 +82,20 @@ alias m='$PAGER'
 alias g='egrep -i'
 
 # enable color support of ls and also add handy aliases {{{2
-
-case $TERM in
-  *-256color) AGKDOT_TERM_COLORS=256 ;;
-  vt100|vt220|dumb) AGKDOT_TERM_COLORS=-1 ;;
-  *)
-    case ${AGKDOT_SYSTEMINFO} in
-      FreeBSD*|DragonFly*) AGKDOT_TERM_COLORS="$(tput Co)" ;;
-      UWIN*) AGKDOT_TERM_COLORS="$(tput cols)" ;;
-      *) AGKDOT_TERM_COLORS="$(tput colors)" ;;
-    esac
-    ;;
-esac
+if [ "$TERM" != "$AGKDOT_ORIG_TERM" ]; then
+  export AGKDOT_TERM_COLORS
+  case $TERM in
+    *-256color) AGKDOT_TERM_COLORS=256 ;;
+    vt100|vt220|dumb) AGKDOT_TERM_COLORS=-1 ;;
+    *)
+      case ${AGKDOT_SYSTEMINFO} in
+        FreeBSD*|DragonFly*) AGKDOT_TERM_COLORS="$(tput Co)" ;;
+        UWIN*) AGKDOT_TERM_COLORS="$(tput cols)" ;;
+        *) AGKDOT_TERM_COLORS="$(tput colors)" ;;
+      esac
+      ;;
+  esac
+fi
 
 if [ -h /bin/ls ]; then
   AGKDOT_IS_BUSYBOX_LS=1
@@ -146,7 +148,7 @@ elif [ "$TERM" != "$AGKDOT_ORIG_TERM" ] &&
       ;;
   esac
 fi
-export AGKDOT_ORIG_TERM
+export LS_COLORS AGKDOT_ORIG_TERM
 AGKDOT_ORIG_TERM=$TERM
 
 case $AGKDOT_SYSTEMINFO in
@@ -166,7 +168,7 @@ case $AGKDOT_SYSTEMINFO in
     ;;
 esac
 
-unset AGKDOT_BUSYBOX_LS AGKDOT_TERM_COLORS
+unset AGKDOT_BUSYBOX_LS
 
 # }}}2
 
