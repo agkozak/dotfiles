@@ -734,7 +734,7 @@ zsh_update() {
 
 # }}}1
 
-unfunction _agkdot_turbo
+(( ${+functions[_agkdot_turbo]} )) && unfunction _agkdot_turbo
 
 # End .zshrc benchmark {{{1
 
