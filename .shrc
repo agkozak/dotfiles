@@ -163,7 +163,8 @@ case $AGKDOT_SYSTEMINFO in
       alias egrep='egrep --color'
 
       # Zenburn-like colors for GNU grep
-      export GREP_COLORSexport GREP_COLORS='sl=49;39:cx=49;39:mt=48;5;22;38;5;230;1:fn=49;38;5;224:ln=49;38;5;78:bn=49;38;5;78:se=49;38;5;116';
+      export GREP_COLORS
+      GREP_COLORS='sl=49;39:cx=49;39:mt=48;5;22;38;5;230;1:fn=49;38;5;224:ln=49;38;5;78:bn=49;38;5;78:se=49;38;5;116';
     fi
     ;;
 esac
