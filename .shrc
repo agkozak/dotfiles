@@ -129,7 +129,6 @@ fi
 
 alias ls='ls ${LS_OPTIONS}'
 
-
 # shellcheck disable=SC2153
 if [ -n "$INSIDE_EMACS" ]; then
   unset LS_COLORS
@@ -190,13 +189,8 @@ alias lrt='ls -1Fcrt'
 
 alias bri='hue set all -b'
 
-if [ -n "$ZSH_VERSION" ] && [ -h =less ] || [ -h "$(command -v less)" ]; then
-  case $AGKDOT_SYSTEMINFO in
-    *Msys|*Cygwin)
-      alias less='less -IMR'  # BusyBox less doesn't pay attention to $LESS
-      ;;
-  esac
-fi
+# BusyBox less doesn't pay attention to $LESS
+[ -h /bin/less ] && alias less='less -IMR'
 
 _agkdot_is_uwin() {
   case $AGKDOT_SYSTEMINFO in
