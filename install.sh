@@ -1,6 +1,48 @@
 #!/bin/sh
 # shellcheck disable=SC1117
 
+# Save current directory {{{1
+
+# From https://github.com/dylanaraps/pure-sh-bible
+_agkdot_dirname() {
+  # Usage: dirname "path"
+
+  # If '$1' is empty set 'dir' to '.', else '$1'.
+  dir=${1:-.}
+
+  # Strip all trailing forward-slashes '/' from
+  # the end of the string.
+  #
+  # "${dir##*[!/]}": Remove all non-forward-slashes
+  # from the start of the string, leaving us with only
+  # the trailing slashes.
+  # "${dir%%"${}"}": Remove the result of the above
+  # substitution (a string of forward slashes) from the
+  # end of the original string.
+  dir=${dir%%"${dir##*[!/]}"}
+
+  # If the variable *does not* contain any forward slashes
+  # set its value to '.'.
+  [ "${dir##*/*}" ] && dir=.
+
+  # Remove everything *after* the last forward-slash '/'.
+  dir=${dir%/*}
+
+  # Again, strip all trailing forward-slashes '/' from
+  # the end of the string (see above).
+  dir=${dir%%"${dir##*[!/]}"}
+
+  # Print the resulting string and if it is empty,
+  # print '/'.
+  printf '%s\n' "${dir:-/}"
+}
+
+AGKDOT_ORIG_DIR="$PWD"
+cd "$(_agkdot_dirname "$0")" || exit
+unset -f _agkdot_dirname
+
+# }}}1
+
 # Functions {{{1
 
 ###########################################################
@@ -64,6 +106,8 @@ github_clone_or_update() {
 }
 
 # }}}1
+
+# Main routine {{{1
 
 [ ! -d prompts ] && mkdir prompts
 
@@ -167,5 +211,14 @@ esac
 
 # Clean up after some frameworks
 rm -f "$HOME/.zlogin" "$HOME/.zlogin.zwc" "$HOME/.zlogout" "$HOME/zlogout.zwc"
+
+# }}}1
+
+# Return to original directory {{{1
+
+cd "$AGKDOT_ORIG_DIR" || exit
+unset AGKDOT_ORIG_DIR
+
+# }}}1
 
 # vim: ft=sh:fdm=marker:ts=2:sts=2:sw=2:et
