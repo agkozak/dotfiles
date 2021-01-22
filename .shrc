@@ -190,9 +190,7 @@ alias lrt='ls -1Fcrt'
 
 alias bri='hue set all -b'
 
-# One less subshell when possible
-if [ -n "$ZSH_VERSION" ] && [ -h =less ] ||
-   [ -h "$(command -v less)" ]; then
+if [ -n "$ZSH_VERSION" ] && [ -h =less ] || [ -h "$(command -v less)" ]; then
   case $AGKDOT_SYSTEMINFO in
     *Msys|*Cygwin)
       alias less='less -IMR'  # BusyBox less doesn't pay attention to $LESS
