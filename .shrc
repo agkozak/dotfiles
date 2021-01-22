@@ -24,13 +24,6 @@ export AGKDOT_SYSTEMINFO
 
 # }}}1
 
-# Source ~/.profile {{{1
-
-#shellcheck source=/dev/null
-[ -z "$ENV" ] && [ -f "${HOME}/.profile" ] && . "${HOME}/.profile"
-
-# }}}1
-
 # Source system-wide files {{{1
 case $AGKDOT_SYSTEMINFO in
   NetBSD*)

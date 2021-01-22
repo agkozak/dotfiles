@@ -85,7 +85,6 @@ _agkdot_construct_path() {
 
 _agkdot_construct_path  '/mingw64/bin' \
                         "${HOME}/.local/bin" \
-                        "${HOME}/perl5/bin" \
                         "${HOME}/.cabal/bin" \
                         "${HOME}/.config/composer/vendor/bin" \
                         "${HOME}/.composer/vendor/bin" \
