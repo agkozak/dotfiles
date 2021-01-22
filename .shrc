@@ -134,11 +134,13 @@ fi
 
 alias ls='ls ${LS_OPTIONS}'
 
+
 # shellcheck disable=SC2153
 if [ -n "$INSIDE_EMACS" ]; then
   unset LS_COLORS
 # If dircolors is available, install.sh will have installed ~/.dircolors
-elif [ -z "$LS_COLORS" ] && command -v dircolors > /dev/null 2>&1; then
+# Try not to run dircolors more than once unless TERM has changed
+elif [ "$TERM" != "$ORIG_TERM" ] && command -v dircolors > /dev/null 2>&1; then
   case $AGKDOT_SYSTEMINFO in
     SunOS*) eval "$(dircolors -b)" ;;
     *)
@@ -150,6 +152,8 @@ elif [ -z "$LS_COLORS" ] && command -v dircolors > /dev/null 2>&1; then
       ;;
   esac
 fi
+export ORIG_TERM
+ORIG_TERM=$TERM
 
 case $AGKDOT_SYSTEMINFO in
   SunOS*|*ish*|UWIN*) ;;
