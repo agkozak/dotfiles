@@ -6,7 +6,7 @@
 # the environment variable ENV is set to this file. It is sourced at the
 # beginnning of .zshrc and .bashrc
 #
-# shellcheck shell=sh disable=SC1094,SC2034
+# shellcheck shell=sh disable=SC1091,SC1094,SC2034
 
 # Only run this script when shell is interactive {{{1
 
