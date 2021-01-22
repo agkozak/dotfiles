@@ -6,7 +6,7 @@
 # the environment variable ENV is set to this file. It is sourced at the
 # beginnning of .zshrc and .bashrc
 #
-# shellcheck shell=sh disable=SC2034
+# shellcheck shell=sh disable=SC1094,SC2034
 
 # Only run this script when shell is interactive {{{1
 
@@ -31,11 +31,17 @@ export AGKDOT_SYSTEMINFO
 
 # }}}1
 
-# Source /etc/shrc (NetBSD) {{{1
+# Source system-wide files {{{1
 case $AGKDOT_SYSTEMINFO in
   NetBSD*)
     # shellcheck source=/dev/null
     [ -f /etc/shrc ] && . /etc/shrc
+    ;;
+esac
+
+case $KSH_VERSION in
+  *'LEGACY KSH'*|*'MIRBSD KSH'*)
+    [ -s /etc/mkshrc ] && . /etc/mkshrc
     ;;
 esac
 
@@ -128,6 +134,7 @@ fi
 
 alias ls='ls ${LS_OPTIONS}'
 
+# shellcheck disable=SC2153
 if [ -n "$INSIDE_EMACS" ]; then
   unset LS_COLORS
 # If dircolors is available, install.sh will have installed ~/.dircolors
@@ -363,7 +370,7 @@ HISTSIZE=10000
 if [ -z "$ZSH_VERSION" ]; then
   case $KSH_VERSION in
     *'PD KSH'*) HISTFILE="${HOME}/.pdksh_history" ;;
-    *MIRBSD*) HISTFILE="${HOME}/.mksh_history" ;;
+    *'LEGACY KSH'*|*'MIRBSD KSH'*) HISTFILE="${HOME}/.mksh_history" ;;
     *) HISTFILE="${HOME}/.ksh_history" ;;
   esac
 fi
@@ -385,6 +392,7 @@ update_dotfiles() {
   printf '%s' 'Updating dotfiles: '
   cd "${HOME}/dotfiles" || exit
   git pull && ./install.sh
+  # shellcheck disable=SC2044
   for i in $(find . -name '.git'); do
     i=${i#\./}
     [ "$i" = '.git' ] && continue
