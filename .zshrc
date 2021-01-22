@@ -81,6 +81,7 @@ if [[ -f ${HOME}/.shrc ]];then
   fi
 fi
 
+export AGKDOT_SYSTEMINFO
 : ${AGKDOT_SYSTEMINFO:=$(uname -a)}
 
 # }}}1

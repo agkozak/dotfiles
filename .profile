@@ -15,10 +15,8 @@ fi
 
 # AGKDOT_SYSTEMINFO {{{1
 
-if [ -z "$AGKDOT_SYSTEMINFO" ]; then
-  export AGKDOT_SYSTEMINFO
-  AGKDOT_SYSTEMINFO=$(uname -a)
-fi
+export AGKDOT_SYSTEMINFO
+: "${AGKDOT_SYSTEMINFO:=$(uname -a)}"
 
 # }}}1
 
