@@ -748,8 +748,12 @@ fi
 ############################################################
 zsh_update() {
   update_dotfiles
-  zinit self-update
-  zinit update --all
+  if (( ${+functions[zinit]} )); then
+    zinit self-update
+    zinit update --all
+  else
+    agkdot_init update
+  fi
   source "${HOME}/.zshrc"
 }
 
