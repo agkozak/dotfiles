@@ -436,14 +436,12 @@ if (( AGKDOT_NO_ZINIT != 1 )) && is-at-least 5.0.8; then
     # Load plugins and snippets {{{2
 
     # Is Turbo Mode appropriate?
-    _agkdot_turbo() {
-      is-at-least 5.3 &&
-        [[ $TERM != 'dumb' &&
-           $OSTYPE != (solaris*|cygwin) &&
-           $EUID != 0 ]]  # Lazyloading doesn't always work well when root
-    }
+    is-at-least 5.3 &&
+      [[ $TERM != dumb                &&
+         $OSTYPE != (solaris*|cygwin) &&
+         $EUID != 0                   ]] && AGKDOT_USE_TURBO=1
 
-    # if _agkdot_turbo; then
+    # if (( AGKDOT_USE_TURBO )); then
     #   PROMPT='%m%# '
     #   zinit ice atload'_agkozak_precmd' nocd silent ver'develop' wait'!0a'
     # else
@@ -468,10 +466,10 @@ if (( AGKDOT_NO_ZINIT != 1 )) && is-at-least 5.0.8; then
     ZSHZ_UNCOMMON=1
     ZSHZ_CASE='smart'
 
-    _agkdot_turbo && zinit ice lucid wait'0g' ver'develop'
+    (( AGKDOT_USE_TURBO )) && zinit ice lucid wait'0g' ver'develop'
     zinit load agkozak/zhooks
 
-    if _agkdot_turbo; then
+    if (( AGKDOT_USE_TURBO )); then
     zinit ice atload'compinit; compdef mosh=ssh; zpcdreplay' atload"
       HISTORY_SUBSTRING_SEARCH_HIGHLIGHT_FOUND='underline'
       HISTORY_SUBSTRING_SEARCH_HIGHLIGHT_NOT_FOUND=''
@@ -486,27 +484,28 @@ if (( AGKDOT_NO_ZINIT != 1 )) && is-at-least 5.0.8; then
     fi
     zinit load zsh-users/zsh-history-substring-search
 
-    _agkdot_turbo && zinit ice atload'_zsh_title__precmd' lucid nocd wait'!0i'
+    (( AGKDOT_USE_TURBO )) &&
+      zinit ice atload'_zsh_title__precmd' lucid nocd wait'!0i'
     zinit load jreese/zsh-titles
 
     # if [[ $AGKDOT_SYSTEMINFO != *ish* ]]; then
-    #   if _agkdot_turbo; then
+    #   if (( AGKDOT_USE_TURBO )); then
     #     zinit ice lucid wait'0e'
     #   fi
     #   zinit load zdharma/zui
-    #   _agkdot_turbo && zinit ice lucid wait'(( $+ZUI ))'
+    #   (( AGKDOT_USE_TURBO )) && zinit ice lucid wait'(( $+ZUI ))'
     #   zinit load zdharma/zbrowse
     # fi
 
     zinit snippet OMZ::plugins/extract/extract.plugin.zsh
 
-    _agkdot_turbo && zinit ice silent wait'0f'
+    (( AGKDOT_USE_TURBO )) && zinit ice silent wait'0f'
     zinit load romkatv/zsh-prompt-benchmark
 
-    _agkdot_turbo && zinit ice silent wait'0h'
+    (( AGKDOT_USE_TURBO )) && zinit ice silent wait'0h'
     zinit load zpm-zsh/clipboard
 
-    if ! _agkdot_turbo; then
+    if (( ! AGKDOT_USE_TURBO )); then
       compinit -u -d "${HOME}/.zcompdump_${ZSH_VERSION}"
       compdef mosh=ssh
       HISTORY_SUBSTRING_SEARCH_HIGHLIGHT_FOUND='underline'
@@ -734,8 +733,6 @@ zsh_update() {
 }
 
 # }}}1
-
-(( ${+functions[_agkdot_turbo]} )) && unfunction _agkdot_turbo
 
 # End .zshrc benchmark {{{1
 
