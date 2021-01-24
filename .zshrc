@@ -26,8 +26,9 @@
 ############################################################
 _agkdot_benchmark_message() {
   (( ${terminfo[colors]:-0} >= 8 )) && >&2 print -Pn '%F{red}'
-  >&2 print -- $@
+  >&2 print -n -- $@
   (( ${terminfo[colors]:-0} >= 8 )) && >&2 print -Pn '%f'
+  >&2 print
 }
 
 if (( AGKDOT_BENCHMARKS )); then
@@ -53,10 +54,10 @@ for i in .zshenv \
          .shrc \
          .shrc.local \
          .zshrc.local; do
-  if [[ -e ${HOME}/${i} &&
+  if [[ -e ${HOME}/${i}       &&
         ! -e ${HOME}/${i}.zwc ||
         ${HOME}/${i} -nt ${HOME}/${i}.zwc ]]; then
-        (( AGKDOT_BENCHMARKS )) && >&2 print -P "%F{red}Compiling ${i}%f"
+    (( AGKDOT_BENCHMARKS )) && >&2 print -P "%F{red}Compiling ${i}%f"
     zcompile "${HOME}/${i}"
   fi
 done
@@ -91,8 +92,8 @@ export AGKDOT_SYSTEMINFO
 # Disable echo escape sequences in MSys2 or Cygwin - variables inherited from
 # Windows may have backslashes in them
 [[ $OSTYPE == (msys|cygwin) ]] && alias echo='echo -E'
-alias hgrep='fc -fl 0 | grep'
 
+alias hgrep='fc -fl 0 | grep'
 alias ls='ls ${=LS_OPTIONS}'
 
 # which should not be aliased in ZSH
@@ -119,7 +120,6 @@ fi
 alias -g L='| less'
 
 alias -g LL='2>&1 | less'
-# alias -g M='| most'
 alias -g NE='2> /dev/null'
 alias -g NUL='&> /dev/null'
 alias -g T='| tail'
@@ -548,12 +548,13 @@ elif is-at-least 4.3.11; then
     case $1 in
       load)
         if [[ ! -d "${HOME}/.zinit/plugins/${2%/*}---${2#*/}" ]]; then
-          (
-            git clone "https://github.com/${2%/*}/${2#*/}" \
-              "${HOME}/.zinit/plugins/${2%/*}---${2#*/}"
-            cd "${HOME}/.zinit/plugins/${2%/*}---${2#*/}"
-            (( $+3 )) && git checkout $3
-          )
+          git clone "https://github.com/${2%/*}/${2#*/}" \
+            "${HOME}/.zinit/plugins/${2%/*}---${2#*/}"
+          if (( $+3 )); then
+            cd "${HOME}/.zinit/plugins/${2%/*}---${2#*/}" || exit
+            git checkout $3
+            cd $orig_dir || exit
+          fi
         fi
         if (( $+4 )); then
           source "${HOME}/.zinit/plugins/${2%/*}---${2#*/}/$4"
@@ -725,6 +726,11 @@ if (( SHLVL == 1  && ! $+TMUX )); then
   cp "${HOME}/.z" "${HOME}/.zbackup/.z_${EPOCHSECONDS}" 2> /dev/null
 fi
 
+############################################################
+# Download the latest dotfiles, then the latest version of
+# Zinit, then the latest Zinit plugins and snippets, and
+# source .zshrc
+############################################################
 zsh_update() {
   update_dotfiles
   zinit self-update
