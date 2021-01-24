@@ -545,6 +545,8 @@ elif is-at-least 4.3.11; then
   ##########################################################
   agkdot_init() {
     ! (( ${+commands[git]} )) && return 1
+    local orig_dir i j
+    orig_dir=$PWD
     case $1 in
       load)
         if [[ ! -d "${HOME}/.zinit/plugins/${2%/*}---${2#*/}" ]]; then
@@ -573,6 +575,19 @@ elif is-at-least 4.3.11; then
         else
           return 1
         fi
+        ;;
+      update)
+        [[ -d ${HOME}/.zinit/plugins ]] && cd ${HOME}/.zinit/plugins || exit
+        for i in *; do
+          if [[ $i != _local---zinit && -d ${i}/.git ]]; then
+            cd $i || exit
+            print -n "Updating ${${PWD:t}%---*}/${${PWD:t}#*---}: "
+            git pull
+            cd .. || exit
+          fi
+        done
+        # TODO: Implement snippets update
+        cd $orig_dir || exit
         ;;
       *) return 1 ;;
     esac
