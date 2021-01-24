@@ -29,7 +29,7 @@ I have tested these dotfiles primarily on
 * `.profile` and `.shrc` are POSIX-compliant. They provide settings common to most shells and are sourced by the relevant `zsh` and `bash` dotfiles.
 * Everything is in `vi`-mode, although in `zsh` there are additional key bindings borrowed from `emacs`-mode.
 * The `tmux` and `screen` prefix key is `Ctrl-Q` (flow control has been disabled to allow this key binding). If you don't need flow control, `Ctrl-Q` is ideal: it does not interfere with any known application's key combinations.
-* [Zenburn](https://github.com/jnurmine/Zenburn) colors are used whenever possible (in Vim, obviously, as well as in `tmux`, `ls`, and `mintty` -- also see my [Zenburn Color Schemes for Windows Terminal](https://github.com/agkozak/windows-terminal-zenburn)).
+* [Zenburn](https://github.com/jnurmine/Zenburn) colors are used whenever possible (in Vim, obviously, as well as in `tmux`, `ls`, `grep`, and `mintty` -- also see my [Zenburn Color Schemes for Windows Terminal](https://github.com/agkozak/windows-terminal-zenburn)).
 
 # Installation
 
