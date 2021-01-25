@@ -355,6 +355,9 @@ case $KSH_VERSION in
     # Search path for autoloadable functions
     FPATH='/usr/share/ksh/functions:~/.func'
     ;;
+  *'PD KSH'*)
+    set -o vi-tabcomplete
+    ;;
 esac
 
 HISTSIZE=10000
