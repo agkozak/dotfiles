@@ -180,7 +180,19 @@ alias l='ls -CF'
 
 alias lr='ls -tRFh'   # sorted by date, recursive, show type, human-readable
 alias lt='ls -ltFh'   # long list, sorted by date, show type, human-readable
-alias ldot='ls -ld .*'
+
+ldot() {
+  [ -n "$ZSH_VERSION" ] && setopt LOCAL_OPTIONS SH_WORD_SPLIT
+
+  if [ -d "$1" ]; then
+    command ls $LS_OPTIONS -ld "${1}"/.*
+  elif [ -n "$1" ]; then
+    command ls $LS_OPTIONS -ld "${1}"
+  else
+    command ls $LS_OPTIONS -ld .*
+  fi
+}
+
 alias lS='ls -1FSsh'
 alias lart='ls -1Fcart'
 alias lrt='ls -1Fcrt'
