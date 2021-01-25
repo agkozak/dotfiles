@@ -4,6 +4,6 @@ set ignorecase
 set nolist
 set number
 set showmatch
-set shiftwidth=4
+set shiftwidth=2
 set showmode
-set tabstop=4
+set tabstop=2
