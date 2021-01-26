@@ -156,12 +156,9 @@ unset AGKDOT_BUSYBOX_LS
 
 # some more ls aliases {{{2
 
-alias ll='ls -alF'
-alias la='ls -A'
 alias l='ls -CF'
-
-alias lr='ls -tRFh'   # sorted by date, recursive, show type, human-readable
-alias lt='ls -ltFh'   # long list, sorted by date, show type, human-readable
+alias la='ls -A'
+alias lart='ls -1Fcart'
 
 unalias ldot > /dev/null 2>&1
 ldot() {
@@ -176,9 +173,11 @@ ldot() {
   fi
 }
 
-alias lS='ls -1FSsh'
-alias lart='ls -1Fcart'
+alias ll='ls -alF'
+alias lr='ls -tRFh'   # sorted by date, recursive, show type, human-readable
 alias lrt='ls -1Fcrt'
+alias lt='ls -ltFh'   # long list, sorted by date, show type, human-readable
+alias lS='ls -1FSsh'
 
 # }}}2
 
@@ -187,41 +186,25 @@ alias bri='hue set all -b'
 # BusyBox less doesn't pay attention to $LESS
 [ -h /bin/less ] && alias less='less -IMR'
 
-_agkdot_is_uwin() {
-  case $AGKDOT_SYSTEMINFO in
-    UWIN*) return 0 ;;
-    *) return 1 ;;
-  esac
-}
+# _agkdot_is_uwin() {
+#   case $AGKDOT_SYSTEMINFO in
+#     UWIN*) return 0 ;;
+#     *) return 1 ;;
+#   esac
+# }
 
 case $KSH_VERSION in
-  *R55*) ;; # mksh version R55 erroneously does not allow these aliases
+  *R55*) ;;         # mksh version R55 erroneously does not allow these aliases
   *)
     alias ..='cd ..'
     alias ...='cd ../..'
     ;;
 esac
-# alias c='clear'
 alias composer='${HOME}/bin/composer.phar'
-# if ! _agkdot_is_uwin; then
-#   alias dud='du -d 1 -h'
-#   alias duf='du -sh *'
-# fi
 # command -v dos2unix > /dev/null 2>&1 || alias dos2unix='perl -p -i -e "s/\\r\\n/\\n/g"'
-# alias fd='find . -type d -name' # Conflicts with fd utility
-# alias ff='find . -type f -name'
 alias github-stats='github-stats --token ${GITHUB_STATS_TOKEN}'
-# alias help='man'
-# alias p='ps -f'
 alias phpunit='${HOME}/bin/phpunit.phar'
-# if [ "$AGKDOT_IS_BUSYBOX_GREP" -eq 0 ]  && ! _agkdot_is_uwin; then
-#   alias sgrep='grep -R -n -H -C 5 --exclude-dir={.git,.svn,CVS} '
-# fi
-# alias sortnr='sort -n -r'
-# alias t='tail -f'
 alias vi='vim'  # Make vi an alias for vim, if it is available
-alias v='findv'
-alias vv='findv --verbose'
 alias wp='$HOME/bin/wp-cli.phar'
 alias yta='youtube-dl --audio-format best -x '
 
@@ -264,10 +247,6 @@ case $AGKDOT_SYSTEMINFO in
     ;;
   *raspberrypi*)
     alias temp='/opt/vc/bin/vcgencmd measure_temp | egrep "[0-9.]{4,}" -o'
-    ;;
-  FreeBSD*)
-    # alias tmux='TERM=xterm-256color tmux'
-    alias mutt='TERM=xterm-256color mutt'
     ;;
 esac
 
@@ -418,7 +397,7 @@ if [ -n "$AGKDOT_SHRC_START" ]; then
 fi
 
 unset AGKDOT_SHRC_START AGKDOT_SHRC_FINISH AGKDOT_DIFFERENCE
-unset -f _agkdot_is_bsd_sh _agkdot_is_uwin _agkdot_winpty_alias
+unset -f _agkdot_is_bsd_sh _agkdot_winpty_alias # _agkdot_is_uwin
 
 # }}}1
 
