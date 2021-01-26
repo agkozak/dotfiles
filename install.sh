@@ -80,11 +80,13 @@ conditional_install() {
 #   [Optional] Branch (if other than master)
 ###########################################################
 github_clone_or_update() {
+  if ! command -v git > /dev/null 2>&1; then
+    echo 'Install git.' >&2 && return 1
+  fi
   case $1 in
     */*) ;;
-    *) command -v "$1" > /dev/null 2>&1 || return ;;
+    *) command -v "$1" > /dev/null 2>&1 && shift || return ;;
   esac
-  command -v git > /dev/null 2>&1 || echo 'Install git.' >&2 && return 1
   AGKDOT_REPO=$(echo "$1" | awk -F/ '{ printf "%s", $2 }')
   echo
   printf 'GitHub repository %s:\n' "$1"
