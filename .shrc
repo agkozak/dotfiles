@@ -6,7 +6,7 @@
 # the environment variable ENV is set to this file. It is sourced at the
 # beginnning of .zshrc and .bashrc
 #
-# shellcheck shell=sh disable=SC1091,SC1094,SC2034
+# shellcheck shell=sh disable=SC1090,SC1091,SC1094,SC2034
 
 # Only run this script when shell is interactive {{{1
 
@@ -26,16 +26,11 @@ export AGKDOT_SYSTEMINFO
 
 # Source system-wide files {{{1
 case $AGKDOT_SYSTEMINFO in
-  NetBSD*)
-    # shellcheck source=/dev/null
-    [ -f /etc/shrc ] && . /etc/shrc
-    ;;
+  NetBSD*) [ -f /etc/shrc ] && . /etc/shrc ;;
 esac
 
 case $KSH_VERSION in
-  *'LEGACY KSH'*|*'MIRBSD KSH'*)
-    [ -s /etc/mkshrc ] && . /etc/mkshrc
-    ;;
+  *'LEGACY KSH'*|*'MIRBSD KSH'*) [ -s /etc/mkshrc ] && . /etc/mkshrc ;;
 esac
 
 # }}}1
@@ -55,11 +50,6 @@ fi
 
 # }}}1
 
-# case $(ls -l /bin/grep 2> /dev/null) in
-#   *busybox*) AGKDOT_IS_BUSYBOX_GREP=1 ;;
-#   *) AGKDOT_IS_BUSYBOX_GREP=0 ;;
-# esac
-
 # Raspberry Pi LXTerminal {{{1
 
 # It's important to set this up early so that dircolors uses the right number of
@@ -72,14 +62,6 @@ fi
 # }}}1
 
 # Aliases {{{1
-
-# case $(type fc) in                            # fc can be Windows file compare
-#   *builtin) alias h='fc -l' ;;
-# esac
-
-alias j=jobs
-alias m='$PAGER'
-alias g='egrep -i'
 
 # enable color support of ls and also add handy aliases {{{2
 if [ "$TERM" != "$AGKDOT_ORIG_TERM" ]; then
@@ -124,7 +106,7 @@ if [ "${AGKDOT_IS_BUSYBOX_LS:-0}" -eq 0 ]; then
       ;;
   esac
 else
-  LS_OPTIONS=--color
+  [ "$AGKDOT_TERM_COLORS" -ge 8 ] && LS_OPTIONS=--color
 fi
 
 alias ls='ls ${LS_OPTIONS}'
@@ -151,7 +133,7 @@ export LS_COLORS AGKDOT_ORIG_TERM
 AGKDOT_ORIG_TERM=$TERM
 
 case $AGKDOT_SYSTEMINFO in
-  SunOS*|*ish*|UWIN*) ;;
+  *ish*|UWIN*) ;;
   *)
     if [ "${AGKDOT_IS_BUSYBOX_LS:-0}" -eq 0 ] &&
        [ "$AGKDOT_TERM_COLORS"        -ge 8 ]; then
@@ -442,7 +424,6 @@ unset -f _agkdot_is_bsd_sh _agkdot_is_uwin _agkdot_winpty_alias
 
 # Source ~/.shrc.local {{{1
 
-# shellcheck source=/dev/null
 if [ -f "${HOME}/.shrc.local" ]; then . "${HOME}/.shrc.local"; fi
 
 # }}}1
