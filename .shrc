@@ -160,7 +160,6 @@ alias l='ls -CF'
 alias la='ls -A'
 alias lart='ls -1Fcart'
 
-unalias ldot > /dev/null 2>&1
 ldot() {
   [ -n "$ZSH_VERSION" ] && setopt LOCAL_OPTIONS SH_WORD_SPLIT
 
