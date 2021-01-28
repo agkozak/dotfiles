@@ -107,7 +107,9 @@ alias -g H='| head'
 
 # Prevent pipes to `less' from being pushed into the background on MSYS2 and
 # Cygwin
-if [[ $OSTYPE == (msys|cygwin) ]]; then
+autoload -Uz is-at-least
+
+if [[ $OSTYPE == (msys|cygwin) ]] && is-at-least 5.6; then
   less() {
     if [[ -p /dev/fd/0 ]]; then
       (command less $@)
@@ -131,7 +133,7 @@ alias -g V='|& vim -'
 
 # 9.1 Autoloading Functions {{{1
 
-autoload -Uz is-at-least compinit edit-command-line zmv
+autoload -Uz compinit edit-command-line zmv
 
 # }}}1
 
