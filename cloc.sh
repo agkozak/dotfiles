@@ -6,12 +6,13 @@ cloc --by-file-by-lang \
   --force-lang="Bourne Again Shell",bashrc \
   --force-lang="Bourne Again Shell",inputrc \
   --force-lang="Bourne Again Shell",editrc \
-  --force-lang="Bourne Again Shell",zprofile \
-  --force-lang="Bourne Again Shell",zshenv \
-  --force-lang="Bourne Again Shell",zshrc \
+  --force-lang="zsh",zprofile \
+  --force-lang="zsh",zshenv \
+  --force-lang="zsh",zshrc \
   --force-lang="Bourne Shell",profile \
   --force-lang="Bourne Shell",sh \
   --force-lang="Bourne Shell",shrc \
+  --force-lang="Bourne Shell",lessfilter \
   --force-lang="C Shell",cshrc \
   --force-lang="C Shell",login_conf \
   --force-lang="vim script",exrc \
