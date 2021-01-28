@@ -109,10 +109,10 @@ alias -g H='| head'
 # Cygwin
 if [[ $OSTYPE == (msys|cygwin) ]]; then
   less() {
-    if [[ -t 0 ]]; then
-      command less $@
-    else
+    if [[ -p /dev/fd/0 ]]; then
       (command less $@)
+    else
+      command less $@
     fi
   }
 fi
