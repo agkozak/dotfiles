@@ -405,7 +405,7 @@ AGKOZAK_CUSTOM_RPROMPT=''
 
 # }}}1
 
-# Use Zinit for zsh v5.0+, along with provisions for zsh v4.3.11+ {{{1
+# Use Zinit for zsh v5.0.8+; fall back to my own routines for zsh v4.3.11+ {{{1
 
 # export AGKDOT_NO_ZINIT=1 to circumvent Zinit
 if (( AGKDOT_NO_ZINIT != 1 )) && is-at-least 5.0.8; then
