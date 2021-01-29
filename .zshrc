@@ -439,8 +439,8 @@ if (( AGKDOT_NO_ZINIT != 1 )) && is-at-least 5.0.8; then
 
     # Is Turbo Mode appropriate?
     is-at-least 5.3 &&
-      [[ $TERM   != dumb       &&
-         $OSTYPE != (solaris*) &&
+      [[ $TERM   != dumb     &&
+         $OSTYPE != solaris* &&
          $EUID   != 0 ]] && AGKDOT_USE_TURBO=1
 
     # if (( AGKDOT_USE_TURBO )); then
