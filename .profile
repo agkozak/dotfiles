@@ -22,6 +22,9 @@ export AGKDOT_SYSTEMINFO
 
 # Environment variables {{{1
 
+export BAT_THEME
+BAT_THEME=zenburn
+
 export EDITOR VISUAL
 if command -v vim > /dev/null 2>&1; then
   EDITOR=vim
