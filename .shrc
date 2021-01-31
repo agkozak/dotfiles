@@ -180,8 +180,6 @@ alias lS='ls -1FSsh'
 
 # }}}2
 
-alias bri='hue set all -b'
-
 # BusyBox less doesn't pay attention to $LESS
 [ -h /bin/less ] && alias less='less -IMR'
 
@@ -199,13 +197,23 @@ case $KSH_VERSION in
     alias ...='cd ../..'
     ;;
 esac
-alias composer='${HOME}/bin/composer.phar'
-# command -v dos2unix > /dev/null 2>&1 || alias dos2unix='perl -p -i -e "s/\\r\\n/\\n/g"'
-alias github-stats='github-stats --token ${GITHUB_STATS_TOKEN}'
-alias phpunit='${HOME}/bin/phpunit.phar'
-alias vi='vim'  # Make vi an alias for vim, if it is available
-alias wp='$HOME/bin/wp-cli.phar'
-alias yta='youtube-dl --audio-format best -x '
+
+command -v batcat > /dev/null 2>&1 &&
+  alias bat='batcat'
+command -v composer.phar > /dev/null 2>&1 && ! command -v composer &&
+  alias composer='composer.phar'
+command -v dos2unix > /dev/null 2>&1 || command -v perl > /dev/null 2>&1 &&
+  alias dos2unix='perl -p -i -e "s/\\r\\n/\\n/g"'
+command -v github-stats > /dev/null 2>&1 &&
+  alias github-stats='github-stats --token ${GITHUB_STATS_TOKEN}'
+command -v hue > /dev/null 2>&1 &&
+  alias bri='hue set all -b'
+command -v vim > /dev/null 2>&1 &&
+  alias vi='vim'  # Make vi an alias for vim, if it is available
+command -v wp-cli.phar &&
+  alias wp='wp-cli.phar'
+command -v youtube-dl > /dev/null 2>&1 &&
+    alias yta='youtube-dl --audio-format best -x '
 
 # System-specific aliases {{{2
 
