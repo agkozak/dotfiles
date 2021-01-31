@@ -226,6 +226,8 @@ _agkdot_cond_aliases \
   wp-cli.phar wp='wp-cli.phar' \
   youtube-dl yta='youtube-dl --audio-format best -x '
 
+unset -f _agkdot_cond_aliases
+
 # System-specific aliases {{{2
 
 ############################################################
@@ -261,7 +263,7 @@ case $AGKDOT_SYSTEMINFO in
     alias npm='winpty /cygdrive/c/Program\ Files/nodejs/npm.cmd'
     ;;
   *CYGWIN_NT-10.0-WOW*|*[Mm]icrosoft*)
-    _agkdot_cond_alias tmux tmux='tmux -S "${HOME}/.tmsock"'
+    command -v tmux > /dev/null 2>&1 && tmux='tmux -S "${HOME}/.tmsock"'
     ;;
   *raspberrypi*)
     alias temp='/opt/vc/bin/vcgencmd measure_temp | egrep "[0-9.]{4,}" -o'

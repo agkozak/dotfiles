@@ -770,6 +770,8 @@ if (( AGKDOT_BENCHMARKS )); then
   typeset -i SECONDS
 fi
 
+unfunction _agkdot_benchmark_message
+
 # }}}1
 
 # Source ~/.zshrc.local, if present {{{1
