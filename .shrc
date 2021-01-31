@@ -239,7 +239,7 @@ unset -f _agkdot_cond_aliases
 _agkdot_winpty_alias() {
   while [ $# -ne 0 ]; do
     # shellcheck disable=SC2139,SC2140
-    alias "$1"="winpty $1"
+    command -v "$1" > /dev/null 2>&1 && alias "$1"="winpty $1"
     shift
   done
 }
