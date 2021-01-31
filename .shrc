@@ -198,6 +198,11 @@ case $KSH_VERSION in
     ;;
 esac
 
+command -v composer.phar > /dev/null 2>&1 && ! command -v composer &&
+  alias composer='composer.phar'
+command -v dos2unix > /dev/null 2>&1 || command -v perl > /dev/null 2>&1 &&
+  alias dos2unix='perl -p -i -e "s/\\r\\n/\\n/g"'
+
 ############################################################
 # If a given command exists, make an alias for it
 #
@@ -205,23 +210,21 @@ esac
 #   $1 The command
 #   $2 The alias
 ############################################################
-_agkdot_cond_alias() {
-  command -v $1 > /dev/null 2>&1 || return
-  alias "$2"
+_agkdot_cond_aliases() {
+  until [ $# = 0 ]; do
+    command -v $1 > /dev/null 2>&1 && alias "$2"
+    shift
+    shift
+  done
 }
 
-_agkdot_cond_alias batcat bat='batcat'
-command -v composer.phar > /dev/null 2>&1 && ! command -v composer &&
-  alias composer='composer.phar'
-command -v dos2unix > /dev/null 2>&1 || command -v perl > /dev/null 2>&1 &&
-  alias dos2unix='perl -p -i -e "s/\\r\\n/\\n/g"'
-_agkdot_cond_alias github-status \
-  alias github-stats='github-stats --token ${GITHUB_STATS_TOKEN}'
-_agkdot_cond_alias hue bri='hue set all -b'
-_agkdot_cond_alias vim vi='vim'
-_agkdot_cond_alias wp-cli.phar alias wp='wp-cli.phar'
-_agkdot_cond_alias youtube-dl \
-    alias yta='youtube-dl --audio-format best -x '
+_agkdot_cond_aliases \
+  batcat bat='batcat' \
+  github-status github-stats='github-stats --token ${GITHUB_STATS_TOKEN}' \
+  hue bri='hue set all -b' \
+  vim vi='vim' \
+  wp-cli.phar wp='wp-cli.phar' \
+  youtube-dl yta='youtube-dl --audio-format best -x '
 
 # System-specific aliases {{{2
 
