@@ -237,6 +237,7 @@ unset -f _agkdot_cond_aliases
 #   $1, $2, etc.  Programs that should be run with winpty
 ############################################################
 _agkdot_winpty_alias() {
+  command -v winpty > /dev/null 2>&1 || return
   while [ $# -ne 0 ]; do
     # shellcheck disable=SC2139,SC2140
     command -v "$1" > /dev/null 2>&1 && alias "$1"="winpty $1"
@@ -247,7 +248,8 @@ _agkdot_winpty_alias() {
 case $AGKDOT_SYSTEMINFO in
   *Msys|*Cygwin)
     _agkdot_winpty_alias choco cinst cuninst cup node php
-    alias eslint='winpty ${APPDATA}/npm/eslint.cmd'
+    command -v winpty > /dev/null 2>&1 &&
+      alias eslint='winpty ${APPDATA}/npm/eslint.cmd'
     alias ghci='ghcii.sh'
     alias gvim='/c/Windows/gvim.bat'
     ;;
@@ -255,12 +257,15 @@ esac
 
 case $AGKDOT_SYSTEMINFO in
   *Msys)
-    alias npm='winpty /c/Program\ Files/nodejs/npm.cmd'
-    alias wp='winpty php $HOME/bin/wp-cli.phar --no-color'
+    if command -v winpty; then
+      alias npm='winpty /c/Program\ Files/nodejs/npm.cmd'
+      alias wp='winpty php $HOME/bin/wp-cli.phar --no-color'
+    fi
     ;;
   *Cygwin)
     alias composer='php $(cygpath -w "${HOME}/bin/composer.phar")'
-    alias npm='winpty /cygdrive/c/Program\ Files/nodejs/npm.cmd'
+    command -v winpty > /dev/null 2>&1 &&
+      alias npm='winpty /cygdrive/c/Program\ Files/nodejs/npm.cmd'
     ;;
   *CYGWIN_NT-10.0-WOW*|*[Mm]icrosoft*)
     command -v tmux > /dev/null 2>&1 && tmux='tmux -S "${HOME}/.tmsock"'
