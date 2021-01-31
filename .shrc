@@ -198,21 +198,29 @@ case $KSH_VERSION in
     ;;
 esac
 
-command -v batcat > /dev/null 2>&1 &&
-  alias bat='batcat'
+############################################################
+# If a given command exists, make an alias for it
+#
+# Arguments
+#   $1 The command
+#   $2 The alias
+############################################################
+_agkdot_cond_alias() {
+  command -v $1 > /dev/null 2>&1 || return
+  alias "$2"
+}
+
+_agkdot_cond_alias batcat bat='batcat'
 command -v composer.phar > /dev/null 2>&1 && ! command -v composer &&
   alias composer='composer.phar'
 command -v dos2unix > /dev/null 2>&1 || command -v perl > /dev/null 2>&1 &&
   alias dos2unix='perl -p -i -e "s/\\r\\n/\\n/g"'
-command -v github-stats > /dev/null 2>&1 &&
+_agkdot_cond_alias github-status \
   alias github-stats='github-stats --token ${GITHUB_STATS_TOKEN}'
-command -v hue > /dev/null 2>&1 &&
-  alias bri='hue set all -b'
-command -v vim > /dev/null 2>&1 &&
-  alias vi='vim'  # Make vi an alias for vim, if it is available
-command -v wp-cli.phar &&
-  alias wp='wp-cli.phar'
-command -v youtube-dl > /dev/null 2>&1 &&
+_agkdot_cond_alias hue bri='hue set all -b'
+_agkdot_cond_alias vim vi='vim'
+_agkdot_cond_alias wp-cli.phar alias wp='wp-cli.phar'
+_agkdot_cond_alias youtube-dl \
     alias yta='youtube-dl --audio-format best -x '
 
 # System-specific aliases {{{2
@@ -250,7 +258,7 @@ case $AGKDOT_SYSTEMINFO in
     alias npm='winpty /cygdrive/c/Program\ Files/nodejs/npm.cmd'
     ;;
   *CYGWIN_NT-10.0-WOW*|*[Mm]icrosoft*)
-    alias tmux='tmux -S "${HOME}/.tmsock"'
+    _agkdot_cond_alias tmux tmux='tmux -S "${HOME}/.tmsock"'
     ;;
   *raspberrypi*)
     alias temp='/opt/vc/bin/vcgencmd measure_temp | egrep "[0-9.]{4,}" -o'
