@@ -183,7 +183,7 @@ alias lS='ls -1FSsh'
 # BusyBox less doesn't pay attention to $LESS
 [ -h /bin/less ] && alias less='less -IMR'
 
-# _agkdot_is_uwin() {
+# _agkdot_is_win() {
 #   case $AGKDOT_SYSTEMINFO in
 #     UWIN*) return 0 ;;
 #     *) return 1 ;;
@@ -237,7 +237,7 @@ unset -f _agkdot_cond_aliases
 #   $1, $2, etc.  Programs that should be run with winpty
 ############################################################
 _agkdot_winpty_alias() {
-  command -v winpty > /dev/null 2>&1 || return
+  command -v winpty > /dev/null 2>&1 || echo 'Install winpty.' >&2 && return 1
   while [ $# -ne 0 ]; do
     # shellcheck disable=SC2139,SC2140
     command -v "$1" > /dev/null 2>&1 && alias "$1"="winpty $1"
