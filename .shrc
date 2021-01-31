@@ -6,7 +6,7 @@
 # the environment variable ENV is set to this file. It is sourced at the
 # beginnning of .zshrc and .bashrc
 #
-# shellcheck shell=sh disable=SC1090,SC1091,SC1094,SC2034
+# shellcheck shell=sh disable=SC1090,SC1091,SC1094,SC2016,SC2034
 
 # Only run this script when shell is interactive {{{1
 
@@ -212,7 +212,7 @@ command -v dos2unix > /dev/null 2>&1 || command -v perl > /dev/null 2>&1 &&
 ############################################################
 _agkdot_cond_aliases() {
   until [ $# = 0 ]; do
-    command -v $1 > /dev/null 2>&1 && alias "$2"
+    command -v "$1" > /dev/null 2>&1 && alias "$2"
     shift
     shift
   done
