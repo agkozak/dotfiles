@@ -343,6 +343,7 @@ if executable('git') && (executable('curl') || executable('wget') || WINDOWS())
       Plug 'mbadran/headlights'
     endif
     Plug 'ciaranm/securemodelines'
+    Plug 'fedorenchik/AnsiEsc'
     
     " Git
     Plug 'tpope/vim-fugitive'
