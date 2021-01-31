@@ -50,6 +50,7 @@ for i in .zshenv \
          .zprofile \
          .zshenv.local \
          .zprofile \
+         .zprofile.local \
          .zshrc \
          .shrc \
          .shrc.local \
