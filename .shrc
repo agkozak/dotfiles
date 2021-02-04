@@ -220,7 +220,7 @@ _agkdot_cond_aliases() {
 
 _agkdot_cond_aliases \
   batcat bat='batcat' \
-  github-status github-stats='github-stats --token ${GITHUB_STATS_TOKEN}' \
+  github-stats github-stats='github-stats --token ${GITHUB_STATS_TOKEN}' \
   hue bri='hue set all -b' \
   vim vi='vim' \
   wp-cli.phar wp='wp-cli.phar' \
