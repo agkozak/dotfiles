@@ -198,7 +198,7 @@ case $KSH_VERSION in
     ;;
 esac
 
-command -v composer.phar > /dev/null 2>&1 && ! command -v composer &&
+command -v composer.phar > /dev/null 2>&1 && ! command -v composer > /dev/null &&
   alias composer='composer.phar'
 command -v dos2unix > /dev/null 2>&1 || command -v perl > /dev/null 2>&1 &&
   alias dos2unix='perl -p -i -e "s/\\r\\n/\\n/g"'
