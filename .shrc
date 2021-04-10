@@ -183,7 +183,7 @@ alias lS='ls -1FSsh'
 # BusyBox less doesn't pay attention to $LESS
 [ -h /bin/less ] && alias less='less -IMR'
 
-# _agkdot_is_win() {
+# _agkdot_is_uwin() {
 #   case $AGKDOT_SYSTEMINFO in
 #     UWIN*) return 0 ;;
 #     *) return 1 ;;
