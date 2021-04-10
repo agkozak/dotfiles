@@ -609,6 +609,8 @@ elif is-at-least 4.3.11; then
 
   agkdot_init load zpm-zsh/clipboard
 
+  agkdot_init load romkatv/zsh-prompt-benchmark
+
   agkdot_init snippet OMZ::plugins/extract/extract.plugin.zsh
 
   compinit -u -d "${HOME}/.zcompdump_${ZSH_VERSION}"
