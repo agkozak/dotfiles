@@ -259,7 +259,7 @@ esac
 
 case $AGKDOT_SYSTEMINFO in
   *Msys)
-    if command -v winpty; then
+    if command -v winpty > /dev/null 2>&1; then
       alias npm='winpty /c/Program\ Files/nodejs/npm.cmd'
       alias wp='winpty php $HOME/bin/wp-cli.phar --no-color'
     fi
