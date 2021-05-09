@@ -280,7 +280,7 @@ esac
 # WSL aliases {{{3
 
 case $AGKDOT_SYSTEMINFO in
-  *Microsoft*)
+  *[Mm]icrosoft*)
     ############################################################
     # Create aliases for Windows .exe programs
     #
