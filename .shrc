@@ -161,15 +161,23 @@ alias la='ls -A'
 alias lart='ls -1Fcart'
 
 ldot() {
-  [ -n "$ZSH_VERSION" ] && setopt LOCAL_OPTIONS SH_WORD_SPLIT
+  [ -n "$ZSH_VERSION" ] &&
+    setopt LOCAL_OPTIONS SH_WORD_SPLIT NO_WARN_CREATE_GLOBAL
 
-  if [ -d "$1" ]; then
-    command ls $LS_OPTIONS -ld "${1}"/.*
-  elif [ -n "$1" ]; then
-    command ls $LS_OPTIONS -ld "${1}"
-  else
-    command ls $LS_OPTIONS -ld .*
-  fi
+  [ $# -eq 0 ] && ls $LS_OPTIONS -ld .* && return
+
+  until [ $# -eq 0 ]; do
+    if [ -d "$1" ]; then
+      LDOT_ARGS="$LDOT_ARGS $(\ls -d "${1}"/.*)"
+    else
+      LDOT_ARGS="$LDOT_ARGS ${1}"
+    fi
+    shift
+  done
+
+  # shellcheck disable=SC2086
+  ls $LS_OPTIONS -ld $LDOT_ARGS
+  unset LDOT_ARGS
 }
 
 alias ll='ls -alF'
