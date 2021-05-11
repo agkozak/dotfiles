@@ -19,14 +19,14 @@ else
       *.lsp|*.l|*.pas|*.p|*.xml|*.xps|*.xsl|*.axp|*.ppd|*.pov|\
       *.diff|*.patch|*.py|*.rb|*.sql|*.ebuild|*.eclass|*.ini|\
 	    *.json|*.css|*.scss|*.pl|Makefile)
-        pygmentize "$1";;
+        pygmentize -O style=zenburn "$1";;
       .bashrc*|.shrc*|.zshrc*|.profile*)
-        pygmentize -l sh "$1"
+        pygmentize -O style=zenburn -l sh "$1"
         ;;
       *)
         grep "#\!/bin/bash" "$1" > /dev/null
         if [ "$?" -eq "0" ]; then
-          pygmentize -l sh "$1"
+          pygmentize -O style=zenburn -l sh "$1"
         else
           exit 1
         fi
