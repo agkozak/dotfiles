@@ -387,14 +387,14 @@ fi
 AGKOZAK_CUSTOM_PROMPT=''
 # Exit status
 AGKOZAK_CUSTOM_PROMPT+='%(?..%B%F{${AGKOZAK_COLORS_EXIT_STATUS}}(%?%)%f%b )'
-# Command execution time
-AGKOZAK_CUSTOM_PROMPT+='%(9V.%F{${AGKOZAK_COLORS_CMD_EXEC_TIME}}%b%9v%b%f .)'
 # Username and hostname
 AGKOZAK_CUSTOM_PROMPT+='%(!.%S%B.%B%F{${AGKOZAK_COLORS_USER_HOST}})%n%1v%(!.%b%s.%f%b) '
 # Path
 AGKOZAK_CUSTOM_PROMPT+='%B%F{${AGKOZAK_COLORS_PATH}}%2v%f%b'
 # Virtual environment indicator
 AGKOZAK_CUSTOM_PROMPT+='%(10V. %F{${AGKOZAK_COLORS_VIRTUALENV:-green}}[%10v]%f.)'
+# Command execution time
+AGKOZAK_CUSTOM_PROMPT+='%(9V. %F{${AGKOZAK_COLORS_CMD_EXEC_TIME}}%b%9v%b%f.)'
 # Git status
 AGKOZAK_CUSTOM_PROMPT+=$'%(3V.%F{${AGKOZAK_COLORS_BRANCH_STATUS}}%3v%f.)\n'
 # SHLVL and prompt character
@@ -469,7 +469,8 @@ if (( AGKDOT_NO_ZINIT != 1 )) && is-at-least 5.0.8; then
     ZSHZ_UNCOMMON=1
     ZSHZ_CASE='smart'
     ZSHZ_ECHO=1
-    ZSHZ_TILDE=1
+    # ZSHZ_TILDE=1
+    ZSHZ_TRAILING_SLASH=1
 
     (( AGKDOT_USE_TURBO )) && zinit ice lucid wait'0g' ver'develop'
     zinit load agkozak/zhooks
