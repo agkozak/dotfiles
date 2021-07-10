@@ -469,7 +469,8 @@ if (( AGKDOT_NO_ZINIT != 1 )) && is-at-least 5.0.8; then
     ZSHZ_UNCOMMON=1
     ZSHZ_CASE='smart'
     ZSHZ_ECHO=1
-    ZSHZ_TILDE=1
+    # ZSHZ_TILDE=1
+    ZSHZ_TRAILING_SLASH=1
 
     (( AGKDOT_USE_TURBO )) && zinit ice lucid wait'0g' ver'develop'
     zinit load agkozak/zhooks
