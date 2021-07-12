@@ -6,7 +6,7 @@
 # the environment variable ENV is set to this file. It is sourced at the
 # beginnning of .zshrc and .bashrc
 #
-# shellcheck shell=sh disable=SC1090,SC1091,SC1094,SC2016,SC2034
+# shellcheck shell=sh disable=SC1090,SC1091,SC1094,SC2016,SC2034,SC2153
 
 # Only run this script when shell is interactive {{{1
 
@@ -368,11 +368,13 @@ set -o vi
 
 case $KSH_VERSION in
   *93*)
+    # shellcheck disable=SC3040
     set -o globstar
     # Search path for autoloadable functions
     FPATH='/usr/share/ksh/functions:~/.func'
     ;;
   *'PD KSH'*)
+    # shellcheck disable=SC3040
     set -o vi-tabcomplete
     ;;
 esac
