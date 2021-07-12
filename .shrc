@@ -257,7 +257,14 @@ _agkdot_winpty_alias() {
 
 case $AGKDOT_SYSTEMINFO in
   *Msys|*Cygwin)
-    _agkdot_winpty_alias choco cinst cuninst cup node php
+    _agkdot_winpty_alias node php
+
+    # Workaround for https://github.com/msys2/MSYS2-packages/issues/1568#issuecomment-847004378
+    alias choco='temp= tmp= winpty choco'
+    alias cinst='temp= tmp= winpty cinst'
+    alias cuninst='temp= tmp= winpty cuninst'
+    alias cup='temp= tmp= winpty cup'
+
     command -v winpty > /dev/null 2>&1 &&
       alias eslint='winpty ${APPDATA}/npm/eslint.cmd'
     alias ghci='ghcii.sh'
