@@ -268,7 +268,6 @@ case $AGKDOT_SYSTEMINFO in
     command -v winpty > /dev/null 2>&1 &&
       alias eslint='winpty ${APPDATA}/npm/eslint.cmd'
     alias ghci='ghcii.sh'
-    alias gvim='/c/Windows/gvim.bat'
     ;;
 esac
 
@@ -278,11 +277,13 @@ case $AGKDOT_SYSTEMINFO in
       alias npm='winpty /c/Program\ Files/nodejs/npm.cmd'
       alias wp='winpty php $HOME/bin/wp-cli.phar --no-color'
     fi
+    alias gvim='/c/Windows/gvim.bat'
     ;;
   *Cygwin)
     alias composer='php $(cygpath -w "${HOME}/bin/composer.phar")'
     command -v winpty > /dev/null 2>&1 &&
       alias npm='winpty /cygdrive/c/Program\ Files/nodejs/npm.cmd'
+    alias gvim='/cygdrive/c/Windows/gvim.bat'
     ;;
   *CYGWIN_NT-10.0-WOW*|*[Mm]icrosoft*)
     command -v tmux > /dev/null 2>&1 && tmux='tmux -S "${HOME}/.tmsock"'
