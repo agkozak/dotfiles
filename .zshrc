@@ -605,6 +605,9 @@ elif is-at-least 4.3.11; then
   agkdot_init load agkozak/zsh-z develop
   ZSHZ_UNCOMMON=1
   ZSHZ_CASE='smart'
+  ZSHZ_ECHO=1
+  # ZSHZ_TILDE=1
+  ZSHZ_TRAILING_SLASH=1
 
   agkdot_init load agkozak/zhooks develop
   agkdot_init load jreese/zsh-titles master titles.plugin.zsh
