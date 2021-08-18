@@ -42,6 +42,14 @@ fi
 
 # }}}1
 
+# Optional Zinit binary module
+if [[ -f "${HOME}/.zinit/bin/zmodules/Src/zdharma/zplugin.so" ]]; then
+  if [[ -z ${module_path[(re)"${HOME}/.zinit/bin/zmodules/Src"]} ]]; then
+    module_path=( "${HOME}/.zinit/bin/zmodules/Src" ${module_path[@]} )
+  fi
+  zmodload zdharma/zplugin
+fi
+
 # Compile dotfiles {{{1
 
 for i in .zshenv \
@@ -410,14 +418,6 @@ AGKOZAK_CUSTOM_RPROMPT=''
 
 # export AGKDOT_NO_ZINIT=1 to circumvent Zinit
 if (( AGKDOT_NO_ZINIT != 1 )) && is-at-least 5.0.8; then
-
-  # Optional binary module
-  if [[ -f "${HOME}/.zinit/bin/zmodules/Src/zdharma/zplugin.so" ]]; then
-    if [[ -z ${module_path[(re)"${HOME}/.zinit/bin/zmodules/Src"]} ]]; then
-      module_path=( "${HOME}/.zinit/bin/zmodules/Src" ${module_path[@]} )
-    fi
-    zmodload zdharma/zplugin
-  fi
 
   if (( ${+commands[git]} )); then
 
