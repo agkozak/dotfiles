@@ -572,7 +572,7 @@ elif is-at-least 4.3.11; then
         ;;
       snippet)
         if [[ $2 == OMZ::* ]]; then
-          if [[ ! -d ${HOME}/.zinit/snippets/${2%%/*}--${2#*/} ]]; then
+          if [[ ! -f ${HOME}/.zinit/snippets/${2/\//--}/${2##*/} ]]; then
             mkdir -p "${HOME}/.zinit/snippets/${2%%/*}--${2#*/}"
             curl "https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/${2#OMZ::}" \
               > "${HOME}/.zinit/snippets/${2%%/*}--${2#*/}/${2##*/}"
@@ -587,12 +587,18 @@ elif is-at-least 4.3.11; then
         for i in *; do
           if [[ $i != _local---zinit && -d ${i}/.git ]]; then
             cd $i || exit
-            print -n "Updating ${${PWD:t}%---*}/${${PWD:t}#*---}: "
+            print -n "Updating plugin ${${PWD:t}%---*}/${${PWD:t}#*---}: "
             git pull
             cd .. || exit
           fi
         done
-        # TODO: Implement snippets update
+        [[ -d ${HOME}/.zinit/snippets ]] && cd ${HOME}/.zinit/snippets || exit
+        i=''
+        for i in ${:-*/*/*}; do
+          [[ $i == *.zwc ]] && continue
+          print "Updating snippet ${${i/--/\/}%/*}"
+          agkdot_init snippet ${${i/--/\/}%/*}
+        done
         cd $orig_dir || exit
         ;;
       *) return 1 ;;
