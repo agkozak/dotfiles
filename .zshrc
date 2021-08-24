@@ -598,7 +598,7 @@ elif is-at-least 4.3.11; then
         done
         [[ -d ${HOME}/.zinit/snippets ]] && cd ${HOME}/.zinit/snippets || exit
         i=''
-        for i in ${:-*/*/*}; do
+        for i in */*/*; do
           [[ $i == *.zwc ]] && continue
           print "Updating snippet ${${i/--/\/}%/*}"
           agkdot_init snippet ${${i/--/\/}%/*}
