@@ -551,6 +551,7 @@ elif is-at-least 4.3.11; then
   ##########################################################
   agkdot_init() {
     ! (( ${+commands[git]} )) && return 1
+    typeset -ga agkdot_plugins agkdot_snippets
     local orig_dir i j
     orig_dir=$PWD
     case $1 in
@@ -565,9 +566,11 @@ elif is-at-least 4.3.11; then
           fi
         fi
         if (( $+4 )); then
-          source "${HOME}/.zinit/plugins/${2%/*}---${2#*/}/$4"
+          source "${HOME}/.zinit/plugins/${2%/*}---${2#*/}/$4" &&
+            agkdot_plugins+=( $2 )
         else
-          source "${HOME}/.zinit/plugins/${2%/*}---${2#*/}/${2#*/}.plugin.zsh"
+          source "${HOME}/.zinit/plugins/${2%/*}---${2#*/}/${2#*/}.plugin.zsh" &&
+            agkdot_plugins+=( $2 )
         fi
         ;;
       snippet)
@@ -577,7 +580,8 @@ elif is-at-least 4.3.11; then
             curl "https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/${2#OMZ::}" \
               > "${HOME}/.zinit/snippets/${2%%/*}--${2#*/}/${2##*/}"
           fi
-          source "${HOME}/.zinit/snippets/${2%%/*}--${2#*/}/${2##*/}"
+          source "${HOME}/.zinit/snippets/${2%%/*}--${2#*/}/${2##*/}" &&
+            agkdot_snippets+=( $2 )
         else
           return 1
         fi
@@ -600,6 +604,16 @@ elif is-at-least 4.3.11; then
           agkdot_init snippet ${${i/--/\/}%/*}
         done
         cd $orig_dir || exit
+        ;;
+      list)
+        print 'Plugins:'
+        for i in $agkdot_plugins; do
+          printf '  %s\n' $i
+        done
+        print 'Snippets:'
+        for j in $agkdot_snippets; do
+          printf '  %s\n' $j
+        done
         ;;
       *) return 1 ;;
     esac
