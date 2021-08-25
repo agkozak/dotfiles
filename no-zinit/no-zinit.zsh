@@ -30,7 +30,7 @@ zinit() {
         shift
       done
       ;;
-    load)
+    load|light)
       shift
 
       local repo=$1 repo_dir="${1%/*}---${1#*/}"
