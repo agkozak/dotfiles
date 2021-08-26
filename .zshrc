@@ -478,11 +478,15 @@ if (( ${+commands[git]} )); then
   # ZSHZ_TILDE=1
   ZSHZ_TRAILING_SLASH=1
 
-  zinit ice ver'develop'
+  if (( AGKDOT_USE_TURBO )); then
+    zinit ice ver'develop' wait lucid
+  else
+    zinit ice ver'develop'
+  fi
   zinit light agkozak/zhooks
 
-  # (( AGKDOT_USE_TURBO )) &&
-  #   zinit ice atload'_zsh_title__precmd' lucid nocd wait'!0'
+  (( AGKDOT_USE_TURBO )) &&
+    zinit ice atload'_zsh_title__precmd' lucid nocd wait
   zinit light jreese/zsh-titles
 
   # if [[ $AGKDOT_SYSTEMINFO != *ish* ]]; then
@@ -494,6 +498,7 @@ if (( ${+commands[git]} )); then
   #   zinit load zdharma/zbrowse
   # fi
 
+  (( AGKDOT_USE_TURBO )) && zinit ice lucid wait
   zinit snippet OMZ::plugins/extract/extract.plugin.zsh
 
   # (( AGKDOT_USE_TURBO )) && zinit ice silent wait'0f'
