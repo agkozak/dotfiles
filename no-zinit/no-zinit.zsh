@@ -94,32 +94,51 @@ zinit() {
       ;;
     update)
       shift
-      # TODO: Allow user to update individual plugins and snippets 
-      >&2 print 'no-zinit: Updating all plugins and snippets.'
+      
       [[ -d ${HOME}/.zinit/plugins ]] && cd ${HOME}/.zinit/plugins || exit
-      for i in *; do
-        if [[ $i != _local---zinit && -d ${i}/.git ]]; then
-          cd $i || exit
-          print -n "no-zinit: Updating plugin ${${PWD:t}%---*}/${${PWD:t}#*---}: "
-          git pull
-          _no_zinit_zcompare *.zsh
-          cd .. || exit
-        fi
-      done
-      [[ -d ${HOME}/.zinit/snippets ]] && cd ${HOME}/.zinit/snippets || exit
-      i=''
-      for i in */*/*; do
-        [[ $i == *.zwc ]] && continue
-        print "no-zinit: Updating snippet ${${i/--/\/}%/*}"
-        zinit snippet ${${i/--/\/}%/*}
-      done
+
+      if [[ $1 == --all ]]; then
+        >&2 print 'no-zinit: Updating all plugins and snippets.'
+        for i in *; do
+          if [[ $i != _local---zinit && -d ${i}/.git ]]; then
+            cd $i || exit
+            print -n "no-zinit: Updating plugin ${${PWD:t}%---*}/${${PWD:t}#*---}: "
+            git pull
+            _no_zinit_zcompare *.zsh
+            cd .. || exit
+          fi
+        done
+        [[ -d ${HOME}/.zinit/snippets ]] && cd ${HOME}/.zinit/snippets || exit
+        i=''
+        for i in */*/*; do
+          [[ $i == *.zwc ]] && continue
+          print "no-zinit: Updating snippet ${${i/--/\/}%/*}"
+          zinit snippet ${${i/--/\/}%/*}
+        done
+      else
+        while (( $# > 0 )); do
+          if [[ $1 == OMZ:** ]]; then
+            # TODO: Code for updating snippets
+            return 1
+          else
+            local repo=$1 repo_dir="${1%/*}---${1#*/}"
+            >&2 print -n "no-zinit: Updating $repo: "
+            [[ -d $repo_dir ]] && cd $repo_dir || exit
+            git pull
+            cd .. || exit
+            zinit load $repo
+          fi
+          shift
+        done
+      fi
+
       cd $orig_dir || exit
       ;;
-    list)
+      list)
       >&2 print 'no-zinit Plugins:'
-      print -lf '  %s\n' $NO_ZINIT_PLUGINS
+      >&2 print -lf '  %s\n' $NO_ZINIT_PLUGINS
       >&2 print 'no-zinit Snippets:'
-      print -lf '  %s\n' $NO_ZINIT_SNIPPETS
+      >&2 print -lf '  %s\n' $NO_ZINIT_SNIPPETS
       ;;
     # TODO: Write this eventually.
     self-update) return 1 ;;
