@@ -209,8 +209,8 @@ esac
 #   ! command -v composer      > /dev/null 2>&1; then
 #   alias composer='composer.phar'
 # fi
-command -v dos2unix > /dev/null 2>&1 || command -v perl > /dev/null 2>&1 &&
-  alias dos2unix='perl -p -i -e "s/\\r\\n/\\n/g"'
+# command -v dos2unix > /dev/null 2>&1 || command -v perl > /dev/null 2>&1 &&
+#   alias dos2unix='perl -p -i -e "s/\\r\\n/\\n/g"'
 
 ############################################################
 # If a given command exists, make an alias for it
