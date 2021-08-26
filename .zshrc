@@ -7,10 +7,31 @@
 
 # Begin .zshrc benchmarks {{{1
 
+# zprof {{{1
+#
 # To run zprof, execute
 #
 #   env ZSH_PROF='' zsh -ic zprof
 (( $+ZSH_PROF )) && zmodload zsh/zprof
+# }}}1
+
+# xtrace {{{1
+#
+# To run xtrace, execute
+#
+# AGKDOT_XTRACE=1 zsh
+if (( AGKDOT_XTRACE )); then
+  zmodload zsh/datetime
+  setopt PROMPT_SUBST
+  PS4='+$EPOCHREALTIME %N:%i> '
+
+  logfile=$(mktemp zsh_profile.XXXXXXXX)
+  echo "Logging to $logfile"
+  exec 3>&2 2>$logfile
+
+  setopt XTRACE
+fi
+# }}}1
 
 # For simple script running times, execute
 #
@@ -636,6 +657,13 @@ if [[ -f ${HOME}/.zshrc.local ]]; then
   source "${HOME}/.zshrc.local"
 fi
 
+# }}}1
+
+# xtrace {{{1
+if (( AGKDOT_XTRACE )); then
+  unsetopt XTRACE
+  exec 2>&3 3>&-
+fi
 # }}}1
 
 # vim: ai:fdm=marker:ts=2:et:sts=2:sw=2
