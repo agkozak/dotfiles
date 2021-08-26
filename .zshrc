@@ -148,47 +148,6 @@ autoload -Uz compinit edit-command-line zmv
 
 # 14.7 Filename Generation {{{1
 
-# 14.7.1 Dynamic Named Directories {{{2
-
-# https://superuser.com/questions/751523/dynamic-directory-hash
-if [[ -d '/c/wamp64/www' ]]; then
-  zsh_directory_name() {
-    emulate -L zsh
-    setopt EXTENDED_GLOB
-
-    local -a match mbegin mend
-    local pp1=/c/wamp64/www/
-    local pp2=wp-content
-
-    if [[ $1 == 'd' ]]; then
-      if [[ $2 == (#b)(${pp1}/)([^/]##)(/${pp2})* ]]; then
-        typeset -ga reply
-        reply=(wp-content:${match[2]} $(( $#match[1] + $#match[2] + $#match[3] )) )
-      else
-        return 1
-      fi
-    elif [[ $1 == 'n' ]]; then
-      [[ $2 != (#b)wp-content:(?*) ]] && return 1
-      typeset -ga reply
-      reply=(${pp1}/${match[1]}/${pp2})
-    elif [[ $1 == 'c' ]]; then
-      local expl
-      local -a dirs
-      dirs=(${pp1}/*/${pp2})
-      for (( i == 1; i <= $#dirs; i++ )); do
-        dirs[$i]=wp-content:${${dirs[$i]#${pp1}/}%/${pp2}}
-      done
-      _wanted dynamic-dirs expl 'user specific directory' compadd -S\] -a dirs
-      return
-    else
-      return 1
-    fi
-    return 0
-  }
-fi
-
-# }}}2
-
 # 14.7.2 Static Named Directories {{{2
 
 # Static named directories
@@ -382,7 +341,7 @@ fi
 AGKOZAK_PROMPT_DEBUG=1
 
 # Make sure the zsh/terminfo module is loaded
-[[ ${modules[zsh/terminfo]} == 'loaded' ]] || zmodload zsh/terminfo
+(( ${+modules[zsh/terminfo]} )) || zmodload zsh/terminfo
 # If there are 256 colors, use the following colors; otherwise use the defaults
 if (( ${terminfo[colors]:-0} >= 256 )); then
   AGKOZAK_COLORS_USER_HOST=108
@@ -416,10 +375,10 @@ AGKOZAK_CUSTOM_RPROMPT=''
 
 # Use Zinit for zsh v5.0.8+; fall back to my own routines for zsh v4.3.11+ {{{1
 
-# export AGKDOT_NO_ZINIT=1 to circumvent Zinit
-if (( AGKDOT_NO_ZINIT != 1 )) && is-at-least 5.0.8; then
+if (( ${+commands[git]} )); then
 
-  if (( ${+commands[git]} )); then
+  # export AGKDOT_NO_ZINIT=1 to circumvent Zinit
+  if (( AGKDOT_NO_ZINIT != 1 )) && is-at-least 5.0.8; then
 
     if [[ ! -d ${HOME}/.zinit/bin ]]; then
       print 'Installing zinit...' >&2
@@ -444,216 +403,76 @@ if (( AGKDOT_NO_ZINIT != 1 )) && is-at-least 5.0.8; then
          $OSTYPE != solaris* &&
          $EUID   != 0 ]] && AGKDOT_USE_TURBO=1
 
-    # if (( AGKDOT_USE_TURBO )); then
-    #   PROMPT='%m%# '
-    #   zinit ice atload'_agkozak_precmd' nocd silent ver'develop' wait'!0a'
-    # else
-      zinit ice ver'develop'
-    # fi
-    zinit load agkozak/agkozak-zsh-prompt
-
-    # }}}3
-
-    # zinit light agkozak/polyglot
-    # if which kubectl &> /dev/null; then
-    #   zinit light jonmosco/kube-ps1
-    #   zinit light agkozak/polyglot-kube-ps1
-    # fi
-
-    # agkozak/zsh-z
-    # In FreeBSD, /home is /usr/home
-    ZSHZ_DEBUG=1
-    [[ $OSTYPE == freebsd* ]] && typeset -g ZSHZ_NO_RESOLVE_SYMLINKS=1
-    zinit ice ver'develop'
-    zinit load agkozak/zsh-z
-    ZSHZ_UNCOMMON=1
-    ZSHZ_CASE='smart'
-    ZSHZ_ECHO=1
-    # ZSHZ_TILDE=1
-    ZSHZ_TRAILING_SLASH=1
-
-    (( AGKDOT_USE_TURBO )) && zinit ice lucid wait'0g' ver'develop'
-    zinit load agkozak/zhooks
-
-    if (( AGKDOT_USE_TURBO )); then
-    zinit ice atload'compinit; compdef mosh=ssh; zpcdreplay' atload"
-      HISTORY_SUBSTRING_SEARCH_HIGHLIGHT_FOUND='underline'
-      HISTORY_SUBSTRING_SEARCH_HIGHLIGHT_NOT_FOUND=''
-      zle -N history-substring-search-up
-      zle -N history-substring-search-down
-      bindkey '^[OA' history-substring-search-up
-      bindkey '^[OB' history-substring-search-down
-      bindkey -M vicmd 'k' history-substring-search-up
-      bindkey -M vicmd 'j' history-substring-search-down
-      bindkey '^P' history-substring-search-up
-      bindkey '^N' history-substring-search-down" nocd silent wait'0d'
-    fi
-    zinit load zsh-users/zsh-history-substring-search
-
-    (( AGKDOT_USE_TURBO )) &&
-      zinit ice atload'_zsh_title__precmd' lucid nocd wait'!0i'
-    zinit load jreese/zsh-titles
-
-    # if [[ $AGKDOT_SYSTEMINFO != *ish* ]]; then
-    #   if (( AGKDOT_USE_TURBO )); then
-    #     zinit ice lucid wait'0e'
-    #   fi
-    #   zinit load zdharma/zui
-    #   (( AGKDOT_USE_TURBO )) && zinit ice lucid wait'(( $+ZUI ))'
-    #   zinit load zdharma/zbrowse
-    # fi
-
-    zinit snippet OMZ::plugins/extract/extract.plugin.zsh
-
-    (( AGKDOT_USE_TURBO )) && zinit ice silent wait'0f'
-    zinit load romkatv/zsh-prompt-benchmark
-
-    (( AGKDOT_USE_TURBO )) && zinit ice silent wait'0h'
-    zinit load zpm-zsh/clipboard
-
-    if (( ! AGKDOT_USE_TURBO )); then
-      compinit -u -d "${HOME}/.zcompdump_${ZSH_VERSION}"
-      compdef mosh=ssh
-      HISTORY_SUBSTRING_SEARCH_HIGHLIGHT_FOUND='underline'
-      HISTORY_SUBSTRING_SEARCH_HIGHLIGHT_NOT_FOUND=''
-      zle -N history-substring-search-up
-      zle -N history-substring-search-down
-      bindkey '^[OA' history-substring-search-up
-      bindkey '^[OB' history-substring-search-down
-      bindkey -M vicmd 'k' history-substring-search-up
-      bindkey -M vicmd 'j' history-substring-search-down
-      bindkey '^P' history-substring-search-up
-      bindkey '^N' history-substring-search-down
-    fi
-
   else
-    print 'Please install git.' >&2
+
+    source ${HOME}/dotfiles/no-zinit/no-zinit.zsh
+
   fi
 
-  # }}}2
+  # if (( AGKDOT_USE_TURBO )); then
+  #   PROMPT='%m%# '
+  #   zinit ice atload'_agkozak_precmd' nocd silent ver'develop' wait'!0a'
+  # else
+    zinit ice ver'develop'
+  # fi
+  zinit light agkozak/agkozak-zsh-prompt
 
-elif is-at-least 4.3.11; then
+  # }}}3
 
-  ##########################################################
-  # A function for downloading repositories and snippets and
-  # sourcing them.
-  #
-  # Arguments:
-  #   If $1 is `load', the name of a Github repository
-  #   follows as $2, followed optionally by $3 as the branch
-  #   to use, and again optionally by $4 as the file to
-  #   source.
-  #
-  #   If $2 is `snippet', the name of an Oh My ZSH file is
-  #   given in the form OMZ::/path/to/file.plugin.zsh.
-  #   Alternatively, the web address for the raw contents of
-  #   any ZSH code may be given.
-  ##########################################################
-  agkdot_init() {
-    ! (( ${+commands[git]} )) && return 1
-    typeset -ga agkdot_plugins agkdot_snippets
-    local orig_dir i j
-    orig_dir=$PWD
-    case $1 in
-      load)
-        if [[ ! -d "${HOME}/.zinit/plugins/${2%/*}---${2#*/}" ]]; then
-          git clone "https://github.com/${2%/*}/${2#*/}" \
-            "${HOME}/.zinit/plugins/${2%/*}---${2#*/}"
-          if (( $+3 )); then
-            cd "${HOME}/.zinit/plugins/${2%/*}---${2#*/}" || exit
-            git checkout $3
-            cd $orig_dir || exit
-          fi
-        fi
-        if (( $+4 )); then
-          source "${HOME}/.zinit/plugins/${2%/*}---${2#*/}/$4" &&
-            agkdot_plugins+=( $2 )
-        else
-          source "${HOME}/.zinit/plugins/${2%/*}---${2#*/}/${2#*/}.plugin.zsh" &&
-            agkdot_plugins+=( $2 )
-        fi
-        ;;
-      snippet)
-        if [[ $2 == OMZ::* ]]; then
-          if [[ ! -f ${HOME}/.zinit/snippets/${2/\//--}/${2##*/} ]]; then
-            mkdir -p "${HOME}/.zinit/snippets/${2%%/*}--${2#*/}"
-            curl "https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/${2#OMZ::}" \
-              > "${HOME}/.zinit/snippets/${2%%/*}--${2#*/}/${2##*/}"
-          fi
-          source "${HOME}/.zinit/snippets/${2%%/*}--${2#*/}/${2##*/}" &&
-            agkdot_snippets+=( $2 )
-        else
-          return 1
-        fi
-        ;;
-      update)
-        [[ -d ${HOME}/.zinit/plugins ]] && cd ${HOME}/.zinit/plugins || exit
-        for i in *; do
-          if [[ $i != _local---zinit && -d ${i}/.git ]]; then
-            cd $i || exit
-            print -n "Updating plugin ${${PWD:t}%---*}/${${PWD:t}#*---}: "
-            git pull
-            cd .. || exit
-          fi
-        done
-        [[ -d ${HOME}/.zinit/snippets ]] && cd ${HOME}/.zinit/snippets || exit
-        i=''
-        for i in */*/*; do
-          [[ $i == *.zwc ]] && continue
-          print "Updating snippet ${${i/--/\/}%/*}"
-          agkdot_init snippet ${${i/--/\/}%/*}
-        done
-        cd $orig_dir || exit
-        ;;
-      list)
-        print 'Plugins:'
-        for i in $agkdot_plugins; do
-          printf '  %s\n' $i
-        done
-        print 'Snippets:'
-        for j in $agkdot_snippets; do
-          printf '  %s\n' $j
-        done
-        ;;
-      *) return 1 ;;
-    esac
-  }
+  # zinit light agkozak/polyglot
+  # if which kubectl &> /dev/null; then
+  #   zinit light jonmosco/kube-ps1
+  #   zinit light agkozak/polyglot-kube-ps1
+  # fi
 
-  agkdot_init load agkozak/agkozak-zsh-prompt develop
-
+  # agkozak/zsh-z
+  # In FreeBSD, /home is /usr/home
+  ZSHZ_DEBUG=1
   [[ $OSTYPE == freebsd* ]] && typeset -g ZSHZ_NO_RESOLVE_SYMLINKS=1
-  agkdot_init load agkozak/zsh-z develop
+  zinit ice ver'develop'
+  zinit light agkozak/zsh-z
   ZSHZ_UNCOMMON=1
   ZSHZ_CASE='smart'
   ZSHZ_ECHO=1
   # ZSHZ_TILDE=1
   ZSHZ_TRAILING_SLASH=1
 
-  agkdot_init load agkozak/zhooks develop
-  agkdot_init load jreese/zsh-titles master titles.plugin.zsh
-  agkdot_init load zsh-users/zsh-history-substring-search
+  if (( AGKDOT_USE_TURBO )); then
+    zinit ice ver'develop' wait lucid
+  else
+    zinit ice ver'develop'
+  fi
+  zinit light agkozak/zhooks
 
-  agkdot_init load zpm-zsh/clipboard
+  (( AGKDOT_USE_TURBO )) &&
+    zinit ice atload'_zsh_title__precmd' lucid nocd wait
+  zinit light jreese/zsh-titles
 
-  agkdot_init load romkatv/zsh-prompt-benchmark
+  # if [[ $AGKDOT_SYSTEMINFO != *ish* ]]; then
+  #   if (( AGKDOT_USE_TURBO )); then
+  #     zinit ice lucid wait'0e'
+  #   fi
+  #   zinit load zdharma/zui
+  #   (( AGKDOT_USE_TURBO )) && zinit ice lucid wait'(( $+ZUI ))'
+  #   zinit load zdharma/zbrowse
+  # fi
 
-  agkdot_init snippet OMZ::plugins/extract/extract.plugin.zsh
+  (( AGKDOT_USE_TURBO )) && zinit ice lucid wait
+  zinit snippet OMZ::plugins/extract/extract.plugin.zsh
+
+  # (( AGKDOT_USE_TURBO )) && zinit ice silent wait'0f'
+  # zinit load romkatv/zsh-prompt-benchmark
+
+  # (( AGKDOT_USE_TURBO )) && zinit ice silent wait'0h'
+  # zinit load zpm-zsh/clipboard
 
   compinit -u -d "${HOME}/.zcompdump_${ZSH_VERSION}"
-
-  # Allow SSH tab completion for mosh hostnames
   compdef mosh=ssh
 
-  HISTORY_SUBSTRING_SEARCH_HIGHLIGHT_FOUND='underline'
-  HISTORY_SUBSTRING_SEARCH_HIGHLIGHT_NOT_FOUND=''
-  zle -N history-substring-search-up
-  zle -N history-substring-search-down
-  bindkey '^[OA' history-substring-search-up
-  bindkey '^[OB' history-substring-search-down
-  bindkey -M vicmd 'k' history-substring-search-up
-  bindkey -M vicmd 'j' history-substring-search-down
-  bindkey '^P' history-substring-search-up
-  bindkey '^N' history-substring-search-down
+# }}}2
+
+else
+  print 'Please install git.' >&2
 fi
 
 # }}}1
@@ -716,8 +535,8 @@ zstyle ':completion:*' select-prompt '%SScrolling active: current selection at %
 # bindkey -v    # `set -o vi` is in .shrc
 
 # Borrowed from emacs mode
-(( ${+functions[history-substring-search-up]} )) || bindkey '^P' up-history
-(( ${+functions[history-substring-search-down]} )) || bindkey '^N' down-history
+bindkey '^P' up-history
+bindkey '^N' down-history
 bindkey '^R' history-incremental-search-backward
 bindkey '^S' history-incremental-search-forward   # FLOW_CONTROL must be off
 
@@ -738,7 +557,7 @@ bindkey '^I' expand-or-complete-with-dots
 
 # 22.7 The zsh/complist Module {{{1
 # use the vi navigation keys (hjkl) besides cursor keys in menu completion
-zmodload zsh/complist
+(( ${+modules[zsh/complist]} )) || zmodload zsh/complist
 bindkey -M menuselect 'h' vi-backward-char        # left
 bindkey -M menuselect 'k' vi-up-line-or-history   # up
 bindkey -M menuselect 'l' vi-forward-char         # right
@@ -761,6 +580,17 @@ elif [[ $TERM == 'dumb' ]]; then
   unset zle_bracketed_paste # Avoid ugly control sequences in dumb terminal
 fi
 
+# 26.7.1 history-search-end
+autoload -U history-search-end
+zle -N history-beginning-search-backward-end history-search-end
+zle -N history-beginning-search-forward-end history-search-end
+bindkey '^P' history-beginning-search-backward-end
+bindkey '^N' history-beginning-search-forward-end
+bindkey ${terminfo[kcuu1]} history-beginning-search-backward-end
+bindkey ${terminfo[kcud1]} history-beginning-search-forward-end
+bindkey -M vicmd 'k' history-beginning-search-backward-end
+bindkey -M vicmd 'j' history-beginning-search-forward-end
+
 # }}}1
 
 # Miscellaneous {{{1
@@ -782,8 +612,6 @@ zsh_update() {
   if (( ${+functions[zinit]} )); then
     zinit self-update
     zinit update --all
-  else
-    agkdot_init update
   fi
   source "${HOME}/.zshrc"
 }
