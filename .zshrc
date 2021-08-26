@@ -481,8 +481,8 @@ if (( ${+commands[git]} )); then
   zinit ice ver'develop'
   zinit load agkozak/zhooks
 
-  (( AGKDOT_USE_TURBO )) &&
-    zinit ice atload'_zsh_title__precmd' lucid nocd wait'!0'
+  # (( AGKDOT_USE_TURBO )) &&
+  #   zinit ice atload'_zsh_title__precmd' lucid nocd wait'!0'
   zinit load jreese/zsh-titles
 
   # if [[ $AGKDOT_SYSTEMINFO != *ish* ]]; then
