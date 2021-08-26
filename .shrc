@@ -228,7 +228,6 @@ esac
 # }
 
 # command -v can be slow
-alias bat='batcat'
 alias github-stats='github-stats --token ${GITHUB_STATS_TOKEN}'
 alias bri='hue set all -b'
 [ "$EDITOR" = vim ] && alias vi='vim'
