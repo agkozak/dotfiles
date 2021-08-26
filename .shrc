@@ -116,8 +116,7 @@ if [ -n "$INSIDE_EMACS" ]; then
   unset LS_COLORS
 # If dircolors is available, install.sh will have installed ~/.dircolors
 # Try not to run dircolors more than once unless TERM has changed
-elif [ "$TERM" != "$AGKDOT_ORIG_TERM" ] &&
-  command -v dircolors > /dev/null 2>&1; then
+elif [ "$TERM" != "$AGKDOT_ORIG_TERM" ] && [ -f "${HOME}/.dircolors" ]; then
   case $AGKDOT_SYSTEMINFO in
     SunOS*) eval "$(dircolors -b)" ;;
     *)
@@ -206,10 +205,10 @@ case $KSH_VERSION in
     ;;
 esac
 
-if  command -v composer.phar > /dev/null 2>&1 &&
-  ! command -v composer      > /dev/null 2>&1; then
-  alias composer='composer.phar'
-fi
+# if  command -v composer.phar > /dev/null 2>&1 &&
+#   ! command -v composer      > /dev/null 2>&1; then
+#   alias composer='composer.phar'
+# fi
 command -v dos2unix > /dev/null 2>&1 || command -v perl > /dev/null 2>&1 &&
   alias dos2unix='perl -p -i -e "s/\\r\\n/\\n/g"'
 
@@ -232,7 +231,7 @@ command -v dos2unix > /dev/null 2>&1 || command -v perl > /dev/null 2>&1 &&
 alias bat='batcat'
 alias github-stats='github-stats --token ${GITHUB_STATS_TOKEN}'
 alias bri='hue set all -b'
-command -v vim > /dev/null 2>&1 && alias vi='vim'
+[ "$EDITOR" = vim ] && alias vi='vim'
 alias wp='wp-cli.phar'
 alias yta='youtube-dl --audio-format best -x '
 
@@ -292,7 +291,7 @@ case $AGKDOT_SYSTEMINFO in
     alias gvim='/cygdrive/c/Windows/gvim.bat'
     ;;
   *CYGWIN_NT-10.0-WOW*|*[Mm]icrosoft*)
-    command -v tmux > /dev/null 2>&1 && tmux='tmux -S "${HOME}/.tmsock"'
+    tmux='tmux -S "${HOME}/.tmsock"'
     ;;
   *raspberrypi*)
     alias temp='/opt/vc/bin/vcgencmd measure_temp | egrep "[0-9.]{4,}" -o'
