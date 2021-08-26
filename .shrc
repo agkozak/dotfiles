@@ -254,7 +254,9 @@ alias yta='youtube-dl --audio-format best -x '
 #   done
 # }
 
-command -v winpty > /dev/null 2>&1 && AGKDOT_WINPTY=1
+if [ -x /usr/bin/winpty ] || [ -x /usr/local/bin/winpty ]; then 
+   AGKDOT_WINPTY=1
+fi
 
 case $AGKDOT_SYSTEMINFO in
   *Msys|*Cygwin)
