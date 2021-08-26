@@ -456,7 +456,7 @@ if (( ${+commands[git]} )); then
   # else
     zinit ice ver'develop'
   # fi
-  zinit load agkozak/agkozak-zsh-prompt
+  zinit light agkozak/agkozak-zsh-prompt
 
   # }}}3
 
@@ -471,7 +471,7 @@ if (( ${+commands[git]} )); then
   ZSHZ_DEBUG=1
   [[ $OSTYPE == freebsd* ]] && typeset -g ZSHZ_NO_RESOLVE_SYMLINKS=1
   zinit ice ver'develop'
-  zinit load agkozak/zsh-z
+  zinit light agkozak/zsh-z
   ZSHZ_UNCOMMON=1
   ZSHZ_CASE='smart'
   ZSHZ_ECHO=1
@@ -479,11 +479,11 @@ if (( ${+commands[git]} )); then
   ZSHZ_TRAILING_SLASH=1
 
   zinit ice ver'develop'
-  zinit load agkozak/zhooks
+  zinit light agkozak/zhooks
 
   # (( AGKDOT_USE_TURBO )) &&
   #   zinit ice atload'_zsh_title__precmd' lucid nocd wait'!0'
-  zinit load jreese/zsh-titles
+  zinit light jreese/zsh-titles
 
   # if [[ $AGKDOT_SYSTEMINFO != *ish* ]]; then
   #   if (( AGKDOT_USE_TURBO )); then
