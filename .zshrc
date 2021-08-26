@@ -148,47 +148,6 @@ autoload -Uz compinit edit-command-line zmv
 
 # 14.7 Filename Generation {{{1
 
-# 14.7.1 Dynamic Named Directories {{{2
-
-# https://superuser.com/questions/751523/dynamic-directory-hash
-if [[ -d '/c/wamp64/www' ]]; then
-  zsh_directory_name() {
-    emulate -L zsh
-    setopt EXTENDED_GLOB
-
-    local -a match mbegin mend
-    local pp1=/c/wamp64/www/
-    local pp2=wp-content
-
-    if [[ $1 == 'd' ]]; then
-      if [[ $2 == (#b)(${pp1}/)([^/]##)(/${pp2})* ]]; then
-        typeset -ga reply
-        reply=(wp-content:${match[2]} $(( $#match[1] + $#match[2] + $#match[3] )) )
-      else
-        return 1
-      fi
-    elif [[ $1 == 'n' ]]; then
-      [[ $2 != (#b)wp-content:(?*) ]] && return 1
-      typeset -ga reply
-      reply=(${pp1}/${match[1]}/${pp2})
-    elif [[ $1 == 'c' ]]; then
-      local expl
-      local -a dirs
-      dirs=(${pp1}/*/${pp2})
-      for (( i == 1; i <= $#dirs; i++ )); do
-        dirs[$i]=wp-content:${${dirs[$i]#${pp1}/}%/${pp2}}
-      done
-      _wanted dynamic-dirs expl 'user specific directory' compadd -S\] -a dirs
-      return
-    else
-      return 1
-    fi
-    return 0
-  }
-fi
-
-# }}}2
-
 # 14.7.2 Static Named Directories {{{2
 
 # Static named directories
