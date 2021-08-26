@@ -23,6 +23,15 @@ zinit() {
   }
 
   case $1 in
+    -h|--help|help)
+      >&2 print -- '-h|--help|help'
+      >&2 print -- 'ice'
+      >&2 print -- 'load|light'
+      >&2 print -- 'snippet'
+      >&2 print -- 'update'
+      >&2 print -- 'list'
+      ;;
+
     ice)
       shift
 
