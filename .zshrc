@@ -576,18 +576,6 @@ bindkey '^N' down-history
 bindkey '^R' history-incremental-search-backward
 bindkey '^S' history-incremental-search-forward   # FLOW_CONTROL must be off
 
-# https://unix.stackexchange.com/questions/97843/how-can-i-search-history-with-text-already-entered-at-the-prompt-in-zsh
-
-autoload -U history-search-end
-zle -N history-beginning-search-backward-end history-search-end
-zle -N history-beginning-search-forward-end history-search-end
-bindkey '^P' history-beginning-search-backward-end
-bindkey '^N' history-beginning-search-forward-end
-bindkey '^[OA' history-beginning-search-backward-end
-bindkey '^[OB' history-beginning-search-forward-end
-bindkey -M vicmd 'k' history-beginning-search-backward-end
-bindkey -M vicmd 'j' history-beginning-search-forward-end
-
 # }}}2
 
 # Show completion "waiting dots" {{{2
@@ -627,6 +615,17 @@ if [[ $ZSH_VERSION != '5.1.1' && $TERM != 'dumb' ]] &&
 elif [[ $TERM == 'dumb' ]]; then
   unset zle_bracketed_paste # Avoid ugly control sequences in dumb terminal
 fi
+
+# 26.7.1 history-search-end
+autoload -U history-search-end
+zle -N history-beginning-search-backward-end history-search-end
+zle -N history-beginning-search-forward-end history-search-end
+bindkey '^P' history-beginning-search-backward-end
+bindkey '^N' history-beginning-search-forward-end
+bindkey ${terminfo[kcuu1]} history-beginning-search-backward-end
+bindkey ${terminfo[kcud1]} history-beginning-search-forward-end
+bindkey -M vicmd 'k' history-beginning-search-backward-end
+bindkey -M vicmd 'j' history-beginning-search-forward-end
 
 # }}}1
 
