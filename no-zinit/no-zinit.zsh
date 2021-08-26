@@ -85,7 +85,7 @@ zinit() {
           curl "https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/${1#OMZ::}" \
             > "${HOME}/.zinit/snippets/${1%%/*}--${1#*/}/${1##*/}"
         fi
-        _no_zinit_zcompare "${HOME}/.zinit/snippets/${1%%/*}--${1#*/}/${1##*/}" 
+        _no_zinit_zcompare "${HOME}/.zinit/snippets/${1%%/*}--${1#*/}/${1##*/}"
         source "${HOME}/.zinit/snippets/${1%%/*}--${1#*/}/${1##*/}" &&
           NO_ZINIT_SNIPPETS+=( $1 )
       else
@@ -118,8 +118,16 @@ zinit() {
       else
         while (( $# > 0 )); do
           if [[ $1 == OMZ:** ]]; then
-            # TODO: Code for updating snippets
-            return 1
+            if [[ -f ${HOME}/.zinit/snippets/${1/\//--}/${1##*/} ]]; then
+              >&2 print "no-zinit: Updating snippet $1"
+              mkdir -p "${HOME}/.zinit/snippets/${1%%/*}--${1#*/}"
+              curl "https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/${1#OMZ::}" \
+                > "${HOME}/.zinit/snippets/${1%%/*}--${1#*/}/${1##*/}"
+            else
+              continue
+            fi
+            _no_zinit_zcompare "${HOME}/.zinit/snippets/${1%%/*}--${1#*/}/${1##*/}"
+            source "${HOME}/.zinit/snippets/${1%%/*}--${1#*/}/${1##*/}" &&
           else
             local repo=$1 repo_dir="${1%/*}---${1#*/}"
             >&2 print -n "no-zinit: Updating $repo: "
