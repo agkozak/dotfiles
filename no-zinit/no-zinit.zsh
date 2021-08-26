@@ -121,6 +121,8 @@ zinit() {
       >&2 print 'no-zinit Snippets:'
       print -lf '  %s\n' $NO_ZINIT_SNIPPETS
       ;;
+    # TODO: Write this eventually.
+    self-update) return 1 ;;
     *) return 1 ;;
   esac
 }

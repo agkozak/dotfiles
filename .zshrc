@@ -648,8 +648,6 @@ zsh_update() {
   if (( ${+functions[zinit]} )); then
     zinit self-update
     zinit update --all
-  else
-    agkdot_init update
   fi
   source "${HOME}/.zshrc"
 }
