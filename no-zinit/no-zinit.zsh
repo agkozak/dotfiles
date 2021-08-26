@@ -1,4 +1,4 @@
-(( ${+command[git]} )) &&
+! (( ${+commands[git]} )) &&
   >&2 print 'no-zinit: Git not installed. Exiting...' &&
   exit
 
