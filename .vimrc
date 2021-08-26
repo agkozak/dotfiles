@@ -320,7 +320,7 @@ if executable('git') && (executable('curl') || executable('wget') || WINDOWS())
     " Bundles
 
     " General
-    Plug 'ctrlpvim/ctrlp.vim'
+    " Plug 'ctrlpvim/ctrlp.vim'
     Plug 'mhinz/vim-startify'
     if ALECompatible()
       Plug 'dense-analysis/ale'
@@ -339,43 +339,44 @@ if executable('git') && (executable('curl') || executable('wget') || WINDOWS())
     Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
     Plug 'tweekmonster/startuptime.vim', { 'on': 'StartupTime' }
     Plug 'tpope/vim-commentary'
-    if has('gui') && has('python')
-      Plug 'mbadran/headlights'
-    endif
+    " if has('gui') && has('python')
+    "   Plug 'mbadran/headlights'
+    " endif
     Plug 'ciaranm/securemodelines'
     Plug 'fedorenchik/AnsiEsc'
     
     " Git
-    Plug 'tpope/vim-fugitive'
-    if has('nvim') || has('patch-8.0.902')
-      Plug 'mhinz/vim-signify'
-    else
-      Plug 'mhinz/vim-signify', { 'branch': 'legacy' }
-    endif
-    Plug 'junegunn/gv.vim'
+    " Plug 'tpope/vim-fugitive'
+    " if has('nvim') || has('patch-8.0.902')
+    "   Plug 'mhinz/vim-signify'
+    " else
+    "   Plug 'mhinz/vim-signify', { 'branch': 'legacy' }
+    " endif
+    Plug 'airblade/vim-gitgutter'
+    " Plug 'junegunn/gv.vim'
 
     " PHP
-    if v:version < 802  " stanangeloff/php.vim is no longer being updated
-      Plug 'stanangeloff/php.vim', { 'for': 'php' }
-    endif
-    Plug 'shawncplus/phpcomplete.vim', { 'for': 'php' }
-    Plug 'tobyS/vmustache', { 'for': 'php' }  " Required for PDV
-    Plug 'tobyS/pdv', { 'for': 'php' }        " PHP Documentor for Vim
+    " if v:version < 802  " stanangeloff/php.vim is no longer being updated
+    "   Plug 'stanangeloff/php.vim', { 'for': 'php' }
+    " endif
+    " Plug 'shawncplus/phpcomplete.vim', { 'for': 'php' }
+    " Plug 'tobyS/vmustache', { 'for': 'php' }  " Required for PDV
+    " Plug 'tobyS/pdv', { 'for': 'php' }        " PHP Documentor for Vim
 
     " HTML5
-    Plug 'othree/html5.vim'
+    " Plug 'othree/html5.vim'
 
     " CSS/SCSS/Sass
-    Plug 'hail2u/vim-css3-syntax', { 'for': 'css' }
-    Plug 'cakebaker/scss-syntax.vim', { 'for': 'scss' }
-    Plug 'tpope/vim-haml'
+    " Plug 'hail2u/vim-css3-syntax', { 'for': 'css' }
+    " Plug 'cakebaker/scss-syntax.vim', { 'for': 'scss' }
+    " Plug 'tpope/vim-haml'
     Plug 'ap/vim-css-color', { 'for': 'css' }
-    Plug 'csscomb/vim-csscomb', { 'for': 'css' }
+    " Plug 'csscomb/vim-csscomb', { 'for': 'css' }
 
     " PowerShell
-    if executable('powershell.exe')
-      Plug 'PProvost/vim-ps1'
-    endif
+    " if executable('powershell.exe')
+    "   Plug 'PProvost/vim-ps1'
+    " endif
 
     " VimL
     if ! ALECompatible() && !executable('vint')
@@ -387,16 +388,16 @@ if executable('git') && (executable('curl') || executable('wget') || WINDOWS())
     Plug 'jnurmine/Zenburn'
 
     " Taskpaper
-    Plug 'davidoc/taskpaper.vim'
+    " Plug 'davidoc/taskpaper.vim'
 
     " .tmux.conf
-    Plug 'tmux-plugins/vim-tmux', { 'for': 'tmux' }
+    " Plug 'tmux-plugins/vim-tmux', { 'for': 'tmux' }
 
     " Apache logs
-    Plug 'vim-scripts/httplog'
+    " Plug 'vim-scripts/httplog'
 
     " zsh
-    Plug 'zinit-zsh/zinit-vim-syntax', { 'for': 'zsh' }
+    " Plug 'zinit-zsh/zinit-vim-syntax', { 'for': 'zsh' }
 
     call plug#end()
 
