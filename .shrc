@@ -220,23 +220,23 @@ command -v dos2unix > /dev/null 2>&1 || command -v perl > /dev/null 2>&1 &&
 #   $1 The command
 #   $2 The alias
 ############################################################
-_agkdot_cond_aliases() {
-  until [ $# = 0 ]; do
-    command -v "$1" > /dev/null 2>&1 && alias "$2"
-    shift
-    shift
-  done
-}
+# _agkdot_cond_aliases() {
+#   until [ $# = 0 ]; do
+#     command -v "$1" > /dev/null 2>&1 && alias "$2"
+#     shift
+#     shift
+#   done
+# }
 
-_agkdot_cond_aliases \
-  batcat bat='batcat' \
-  github-stats github-stats='github-stats --token ${GITHUB_STATS_TOKEN}' \
-  hue bri='hue set all -b' \
-  vim vi='vim' \
-  wp-cli.phar wp='wp-cli.phar' \
-  youtube-dl yta='youtube-dl --audio-format best -x '
+# command -v can be slow
+alias bat='batcat'
+alias github-stats='github-stats --token ${GITHUB_STATS_TOKEN}'
+alias bri='hue set all -b'
+command -v vim > /dev/null 2>&1 && alias vi='vim'
+alias wp='wp-cli.phar'
+alias yta='youtube-dl --audio-format best -x '
 
-unset -f _agkdot_cond_aliases
+# unset -f _agkdot_cond_aliases
 
 # System-specific aliases {{{2
 
