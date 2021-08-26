@@ -478,11 +478,11 @@ if (( ${+commands[git]} )); then
   # ZSHZ_TILDE=1
   ZSHZ_TRAILING_SLASH=1
 
-  (( AGKDOT_USE_TURBO )) && zinit ice lucid wait'0g' ver'develop'
+  zinit ice ver'develop'
   zinit load agkozak/zhooks
 
   (( AGKDOT_USE_TURBO )) &&
-    zinit ice atload'_zsh_title__precmd' lucid nocd wait'!0i'
+    zinit ice atload'_zsh_title__precmd' lucid nocd wait'!0'
   zinit load jreese/zsh-titles
 
   # if [[ $AGKDOT_SYSTEMINFO != *ish* ]]; then
@@ -496,11 +496,11 @@ if (( ${+commands[git]} )); then
 
   zinit snippet OMZ::plugins/extract/extract.plugin.zsh
 
-  (( AGKDOT_USE_TURBO )) && zinit ice silent wait'0f'
-  zinit load romkatv/zsh-prompt-benchmark
+  # (( AGKDOT_USE_TURBO )) && zinit ice silent wait'0f'
+  # zinit load romkatv/zsh-prompt-benchmark
 
-  (( AGKDOT_USE_TURBO )) && zinit ice silent wait'0h'
-  zinit load zpm-zsh/clipboard
+  # (( AGKDOT_USE_TURBO )) && zinit ice silent wait'0h'
+  # zinit load zpm-zsh/clipboard
 
   compinit -u -d "${HOME}/.zcompdump_${ZSH_VERSION}"
   compdef mosh=ssh
