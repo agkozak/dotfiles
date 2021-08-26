@@ -25,6 +25,9 @@ zinit() {
   case $1 in
     ice)
       shift
+
+      ! (( $# )) && return 1
+
       while [[ -n $@ ]]; do
         [[ $1 == ver* ]] && NO_ZINIT[BRANCH]=${1/ver/}
         shift
@@ -32,6 +35,8 @@ zinit() {
       ;;
     load|light)
       shift
+
+      ! (( $# )) && return 1
 
       local repo=$1 repo_dir="${1%/*}---${1#*/}"
 
@@ -61,6 +66,9 @@ zinit() {
         ;;
     snippet)
       shift
+
+      ! (( $# )) && return 1
+
       if [[ $1 == OMZ::* ]]; then
         if [[ ! -f ${HOME}/.zinit/snippets/${1/\//--}/${1##*/} ]]; then
           >&2 print "no-zinit: Installing snippet $1"
