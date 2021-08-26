@@ -382,7 +382,7 @@ fi
 AGKOZAK_PROMPT_DEBUG=1
 
 # Make sure the zsh/terminfo module is loaded
-[[ ${modules[zsh/terminfo]} == 'loaded' ]] || zmodload zsh/terminfo
+(( ${+modules[zsh/terminfo]} )) || zmodload zsh/terminfo
 # If there are 256 colors, use the following colors; otherwise use the defaults
 if (( ${terminfo[colors]:-0} >= 256 )); then
   AGKOZAK_COLORS_USER_HOST=108
@@ -593,7 +593,7 @@ bindkey '^I' expand-or-complete-with-dots
 
 # 22.7 The zsh/complist Module {{{1
 # use the vi navigation keys (hjkl) besides cursor keys in menu completion
-zmodload zsh/complist
+(( ${+modules[zsh/complist]} )) || zmodload zsh/complist
 bindkey -M menuselect 'h' vi-backward-char        # left
 bindkey -M menuselect 'k' vi-up-line-or-history   # up
 bindkey -M menuselect 'l' vi-forward-char         # right
