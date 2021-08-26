@@ -49,7 +49,7 @@ zinit() {
 
       local repo=$1 repo_dir="${1%/*}---${1#*/}"
 
-      _plugin_source() {
+      _no_zinit_plugin_source() {
         if [[ -f $1 ]]; then
           source $1 && NO_ZINIT_PLUGINS+=( $repo )
         else
@@ -67,11 +67,11 @@ zinit() {
           _no_zinit_zcompare *.zsh
           cd $orig_dir || exit
         fi
-        _plugin_source "${HOME}/.zinit/plugins/${repo_dir}/${repo#*/}.plugin.zsh" ||
-          _plugin_source "${HOME}/.zinit/plugins/${repo_dir}/init.zsh" ||
+        _no_zinit_plugin_source "${HOME}/.zinit/plugins/${repo_dir}/${repo#*/}.plugin.zsh" ||
+          _no_zinit_plugin_source "${HOME}/.zinit/plugins/${repo_dir}/init.zsh" ||
           # TODO: Rewrite
-          _plugin_source ${HOME}/.zinit/plugins/${repo_dir}/*.zsh ||
-            _plugin_source ${HOME}/.zinit/plugins/${repo_dir}/*.sh
+          _no_zinit_plugin_source ${HOME}/.zinit/plugins/${repo_dir}/*.zsh ||
+          _no_zinit_plugin_source ${HOME}/.zinit/plugins/${repo_dir}/*.sh
         ;;
     snippet)
       shift
@@ -114,6 +114,7 @@ zinit() {
           [[ $i == *.zwc ]] && continue
           print "no-zinit: Updating snippet ${${i/--/\/}%/*}"
           zinit snippet ${${i/--/\/}%/*}
+          _no_zinit_zcompare *.zsh
         done
       else
         while (( $# > 0 )); do
@@ -133,6 +134,7 @@ zinit() {
             >&2 print -n "no-zinit: Updating $repo: "
             [[ -d $repo_dir ]] && cd $repo_dir || exit
             git pull
+            _no_zinit_zcompare *.zsh
             cd .. || exit
             zinit load $repo
           fi
