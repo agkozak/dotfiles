@@ -220,8 +220,8 @@ nnoremap <Leader>st :Startify<CR>
 " `\tt' toggles Tagbar
 nnoremap <Leader>t :TagbarToggle<CR>
 
-" `\<TAB>' toggles NERDTree
-nnoremap <Leader><Tab> :NERDTreeToggle<CR>
+" " `\<TAB>' toggles NERDTree
+" nnoremap <Leader><Tab> :NERDTreeToggle<CR>
 
 set ttimeoutlen=50          " Make <Esc> faster
 
@@ -332,11 +332,11 @@ if executable('git') && (executable('curl') || executable('wget') || WINDOWS())
     endif
     Plug 'sgur/vim-editorconfig'
     Plug 'majutsushi/tagbar', { 'on': 'TagbarToggle' }
-    if v:version > 703
-          \ || v:version == 703 && has('patch1261') && has('patch1264')
-      Plug 'jlanzarotta/bufexplorer'
-    endif
-    Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
+    " if v:version > 703
+    "       \ || v:version == 703 && has('patch1261') && has('patch1264')
+    "   Plug 'jlanzarotta/bufexplorer'
+    " endif
+    " Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
     Plug 'tweekmonster/startuptime.vim', { 'on': 'StartupTime' }
     Plug 'tpope/vim-commentary'
     " if has('gui') && has('python')
@@ -494,17 +494,17 @@ endif
 let g:startify_custom_header = [ '' ]
 
 " phpcomplete.vim
-if has('autocmd')
-  augroup PHPComplete
-    autocmd!
-    autocmd FileType php setlocal omnifunc=phpcomplete#CompletePHP
-  augroup END
-endif
-let g:phpcomplete_parse_docblock_comments = 1
-let g:phpcomplete_complete_for_unknown_classes = 1
+" if has('autocmd')
+"   augroup PHPComplete
+"     autocmd!
+"     autocmd FileType php setlocal omnifunc=phpcomplete#CompletePHP
+"   augroup END
+" endif
+" let g:phpcomplete_parse_docblock_comments = 1
+" let g:phpcomplete_complete_for_unknown_classes = 1
 
 " wordpress.vim
-let g:wordpress_vim_php_syntax_highlight = 1
+" let g:wordpress_vim_php_syntax_highlight = 1
 
 " Syntastic
 if ! ALECompatible()
@@ -523,18 +523,18 @@ endif
 let g:is_posix=1
 
 " CtrlP
-let g:ctrlp_custom_ignore = '\v[\/]Music$'
+" let g:ctrlp_custom_ignore = '\v[\/]Music$'
 
 " NERDTree
 
-let g:NERDTreeDirArrowExpandable = '+'
-let g:NERDTreeDirArrowCollapsible = '~'
+" let g:NERDTreeDirArrowExpandable = '+'
+" let g:NERDTreeDirArrowCollapsible = '~'
 
 " Tagbar
 let g:tagbar_autofocus = 1
 
 " Colorizer
-let g:colorizer_auto_filetype='css,scss,html'
+" let g:colorizer_auto_filetype='css,scss,html'
 
 " }}}1
 
@@ -569,10 +569,10 @@ if has('autocmd')
     " Syntax {{{2
 
     " access.log is an Apache log
-    autocmd BufReadPost *access.log* set filetype=httplog
+    " autocmd BufReadPost *access.log* set filetype=httplog
 
     " Use JSON syntax highlighting for CSON files
-    autocmd BufNewFile,BufReadPost *.cson set filetype=coffee
+    " autocmd BufNewFile,BufReadPost *.cson set filetype=coffee
 
     " Treat *.md files as Markdown, not Modula-2
     autocmd BufNewFile,BufReadPost *.md setlocal filetype=markdown linebreak
@@ -581,7 +581,7 @@ if has('autocmd')
     autocmd BufNewFile,BufReadPost .minttyrc set filetype=dosini
 
     " .todo extension is TaskPaper
-    autocmd BufNewFile,BufReadPost *.todo set filetype=taskpaper
+    " autocmd BufNewFile,BufReadPost *.todo set filetype=taskpaper
 
     " JetBrains IDE color schemes
     autocmd BufNewFile,BufReadPost *.icls set filetype=xml
@@ -610,21 +610,21 @@ set t_ut= " Disable background color erase
 " rg/ag/ack {{{2
 
 " Avoid problems with native Windows rg/ag 
-if ! has('win32unix') 
+" if ! has('win32unix') 
 
-  if executable('rg')
-    set grepprg=rg\ --vimgrep\ --noheading
-    let g:ctrlp_user_command = 'rg %s --files --color=never --glob ""'
-    let g:ctrlp_use_caching  = 0
-  elseif executable('ag')
-    set grepprg=ag\ --nogroup\ --nocolor
-    let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
-    let g:ctrlp_use_caching = 0
-  elseif executable('ack')
-    set grepprg=ack\ -aH
-  endif
+"   if executable('rg')
+"     set grepprg=rg\ --vimgrep\ --noheading
+"     let g:ctrlp_user_command = 'rg %s --files --color=never --glob ""'
+"     let g:ctrlp_use_caching  = 0
+"   elseif executable('ag')
+"     set grepprg=ag\ --nogroup\ --nocolor
+"     let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
+"     let g:ctrlp_use_caching = 0
+"   elseif executable('ack')
+"     set grepprg=ack\ -aH
+"   endif
 
-endif
+" endif
 
 " }}}2
 
