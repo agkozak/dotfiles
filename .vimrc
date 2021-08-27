@@ -332,12 +332,11 @@ if executable('git') && (executable('curl') || executable('wget') || WINDOWS())
     
     " Git
     " vim-signify seems to slow down WSL2 startup
-    if $AGKDOT_SYSTEMINFO =~# 'microsoft'
-      Plug 'airblade/vim-gitgutter'
-    elseif has('nvim') || has('patch-8.0.902')
-      Plug 'mhinz/vim-signify'
-    else
+    if $AGKDOT_SYSTEMINFO =~# 'microsoft' || ! has('nvim')
+          \ || ! has('patch-8.0.902')
       Plug 'mhinz/vim-signify', { 'branch': 'legacy' }
+    else
+      Plug 'mhinz/vim-signify'
     endif
     Plug 'tpope/vim-fugitive'
     Plug 'junegunn/gv.vim'
