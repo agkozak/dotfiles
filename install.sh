@@ -216,6 +216,12 @@ rm -f "$HOME/.zlogin" "$HOME/.zlogin.zwc" "$HOME/.zlogout" "$HOME/zlogout.zwc"
 
 # }}}1
 
+# Update rupa/z {{{1
+
+[ -d "${HOME}/dotfiles/plugins/z" ] &&
+  cd "${HOME}/dotfiles/plugins/z"   &&
+  git pull
+
 # Return to original directory {{{1
 
 cd "$AGKDOT_ORIG_DIR" || exit
