@@ -4,14 +4,17 @@
 #  | | | | (_) |_____/ /| | | | | | |_
 #  |_| |_|\___/     /___|_|_| |_|_|\__|
 
+# This script requires Git
 ! (( ${+commands[git]} )) &&
   >&2 print 'no-zinit: Git not installed. Exiting...' &&
-  exit
+  return
 
+# This script should not run if Zinit has been loaded
 (( ${+functions[zinit]} )) &&
   >&2 print 'no-zinit: zinit function already loaded. Exiting...' &&
-  exit
+  return
 
+# no-zinit provides a subset of Zinit's capabilities
 zinit() {
 
   typeset -gA NO_ZINIT
@@ -19,6 +22,7 @@ zinit() {
   local orig_dir=$PWD i j
   local branch=${NO_ZINIT[BRANCH]} && NO_ZINIT[BRANCH]=''
 
+  # Compile scripts to wordcode when necessary
   _no_zinit_zcompare() {
     while [[ $# > 0 ]]; do
       if [[ -s ${1} && ( ! -s ${1}.zwc || ${1} -nt ${1}.zwc) ]]; then
@@ -29,6 +33,8 @@ zinit() {
   }
 
   case $1 in
+
+    # The beginnings of a help command
     -h|--help|help)
       >&2 print -- '-h|--help|help'
       >&2 print -- 'ice'
@@ -38,6 +44,7 @@ zinit() {
       >&2 print -- 'list'
       ;;
 
+    # ice only provides ver'...' at present
     ice)
       shift
 
@@ -48,6 +55,8 @@ zinit() {
         shift
       done
       ;;
+
+    # For our purposes, load and light do the same thing
     load|light)
       shift
 
@@ -55,6 +64,7 @@ zinit() {
 
       local repo=$1 repo_dir="${1%/*}---${1#*/}"
 
+      # If a script exists, source it and add it to the plugin list
       _no_zinit_plugin_source() {
         if [[ -f $1 ]]; then
           source $1 && NO_ZINIT_PLUGINS+=( $repo )
@@ -79,6 +89,8 @@ zinit() {
           _no_zinit_plugin_source ${HOME}/.zinit/plugins/${repo_dir}/*.zsh ||
           _no_zinit_plugin_source ${HOME}/.zinit/plugins/${repo_dir}/*.sh
         ;;
+
+    # Clone and load snippets
     snippet)
       shift
 
@@ -98,6 +110,8 @@ zinit() {
         return 1
       fi
       ;;
+
+    # Update individual plugins and snippets or all of them
     update)
       shift
       
@@ -150,14 +164,18 @@ zinit() {
 
       cd $orig_dir || exit
       ;;
+
+      # List loaded plugins and snippets
       list)
       >&2 print 'no-zinit Plugins:'
       >&2 print -lf '  %s\n' $NO_ZINIT_PLUGINS
       >&2 print 'no-zinit Snippets:'
       >&2 print -lf '  %s\n' $NO_ZINIT_SNIPPETS
       ;;
+
     # TODO: Write this eventually.
     self-update) return 1 ;;
+
     *) return 1 ;;
   esac
 }
