@@ -12,14 +12,16 @@ I have tested these dotfiles primarily on
 * Windows
     - MSYS2 with mintty
     - Cygwin with mintty
-    - The Windows Subsystem for Linux (a.ka. Bash on Ubuntu on Windows)
+    - The Windows Subsystem for Linux (versions 1 and 2)
 * Linux
-    - Ubuntu/Linux Mint/Raspbian (based on Debian)
+    - Ubuntu/Raspbian (based on Debian)
     - CloudLinux (based on CentOS)
+    - Alpine Linux
 * BSD
-    - FreeBSD/TrueOS/GhostBSD
+    - FreeBSD
     - NetBSD
     - OpenBSD
+    - DragonFly BSD
 * Unix
     - Solaris 11
     - OpenIndiana
@@ -36,8 +38,8 @@ I have tested these dotfiles primarily on
 Clone this repository to a `~/dotfiles` directory (the directory name is hard-coded at the moment) and run the installation script:
 
 ```sh
-git clone https://github.com/agkozak/dotfiles.git "$HOME/dotfiles"
-cd "$HOME/dotfiles"
+git clone https://github.com/agkozak/dotfiles.git "${HOME}/dotfiles"
+cd "${HOME}/dotfiles"
 ./install.sh
 ```
 
