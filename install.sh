@@ -218,6 +218,7 @@ rm -f "$HOME/.zlogin" "$HOME/.zlogin.zwc" "$HOME/.zlogout" "$HOME/zlogout.zwc"
 
 # Update rupa/z {{{1
 
+>&2 echo Updating rupa/z
 [ -d "${HOME}/dotfiles/plugins/z" ] &&
   cd "${HOME}/dotfiles/plugins/z"   &&
   git pull
