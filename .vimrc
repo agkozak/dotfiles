@@ -382,8 +382,6 @@ if executable('git') && (executable('curl') || executable('wget') || WINDOWS())
 
     :PlugInstall
 
-    source $MYVIMRC
-
   endif
 else
   if !has('iVim')
