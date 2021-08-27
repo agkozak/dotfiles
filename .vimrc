@@ -18,6 +18,10 @@ endfunction
 
 " Tests to see if ale can be used for syntax checking
 function! ALECompatible() abort
+  " ALE seems to slow down WSL2 startup
+  if $AGKDOT_SYSTEMINFO =~# 'microsoft'
+    return 0
+  endif
   return ((v:version >= 800 && has('job') && has('timers') && has('channel'))
         \ || has('nvim'))
 endfunction
@@ -327,7 +331,10 @@ if executable('git') && (executable('curl') || executable('wget') || WINDOWS())
     Plug 'fedorenchik/AnsiEsc'
     
     " Git
-    if has('nvim') || has('patch-8.0.902')
+    " vim-signify seems to slow down WSL2 startup
+    if $AGKDOT_SYSTEMINFO =~# 'microsoft'
+      Plug 'airblade/vim-gitgutter'
+    elseif has('nvim') || has('patch-8.0.902')
       Plug 'mhinz/vim-signify'
     else
       Plug 'mhinz/vim-signify', { 'branch': 'legacy' }
