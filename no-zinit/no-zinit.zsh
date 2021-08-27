@@ -3,6 +3,8 @@
 #  | '_ \ / _ \ ____|_  / | '_ \| | __|
 #  | | | | (_) |_____/ /| | | | | | |_
 #  |_| |_|\___/     /___|_|_| |_|_|\__|
+#
+#  https://github.com/agkozak/dotfiles/no-zinit
 
 # This script requires Git
 ! (( ${+commands[git]} )) &&
