@@ -339,7 +339,7 @@ if executable('git') && (executable('curl') || executable('wget') || WINDOWS())
       Plug 'mhinz/vim-signify'
     endif
     Plug 'tpope/vim-fugitive'
-    Plug 'junegunn/gv.vim'
+    Plug 'junegunn/gv.vim', { 'on': 'GV' }
 
     " CSS/SCSS/Sass
     Plug 'ap/vim-css-color', { 'for': 'css' }
