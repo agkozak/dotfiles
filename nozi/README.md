@@ -13,7 +13,7 @@
 * `ice` (right now only the modifier `ver'...'` is understood; there are no [alternative syntaxes](https://zdharma.github.io/zinit/wiki/Alternate-Ice-Syntax/) yet)
 * `self-update`
 * `-h`|`--help`|`help`
-* 
+
 Zinit is one of the best ZSH frameworks at present, and I use it in my [dotfiles](https://github.com/agkozak/dotfiles). It only functions reliably, however, with ZSH v5.0.8 and later. I develop [ZSH plugins](https://agkozak.github.io/) that are guaranteed to work in ZSH v4.3.11. Clearly, I need to have a way to load my own and other people's plugins and snippets with older versions of the shell when I have **No Zi**nit. That is where `nozi` comes in.
 
 The following example of how `nozi` can be used is derived from [my own `.zshrc`](https://github.com/agkozak/dotfiles/blob/master/.zshrc`). You'll see that it accounts for three possibilities: when Zinit Turbo mode is possible, when Zinit without Turbo mode is desired, and when Zinit is not an option and `nozi` kicks in:
