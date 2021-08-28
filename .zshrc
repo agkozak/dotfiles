@@ -426,7 +426,7 @@ if (( ${+commands[git]} )); then
 
   else
 
-    source ${HOME}/dotfiles/no-zinit/no-zinit.zsh
+    source ${HOME}/dotfiles/nozi/nozi.zsh
 
   fi
 
