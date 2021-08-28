@@ -23,6 +23,7 @@
 # nozi provides a subset of Zinit's capabilities
 nozi() {
 
+  # Use Zinit custom paths, if they have been specified
   local home_dir plugins_dir snippets_dir
   home_dir=${ZINIT[HOME_DIR]:-${HOME}/.zinit}
   plugins_dir=${ZINIT[PLUGINS_DIR]:-${home_dir}/plugins}
@@ -47,12 +48,13 @@ nozi() {
 
     # The beginnings of a help command
     -h|--help|help)
-      >&2 print -- '-h|--help|help'
-      >&2 print -- 'ice'
-      >&2 print -- 'load|light'
-      >&2 print -- 'snippet'
-      >&2 print -- 'update'
-      >&2 print -- 'list'
+      >&2 print -- '-h|--help|help    - usage information'
+      >&2 print -- "ice               - add ICE to next command, e.g. ice ver'develop'"
+      >&2 print -- 'load|light        - load plugin'
+      >&2 print -- 'snippet           - source a snippet from Oh-My-ZSH'
+      >&2 print -- 'update            - update plugin or snippet (or --all)'
+      >&2 print -- 'loaded|list       - show which plugins are loaded'
+      >&2 print -- 'ls                - list snippets'
       ;;
 
     # ice only provides ver'...' at present
@@ -176,10 +178,14 @@ nozi() {
       cd $orig_dir || exit
       ;;
 
-      # List loaded plugins and snippets
-      list)
+    # List loaded plugins
+    loaded|list)
       >&2 print 'nozi Plugins:'
       >&2 print -lf '  %s\n' $NOZI_PLUGINS
+      ;;
+
+    # List sourced snippets
+    ls)
       >&2 print 'nozi Snippets:'
       >&2 print -lf '  %s\n' $NOZI_SNIPPETS
       ;;
