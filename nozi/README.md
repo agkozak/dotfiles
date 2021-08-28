@@ -10,18 +10,18 @@ A tiny ZSH framework, `nozi` is a partial drop-in replacement for [Zinit](https:
 * `update`
 * `loaded`|`list`
 * `ls`
-* `ice` (right now only the modifier `ver'...'` is understood; there are no [alternative syntaxes](https://zdharma.github.io/zinit/wiki/Alternate-Ice-Syntax/) yet)
+* `ice` (right now only the modifier `ver'...'` is understood, and there are no [alternative syntaxes](https://zdharma.github.io/zinit/wiki/Alternate-Ice-Syntax/) yet)
 * `self-update`
 * `-h`|`--help`|`help`
 
-Zinit is one of the best ZSH frameworks at present, and I use it in my [dotfiles](https://github.com/agkozak/dotfiles). It only functions reliably, however, with ZSH v5.0.8 and later. I develop [ZSH plugins](https://agkozak.github.io/) that are guaranteed to work in ZSH v4.3.11. Clearly, I need to have a way to load my own and other people's plugins and snippets with older versions of the shell when I have **No Zi**nit. That is where `nozi` comes in.
+Zinit is one of the best ZSH frameworks at present, and I use it in my [dotfiles](https://github.com/agkozak/dotfiles). It only functions reliably, however, with ZSH v5.0.8 and later. I develop [ZSH plugins](https://agkozak.github.io/) that are guaranteed to work in ZSH v4.3.11. Clearly, I need to have a way to load my own and other people's plugins and snippets with older versions of the shell when I have **no Zi**nit. That is where `nozi` comes in.
 
-The following example of how `nozi` can be used is derived from [my own `.zshrc`](https://github.com/agkozak/dotfiles/blob/master/.zshrc`). You'll see that it accounts for three possibilities: when Zinit Turbo mode is possible, when Zinit without Turbo mode is desired, and when Zinit is not an option and `nozi` kicks in:
+The following example is derived from [my own `.zshrc`](https://github.com/agkozak/dotfiles/blob/master/.zshrc`). You will see that it accounts for three possibilities: when Zinit Turbo mode is possible, when Zinit without Turbo mode is desired, and when Zinit is not an option and `nozi` should handle everything.
 
 ```sh
 autoload -Uz is-at-least compinit
 
-# Zinit's perfect for ZSH v5.0.8 and later
+# Zinit is perfect for ZSH v5.0.8 and later
 if is-at-least 5.0.8; then
 
     if [[ ! -d ${HOME}/.zinit/bin ]]; then
@@ -45,7 +45,11 @@ if is-at-least 5.0.8; then
 else
     source ${HOME}/dotfiles/nozi/nozi.zsh
 fi
+```
 
+Once we have loaded either Zinit (with the variable `USE_TURBO` indicating whether Turbo mode should be used) or `nozi`, we can load plugins and snippets using syntax that will be understood by either framework:
+
+```sh
 # My own prompt; I use the `develop' branch
 zinit ice ver'develop'
 zinit light agkozak/agkozak-zsh-prompt
@@ -67,13 +71,13 @@ zinit light agkozak/zhooks
 zinit light jreese/zsh-titles
 
 # And a snippet from Oh-My-ZSH; lazy-load when possible
-(( AGKDOT_USE_TURBO )) && zinit ice lucid wait
+(( USE_TURBO )) && zinit ice lucid wait
 zinit snippet OMZ::plugins/extract/extract.plugin.zsh
 
 # Run compinit
 compinit -u -d "${ZINIT[ZCOMPDUMP_PATH]}"
 ```
 
-In this example, a `USE_TURBO` variable is set when Zinit Turbo mode is appropriate and a backup `ice` modifier is used when necessary. If Zinit does not load, `nozi` knows how to interpret the basic meaning of `load`/`light`/`snippet` commmands and will keep repositories and snippets in the same directories that Zinit uses (`nozi` even understands [`ZINIT[HOME_DIR]`, `ZINIT[PLUGINS_DIR]`, and `ZINIT[SNIPPETS_DIR]`](https://github.com/zdharma/zinit#customizing-paths)). The `ice` modifier `ver'...'` will use the correct Git branch for a plugin, and once you are at a prompt you can `update` plugins and snippets and use `loaded`|`list` and `ls` to see what you have loaded into the environment.
+If `nozi` is used, it will keep repositories and snippets in the same directories that Zinit uses (`nozi` even uses the [`ZINIT[HOME_DIR]`, `ZINIT[PLUGINS_DIR]`, and `ZINIT[SNIPPETS_DIR]`](https://github.com/zdharma/zinit#customizing-paths) custom path variables). The `ice` modifier `ver'...'` will use the correct Git branch for a plugin, and once you are at a prompt you can `update` plugins and snippets and use `loaded`|`list` and `ls` to see what you have loaded into the environment.
 
 *Copyright (c) 2021 Alexandros Kozak*
