@@ -481,8 +481,8 @@ if (( ${+commands[git]} )); then
   (( AGKDOT_USE_TURBO )) && zinit ice lucid wait
   zinit snippet OMZ::plugins/extract/extract.plugin.zsh
 
-  # (( AGKDOT_USE_TURBO )) && zinit ice silent wait'0f'
-  # zinit load romkatv/zsh-prompt-benchmark
+  (( AGKDOT_USE_TURBO )) && zinit ice lucid wait
+  zinit load romkatv/zsh-prompt-benchmark
 
   # (( AGKDOT_USE_TURBO )) && zinit ice silent wait'0h'
   # zinit load zpm-zsh/clipboard
