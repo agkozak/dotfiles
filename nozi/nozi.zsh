@@ -10,6 +10,13 @@
 #
 # Copyright (c) 2021 Alexandros Kozak
 
+# Find directory where the nozi.zsh script is
+#
+# Standarized $0 handling
+# (See https://github.com/zdharma/Zsh-100-Commits-Club/blob/master/Zsh-Plugin-Standard.adoc)
+0=${${ZERO:-${0:#$ZSH_ARGZERO}}:-${(%):-%N}}
+NOZI_DIR=${${${(M)0:#/*}:-$PWD/$0}:A:h}
+
 # This script requires Git
 ! (( ${+commands[git]} )) &&
   >&2 print 'nozi: Git not installed. Exiting...' &&
@@ -55,6 +62,7 @@ nozi() {
       >&2 print -- 'update            - update plugin or snippet (or --all)'
       >&2 print -- 'loaded|list       - show which plugins are loaded'
       >&2 print -- 'ls                - list snippets'
+      >&2 print -- 'self-update       - update nozi'
       ;;
 
     # ice only provides ver'...' at present
@@ -191,7 +199,19 @@ nozi() {
       ;;
 
     # TODO: Write this eventually.
-    self-update) return 1 ;;
+    self-update)
+      if [[ -d $NOZI_DIR ]]; then
+        cd $NOZI_DIR || exit
+        if [[ -d .git ]]; then
+          git pull
+        else
+          >&2 print "nozi must be in a Git repository for \`self-update' to work"
+        fi
+        cd $orig_dir
+      else
+        return 1
+      fi
+      ;;
 
     *) return 1 ;;
   esac

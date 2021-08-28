@@ -3,16 +3,17 @@
 [![MIT License](img/mit_license.svg)](img/mit_license.svg)
 ![ZSH version 4.3.11 and higher](img/zsh_4.3.11_plus.svg)
 
-[Zinit](https://github.com/zdharma/zinit) is one of the best ZSH frameworks at present, and I use it in my [dotfiles](https://github.com/agkozak/dotfiles). It only functions reliably, however, with ZSH v5.0.8 and later. I develop [ZSH plugins](https://agkozak.github.io/) that I guarantee to work in ZSH v4.3.11. Clearly, I need to have a way to load my own and other people's plugins and snippets with older versions of the shell.
-
-`nozi` is a partial drop-in replacement for times when you have **no Zi**nit. It understands a subset of Zinit's commands:
+`nozi` is a partial drop-in replacement for Zinit; it is a tiny ZSH framework. It understands a subset of Zinit's commands:
 
 * `load`/`light`
 * `snippet` (works only with [Oh-My-ZSH](https://github.com/ohmyzsh/ohmyzsh) code right now)
 * `update`
-* `list`
-* `ice` (right now only the modifier `ver'...'` is understood; no [alternative syntaxes](https://zdharma.github.io/zinit/wiki/Alternate-Ice-Syntax/) yet)
+* `loaded`|`list`
+* `ls`
+* `ice` (right now only the modifier `ver'...'` is understood; there are no [alternative syntaxes](https://zdharma.github.io/zinit/wiki/Alternate-Ice-Syntax/) yet)
+* `self-update`
 * `-h`|`--help`|`help`
+[Zinit](https://github.com/zdharma/zinit) is one of the best ZSH frameworks at present, and I use it in my [dotfiles](https://github.com/agkozak/dotfiles). It only functions reliably, however, with ZSH v5.0.8 and later. I develop [ZSH plugins](https://agkozak.github.io/) that are guaranteed to work in ZSH v4.3.11. Clearly, I need to have a way to load my own and other people's plugins and snippets with older versions of the shell when I have **No Zi**nit. That is where `nozi` comes in.
 
 The following example of how `nozi` can be used is derived from [my own `.zshrc`](https://github.com/agkozak/dotfiles/blob/master/.zshrc`). You'll see that it accounts for three possibilities: when Zinit Turbo mode is possible, when Zinit without Turbo mode is desired, and when Zinit is not an option and `nozi` kicks in:
 
@@ -72,6 +73,6 @@ zinit snippet OMZ::plugins/extract/extract.plugin.zsh
 compinit -u -d "${ZINIT[ZCOMPDUMP_PATH]}"
 ```
 
-In this example, a `USE_TURBO` variable is set when Zinit Turbo mode is appropriate and a backup `ice` modifier is used when necessary. If Zinit does not load, `nozi` knows how to interpret the basic meaning of `load`/`light`/`snippet` commmands and will keep repositories and snippets in the same directories that Zinit uses (`nozi` even understands [`ZINIT[HOME_DIR]`, `ZINIT[PLUGINS_DIR]`, and `ZINIT[SNIPPETS_DIR]`](https://github.com/zdharma/zinit#customizing-paths)). The `ice` modifier `ver'...'` will use the correct Git branch for a plugin, and once you are at a prompt you can `update` plugins and snippets and `list` what you have loaded into the environment.
+In this example, a `USE_TURBO` variable is set when Zinit Turbo mode is appropriate and a backup `ice` modifier is used when necessary. If Zinit does not load, `nozi` knows how to interpret the basic meaning of `load`/`light`/`snippet` commmands and will keep repositories and snippets in the same directories that Zinit uses (`nozi` even understands [`ZINIT[HOME_DIR]`, `ZINIT[PLUGINS_DIR]`, and `ZINIT[SNIPPETS_DIR]`](https://github.com/zdharma/zinit#customizing-paths)). The `ice` modifier `ver'...'` will use the correct Git branch for a plugin, and once you are at a prompt you can `update` plugins and snippets and use `loaded`|`list` and `list` to see what you have loaded into the environment.
 
-Copyright (c) 2021 Alexandros Kozak
+*Copyright (c) 2021 Alexandros Kozak*
