@@ -73,6 +73,6 @@ zinit snippet OMZ::plugins/extract/extract.plugin.zsh
 compinit -u -d "${ZINIT[ZCOMPDUMP_PATH]}"
 ```
 
-In this example, a `USE_TURBO` variable is set when Zinit Turbo mode is appropriate and a backup `ice` modifier is used when necessary. If Zinit does not load, `nozi` knows how to interpret the basic meaning of `load`/`light`/`snippet` commmands and will keep repositories and snippets in the same directories that Zinit uses (`nozi` even understands [`ZINIT[HOME_DIR]`, `ZINIT[PLUGINS_DIR]`, and `ZINIT[SNIPPETS_DIR]`](https://github.com/zdharma/zinit#customizing-paths)). The `ice` modifier `ver'...'` will use the correct Git branch for a plugin, and once you are at a prompt you can `update` plugins and snippets and use `loaded`|`list` and `list` to see what you have loaded into the environment.
+In this example, a `USE_TURBO` variable is set when Zinit Turbo mode is appropriate and a backup `ice` modifier is used when necessary. If Zinit does not load, `nozi` knows how to interpret the basic meaning of `load`/`light`/`snippet` commmands and will keep repositories and snippets in the same directories that Zinit uses (`nozi` even understands [`ZINIT[HOME_DIR]`, `ZINIT[PLUGINS_DIR]`, and `ZINIT[SNIPPETS_DIR]`](https://github.com/zdharma/zinit#customizing-paths)). The `ice` modifier `ver'...'` will use the correct Git branch for a plugin, and once you are at a prompt you can `update` plugins and snippets and use `loaded`|`list` and `ls` to see what you have loaded into the environment.
 
 *Copyright (c) 2021 Alexandros Kozak*
