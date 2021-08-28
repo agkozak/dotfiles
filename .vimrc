@@ -122,7 +122,7 @@ if has('gui_running')
   set guioptions-=T               " Remove toolbar
   if WINDOWS()
     " Windows GUI font (Consolas tends to leave artefacts)
-    set guifont=DejaVu\ Sans\ Mono:h18:cANSI,Consolas:h18:cANSI
+    set guifont=DejaVu\ Sans\ Mono:h12:cANSI,Consolas:h12:cANSI
   else
     set guifont=DejaVu\ Sans\ Mono\ 12
   endif
