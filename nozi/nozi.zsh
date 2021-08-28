@@ -23,6 +23,11 @@
 # nozi provides a subset of Zinit's capabilities
 nozi() {
 
+  local home_dir plugins_dir snippets_dir
+  home_dir=${ZINIT[HOME_DIR]:-${HOME}/.zinit}
+  plugins_dir=${ZINIT[PLUGINS_DIR]:-${home_dir}/plugins}
+  snippets_dir=${ZINIT[SNIPPETS_DIR]:-${home_dir}/snippets}
+
   typeset -gA NOZI
   typeset -ga NOZI_PLUGINS NOZI_SNIPPETS
   local orig_dir=$PWD i j
@@ -31,8 +36,8 @@ nozi() {
   # Compile scripts to wordcode when necessary
   _nozi_zcompare() {
     while [[ $# > 0 ]]; do
-      if [[ -s ${1} && ( ! -s ${1}.zwc || ${1} -nt ${1}.zwc) ]]; then
-        zcompile ${1}
+      if [[ -s $1 && ( ! -s ${1}.zwc || $1 -nt ${1}.zwc) ]]; then
+        zcompile $1
       fi
       shift
     done
@@ -79,21 +84,21 @@ nozi() {
         fi
       }
 
-      if [[ ! -d "${HOME}/.zinit/plugins/${repo_dir}" ]]; then
+      if [[ ! -d "${plugins_dir}/${repo_dir}" ]]; then
           git clone "https://github.com/${repo}" \
-            "${HOME}/.zinit/plugins/${repo_dir}"
-          cd "${HOME}/.zinit/plugins/${repo_dir}" || exit
+            "${plugins_dir}/${repo_dir}"
+          cd "${plugins_dir}/${repo_dir}" || exit
           if [[ -n $branch ]]; then
             git checkout $branch
           fi
           _nozi_zcompare *.zsh
           cd $orig_dir || exit
         fi
-        _nozi_plugin_source "${HOME}/.zinit/plugins/${repo_dir}/${repo#*/}.plugin.zsh" ||
-          _nozi_plugin_source "${HOME}/.zinit/plugins/${repo_dir}/init.zsh" ||
+        _nozi_plugin_source "${plugins_dir}/${repo_dir}/${repo#*/}.plugin.zsh" ||
+          _nozi_plugin_source "${plugins_dir}/${repo_dir}/init.zsh" ||
           # TODO: Rewrite
-          _nozi_plugin_source ${HOME}/.zinit/plugins/${repo_dir}/*.zsh ||
-          _nozi_plugin_source ${HOME}/.zinit/plugins/${repo_dir}/*.sh
+          _nozi_plugin_source ${plugins_dir}/${repo_dir}/*.zsh ||
+          _nozi_plugin_source ${plugins_dir}/${repo_dir}/*.sh
         ;;
 
     # Clone and load snippets
@@ -103,14 +108,14 @@ nozi() {
       ! (( $# )) && return 1
 
       if [[ $1 == OMZ::* ]]; then
-        if [[ ! -f ${HOME}/.zinit/snippets/${1/\//--}/${1##*/} ]]; then
+        if [[ ! -f ${snippets_dir}/${1/\//--}/${1##*/} ]]; then
           >&2 print "nozi: Installing snippet $1"
-          mkdir -p "${HOME}/.zinit/snippets/${1%%/*}--${1#*/}"
+          mkdir -p "${snippets_dir}/${1%%/*}--${1#*/}"
           curl "https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/${1#OMZ::}" \
-            > "${HOME}/.zinit/snippets/${1%%/*}--${1#*/}/${1##*/}"
+            > "${snippets_dir}/${1%%/*}--${1#*/}/${1##*/}"
         fi
-        _nozi_zcompare "${HOME}/.zinit/snippets/${1%%/*}--${1#*/}/${1##*/}"
-        source "${HOME}/.zinit/snippets/${1%%/*}--${1#*/}/${1##*/}" &&
+        _nozi_zcompare "${snippets_dir}/${1%%/*}--${1#*/}/${1##*/}"
+        source "${snippets_dir}/${1%%/*}--${1#*/}/${1##*/}" &&
           NOZI_SNIPPETS+=( $1 )
       else
         return 1
@@ -121,7 +126,7 @@ nozi() {
     update)
       shift
       
-      [[ -d ${HOME}/.zinit/plugins ]] && cd ${HOME}/.zinit/plugins || exit
+      [[ -d $plugins_dir ]] && cd $plugins_dir || exit
 
       if [[ $1 == --all ]]; then
         >&2 print 'nozi: Updating all plugins and snippets.'
@@ -134,7 +139,7 @@ nozi() {
             cd .. || exit
           fi
         done
-        [[ -d ${HOME}/.zinit/snippets ]] && cd ${HOME}/.zinit/snippets || exit
+        [[ -d $snippets_dir ]] && cd $snippets_dir || exit
         i=''
         for i in */*/*; do
           [[ $i == *.zwc ]] && continue
@@ -145,16 +150,16 @@ nozi() {
       else
         while (( $# > 0 )); do
           if [[ $1 == OMZ:** ]]; then
-            if [[ -f ${HOME}/.zinit/snippets/${1/\//--}/${1##*/} ]]; then
+            if [[ -f ${snippets_dir}/${1/\//--}/${1##*/} ]]; then
               >&2 print "nozi: Updating snippet $1"
-              mkdir -p "${HOME}/.zinit/snippets/${1%%/*}--${1#*/}"
+              mkdir -p "${snippets_dir}/${1%%/*}--${1#*/}"
               curl "https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/${1#OMZ::}" \
-                > "${HOME}/.zinit/snippets/${1%%/*}--${1#*/}/${1##*/}"
+                > "${snippets_dir}/${1%%/*}--${1#*/}/${1##*/}"
             else
               continue
             fi
-            _nozi_zcompare "${HOME}/.zinit/snippets/${1%%/*}--${1#*/}/${1##*/}"
-            source "${HOME}/.zinit/snippets/${1%%/*}--${1#*/}/${1##*/}" &&
+            _nozi_zcompare "${snippets_dir}/${1%%/*}--${1#*/}/${1##*/}"
+            source "${snippets_dir}/${1%%/*}--${1#*/}/${1##*/}" &&
           else
             local repo=$1 repo_dir="${1%/*}---${1#*/}"
             >&2 print -n "nozi: Updating $repo: "
