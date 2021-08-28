@@ -487,7 +487,7 @@ if (( ${+commands[git]} )); then
   # (( AGKDOT_USE_TURBO )) && zinit ice silent wait'0h'
   # zinit load zpm-zsh/clipboard
 
-  compinit -u -d "${HOME}/.zcompdump_${ZSH_VERSION}"
+  compinit -u -d "${ZINIT[ZCOMPDUMP_PATH]}"
   compdef mosh=ssh
 
 # }}}2
