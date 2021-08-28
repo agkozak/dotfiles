@@ -3,7 +3,7 @@
 [![MIT License](img/mit_license.svg)](img/mit_license.svg)
 ![ZSH version 4.3.11 and higher](img/zsh_4.3.11_plus.svg)
 
-`nozi` is a partial drop-in replacement for [Zinit](https://github.com/zdharma/zinit); it is a tiny ZSH framework. It understands a subset of Zinit's commands:
+A tiny ZSH framework, `nozi` is a partial drop-in replacement for [Zinit](https://github.com/zdharma/zinit). It understands a subset of Zinit's commands:
 
 * `load`/`light`
 * `snippet` (works only with [Oh-My-ZSH](https://github.com/ohmyzsh/ohmyzsh) code right now)
