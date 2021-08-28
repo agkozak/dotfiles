@@ -64,7 +64,8 @@ zinit light agkozak/zhooks
 (( USE_TURBO )) && zinit ice atload'_zsh_title__precmd' lucid nocd wait
 zinit light jreese/zsh-titles
 
-# And a snippet from Oh-My-ZSH
+# And a snippet from Oh-My-ZSH; lazy-load when possible
+(( AGKDOT_USE_TURBO )) && zinit ice lucid wait
 zinit snippet OMZ::plugins/extract/extract.plugin.zsh
 
 # Run compinit
