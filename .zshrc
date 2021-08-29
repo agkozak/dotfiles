@@ -426,6 +426,8 @@ if (( ${+commands[git]} )); then
 
   else
 
+    [[ ! -d ${HOME}/dotfiles/nozi ]] &&
+      git clone https://github.com/agkozak/nozi.git ${HOME}/dotfiles/nozi
     source ${HOME}/dotfiles/nozi/nozi.zsh
 
   fi
