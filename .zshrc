@@ -426,6 +426,7 @@ if (( ${+commands[git]} )); then
 
   else
 
+    # Use nozi as a drop-in for Zinit when ZSH < v5.0.8
     [[ ! -d ${HOME}/dotfiles/nozi ]] &&
       git clone https://github.com/agkozak/nozi.git ${HOME}/dotfiles/nozi
     source ${HOME}/dotfiles/nozi/nozi.zsh
