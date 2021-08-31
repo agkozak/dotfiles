@@ -100,5 +100,15 @@ zimp() {
       cd $orig_dir
       ;;
     list) print -l $ZIMP_PLUGINS $ZIMP_SNIPPETS ;;
+    -h|--help|help)
+      print "usage: $0 command [...]
+
+load            load a plugin
+snippet         load a snippet of code from Oh-My-ZSH
+update          update all plugins and snippets
+list            list all loaded plugins and snippets
+-h|--help|help  print this help text" | fold -s -w $COLUMNS
+      ;;
+    *) zimp help; return 1 ;;
   esac
 }
