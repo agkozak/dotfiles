@@ -394,12 +394,12 @@ AGKOZAK_CUSTOM_RPROMPT=''
 
 # }}}1
 
-# zimp {{{1
+# zsh-imp {{{1
 
 if (( ${+commands[git]} )); then
 
   # Load plugins and snippets {{{2
-  source ~/dotfiles/zimp/zimp.zsh
+  source ~/dotfiles/zsh-imp/zsh-imp.zsh
 
   zimp load agkozak/agkozak-zsh-prompt@develop
 
