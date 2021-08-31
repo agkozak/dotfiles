@@ -401,6 +401,7 @@ if (( ${+commands[git]} )); then
   source ${HOME}/dotfiles/antigen.zsh
 
   ANTIGEN_COMPDUMP="${ADOTDIR}/.zcompdump_${ZSH_VERSION}"
+  ANTIGEN_DEFAULT_REPO_URL='https://github.com/ohmyzsh/ohmyzsh'
 
   antigen theme agkozak/agkozak-zsh-prompt@develop
 
@@ -417,7 +418,7 @@ if (( ${+commands[git]} )); then
 
   antigen bundle agkozak/zhooks@develop
   antigen bundle jreese/zsh-titles
-  antigen bundle ohmyzsh/ohmyzsh plugins/extract
+  antigen bundle extract
   antigen bundle romkatv/zsh-prompt-benchmark
 
   antigen apply
