@@ -394,111 +394,35 @@ AGKOZAK_CUSTOM_RPROMPT=''
 
 # }}}1
 
-# Use Zinit for zsh v5.0.8+; fall back to my own routines for zsh v4.3.11+ {{{1
+# antigen {{{1
 
 if (( ${+commands[git]} )); then
 
-  # export AGKDOT_NO_ZINIT=1 to circumvent Zinit
-  if (( AGKDOT_NO_ZINIT != 1 )) && is-at-least 5.0.8; then
+  source ${HOME}/dotfiles/antigen.zsh
 
-    if [[ ! -d ${HOME}/.zinit/bin ]]; then
-      print 'Installing zinit...' >&2
-      mkdir -p "${HOME}/.zinit"
-      git clone https://github.com/zdharma/zinit.git "${HOME}/.zinit/bin"
-    fi
+  ANTIGEN_COMPDUMP="${ADOTDIR}/.zcompdump_${ZSH_VERSION}"
 
-    # Configuration hash
-    typeset -A ZINIT
-
-    # Location of .zcompdump file
-    ZINIT[ZCOMPDUMP_PATH]="${HOME}/.zcompdump_${ZSH_VERSION}"
-
-    # Zinit and its plugins and snippets
-    source "${HOME}/.zinit/bin/zinit.zsh"
-
-    # Load plugins and snippets {{{2
-
-    # Is Turbo Mode appropriate?
-    is-at-least 5.3 &&
-      [[ $TERM   != dumb     &&
-         $OSTYPE != solaris* &&
-         $EUID   != 0 ]] && AGKDOT_USE_TURBO=1
-
-  # if (( AGKDOT_USE_TURBO )); then
-  #   PROMPT='%m%# '
-  #   zinit ice atload'_agkozak_precmd' nocd silent ver'develop' wait'!0a'
-  # else
-    zinit ice ver'develop'
-  # fi
-  zinit light agkozak/agkozak-zsh-prompt
-
-  # }}}3
-
-  # zinit light agkozak/polyglot
-  # if which kubectl &> /dev/null; then
-  #   zinit light jonmosco/kube-ps1
-  #   zinit light agkozak/polyglot-kube-ps1
-  # fi
+  antigen theme agkozak/agkozak-zsh-prompt@develop
 
   # agkozak/zsh-z
   # In FreeBSD, /home is /usr/home
   ZSHZ_DEBUG=1
   [[ $OSTYPE == freebsd* ]] && typeset -g ZSHZ_NO_RESOLVE_SYMLINKS=1
-  zinit ice ver'develop'
-  zinit light agkozak/zsh-z
   ZSHZ_UNCOMMON=1
   ZSHZ_CASE='smart'
   ZSHZ_ECHO=1
   # ZSHZ_TILDE=1
   ZSHZ_TRAILING_SLASH=1
+  antigen bundle agkozak/zsh-z@develop
 
-  if (( AGKDOT_USE_TURBO )); then
-    zinit ice ver'develop' wait lucid
-  else
-    zinit ice ver'develop'
-  fi
-  zinit light agkozak/zhooks
+  antigen bundle agkozak/zhooks@develop
+  antigen bundle jreese/zsh-titles
+  antigen bundle ohmyzsh/ohmyzsh plugins/extract
+  antigen bundle romkatv/zsh-prompt-benchmark
 
-  (( AGKDOT_USE_TURBO )) &&
-    zinit ice atload'_zsh_title__precmd' lucid nocd wait
-  zinit light jreese/zsh-titles
+  antigen apply
 
-  # if [[ $AGKDOT_SYSTEMINFO != *ish* ]]; then
-  #   if (( AGKDOT_USE_TURBO )); then
-  #     zinit ice lucid wait'0e'
-  #   fi
-  #   zinit load zdharma/zui
-  #   (( AGKDOT_USE_TURBO )) && zinit ice lucid wait'(( $+ZUI ))'
-  #   zinit load zdharma/zbrowse
-  # fi
-
-  (( AGKDOT_USE_TURBO )) && zinit ice lucid wait
-  zinit snippet OMZ::plugins/extract/extract.plugin.zsh
-
-  (( AGKDOT_USE_TURBO )) && zinit ice lucid wait
-  zinit load romkatv/zsh-prompt-benchmark
-
-  # (( AGKDOT_USE_TURBO )) && zinit ice silent wait'0h'
-  # zinit load zpm-zsh/clipboard
-
-  compinit -u -d "${ZINIT[ZCOMPDUMP_PATH]}"
   compdef mosh=ssh
-
-  else
-
-    source ${HOME}/dotfiles/antigen.zsh
-
-    antigen theme agkozak/agkozak-zsh-prompt@develop
-    antigen bundle agkozak/zsh-z@develop
-    antigen bundle agkozak/zhooks@develop
-    antigen bundle jreese/zsh-titles
-    antigen bundle ohmyzsh/ohmyzsh plugins/extract
-    antigen bundle romkatv/zsh-prompt-benchmark
-
-    antigen apply
-
-  fi
-# }}}2
 
 else
   print 'Please install git.' >&2
