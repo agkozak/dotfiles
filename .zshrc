@@ -424,15 +424,6 @@ if (( ${+commands[git]} )); then
          $OSTYPE != solaris* &&
          $EUID   != 0 ]] && AGKDOT_USE_TURBO=1
 
-  else
-
-    # Use nozi as a drop-in for Zinit when ZSH < v5.0.8
-    [[ ! -d ${HOME}/dotfiles/nozi ]] &&
-      git clone https://github.com/agkozak/nozi.git ${HOME}/dotfiles/nozi
-    source ${HOME}/dotfiles/nozi/nozi.zsh
-
-  fi
-
   # if (( AGKDOT_USE_TURBO )); then
   #   PROMPT='%m%# '
   #   zinit ice atload'_agkozak_precmd' nocd silent ver'develop' wait'!0a'
@@ -493,6 +484,20 @@ if (( ${+commands[git]} )); then
   compinit -u -d "${ZINIT[ZCOMPDUMP_PATH]}"
   compdef mosh=ssh
 
+  else
+
+    source ${HOME}/dotfiles/antigen.zsh
+
+    antigen theme agkozak/agkozak-zsh-prompt@develop
+    antigen bundle agkozak/zsh-z@develop
+    antigen bundle agkozak/zhooks@develop
+    antigen bundle jreese/zsh-titles
+    antigen bundle ohmyzsh/ohmyzsh plugins/extract
+    antigen bundle romkatv/zsh-prompt-benchmark
+
+    antigen apply
+
+  fi
 # }}}2
 
 else
