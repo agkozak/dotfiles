@@ -45,14 +45,13 @@ zimp() {
           shift
         done
       else
-        local file sourced
+        local file
         for file in ${HOME}/.zimp/plugins/${repo}/${repo#*/}.plugin.zsh \
                     ${HOME}/.zimp/plugins/${repo}/*.plugin.zsh \
                     ${HOME}/.zimp/plugins/${repo}/init.zsh; do
           [[ -f $file ]] && break
         done
-        source $file && sourced=1
-        if (( sourced )); then
+        if source $file; then
           ZIMP_PLUGINS+=( ${repo} )
         else
           >&2 print "Could not source ${repo}."
