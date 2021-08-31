@@ -579,9 +579,8 @@ fi
 ############################################################
 zsh_update() {
   update_dotfiles
-  if (( ${+functions[zinit]} )); then
-    zinit self-update
-    zinit update --all
+  if (( ${+functions[zimp]} )); then
+    zimp update
   fi
   source "${HOME}/.zshrc"
 }
