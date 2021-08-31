@@ -19,6 +19,7 @@ zimp() {
   orig_dir=$PWD
   case $cmd in
     load)
+      [[ -z $1 ]] && return 1
       local repo branch
       if [[ -n $1 ]]; then
         repo=${1%@*}
@@ -60,6 +61,7 @@ zimp() {
       fi
       ;;
     snippet)
+      [[ -z $1 ]] && return 1
       local update snippet repo
       [[ $1 == '--update' ]] && update=1 && shift
       snippet=$1 repo='https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/'
