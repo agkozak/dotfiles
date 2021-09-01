@@ -15,6 +15,33 @@ zimp() {
     done
   }
 
+  _zimp_smart_source() {
+    local cmd file repo_path
+    cmd=$1 repo_path=$2
+
+    case $cmd in
+      load)
+        for file in ${repo_path}/${repo#*/}.plugin.zsh \
+                    ${repo_path}/*.plugin.zsh \
+                    ${repo_path}/init.zsh; do
+          [[ -f $file ]] && break
+        done
+        ;;
+      prompt)
+        for file in ${repo_path}/prompt_${repo#*/}_setup \
+                    ${repo_path}/${repo#*/}.zsh_theme; do
+          [[ -f $file ]] && break
+        done
+        ;;
+    esac
+    if source $file; then
+      ZIMP_PLUGINS+=( ${repo} )
+    else
+      >&2 print "Could not source ${repo}."
+      return 1
+    fi
+  }
+
   local cmd orig_dir
   [[ -n $1 ]] && cmd=$1 && shift
   orig_dir=$PWD
@@ -50,28 +77,7 @@ zimp() {
           shift
         done
       else
-        local file
-        case $cmd in
-          load)
-            for file in ${HOME}/.zimp/repos/${repo}/${repo#*/}.plugin.zsh \
-                        ${HOME}/.zimp/repos/${repo}/*.plugin.zsh \
-                        ${HOME}/.zimp/repos/${repo}/init.zsh; do
-              [[ -f $file ]] && break
-            done
-            ;;
-          prompt)
-            for file in ${HOME}/.zimp/repos/${repo}/prompt_${repo#*/}_setup \
-                        ${HOME}/.zimp/repos/${repo}/${repo#*/}.zsh_theme; do
-              [[ -f $file ]] && break
-            done
-            ;;
-        esac
-        if source $file; then
-          ZIMP_PLUGINS+=( ${repo} )
-        else
-          >&2 print "Could not source ${repo}."
-          return 1
-        fi
+        _zimp_smart_source $cmd ${HOME}/.zimp/repos/${repo}
       fi
       ;;
     snippet)
