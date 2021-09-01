@@ -83,8 +83,7 @@ zimp() {
       fi
       if (( $# )); then
         while (( $# )); do
-          # Example: zimp prompt sindresorhus/pure async.zsh
-          #          zimp prompt sindresorhus/pure pure.zsh
+          # Example: zimp prompt sindresorhus/pure async.zsh pure.zsh
           if [[ -f ${HOME}/.zimp/repos/${repo}/$1 ]]; then
             source ${HOME}/.zimp/repos/${repo}/$1 &&
               _zimp_add_list $cmd "${repo} ${1}"
