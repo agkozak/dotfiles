@@ -112,8 +112,13 @@ zimp() {
       ;;
     trigger-load)
       [[ -z $1 ]] && return 1
-      functions[$2]="ZIMP_TRIGGERS=( "\${(@)ZIMP_TRIGGERS:#${2}}" ); unfunction $2; zimp load $1; eval $2 \$@"
-      ZIMP_TRIGGERS+=( $2 )
+      local trigger
+      trigger=$1 && shift
+      functions[$trigger]="ZIMP_TRIGGERS=( "\${(@)ZIMP_TRIGGERS:#${trigger}}" );
+        unfunction $trigger;
+        zimp load $@;
+        eval $trigger \$@"
+      ZIMP_TRIGGERS+=( $trigger )
       ;;
     update)
       [[ -d ${HOME}/.zimp/repos ]] && cd ${HOME}/.zimp/repos || exit
