@@ -6,7 +6,7 @@ ZIMP[DIR]=${${NOZI[SCRIPT]}:A:h}
 
 zimp() {
 
-  typeset -ga ZIMP_PLUGINS ZIMP_SNIPPETS ZIMP_TRIGGERS
+  typeset -gUa ZIMP_PROMPTS ZIMP_PLUGINS ZIMP_SNIPPETS ZIMP_TRIGGERS
 
   _zimp_compile() {
     while (( $# )); do
@@ -36,10 +36,22 @@ zimp() {
         ;;
     esac
     if source $file; then
-      ZIMP_PLUGINS+=( ${repo} )
+      _zimp_add_list $cmd $repo
     else
       >&2 print "Could not source ${repo}."
       return 1
+    fi
+  }
+
+  _zimp_add_list() {
+    if [[ $1 == 'load' ]]; then
+      ZIMP_PLUGINS+=( "$2" )
+    elif [[ $1 == 'prompt' ]]; then
+      ZIMP_PROMPTS+=( "$2" )
+    elif [[ $1 == 'snippet' ]]; then
+      ZIMP_SNIPPETS+=( "$2" )
+    elif [[ $1 == 'trigger-load' ]]; then
+      ZIMP_TRIGGERS+=( "$2" )
     fi
   }
 
@@ -72,19 +84,20 @@ zimp() {
         while (( $# )); do
           # Example: zimp prompt sindresorhus/pure async.zsh pure.zsh
           if [[ -f ${HOME}/.zimp/repos/${repo}/$1 ]]; then
-            source ${HOME}/.zimp/repos/${repo}/$1 && ZIMP_PLUGINS+=( ${repo} )
+            source ${HOME}/.zimp/repos/${repo}/$1 && _zimp_add_list $cmd $repo
           # Example: zimp load ohmyzsh/ohmyzsh plugins/common-aliases
           elif [[ -d ${HOME}/.zimp/repos/${repo}/$1 ]]; then
             _zimp_smart_source $cmd ${HOME}/.zimp/repos/${repo}/$1
           # Example: zimp load ohmyzsh/ohmyzsh lib/git
           elif [[ $cmd == 'load' &&
                   -f ${HOME}/.zimp/repos/${repo}/${1}.zsh ]]; then
-            source ${HOME}/.zimp/repos/${repo}/${1}.zsh && ZIMP_PLUGINS+=( $repo )
+            source ${HOME}/.zimp/repos/${repo}/${1}.zsh &&
+              _zimp_add_list $cmd $repo
           # Example: zimp load ohmyzsh/ohmyzsh themes/robbyrussell
           elif [[ $cmd == 'prompt' &&
                   -f ${HOME}/.zimp/repos/${repo}/${1}.zsh-theme ]]; then
             source ${HOME}/.zimp/repos/${repo}/${1}.zsh-theme &&
-              ZIMP_PLUGINS+=( $repo )
+              _zimp_add_list $cmd $repo
           else
             >&2 print "Cannot source ${repo} $1."
             return 1
@@ -108,7 +121,7 @@ zimp() {
         curl ${repo}${snippet#OMZ::} > ${HOME}/.zimp/snippets/${snippet}
         _zimp_compile ${HOME}/.zimp/snippets/${snippet}
       fi
-      source ${HOME}/.zimp/snippets/${snippet} && ZIMP_SNIPPETS+=( $snippet )
+      source ${HOME}/.zimp/snippets/${snippet} && _zimp_add_list $cmd $snippet
       ;;
     trigger-load)
       [[ -z $1 ]] && return 1
@@ -118,7 +131,7 @@ zimp() {
         unfunction $trigger;
         zimp load $@;
         eval $trigger \$@"
-      ZIMP_TRIGGERS+=( $trigger )
+      _zimp_add_list $cmd $trigger
       ;;
     update)
       [[ -d ${HOME}/.zimp/repos ]] && cd ${HOME}/.zimp/repos || exit
@@ -134,7 +147,11 @@ zimp() {
             $file == *.zsh-theme ||
             $file == *.sh ]] && _zimp_compile $file
         done
-        (( ${ZIMP_PLUGINS[(Ie)$i]} )) && zimp load $i
+        if (( ${ZIMP_PLUGINS[(Ie)$i]} )); then
+          zimp load $i
+        elif (( ${ZIMP_PROMPT[(Ie)$i]} )); then
+          zimp prompt $i
+        fi
         cd ../..
       done
       local -a snippets
@@ -150,12 +167,14 @@ zimp() {
       cd $orig_dir
       ;;
     list)
-      print 'Plugins:'
-      print -l -f '  %s\n' ${(@o)ZIMP_PLUGINS}
-      print 'Snippets:'
-      print -l -f '  %s\n' ${(@o)ZIMP_SNIPPETS}
-      print 'Triggers:'
-      print "  ${(@o)ZIMP_TRIGGERS}"
+      (( ${#ZIMP_PROMPTS} )) && print 'Prompts:' &&
+        print -l -f '  %s\n' ${(@o)ZIMP_PROMPTS}
+      (( ${#ZIMP_PLUGINS} )) && print 'Plugins:' &&
+        print -l -f '  %s\n' ${(@o)ZIMP_PLUGINS}
+      (( ${#ZIMP_SNIPPETS} )) && print 'Snippets:' &&
+        print -l -f '  %s\n' ${(@o)ZIMP_SNIPPETS}
+      (( ${#ZIMP_TRIGGERS} )) && print 'Triggers:' &&
+        print "  ${(@o)ZIMP_TRIGGERS}"
       ;;
     -h|--help|help)
       print "usage: $0 command [...]
