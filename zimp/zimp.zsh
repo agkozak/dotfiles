@@ -15,6 +15,8 @@ zimp() {
     done
   }
 
+  _zimp_compile ${ZIMP[SCRIPT]}
+
   _zimp_smart_source() {
     local cmd file repo source_path
     cmd=$1 repo=$2 source_path="${HOME}/.zimp/repos/${repo}${3:+\/${3}}"
