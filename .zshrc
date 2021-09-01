@@ -401,7 +401,7 @@ if (( ${+commands[git]} )); then
   # Load plugins and snippets {{{2
   source ~/dotfiles/zimp/zimp.zsh
 
-  zimp load agkozak/agkozak-zsh-prompt@develop
+  zimp prompt agkozak/agkozak-zsh-prompt@develop
 
   # zinit light agkozak/polyglot
   # if which kubectl &> /dev/null; then

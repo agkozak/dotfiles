@@ -18,7 +18,7 @@ zimp() {
   [[ -n $1 ]] && cmd=$1 && shift
   orig_dir=$PWD
   case $cmd in
-    load)
+    load|prompt)
       [[ -z $1 ]] && return 1
       local repo branch
       if [[ -n $1 ]]; then
@@ -46,11 +46,21 @@ zimp() {
         done
       else
         local file
-        for file in ${HOME}/.zimp/plugins/${repo}/${repo#*/}.plugin.zsh \
-                    ${HOME}/.zimp/plugins/${repo}/*.plugin.zsh \
-                    ${HOME}/.zimp/plugins/${repo}/init.zsh; do
-          [[ -f $file ]] && break
-        done
+        case $cmd in
+          load)
+            for file in ${HOME}/.zimp/plugins/${repo}/${repo#*/}.plugin.zsh \
+                        ${HOME}/.zimp/plugins/${repo}/*.plugin.zsh \
+                        ${HOME}/.zimp/plugins/${repo}/init.zsh; do
+              [[ -f $file ]] && break
+            done
+            ;;
+          prompt)
+            for file in ${HOME}/.zimp/plugins/${repo}/prompt_${repo#*/}_setup \
+                        ${HOME}/.zimp/plugins/${repo}/${repo#*/}.zsh_theme; do
+              [[ -f $file ]] && break
+            done
+            ;;
+        esac
         if source $file; then
           ZIMP_PLUGINS+=( ${repo} )
         else
@@ -105,6 +115,7 @@ zimp() {
       print "usage: $0 command [...]
 
 load            load a plugin
+prompt          load a prompt
 snippet         load a snippet of code from Oh-My-ZSH
 update          update all plugins and snippets
 list            list all loaded plugins and snippets
