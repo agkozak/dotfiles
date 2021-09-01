@@ -6,7 +6,7 @@ ZIMP[DIR]=${${NOZI[SCRIPT]}:A:h}
 
 zimp() {
 
-  typeset -ga ZIMP_PLUGINS ZIMP_SNIPPETS
+  typeset -ga ZIMP_PLUGINS ZIMP_SNIPPETS ZIMP_TRIGGERS
 
   _zimp_compile() {
     while (( $# )); do
@@ -88,6 +88,7 @@ zimp() {
     trigger-load)
       [[ -z $1 ]] && return 1
       functions[$2]="unfunction $2; zimp load $1; eval $2 \$@"
+      ZIMP_TRIGGERS+=( $2 )
       ;;
     update)
       [[ -d ${HOME}/.zimp/repos ]] && cd ${HOME}/.zimp/repos || exit
@@ -115,7 +116,14 @@ zimp() {
       done
       cd $orig_dir
       ;;
-    list) print -l $ZIMP_PLUGINS $ZIMP_SNIPPETS ;;
+    list)
+      print 'Plugins:'
+      print -l -f '  %s\n' $ZIMP_PLUGINS
+      print 'Snippets:'
+      print -l -f '  %s\n' $ZIMP_SNIPPETS
+      print 'Triggers:'
+      print "  $ZIMP_TRIGGERS"
+      ;;
     -h|--help|help)
       print "usage: $0 command [...]
 
