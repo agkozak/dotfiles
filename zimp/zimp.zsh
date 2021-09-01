@@ -57,11 +57,15 @@ zimp() {
       fi
       if [[ ! -d ${HOME}/.zimp/repos/${repo} ]]; then
         git clone https://github.com/${repo} ${HOME}/.zimp/repos/${repo}
-        if [[ -n $branch ]]; then
-          cd ${HOME}/.zimp/repos/${repo} || exit
-          git checkout $branch
-        fi
-        # TODO: Compile scripts
+        cd ${HOME}/.zimp/repos/${repo} || exit
+        [[ -n $branch ]] && git checkout $branch
+        for file in **/*; do
+          [[ -s $file &&
+            $file == *.zsh ||
+            $file == prompt_*_setup ||
+            $file == *.zsh-theme ||
+            $file == *.sh ]] && _zimp_compile $file
+        done
         cd $orig_dir || exit
       fi
       if (( $# )); then
@@ -118,7 +122,13 @@ zimp() {
         cd $i
         print -n "${i}: "
         git pull
-        # TODO: Compile scripts
+        for file in **/*; do
+          [[ -s $file &&
+            $file == *.zsh ||
+            $file == prompt_*_setup ||
+            $file == *.zsh-theme ||
+            $file == *.sh ]] && _zimp_compile $file
+        done
         (( ${ZIMP_PLUGINS[(Ie)$i]} )) && zimp load $i
         cd ../..
       done
