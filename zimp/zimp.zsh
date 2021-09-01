@@ -6,7 +6,7 @@ ZIMP[DIR]=${${NOZI[SCRIPT]}:A:h}
 
 zimp() {
 
-  typeset -ga ZIMP_PLUGINS ZIMP_SNIPPETS ZIMP_TRIGGERS
+  typeset -gUa ZIMP_PLUGINS ZIMP_SNIPPETS ZIMP_TRIGGERS
 
   _zimp_compile() {
     while (( $# )); do
