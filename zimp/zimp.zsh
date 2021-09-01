@@ -36,6 +36,10 @@ zimp() {
         fi
         [[ -f ${HOME}/.zimp/repos/${repo}/*.zsh ]] &&
           _zimp_compile ${HOME}/.zimp/repos/${repo}/*.zsh
+        [[ -f ${HOME}/.zimp/repos/${repo}/prompt_*_setup ]] &&
+          _zimp_compile ${HOME}/.zimp/repos/${repo}/prompt_*_setup
+        [[ -f ${HOME}/.zimp/repos/${repo}/*.zsh_theme ]] &&
+          _zimp_compile ${HOME}/.zimp/repos/${repo}/*.zsh_theme
         [[ -f ${HOME}/.zimp/repos/${repo}/*.sh ]] &&
           _zimp_compile ${HOME}/.zimp/repos/${repo}/*.sh
       fi
@@ -99,6 +103,10 @@ zimp() {
         git pull
         [[ -f ${HOME}/.zimp/repos/${repo}/*.zsh ]] &&
           _zimp_compile ${HOME}/.zimp/repos/${repo}/*.zsh
+        [[ -f ${HOME}/.zimp/repos/${repo}/prompt_*_setup ]] &&
+          _zimp_compile ${HOME}/.zimp/repos/${repo}/prompt_*_setup
+        [[ -f ${HOME}/.zimp/repos/${repo}/*.zsh_theme ]] &&
+          _zimp_compile ${HOME}/.zimp/repos/${repo}/*.zsh_theme
         [[ -f ${HOME}/.zimp/repos/${repo}/*.sh ]] &&
           _zimp_compile ${HOME}/.zimp/repos/${repo}/*.sh
         (( ${ZIMP_PLUGINS[(Ie)$i]} )) && zimp load $i
