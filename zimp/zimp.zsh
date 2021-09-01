@@ -29,7 +29,8 @@ zimp() {
         ;;
       prompt)
         for file in ${repo_path}/prompt_${repo#*/}_setup \
-                    ${repo_path}/${repo#*/}.zsh-theme; do
+                    ${repo_path}/${repo#*/}.zsh-theme \
+                    ${repo_path}/*.plugin.zsh; do
           [[ -f $file ]] && break
         done
         ;;
@@ -60,7 +61,7 @@ zimp() {
           cd ${HOME}/.zimp/repos/${repo} || exit
           git checkout $branch
         fi
-        # TODO: Compile **/*.zsh **/prompt_*_setup **/*.zsh-theme **/*.sh
+        # TODO: Compile scripts
         cd $orig_dir || exit
       fi
       if (( $# )); then
@@ -117,7 +118,7 @@ zimp() {
         cd $i
         print -n "${i}: "
         git pull
-        # TODO: Compile **/*.zsh **/prompt_*_setup **/*.zsh-theme **/*.sh
+        # TODO: Compile scripts
         (( ${ZIMP_PLUGINS[(Ie)$i]} )) && zimp load $i
         cd ../..
       done
