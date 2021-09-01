@@ -44,6 +44,7 @@ zimp() {
   }
 
   _zimp_add_list() {
+    2="${2% }"
     if [[ $1 == 'load' ]]; then
       ZIMP_PLUGINS+=( "$2" )
     elif [[ $1 == 'prompt' ]]; then
@@ -134,6 +135,14 @@ zimp() {
         eval $trigger \$@"
       _zimp_add_list $cmd $trigger
       ;;
+    unload)
+      [[ -z $1 ]] && return 1
+      if (( ${+functions[${1#*/}_plugin_unload]} )) &&
+        ${1#*/}_plugin_unload; then
+        ZIMP_PROMPTS=( ${(@)ZIMP_PROMPTS:#${1}} )
+        ZIMP_PLUGINS=( ${(@)ZIMP_PLUGINS:#${1}} )
+      fi
+      ;;
     update)
       [[ -d ${HOME}/.zimp/repos ]] && cd ${HOME}/.zimp/repos || exit
       local i
@@ -184,6 +193,7 @@ load            load a plugin
 trigger-load    create a shortcut for loading and running a plugin
 prompt          load a prompt
 snippet         load a snippet of code from Oh-My-ZSH
+unload          unload a prompt or plugin
 update          update all plugins and snippets
 list            list all loaded plugins and snippets
 -h|--help|help  print this help text" | fold -s -w $COLUMNS
