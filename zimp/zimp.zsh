@@ -23,7 +23,7 @@ zimp() {
       load)
         for file in ${source_path}/${repo#*/}.plugin.zsh \
                     ${source_path}/*.plugin.zsh \
-                    ${soure_path}/init.zsh; do
+                    ${source_path}/init.zsh; do
           [[ -f $file ]] && break
         done
         ;;
