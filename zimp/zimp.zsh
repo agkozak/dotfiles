@@ -59,16 +59,9 @@ zimp() {
         if [[ -n $branch ]]; then
           cd ${HOME}/.zimp/repos/${repo} || exit
           git checkout $branch
-          cd $orig_dir || exit
         fi
-        [[ -f ${HOME}/.zimp/repos/${repo}/*.zsh ]] &&
-          _zimp_compile ${HOME}/.zimp/repos/${repo}/*.zsh
-        [[ -f ${HOME}/.zimp/repos/${repo}/prompt_*_setup ]] &&
-          _zimp_compile ${HOME}/.zimp/repos/${repo}/prompt_*_setup
-        [[ -f ${HOME}/.zimp/repos/${repo}/*.zsh-theme ]] &&
-          _zimp_compile ${HOME}/.zimp/repos/${repo}/*.zsh-theme
-        [[ -f ${HOME}/.zimp/repos/${repo}/*.sh ]] &&
-          _zimp_compile ${HOME}/.zimp/repos/${repo}/*.sh
+        # TODO: Compile **/*.zsh **/prompt_*_setup **/*.zsh-theme **/*.sh
+        cd $orig_dir || exit
       fi
       if (( $# )); then
         while (( $# )); do
@@ -124,14 +117,7 @@ zimp() {
         cd $i
         print -n "${i}: "
         git pull
-        [[ -f ${HOME}/.zimp/repos/${repo}/*.zsh ]] &&
-          _zimp_compile ${HOME}/.zimp/repos/${repo}/*.zsh
-        [[ -f ${HOME}/.zimp/repos/${repo}/prompt_*_setup ]] &&
-          _zimp_compile ${HOME}/.zimp/repos/${repo}/prompt_*_setup
-        [[ -f ${HOME}/.zimp/repos/${repo}/*.zsh-theme ]] &&
-          _zimp_compile ${HOME}/.zimp/repos/${repo}/*.zsh-theme
-        [[ -f ${HOME}/.zimp/repos/${repo}/*.sh ]] &&
-          _zimp_compile ${HOME}/.zimp/repos/${repo}/*.sh
+        # TODO: Compile **/*.zsh **/prompt_*_setup **/*.zsh-theme **/*.sh
         (( ${ZIMP_PLUGINS[(Ie)$i]} )) && zimp load $i
         cd ../..
       done
