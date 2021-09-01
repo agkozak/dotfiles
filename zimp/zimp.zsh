@@ -36,7 +36,7 @@ zimp() {
         ;;
     esac
     if source $file; then
-      _zimp_add_list $cmd $repo
+      _zimp_add_list $cmd "${repo} ${3}"
     else
       >&2 print "Could not source ${repo}."
       return 1
@@ -82,9 +82,11 @@ zimp() {
       fi
       if (( $# )); then
         while (( $# )); do
-          # Example: zimp prompt sindresorhus/pure async.zsh pure.zsh
+          # Example: zimp prompt sindresorhus/pure async.zsh
+          #          zimp prompt sindresorhus/pure pure.zsh
           if [[ -f ${HOME}/.zimp/repos/${repo}/$1 ]]; then
-            source ${HOME}/.zimp/repos/${repo}/$1 && _zimp_add_list $cmd $repo
+            source ${HOME}/.zimp/repos/${repo}/$1 &&
+              _zimp_add_list $cmd "${repo} ${1}"
           # Example: zimp load ohmyzsh/ohmyzsh plugins/common-aliases
           elif [[ -d ${HOME}/.zimp/repos/${repo}/$1 ]]; then
             _zimp_smart_source $cmd ${repo} $1
@@ -92,11 +94,11 @@ zimp() {
           elif [[ $cmd == 'load' &&
                   -f ${HOME}/.zimp/repos/${repo}/${1}.zsh ]]; then
             source ${HOME}/.zimp/repos/${repo}/${1}.zsh &&
-              _zimp_add_list $cmd $repo
+              _zimp_add_list $cmd "${repo} ${1}"
           # Example: zimp load ohmyzsh/ohmyzsh themes/robbyrussell
           elif [[ -f ${HOME}/.zimp/repos/${repo}/${1}.zsh-theme ]]; then
             source ${HOME}/.zimp/repos/${repo}/${1}.zsh-theme &&
-              _zimp_add_list $cmd $repo
+              _zimp_add_list $cmd "${repo} ${1}"
           else
             >&2 print "Cannot source ${repo} $1."
             return 1
