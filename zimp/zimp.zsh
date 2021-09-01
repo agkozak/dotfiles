@@ -118,11 +118,11 @@ zimp() {
       ;;
     list)
       print 'Plugins:'
-      print -l -f '  %s\n' $ZIMP_PLUGINS
+      print -l -f '  %s\n' ${(@o)ZIMP_PLUGINS}
       print 'Snippets:'
-      print -l -f '  %s\n' $ZIMP_SNIPPETS
+      print -l -f '  %s\n' ${(@o)ZIMP_SNIPPETS}
       print 'Triggers:'
-      print "  $ZIMP_TRIGGERS"
+      print "  ${(@o)ZIMP_TRIGGERS}"
       ;;
     -h|--help|help)
       print "usage: $0 command [...]
