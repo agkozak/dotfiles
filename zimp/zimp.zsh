@@ -112,7 +112,7 @@ zimp() {
       ;;
     trigger-load)
       [[ -z $1 ]] && return 1
-      functions[$2]="unfunction $2; zimp load $1; eval $2 \$@"
+      functions[$2]="ZIMP_TRIGGERS=( "\${(@)ZIMP_TRIGGERS:#${2}}" ); unfunction $2; zimp load $1; eval $2 \$@"
       ZIMP_TRIGGERS+=( $2 )
       ;;
     update)
