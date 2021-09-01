@@ -16,21 +16,21 @@ zimp() {
   }
 
   _zimp_smart_source() {
-    local cmd file repo_path
-    cmd=$1 repo_path=$2
+    local cmd file repo source_path
+    cmd=$1 repo=$2 source_path="${HOME}/.zimp/repos/${repo}${3:+\/${3}}"
 
     case $cmd in
       load)
-        for file in ${repo_path}/${repo#*/}.plugin.zsh \
-                    ${repo_path}/*.plugin.zsh \
-                    ${repo_path}/init.zsh; do
+        for file in ${source_path}/${repo#*/}.plugin.zsh \
+                    ${source_path}/*.plugin.zsh \
+                    ${soure_path}/init.zsh; do
           [[ -f $file ]] && break
         done
         ;;
       prompt)
-        for file in ${repo_path}/prompt_${repo#*/}_setup \
-                    ${repo_path}/${repo#*/}.zsh-theme \
-                    ${repo_path}/*.plugin.zsh; do
+        for file in ${source_path}/prompt_${repo#*/}_setup \
+                    ${source_path}/${repo#*/}.zsh-theme \
+                    ${source_path}/*.plugin.zsh; do
           [[ -f $file ]] && break
         done
         ;;
@@ -87,15 +87,14 @@ zimp() {
             source ${HOME}/.zimp/repos/${repo}/$1 && _zimp_add_list $cmd $repo
           # Example: zimp load ohmyzsh/ohmyzsh plugins/common-aliases
           elif [[ -d ${HOME}/.zimp/repos/${repo}/$1 ]]; then
-            _zimp_smart_source $cmd ${HOME}/.zimp/repos/${repo}/$1
+            _zimp_smart_source $cmd ${repo} $1
           # Example: zimp load ohmyzsh/ohmyzsh lib/git
           elif [[ $cmd == 'load' &&
                   -f ${HOME}/.zimp/repos/${repo}/${1}.zsh ]]; then
             source ${HOME}/.zimp/repos/${repo}/${1}.zsh &&
               _zimp_add_list $cmd $repo
           # Example: zimp load ohmyzsh/ohmyzsh themes/robbyrussell
-          elif [[ $cmd == 'prompt' &&
-                  -f ${HOME}/.zimp/repos/${repo}/${1}.zsh-theme ]]; then
+          elif [[ -f ${HOME}/.zimp/repos/${repo}/${1}.zsh-theme ]]; then
             source ${HOME}/.zimp/repos/${repo}/${1}.zsh-theme &&
               _zimp_add_list $cmd $repo
           else
@@ -105,7 +104,7 @@ zimp() {
           shift
         done
       else
-        _zimp_smart_source $cmd ${HOME}/.zimp/repos/${repo}
+        _zimp_smart_source $cmd ${repo}
       fi
       ;;
     snippet)
