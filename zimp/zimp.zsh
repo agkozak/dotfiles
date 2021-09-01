@@ -72,8 +72,14 @@ zimp() {
       fi
       if (( $# )); then
         while (( $# )); do
-          source ${HOME}/.zimp/repos/${repo}/$1 &&
-            ZIMP_PLUGINS+=( ${repo} )
+          if [[ -f ${HOME}/.zimp/repos/${repo}/$1 ]]; then
+            source ${HOME}/.zimp/repos/${repo}/$1 && ZIMP_PLUGINS+=( ${repo} )
+          elif [[ -d ${HOME}/.zimp/repos/${repo}/$1 ]]; then
+            _zimp_smart_source $cmd ${HOME}/.zimp/repos/${repo}/$1
+          else
+            >&2 print "Cannot source ${repo} $1."
+            return 1
+          fi
           shift
         done
       else
