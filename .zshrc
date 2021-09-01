@@ -167,22 +167,6 @@ autoload -Uz compinit edit-command-line zmv
 
 # }}}1
 
-# 14.7 Filename Generation {{{1
-
-# 14.7.2 Static Named Directories {{{2
-
-# Static named directories
-[[ -d ${HOME}/public_html/wp-content ]] &&
-  hash -d wp-content="${HOME}/public_html/wp-content"
-[[ -d ${HOME}/.zinit/plugins/agkozak---agkozak-zsh-prompt ]] &&
-  hash -d agk="${HOME}/.zinit/plugins/agkozak---agkozak-zsh-prompt"
-[[ -d ${HOME}/.zinit/plugins/agkozak---zsh-z ]] &&
-  hash -d z="${HOME}/.zinit/plugins/agkozak---zsh-z"
-
-# }}}2
-
-# }}}1
-
 # 15.6 Parameters Used by the Shell {{{1
 
 # History environment variables
@@ -444,6 +428,22 @@ if (( ${+commands[git]} )); then
 else
   print 'Please install git.' >&2
 fi
+
+# }}}1
+
+# 14.7 Filename Generation {{{1
+
+# 14.7.2 Static Named Directories {{{2
+
+# Static named directories
+[[ -d ${HOME}/public_html/wp-content ]] &&
+  hash -d wp-content="${HOME}/public_html/wp-content"
+[[ -d ${HOME}/.zinit/plugins/agkozak---agkozak-zsh-prompt ]] &&
+  hash -d agk="${HOME}/.zinit/plugins/agkozak---agkozak-zsh-prompt"
+[[ -d ${HOME}/.zinit/plugins/agkozak---zsh-z ]] &&
+  hash -d z="${HOME}/.zinit/plugins/agkozak---zsh-z"
+
+# }}}2
 
 # }}}1
 
