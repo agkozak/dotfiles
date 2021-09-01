@@ -29,7 +29,7 @@ zimp() {
         ;;
       prompt)
         for file in ${repo_path}/prompt_${repo#*/}_setup \
-                    ${repo_path}/${repo#*/}.zsh_theme; do
+                    ${repo_path}/${repo#*/}.zsh-theme; do
           [[ -f $file ]] && break
         done
         ;;
@@ -65,17 +65,28 @@ zimp() {
           _zimp_compile ${HOME}/.zimp/repos/${repo}/*.zsh
         [[ -f ${HOME}/.zimp/repos/${repo}/prompt_*_setup ]] &&
           _zimp_compile ${HOME}/.zimp/repos/${repo}/prompt_*_setup
-        [[ -f ${HOME}/.zimp/repos/${repo}/*.zsh_theme ]] &&
-          _zimp_compile ${HOME}/.zimp/repos/${repo}/*.zsh_theme
+        [[ -f ${HOME}/.zimp/repos/${repo}/*.zsh-theme ]] &&
+          _zimp_compile ${HOME}/.zimp/repos/${repo}/*.zsh-theme
         [[ -f ${HOME}/.zimp/repos/${repo}/*.sh ]] &&
           _zimp_compile ${HOME}/.zimp/repos/${repo}/*.sh
       fi
       if (( $# )); then
         while (( $# )); do
+          # Example: zimp prompt sindresorhus/pure async.zsh pure.zsh
           if [[ -f ${HOME}/.zimp/repos/${repo}/$1 ]]; then
             source ${HOME}/.zimp/repos/${repo}/$1 && ZIMP_PLUGINS+=( ${repo} )
+          # Example: zimp load ohmyzsh/ohmyzsh plugins/common-aliases
           elif [[ -d ${HOME}/.zimp/repos/${repo}/$1 ]]; then
             _zimp_smart_source $cmd ${HOME}/.zimp/repos/${repo}/$1
+          # Example: zimp load ohmyzsh/ohmyzsh lib/git
+          elif [[ $cmd == 'load' &&
+                  -f ${HOME}/.zimp/repos/${repo}/${1}.zsh ]]; then
+            source ${HOME}/.zimp/repos/${repo}/${1}.zsh && ZIMP_PLUGINS+=( $repo )
+          # Example: zimp load ohmyzsh/ohmyzsh themes/robbyrussell
+          elif [[ $cmd == 'prompt' &&
+                  -f ${HOME}/.zimp/repos/${repo}/${1}.zsh-theme ]]; then
+            source ${HOME}/.zimp/repos/${repo}/${1}.zsh-theme &&
+              ZIMP_PLUGINS+=( $repo )
           else
             >&2 print "Cannot source ${repo} $1."
             return 1
@@ -117,8 +128,8 @@ zimp() {
           _zimp_compile ${HOME}/.zimp/repos/${repo}/*.zsh
         [[ -f ${HOME}/.zimp/repos/${repo}/prompt_*_setup ]] &&
           _zimp_compile ${HOME}/.zimp/repos/${repo}/prompt_*_setup
-        [[ -f ${HOME}/.zimp/repos/${repo}/*.zsh_theme ]] &&
-          _zimp_compile ${HOME}/.zimp/repos/${repo}/*.zsh_theme
+        [[ -f ${HOME}/.zimp/repos/${repo}/*.zsh-theme ]] &&
+          _zimp_compile ${HOME}/.zimp/repos/${repo}/*.zsh-theme
         [[ -f ${HOME}/.zimp/repos/${repo}/*.sh ]] &&
           _zimp_compile ${HOME}/.zimp/repos/${repo}/*.sh
         (( ${ZIMP_PLUGINS[(Ie)$i]} )) && zimp load $i
