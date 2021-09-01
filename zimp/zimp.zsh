@@ -1,3 +1,4 @@
+# MIT License / Copyright (c) 2021 Alexandros Kozak
 typeset -A ZIMP
 0=${${ZERO:-${0:#$ZSH_ARGZERO}}:-${(%):-%N}}
 ZIMP[SCRIPT]=${${(M)0:#/*}:-$PWD/$0}
@@ -84,6 +85,10 @@ zimp() {
       fi
       source ${HOME}/.zimp/snippets/${snippet} && ZIMP_SNIPPETS+=( $snippet )
       ;;
+    trigger-load)
+      [[ -z $1 ]] && return 1
+      functions[$2]="unfunction $2; zimp load $1; eval $2 \$@"
+      ;;
     update)
       [[ -d ${HOME}/.zimp/repos ]] && cd ${HOME}/.zimp/repos || exit
       local i
@@ -115,6 +120,7 @@ zimp() {
       print "usage: $0 command [...]
 
 load            load a plugin
+trigger-load    create a shortcut for loading and running a plugin
 prompt          load a prompt
 snippet         load a snippet of code from Oh-My-ZSH
 update          update all plugins and snippets

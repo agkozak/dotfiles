@@ -420,7 +420,7 @@ if (( ${+commands[git]} )); then
   # ZSHZ_TILDE=1
   ZSHZ_TRAILING_SLASH=1
 
-  zimp load agkozak/zhooks@develop
+  zimp trigger-load agkozak/zhooks@develop zhooks
   zimp load jreese/zsh-titles
 
   # if [[ $AGKDOT_SYSTEMINFO != *ish* ]]; then
@@ -433,7 +433,7 @@ if (( ${+commands[git]} )); then
   # fi
 
   zimp snippet OMZ::plugins/extract/extract.plugin.zsh
-  zimp load romkatv/zsh-prompt-benchmark
+  zimp trigger-load romkatv/zsh-prompt-benchmark zsh-prompt-benchmark
 
   # (( AGKDOT_USE_TURBO )) && zinit ice silent wait'0h'
   # zinit load zpm-zsh/clipboard
