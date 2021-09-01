@@ -26,21 +26,21 @@ zimp() {
         [[ $1 == *@* ]] && branch=${1#*@}
         shift
       fi
-      if [[ ! -d ${HOME}/.zimp/plugins/${repo} ]]; then
-        git clone https://github.com/${repo} ${HOME}/.zimp/plugins/${repo}
+      if [[ ! -d ${HOME}/.zimp/repos/${repo} ]]; then
+        git clone https://github.com/${repo} ${HOME}/.zimp/repos/${repo}
         if [[ -n $branch ]]; then
-          cd ${HOME}/.zimp/plugins/${repo} || exit
+          cd ${HOME}/.zimp/repos/${repo} || exit
           git checkout $branch
           cd $orig_dir || exit
         fi
-        [[ -f ${HOME}/.zimp/plugins/${repo}/*.zsh ]] &&
-          _zimp_compile ${HOME}/.zimp/plugins/${repo}/*.zsh
-        [[ -f ${HOME}/.zimp/plugins/${repo}/*.sh ]] &&
-          _zimp_compile ${HOME}/.zimp/plugins/${repo}/*.sh
+        [[ -f ${HOME}/.zimp/repos/${repo}/*.zsh ]] &&
+          _zimp_compile ${HOME}/.zimp/repos/${repo}/*.zsh
+        [[ -f ${HOME}/.zimp/repos/${repo}/*.sh ]] &&
+          _zimp_compile ${HOME}/.zimp/repos/${repo}/*.sh
       fi
       if (( $# )); then
         while (( $# )); do
-          source ${HOME}/.zimp/plugins/${repo}/$1 &&
+          source ${HOME}/.zimp/repos/${repo}/$1 &&
             ZIMP_PLUGINS+=( ${repo} )
           shift
         done
@@ -48,15 +48,15 @@ zimp() {
         local file
         case $cmd in
           load)
-            for file in ${HOME}/.zimp/plugins/${repo}/${repo#*/}.plugin.zsh \
-                        ${HOME}/.zimp/plugins/${repo}/*.plugin.zsh \
-                        ${HOME}/.zimp/plugins/${repo}/init.zsh; do
+            for file in ${HOME}/.zimp/repos/${repo}/${repo#*/}.plugin.zsh \
+                        ${HOME}/.zimp/repos/${repo}/*.plugin.zsh \
+                        ${HOME}/.zimp/repos/${repo}/init.zsh; do
               [[ -f $file ]] && break
             done
             ;;
           prompt)
-            for file in ${HOME}/.zimp/plugins/${repo}/prompt_${repo#*/}_setup \
-                        ${HOME}/.zimp/plugins/${repo}/${repo#*/}.zsh_theme; do
+            for file in ${HOME}/.zimp/repos/${repo}/prompt_${repo#*/}_setup \
+                        ${HOME}/.zimp/repos/${repo}/${repo#*/}.zsh_theme; do
               [[ -f $file ]] && break
             done
             ;;
@@ -85,16 +85,16 @@ zimp() {
       source ${HOME}/.zimp/snippets/${snippet} && ZIMP_SNIPPETS+=( $snippet )
       ;;
     update)
-      [[ -d ${HOME}/.zimp/plugins ]] && cd ${HOME}/.zimp/plugins || exit
+      [[ -d ${HOME}/.zimp/repos ]] && cd ${HOME}/.zimp/repos || exit
       local i
       for i in */*; do
         cd $i
         print -n "${i}: "
         git pull
-        [[ -f ${HOME}/.zimp/plugins/${repo}/*.zsh ]] &&
-          _zimp_compile ${HOME}/.zimp/plugins/${repo}/*.zsh
-        [[ -f ${HOME}/.zimp/plugins/${repo}/*.sh ]] &&
-          _zimp_compile ${HOME}/.zimp/plugins/${repo}/*.sh
+        [[ -f ${HOME}/.zimp/repos/${repo}/*.zsh ]] &&
+          _zimp_compile ${HOME}/.zimp/repos/${repo}/*.zsh
+        [[ -f ${HOME}/.zimp/repos/${repo}/*.sh ]] &&
+          _zimp_compile ${HOME}/.zimp/repos/${repo}/*.sh
         (( ${ZIMP_PLUGINS[(Ie)$i]} )) && zimp load $i
         cd ../..
       done
