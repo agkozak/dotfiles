@@ -140,7 +140,9 @@ zimp() {
       if (( ${+functions[${1#*/}_plugin_unload]} )) &&
         ${1#*/}_plugin_unload; then
         ZIMP_PROMPTS=( ${(@)ZIMP_PROMPTS:#${1}} )
+        ZIMP_PROMPTS=( ${(@)ZIMP_PROMPTS:#${1} *} )
         ZIMP_PLUGINS=( ${(@)ZIMP_PLUGINS:#${1}} )
+        ZIMP_PLUGINS=( ${(@)ZIMP_PLUGINS:#${1} *} )
       fi
       ;;
     update)
