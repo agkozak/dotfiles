@@ -155,11 +155,12 @@ zimp() {
       [[ -z $1 ]] && return 1
       local trigger
       trigger=$1 && shift
-      functions[$trigger]="ZIMP_TRIGGERS=( "\${(@)ZIMP_TRIGGERS:#${trigger}}" );
-        unfunction $trigger;
-        zimp load $@;
-        eval $trigger \$@"
-      _zimp_add_list $cmd $trigger
+      ! (( ${+functions[$trigger]} )) &&
+        functions[$trigger]="ZIMP_TRIGGERS=( "\${(@)ZIMP_TRIGGERS:#${trigger}}" );
+          unfunction $trigger;
+          zimp load $@;
+          eval $trigger \$@" &&
+        _zimp_add_list $cmd $trigger
       ;;
     unload)
       [[ -z $1 ]] && return 1

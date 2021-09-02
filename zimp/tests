@@ -2,10 +2,10 @@ zimp unload agkozak/agkozak-zsh-prompt
 
 zimp load willghatch/zsh-saneopt
 
-zimp load mafredri/zsh-async
+# zimp load mafredri/zsh-async
 
 zimp unload agkozak/zsh-z
-zimp load rupa/z
+unalias z && zimp trigger-load z rupa/z
 
 zimp load zdharma/fast-syntax-highlighting
 
@@ -16,4 +16,6 @@ zimp load zsh-users/zsh-autosuggestions
 
 zimp load oldratlee/hacker-quotes
 
-zimp load marlonrichert/zsh-hist
+zimp trigger-load hist marlonrichert/zsh-hist
+
+zimp load zsh-users/zsh-completions
