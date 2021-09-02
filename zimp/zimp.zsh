@@ -19,7 +19,6 @@ zimp() {
 
   typeset -gUa ZIMP_PROMPTS ZIMP_PLUGINS ZIMP_SNIPPETS ZIMP_TRIGGERS
 
-
   _zimp_smart_source() {
     local cmd file repo source_path
     cmd=$1 repo=$2 source_path="${HOME}/.zimp/repos/${repo}${3:+\/${3}}"
@@ -86,6 +85,26 @@ zimp() {
     fi
   }
 
+  _zimp_clone_repo() {
+    local start_dir
+    start_dir=$PWD
+
+    if [[ ! -d ${HOME}/.zimp/repos/${1} ]]; then
+      git clone https://github.com/${1} ${HOME}/.zimp/repos/${1}
+      cd ${HOME}/.zimp/repos/${1} || exit
+      [[ -n $branch ]] && git checkout $branch
+      for file in **/*; do
+        [[ -s $file &&
+          $file == *.zsh ||
+          $file == prompt_*_setup ||
+          $file == *.zsh-theme ||
+          $file == *.sh ||
+          $file == _* ]] && _zimp_compile $file
+      done
+      cd $start_dir || exit
+    fi
+  }
+
   local cmd orig_dir
   [[ -n $1 ]] && cmd=$1 && shift
   orig_dir=$PWD
@@ -98,19 +117,7 @@ zimp() {
         [[ $1 == *@* ]] && branch=${1#*@}
         shift
       fi
-      if [[ ! -d ${HOME}/.zimp/repos/${repo} ]]; then
-        git clone https://github.com/${repo} ${HOME}/.zimp/repos/${repo}
-        cd ${HOME}/.zimp/repos/${repo} || exit
-        [[ -n $branch ]] && git checkout $branch
-        for file in **/*; do
-          [[ -s $file &&
-            $file == *.zsh ||
-            $file == prompt_*_setup ||
-            $file == *.zsh-theme ||
-            $file == *.sh ]] && _zimp_compile $file
-        done
-        cd $orig_dir || exit
-      fi
+      _zimp_clone_repo $repo || return 1
       if (( $# )); then
         while (( $# )); do
           # Example: zimp prompt sindresorhus/pure async.zsh pure.zsh
@@ -138,6 +145,11 @@ zimp() {
       else
         _zimp_smart_source $cmd ${repo}
       fi
+      ;;
+    fpath)
+      [[ -z $1 ]] && return
+      _zimp_clone_repo $1 || return 1
+      fpath=( ${HOME}/.zimp/repos/${1}/${2} $fpath )
       ;;
     snippet)
       [[ -z $1 ]] && return 1
@@ -224,6 +236,7 @@ zimp() {
 load            load a plugin
 trigger         create a shortcut for loading and running a plugin
 prompt          load a prompt
+fpath           clone a repo and add it to FPATH
 snippet         load a snippet of code from Oh-My-ZSH
 unload          unload a prompt or plugin
 update          update all plugins and snippets
