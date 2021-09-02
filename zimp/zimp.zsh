@@ -31,10 +31,15 @@ zimp() {
           file=${source_path}/${3%*/}.plugin.zsh 
         else
           files=( ${source_path}/*.plugin.zsh )
-          if (( ${#files} == 1 )); then
+          if (( ${#files} == 1 )) && [[ ${files[1]} != *\** ]]; then
             file=${files[1]}
           elif [[ -s ${source_path}/init.zsh ]]; then
             file=${source_path}/init.zsh
+          else
+            files=( ${source_path}/*.sh )
+            if (( ${#files} == 1 )) && [[ ${files[1]} != *\** ]]; then
+              file=${files[1]}
+            fi
           fi
         fi
         ;;
@@ -46,11 +51,11 @@ zimp() {
           file=${source_path}/${repo#*/}.zsh-theme
         else
           files=( ${source_path}/*.zsh-theme )
-          if (( ${#files} == 1 )); then
+          if (( ${#files} == 1 )) && [[ ${files[1]} != *\** ]]; then
             file=${files[1]}
           else
             files=( ${source_path}/*.plugin.zsh )
-            if (( ${#files} == 1 )); then
+            if (( ${#files} == 1 )) && [[ ${files[1]} != *\** ]]; then
               file=${files[1]}
             fi
           fi
