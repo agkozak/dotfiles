@@ -11,7 +11,7 @@ zimp trigger-load z rupa/z
 zimp load zdharma/fast-syntax-highlighting
 
 zimp unload agkozak/agkozak-zsh-prompt
-# zimp load sindresorhus/pure async.zsh pure.zsh
+zimp load sindresorhus/pure async.zsh pure.zsh
 
 zimp load zsh-users/zsh-autosuggestions
 
@@ -23,4 +23,4 @@ zimp load zsh-users/zsh-completions
 
 zimp load ohmyzsh/ohmyzsh lib/git
 
-zimp prompt ohmyzsh/ohmyzsh themes/agnoster
+# zimp prompt ohmyzsh/ohmyzsh themes/agnoster
