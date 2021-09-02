@@ -1,0 +1,10 @@
+zimp load zdharma/fast-syntax-highlighting
+
+zimp unload agkozak/agkozak-zsh-prompt
+zimp load sindresorhus/pure async.zsh pure.zsh
+
+zimp load zsh-users/zsh-autosuggestions
+
+zimp load oldratlee/hacker-quotes
+
+zimp load marlonrichert/zsh-hist
