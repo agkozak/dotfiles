@@ -6,7 +6,7 @@ zimp load willghatch/zsh-saneopt
 
 zimp unload agkozak/zsh-z
 (( ${+aliases[z]} )) && unalias z
-zimp trigger-load z rupa/z
+zimp trigger z rupa/z
 
 zimp load zdharma/fast-syntax-highlighting
 
@@ -17,7 +17,7 @@ zimp load zsh-users/zsh-autosuggestions
 
 zimp load oldratlee/hacker-quotes
 
-zimp trigger-load hist marlonrichert/zsh-hist
+zimp trigger hist marlonrichert/zsh-hist
 
 zimp load zsh-users/zsh-completions
 
