@@ -4,20 +4,21 @@ typeset -A ZIMP
 ZIMP[SCRIPT]=${${(M)0:#/*}:-$PWD/$0}
 ZIMP[DIR]=${${NOZI[SCRIPT]}:A:h}
 
+_zimp_compile() {
+  while (( $# )); do
+    [[ -s $1 && ( ! -s ${1}.zwc || $1 -nt ${1}.zwc ) ]] && zcompile $1
+    shift
+  done
+}
+
+_zimp_compile ${ZIMP[SCRIPT]}
+
 zimp() {
 
   setopt NULL_GLOB
 
   typeset -gUa ZIMP_PROMPTS ZIMP_PLUGINS ZIMP_SNIPPETS ZIMP_TRIGGERS
 
-  _zimp_compile() {
-    while (( $# )); do
-      [[ -s $1 && ( ! -s ${1}.zwc || $1 -nt ${1}.zwc ) ]] && zcompile $1
-      shift
-    done
-  }
-
-  _zimp_compile ${ZIMP[SCRIPT]}
 
   _zimp_smart_source() {
     local cmd file repo source_path
