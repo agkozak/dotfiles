@@ -20,21 +20,41 @@ zimp() {
   _zimp_smart_source() {
     local cmd file repo source_path
     cmd=$1 repo=$2 source_path="${HOME}/.zimp/repos/${repo}${3:+\/${3}}"
+    local -a files
 
     case $cmd in
       load)
-        for file in ${source_path}/${repo#*/}.plugin.zsh \
-                    ${source_path}/*.plugin.zsh \
-                    ${source_path}/init.zsh; do
-          [[ -f $file ]] && break
-        done
+        # TODO: Check these conditions.
+        if [[ -s ${source_path}/${repo#*/}.plugin.zsh ]]; then
+          file=${source_path}/${repo#*/}.plugin.zsh
+        elif [[ -s ${source_path}/${3%*/}.plugin.zsh ]]; then
+          file=${source_path}/${3%*/}.plugin.zsh 
+        else
+          files=( ${source_path}/*.plugin.zsh )
+          if (( ${#files} == 1 )); then
+            file=${files[1]}
+          elif [[ -s ${source_path}/init.zsh ]]; then
+            file=${source_path}/init.zsh
+          fi
+        fi
         ;;
       prompt)
-        for file in ${source_path}/prompt_${repo#*/}_setup \
-                    ${source_path}/${repo#*/}.zsh-theme \
-                    ${source_path}/*.plugin.zsh; do
-          [[ -f $file ]] && break
-        done
+        # TODO: Check these conditions.
+        if [[ -s ${source_path}/prompt_${repo#*/}_setup ]]; then
+          file=${source_path}/prompt_${repo#*/}_setup
+        elif [[ -s ${source_path}/${repo#*/}.zsh-theme ]]; then
+          file=${source_path}/${repo#*/}.zsh-theme
+        else
+          files=( ${source_path}/*.zsh-theme )
+          if (( ${#files} == 1 )); then
+            file=${files[1]}
+          else
+            files=( ${source_path}/*.plugin.zsh )
+            if (( ${#files} == 1 )); then
+              file=${files[1]}
+            fi
+          fi
+        fi
         ;;
     esac
     if source $file; then
