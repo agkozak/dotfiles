@@ -80,7 +80,7 @@ zimp() {
       ZIMP_PROMPTS+=( "$2" )
     elif [[ $1 == 'snippet' ]]; then
       ZIMP_SNIPPETS+=( "$2" )
-    elif [[ $1 == 'trigger-load' ]]; then
+    elif [[ $1 == 'trigger' ]]; then
       ZIMP_TRIGGERS+=( "$2" )
     fi
   }
@@ -153,7 +153,7 @@ zimp() {
       fi
       source ${HOME}/.zimp/snippets/${snippet} && _zimp_add_list $cmd $snippet
       ;;
-    trigger-load)
+    trigger)
       [[ -z $1 ]] && return 1
       local trigger
       trigger=$1 && shift
@@ -221,7 +221,7 @@ zimp() {
       print "usage: $0 command [...]
 
 load            load a plugin
-trigger-load    create a shortcut for loading and running a plugin
+trigger         create a shortcut for loading and running a plugin
 prompt          load a prompt
 snippet         load a snippet of code from Oh-My-ZSH
 unload          unload a prompt or plugin
