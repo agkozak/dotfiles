@@ -25,7 +25,7 @@ zimp() {
 
   _zimp_smart_source() {
     local cmd file repo source_path
-    cmd=$1 repo=$2 source_path="${ZIMP[REPOS_DIR]}/${repo}${3:+\/${3}}"
+    cmd=$1 repo=$2 source_path="${ZIMP[REPOS_DIR]}/${repo}${3:+/${3}}"
     local -a files
 
     case $cmd in
@@ -72,7 +72,10 @@ zimp() {
     if source $file &> /dev/null; then
       success=1 
     fi
-    if [[ -f ${source_path}/_${repo#*/} ||
+    if [[ -n $3                                   &&
+          -f ${source_path}/_${3#*/}              ||
+          -f ${source_path}/${3#*/}.plugin.zsh ]] ||
+       [[ -f ${source_path}/_${repo#*/}           ||
           -f ${source_path}/${repo#*/}.plugin.zsh ]] &&
        (( ! ${fpath[(Ie)${source_path}]} )); then
       fpath=( ${source_path} $fpath )
@@ -146,8 +149,9 @@ zimp() {
               fpath=( ${ZIMP[REPOS_DIR]}/${repo} $fpath ) &&
               _zimp_add_list $cmd "${repo} ${1}"
           # Example: zimp load ohmyzsh/ohmyzsh plugins/common-aliases
-          elif [[ -d ${ZIMP[REPOS_DIR]}/${repo}/$1 ]]; then
+          elif [[ -d ${ZIMP[REPOS_DIR]}/${repo}/${1} ]]; then
             _zimp_smart_source $cmd ${repo} $1
+              _zimp_add_list $cmd "${repo} ${1}"
           # Example: zimp load ohmyzsh/ohmyzsh lib/git
           elif [[ $cmd == 'load' &&
                   -f ${ZIMP[REPOS_DIR]}/${repo}/${1}.zsh ]]; then
