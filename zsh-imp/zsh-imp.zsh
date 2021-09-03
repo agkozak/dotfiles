@@ -2,7 +2,9 @@
 typeset -A ZIMP
 0=${${ZERO:-${0:#$ZSH_ARGZERO}}:-${(%):-%N}}
 ZIMP[SCRIPT]=${${(M)0:#/*}:-$PWD/$0}
-ZIMP[DIR]=${${NOZI[SCRIPT]}:A:h}
+ZIMP[HOME_DIR]=${ZIMP[HOME_DIR]:-${HOME}/.zsh-imp}
+ZIMP[REPOS_DIR]=${ZIMP[REPOS_DIR]:-${ZIMP[HOME_DIR]}/repos}
+ZIMP[SNIPPETS_DIR]=${ZIMP[SNIPPETS_DIR]:-${ZIMP[HOME_DIR]}/snippets}
 
 _zimp_compile() {
   while (( $# )); do
@@ -23,7 +25,7 @@ zimp() {
 
   _zimp_smart_source() {
     local cmd file repo source_path
-    cmd=$1 repo=$2 source_path="${HOME}/.zsh-imp/repos/${repo}${3:+\/${3}}"
+    cmd=$1 repo=$2 source_path="${ZIMP[REPOS_DIR]}/${repo}${3:+\/${3}}"
     local -a files
 
     case $cmd in
@@ -106,10 +108,10 @@ zimp() {
     local start_dir
     start_dir=$PWD
 
-    if [[ ! -d ${HOME}/.zsh-imp/repos/${1} ]]; then
+    if [[ ! -d ${ZIMP[REPOS_DIR]}/${1} ]]; then
       print -P "%B%F{yellow}Cloning ${1}:%f%b"
-      command git clone https://github.com/${1} ${HOME}/.zsh-imp/repos/${1}
-      cd ${HOME}/.zsh-imp/repos/${1} || exit
+      command git clone https://github.com/${1} ${ZIMP[REPOS_DIR]}/${1}
+      cd ${ZIMP[REPOS_DIR]}/${1} || exit
       [[ -n $branch ]] && command git checkout $branch
       for file in **/*; do
         [[ -s $file &&
@@ -139,23 +141,23 @@ zimp() {
       if (( $# )); then
         while (( $# )); do
           # Example: zimp prompt sindresorhus/pure async.zsh pure.zsh
-          if [[ -f ${HOME}/.zsh-imp/repos/${repo}/$1 ]]; then
-            source ${HOME}/.zsh-imp/repos/${repo}/$1 &&
-              fpath=( ${HOME}/.zsh-imp/repos/${repo} ) &&
+          if [[ -f ${ZIMP[REPOS_DIR]}/${repo}/$1 ]]; then
+            source ${ZIMP[REPOS_DIR]}/${repo}/$1 &&
+              fpath=( ${ZIMP[REPOS_DIR]}/${repo} ) &&
               _zimp_add_list $cmd "${repo} ${1}"
           # Example: zimp load ohmyzsh/ohmyzsh plugins/common-aliases
-          elif [[ -d ${HOME}/.zsh-imp/repos/${repo}/$1 ]]; then
+          elif [[ -d ${ZIMP[REPOS_DIR]}/${repo}/$1 ]]; then
             _zimp_smart_source $cmd ${repo} $1
           # Example: zimp load ohmyzsh/ohmyzsh lib/git
           elif [[ $cmd == 'load' &&
-                  -f ${HOME}/.zsh-imp/repos/${repo}/${1}.zsh ]]; then
-            source ${HOME}/.zsh-imp/repos/${repo}/${1}.zsh &&
-              fpath=( ${HOME}/.zsh-imp/repos/${repo} ) &&
+                  -f ${ZIMP[REPOS_DIR]}/${repo}/${1}.zsh ]]; then
+            source ${ZIMP[REPOS_DIR]}/${repo}/${1}.zsh &&
+              fpath=( ${ZIMP[REPOS_DIR]}/${repo} ) &&
               _zimp_add_list $cmd "${repo} ${1}"
           # Example: zimp load ohmyzsh/ohmyzsh themes/robbyrussell
-          elif [[ -f ${HOME}/.zsh-imp/repos/${repo}/${1}.zsh-theme ]]; then
-            source ${HOME}/.zsh-imp/repos/${repo}/${1}.zsh-theme &&
-              fpath=( ${HOME}/.zsh-imp/repos/${repo} ) &&
+          elif [[ -f ${ZIMP[REPOS_DIR]}/${repo}/${1}.zsh-theme ]]; then
+            source ${ZIMP[REPOS_DIR]}/${repo}/${1}.zsh-theme &&
+              fpath=( ${ZIMP[REPOS_DIR]}/${repo} ) &&
               _zimp_add_list $cmd "${repo} ${1}"
           else
             >&2 print "Cannot source ${repo} $1."
@@ -170,7 +172,7 @@ zimp() {
     fpath)
       [[ -z $1 ]] && return
       _zimp_clone_repo $1 || return 1
-      fpath=( ${HOME}/.zsh-imp/repos/${1}/${2} $fpath )
+      fpath=( ${ZIMP[REPOS_DIR]}/${1}/${2} $fpath )
       ;;
     snippet)
       [[ -z $1 ]] && return 1
@@ -178,14 +180,14 @@ zimp() {
       [[ $1 == '--update' ]] && update=1 && shift
       snippet=$1 repo='https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/'
       shift
-      if [[ ! -f ${HOME}/.zsh-imp/snippets/${snippet} ]] || (( update )); then
-        [[ ! -d ${HOME}/.zsh-imp/snippets/${snippet%/*} ]] &&
-          mkdir -p ${HOME}/.zsh-imp/snippets/${snippet%/*}
+      if [[ ! -f ${ZIMP[SNIPPETS_DIR]}/${snippet} ]] || (( update )); then
+        [[ ! -d ${ZIMP[SNIPPETS_DIR]}/${snippet%/*} ]] &&
+          mkdir -p ${ZIMP[SNIPPETS_DIR]}/${snippet%/*}
         print -P "%B%F{yellow}Downloading snippet ${snippet}:%f%b"
-        curl ${repo}${snippet#OMZ::} > ${HOME}/.zsh-imp/snippets/${snippet}
-        _zimp_compile ${HOME}/.zsh-imp/snippets/${snippet}
+        curl ${repo}${snippet#OMZ::} > ${ZIMP[SNIPPETS_DIR]}/${snippet}
+        _zimp_compile ${ZIMP[SNIPPETS_DIR]}/${snippet}
       fi
-      source ${HOME}/.zsh-imp/snippets/${snippet} && _zimp_add_list $cmd $snippet
+      source ${ZIMP[SNIPPETS_DIR]}/${snippet} && _zimp_add_list $cmd $snippet
       ;;
     trigger)
       [[ -z $1 ]] && return 1
@@ -209,7 +211,7 @@ zimp() {
       fi
       ;;
     update)
-      [[ -d ${HOME}/.zsh-imp/repos ]] && cd ${HOME}/.zsh-imp/repos || exit
+      [[ -d ${ZIMP[REPOS_DIR]} ]] && cd ${ZIMP[REPOS_DIR]} || exit
       local i
       for i in */*; do
         cd $i
@@ -230,14 +232,14 @@ zimp() {
         cd ../..
       done
       local -a snippets
-      snippets=( ${HOME}/.zsh-imp/snippets/**/* )
+      snippets=( ${ZIMP[SNIPPETS_DIR]}/**/* )
       for i in $snippets; do
         if [[ $i == *.zsh || $i == *.sh ]]; then
-          print -P "%B%F{yellow}${i#${HOME}/.zsh-imp/snippets/}:%f%b"
-          zimp snippet --update ${i#${HOME}/.zsh-imp/snippets/}
+          print -P "%B%F{yellow}${i#${ZIMP[SNIPPETS_DIR]}/}:%f%b"
+          zimp snippet --update ${i#${ZIMP[SNIPPETS_DIR]}/}
         _zimp_compile $i
         (( ${ZIMP_SNIPPETS[(Ie)$i]} )) &&
-          zimp snippet ${i#${HOME}/.zsh-imp/snippets/}
+          zimp snippet ${i#${ZIMP[SNIPPETS_DIR]}/}
         fi
       done
       cd $orig_dir
