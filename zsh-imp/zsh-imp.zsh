@@ -143,7 +143,7 @@ zimp() {
           # Example: zimp prompt sindresorhus/pure async.zsh pure.zsh
           if [[ -f ${ZIMP[REPOS_DIR]}/${repo}/$1 ]]; then
             source ${ZIMP[REPOS_DIR]}/${repo}/$1 &&
-              fpath=( ${ZIMP[REPOS_DIR]}/${repo} ) &&
+              fpath=( ${ZIMP[REPOS_DIR]}/${repo} $fpath ) &&
               _zimp_add_list $cmd "${repo} ${1}"
           # Example: zimp load ohmyzsh/ohmyzsh plugins/common-aliases
           elif [[ -d ${ZIMP[REPOS_DIR]}/${repo}/$1 ]]; then
@@ -152,12 +152,12 @@ zimp() {
           elif [[ $cmd == 'load' &&
                   -f ${ZIMP[REPOS_DIR]}/${repo}/${1}.zsh ]]; then
             source ${ZIMP[REPOS_DIR]}/${repo}/${1}.zsh &&
-              fpath=( ${ZIMP[REPOS_DIR]}/${repo} ) &&
+              fpath=( ${ZIMP[REPOS_DIR]}/${repo} $fpath ) &&
               _zimp_add_list $cmd "${repo} ${1}"
           # Example: zimp load ohmyzsh/ohmyzsh themes/robbyrussell
           elif [[ -f ${ZIMP[REPOS_DIR]}/${repo}/${1}.zsh-theme ]]; then
             source ${ZIMP[REPOS_DIR]}/${repo}/${1}.zsh-theme &&
-              fpath=( ${ZIMP[REPOS_DIR]}/${repo} ) &&
+              fpath=( ${ZIMP[REPOS_DIR]}/${repo} $fpath ) &&
               _zimp_add_list $cmd "${repo} ${1}"
           else
             >&2 print "Cannot source ${repo} $1."
