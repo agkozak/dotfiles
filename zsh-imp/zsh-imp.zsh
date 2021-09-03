@@ -141,6 +141,7 @@ zimp() {
           # Example: zimp prompt sindresorhus/pure async.zsh pure.zsh
           if [[ -f ${HOME}/.zsh-imp/repos/${repo}/$1 ]]; then
             source ${HOME}/.zsh-imp/repos/${repo}/$1 &&
+              fpath=( ${HOME}/.zsh-imp/repos/${repo} ) &&
               _zimp_add_list $cmd "${repo} ${1}"
           # Example: zimp load ohmyzsh/ohmyzsh plugins/common-aliases
           elif [[ -d ${HOME}/.zsh-imp/repos/${repo}/$1 ]]; then
@@ -149,10 +150,12 @@ zimp() {
           elif [[ $cmd == 'load' &&
                   -f ${HOME}/.zsh-imp/repos/${repo}/${1}.zsh ]]; then
             source ${HOME}/.zsh-imp/repos/${repo}/${1}.zsh &&
+              fpath=( ${HOME}/.zsh-imp/repos/${repo} ) &&
               _zimp_add_list $cmd "${repo} ${1}"
           # Example: zimp load ohmyzsh/ohmyzsh themes/robbyrussell
           elif [[ -f ${HOME}/.zsh-imp/repos/${repo}/${1}.zsh-theme ]]; then
             source ${HOME}/.zsh-imp/repos/${repo}/${1}.zsh-theme &&
+              fpath=( ${HOME}/.zsh-imp/repos/${repo} ) &&
               _zimp_add_list $cmd "${repo} ${1}"
           else
             >&2 print "Cannot source ${repo} $1."
