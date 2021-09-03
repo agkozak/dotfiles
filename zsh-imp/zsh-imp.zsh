@@ -1,11 +1,19 @@
+# ZSH-Imp
+#
+# https://github.com/agkozak/dotfiles/zsh-imp
+#
 # MIT License / Copyright (c) 2021 Alexandros Kozak
+
 typeset -A ZIMP
 0=${${ZERO:-${0:#$ZSH_ARGZERO}}:-${(%):-%N}}
 ZIMP[SCRIPT]=${${(M)0:#/*}:-$PWD/$0}
+
+# Allow the user to specify custom directories
 ZIMP[HOME_DIR]=${ZIMP[HOME_DIR]:-${HOME}/.zsh-imp}
 ZIMP[REPOS_DIR]=${ZIMP[REPOS_DIR]:-${ZIMP[HOME_DIR]}/repos}
 ZIMP[SNIPPETS_DIR]=${ZIMP[SNIPPETS_DIR]:-${ZIMP[HOME_DIR]}/snippets}
 
+# Conditionally compile or recompile ZSH scripts
 _zimp_compile() {
   while (( $# )); do
     [[ -s $1 && ( ! -s ${1}.zwc || $1 -nt ${1}.zwc ) ]] &&
@@ -15,14 +23,18 @@ _zimp_compile() {
   done
 }
 
+# Keep a current compile version of zsh-imp.zsh
 _zimp_compile ${ZIMP[SCRIPT]}
 
+# The main command
 zimp() {
 
   setopt NULL_GLOB
 
   typeset -gUa ZIMP_PROMPTS ZIMP_PLUGINS ZIMP_SNIPPETS ZIMP_TRIGGERS
 
+  # Try to find the file in a repo to source; also intelligently add
+  # directories to fpath
   _zimp_smart_source() {
     local cmd file repo source_path
     cmd=$1 repo=$2 source_path="${ZIMP[REPOS_DIR]}/${repo}${3:+/${3}}"
@@ -69,31 +81,46 @@ zimp() {
         ;;
     esac
     local success
+
+    # Try to source a script
     if source $file &> /dev/null; then
       success=1 
     fi
-    if [[ -n $3                                   &&
+
+    # Add directories to fpath
+
+    # E.g., zimp load zimfw/git add /path/to/zimfw/git/functions to fpath
+    if [[ -d ${source_path}/functions ]] &&
+       (( ! ${fpath[(Ie)${source_path}]} )); then
+      fpath=( "${source_path}/functions" $fpath )
+      success=1
+    # E.g., zimp load ohmyzsh/ohmyzsh plugins/extract adds
+    # /path/to/extract to fpath
+    elif [[ -n $3                                   &&
           -f ${source_path}/_${3#*/}              ||
           -f ${source_path}/${3#*/}.plugin.zsh ]] ||
+       # E.g., zimp load agkozak/zsh-z adds /path/to/zsh-z to fpath
        [[ -f ${source_path}/_${repo#*/}           ||
           -f ${source_path}/${repo#*/}.plugin.zsh ]] &&
        (( ! ${fpath[(Ie)${source_path}]} )); then
       fpath=( ${source_path} $fpath )
       success=1
     fi
-    if [[ -d ${source_path}/functions ]] &&
-       (( ! ${fpath[(Ie)${source_path}]} )); then
-      fpath=( "${source_path}/functions" $fpath )
-      success=1
-    fi
+
+    # If a script has been sourced or a directory added to fpath or both, make
+    # the repo and any subpackage visible in `zimp list'
     if (( success )); then
       _zimp_add_list $cmd "${repo} ${3}"
+
+    # Report failure if a script has not been sourced nor a directory added to
+    # fpath
     else
       >&2 print "Could not load ${repo}."
       return 1
     fi
   }
 
+  # Manage the arrays which appear when `zimp list' is run
   _zimp_add_list() {
     2="${2% }"
     if [[ $1 == 'load' ]]; then
@@ -107,6 +134,8 @@ zimp() {
     fi
   }
 
+  # Clone a repository, switch to the correct branch (or tag or commit), and
+  # compile any scripts
   _zimp_clone_repo() {
     local start_dir
     start_dir=$PWD
@@ -131,6 +160,7 @@ zimp() {
   local cmd orig_dir
   [[ -n $1 ]] && cmd=$1 && shift
   orig_dir=$PWD
+
   case $cmd in
     load|prompt)
       [[ -z $1 ]] && return 1
