@@ -383,7 +383,7 @@ AGKOZAK_CUSTOM_RPROMPT=''
 if (( ${+commands[git]} )); then
 
   # Load plugins and snippets {{{2
-  source ~/dotfiles/zimp/zimp.zsh
+  source ~/dotfiles/zsh-imp/zsh-imp.zsh
 
   zimp prompt agkozak/agkozak-zsh-prompt@develop
 
@@ -442,6 +442,8 @@ fi
   hash -d agk="${HOME}/.zinit/plugins/agkozak---agkozak-zsh-prompt"
 [[ -d ${HOME}/.zinit/plugins/agkozak---zsh-z ]] &&
   hash -d z="${HOME}/.zinit/plugins/agkozak---zsh-z"
+[[ -d ${HOME}/dotfiles/zsh-imp ]] &&
+  hash -d zimp="${HOME}/dotfiles/zsh-imp"
 
 # }}}2
 
