@@ -225,13 +225,13 @@ zimp() {
       cd $orig_dir
       ;;
     list)
-      (( ${#ZIMP_PROMPTS} )) && print 'Prompts:' &&
+      (( ${#ZIMP_PROMPTS} )) && print -P '%B%F{yellow}Prompts:%f%b' &&
         print -l -f '  %s\n' ${(@o)ZIMP_PROMPTS}
-      (( ${#ZIMP_PLUGINS} )) && print 'Plugins:' &&
+      (( ${#ZIMP_PLUGINS} )) && print -P '%B%F{yellow}Plugins:%f%b' &&
         print -l -f '  %s\n' ${(@o)ZIMP_PLUGINS}
-      (( ${#ZIMP_SNIPPETS} )) && print 'Snippets:' &&
+      (( ${#ZIMP_SNIPPETS} )) && print -P '%B%F{yellow}Snippets:%f%b' &&
         print -l -f '  %s\n' ${(@o)ZIMP_SNIPPETS}
-      (( ${#ZIMP_TRIGGERS} )) && print 'Triggers:' &&
+      (( ${#ZIMP_TRIGGERS} )) && print -P '%B%F{yellow}Triggers:%f%b' &&
         print "  ${(@o)ZIMP_TRIGGERS}"
       ;;
     -h|--help|help)
