@@ -67,7 +67,7 @@ zimp() {
         ;;
     esac
     local success
-    if source $file; then
+    if source $file &> /dev/null; then
       success=1 
     fi
     if [[ -f ${source_path}/_${repo#*/} ||

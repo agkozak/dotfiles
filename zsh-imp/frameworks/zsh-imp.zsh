@@ -9,14 +9,11 @@ command curl -Ss -L https://raw.githubusercontent.com/agkozak/dotfiles/zsh-imp/z
 print 'source ${HOME}/zsh-imp.zsh
 zimp load zimfw/environment
 zimp load zimfw/git
-zimp fpath zimfw/git functions
 zimp load zimfw/input
 zimp load zimfw/termtitle
 zimp load zimfw/utility
-zimp fpath zimfw/utility functions
 zimp load zimfw/duration-info
-zimp fpath zimfw/duration-info functions
-zimp fpath zimfw/git-info functions
+zimp load zimfw/git-info
 zimp prompt zimfw/asciiship
 zimp load zsh-users/zsh-completions
 zimp load zsh-users/zsh-autosuggestions
