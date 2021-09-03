@@ -92,6 +92,7 @@ zimp() {
     start_dir=$PWD
 
     if [[ ! -d ${HOME}/.zsh-imp/repos/${1} ]]; then
+      print -P "%B%F{yellow}Cloning ${1}:%f%b"
       command git clone https://github.com/${1} ${HOME}/.zsh-imp/repos/${1}
       cd ${HOME}/.zsh-imp/repos/${1} || exit
       [[ -n $branch ]] && command git checkout $branch
@@ -162,7 +163,7 @@ zimp() {
       if [[ ! -f ${HOME}/.zsh-imp/snippets/${snippet} ]] || (( update )); then
         [[ ! -d ${HOME}/.zsh-imp/snippets/${snippet%/*} ]] &&
           mkdir -p ${HOME}/.zsh-imp/snippets/${snippet%/*}
-        print ${repo}${snippet#OMZ::}
+        print -P "%B%F{yellow}Downloading snippet ${snippet}:%f%b"
         curl ${repo}${snippet#OMZ::} > ${HOME}/.zsh-imp/snippets/${snippet}
         _zimp_compile ${HOME}/.zsh-imp/snippets/${snippet}
       fi
@@ -194,7 +195,7 @@ zimp() {
       local i
       for i in */*; do
         cd $i
-        print -Pn "%F{yellow}${i}:%f "
+        print -Pn "%B%F{yellow}${i}:%f%b "
         command git pull
         for file in **/*; do
           [[ -s $file &&
@@ -214,7 +215,7 @@ zimp() {
       snippets=( ${HOME}/.zsh-imp/snippets/**/* )
       for i in $snippets; do
         if [[ $i == *.zsh || $i == *.sh ]]; then
-          print -P "%F{yellow}${i#${HOME}/.zsh-imp/snippets/}%f:"
+          print -P "%B%F{yellow}${i#${HOME}/.zsh-imp/snippets/}:%f%b"
           zimp snippet --update ${i#${HOME}/.zsh-imp/snippets/}
         _zimp_compile $i
         (( ${ZIMP_SNIPPETS[(Ie)$i]} )) &&
