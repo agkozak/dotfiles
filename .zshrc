@@ -416,7 +416,9 @@ if (( ${+commands[git]} )); then
   #   zinit load zdharma/zbrowse
   # fi
 
-  zimp snippet OMZ::plugins/extract/extract.plugin.zsh
+  zimp load ohmyzsh/ohmyzsh plugins/extract
+  zimp load ohmyzsh/ohmyzsh plugins/gitfast
+
   zimp trigger zsh-prompt-benchmark romkatv/zsh-prompt-benchmark
 
   # (( AGKDOT_USE_TURBO )) && zinit ice silent wait'0h'
