@@ -90,9 +90,9 @@ zimp() {
     start_dir=$PWD
 
     if [[ ! -d ${HOME}/.zimp/repos/${1} ]]; then
-      git clone https://github.com/${1} ${HOME}/.zimp/repos/${1}
+      command git clone https://github.com/${1} ${HOME}/.zimp/repos/${1}
       cd ${HOME}/.zimp/repos/${1} || exit
-      [[ -n $branch ]] && git checkout $branch
+      [[ -n $branch ]] && command git checkout $branch
       for file in **/*; do
         [[ -s $file &&
           $file == *.zsh ||
@@ -193,7 +193,7 @@ zimp() {
       for i in */*; do
         cd $i
         print -n "${i}: "
-        git pull
+        command git pull
         for file in **/*; do
           [[ -s $file &&
             $file == *.zsh ||
