@@ -1,0 +1,5 @@
+#compdef zimp
+#autoload
+
+compadd -X 'zimp completions' load trigger prompt fpath snippet unload update \
+  list help

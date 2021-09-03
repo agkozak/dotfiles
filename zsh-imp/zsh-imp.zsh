@@ -7,6 +7,8 @@
 typeset -A ZIMP
 0=${${ZERO:-${0:#$ZSH_ARGZERO}}:-${(%):-%N}}
 ZIMP[SCRIPT]=${${(M)0:#/*}:-$PWD/$0}
+# Add zimp completions to fpath
+fpath=( ${ZIMP[SCRIPT]:A:h} $fpath )
 
 # Allow the user to specify custom directories
 ZIMP[HOME_DIR]=${ZIMP[HOME_DIR]:-${HOME}/.zsh-imp}
