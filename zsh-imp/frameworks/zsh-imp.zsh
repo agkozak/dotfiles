@@ -2,18 +2,20 @@
 local -r home_dir=${1}
 
 # download the repository
-command curl -Ss -L https://raw.githubusercontent.com/agkozak/dotfiles/zimp/zimp/zimp.zsh \
-  > ${home_dir}/zimp.zsh
+command curl -Ss -L https://raw.githubusercontent.com/agkozak/dotfiles/zsh-imp/zsh-imp/zsh-imp.zsh \
+  > ${home_dir}/zsh-imp.zsh
 
 # add modules to .zshrc
-print 'source ${HOME}/zimp.zsh
+print 'source ${HOME}/zsh-imp.zsh
 zimp load zimfw/environment
 zimp load zimfw/git
+zimp fpath zimfw/git functions
 zimp load zimfw/input
 zimp load zimfw/termtitle
 zimp load zimfw/utility
+zimp fpath zimfw/utility functions
 zimp load zimfw/duration-info
-zimp fpath zimfw/duration-info
+zimp fpath zimfw/duration-info functions
 zimp fpath zimfw/git-info functions
 zimp prompt zimfw/asciiship
 zimp load zsh-users/zsh-completions

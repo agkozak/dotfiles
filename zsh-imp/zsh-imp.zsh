@@ -6,7 +6,9 @@ ZIMP[DIR]=${${NOZI[SCRIPT]}:A:h}
 
 _zimp_compile() {
   while (( $# )); do
-    [[ -s $1 && ( ! -s ${1}.zwc || $1 -nt ${1}.zwc ) ]] && zcompile $1
+    [[ -s $1 && ( ! -s ${1}.zwc || $1 -nt ${1}.zwc ) ]] &&
+      # TODO: Debug mode
+      zcompile $1 &> /dev/null
     shift
   done
 }
@@ -192,7 +194,7 @@ zimp() {
       local i
       for i in */*; do
         cd $i
-        print -n "${i}: "
+        print -Pn "%F{yellow}${i}:%f "
         command git pull
         for file in **/*; do
           [[ -s $file &&
@@ -212,6 +214,7 @@ zimp() {
       snippets=( ${HOME}/.zsh-imp/snippets/**/* )
       for i in $snippets; do
         if [[ $i == *.zsh || $i == *.sh ]]; then
+          print -P "%F{yellow}${i#${HOME}/.zsh-imp/snippets/}%f:"
           zimp snippet --update ${i#${HOME}/.zsh-imp/snippets/}
         _zimp_compile $i
         (( ${ZIMP_SNIPPETS[(Ie)$i]} )) &&
