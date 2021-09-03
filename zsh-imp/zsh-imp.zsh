@@ -66,10 +66,25 @@ zimp() {
         fi
         ;;
     esac
+    local success
     if source $file; then
+      success=1 
+    fi
+    if [[ -f ${source_path}/_${repo#*/} ||
+          -f ${source_path}/${repo#*/}.plugin.zsh ]] &&
+       (( ! ${fpath[(Ie)${source_path}]} )); then
+      fpath=( ${source_path} $fpath )
+      success=1
+    fi
+    if [[ -d ${source_path}/functions ]] &&
+       (( ! ${fpath[(Ie)${source_path}]} )); then
+      fpath=( "${source_path}/functions" $fpath )
+      success=1
+    fi
+    if (( success )); then
       _zimp_add_list $cmd "${repo} ${3}"
     else
-      >&2 print "Could not source ${repo}."
+      >&2 print "Could not load ${repo}."
       return 1
     fi
   }
