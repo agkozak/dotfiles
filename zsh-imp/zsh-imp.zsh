@@ -16,11 +16,19 @@ ZIMP[REPOS_DIR]=${ZIMP[REPOS_DIR]:-${ZIMP[HOME_DIR]}/repos}
 ZIMP[SNIPPETS_DIR]=${ZIMP[SNIPPETS_DIR]:-${ZIMP[HOME_DIR]}/snippets}
 
 # Conditionally compile or recompile ZSH scripts
+
+############################################################
+# Compile scripts to wordcode or recompile them when they
+# have changed.
+# Arguments:
+#   Files to compile or recompile
+############################################################
 _zimp_compile() {
   while (( $# )); do
-    [[ -s $1 && ( ! -s ${1}.zwc || $1 -nt ${1}.zwc ) ]] &&
+    if [[ -s $1 && ( ! -s ${1}.zwc || $1 -nt ${1}.zwc ) ]]; then
       # TODO: Debug mode
       zcompile $1 &> /dev/null
+    fi
     shift
   done
 }
@@ -28,7 +36,27 @@ _zimp_compile() {
 # Keep a current compile version of zsh-imp.zsh
 _zimp_compile ${ZIMP[SCRIPT]}
 
+############################################################
 # The main command
+# Globals:
+#   ZIMP
+#   ZIMP_PLUGINS
+#   ZIMP_PROMPTS
+#   ZIMP_SNIPPETS
+#   ZIMP_TRIGGERS
+# Arguments:
+#   load <repo> [...]
+#   trigger <trigger> <repo] [...]
+#   snippet <snippet>
+#   update
+#   prompt <repo> [...]
+#   fpath <repo> [...]
+#   unload <repo>
+#   list
+#   help
+# Outputs:
+#   Status updates
+############################################################
 zimp() {
 
   setopt NULL_GLOB
@@ -113,8 +141,6 @@ zimp() {
     # the repo and any subpackage visible in `zimp list'
     if (( success )); then
       _zimp_add_list $cmd "${repo} ${3}"
-      # Blank line
-      print
 
     # Report failure if a script has not been sourced nor a directory added to
     # fpath
