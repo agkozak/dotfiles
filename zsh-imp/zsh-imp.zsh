@@ -113,6 +113,8 @@ zimp() {
     # the repo and any subpackage visible in `zimp list'
     if (( success )); then
       _zimp_add_list $cmd "${repo} ${3}"
+      # Blank line
+      print
 
     # Report failure if a script has not been sourced nor a directory added to
     # fpath
