@@ -63,8 +63,22 @@ zimp() {
 
   typeset -gUa ZIMP_PROMPTS ZIMP_PLUGINS ZIMP_SNIPPETS ZIMP_TRIGGERS
 
-  # Try to find the file in a repo to source; also intelligently add
-  # directories to fpath
+
+  ##########################################################
+  # Find plugin file to source and/or add directories to
+  # FPATH and adds the repo and optional argument to a list
+  # that can be displayed with `zimp list'
+  # Globals:
+  #   ZIMP
+  # Arguments:
+  #   $1 The command being executed (`load' or `prompt')
+  #   $2 A Git repository
+  #   $3 A continuation of the repo path, e.g.,
+  #     `plugins/common-aliases'
+  # Returns:
+  #   0 if a file was successfully sourced or a directory
+  #   was added to FPATH; otherwise 1
+  ##########################################################
   _zimp_smart_source() {
     local cmd file repo source_path
     cmd=$1 repo=$2 source_path="${ZIMP[REPOS_DIR]}/${repo}${3:+/${3}}"
@@ -150,7 +164,18 @@ zimp() {
     fi
   }
 
-  # Manage the arrays which appear when `zimp list' is run
+  ##########################################################
+  # Manage the arrays used when running `zimp list'
+  # Globals:
+  #   ZIMP_PLUGINS
+  #   ZIMP_PROMPTS
+  #   ZIMP_SNIPPETS
+  #   ZIMP_TRIGGERS
+  # Arguments:
+  #   $1 The command being run (load/prompt/snippet/trigger)
+  #   $2 Repository and optional subpackage, e.g.,
+  #     themes/robbyrussell
+  ##########################################################
   _zimp_add_list() {
     2="${2% }"
     if [[ $1 == 'load' ]]; then
@@ -164,8 +189,14 @@ zimp() {
     fi
   }
 
-  # Clone a repository, switch to the correct branch (or tag or commit), and
-  # compile any scripts
+  ##########################################################
+  # Clone a repository, switch to a branch/tag/commit if
+  # requested, and compile the scripts
+  # Globals:
+  #   ZIMP 
+  # Arguments:
+  #   $1 The repository
+  ##########################################################
   _zimp_clone_repo() {
     local start_dir
     start_dir=$PWD
@@ -186,6 +217,10 @@ zimp() {
       cd $start_dir || exit
     fi
   }
+
+  ##########################################################
+  # THE MAIN ROUTINE
+  ##########################################################
 
   local cmd orig_dir
   [[ -n $1 ]] && cmd=$1 && shift
