@@ -193,9 +193,12 @@ zimp() {
   # Clone a repository, switch to a branch/tag/commit if
   # requested, and compile the scripts
   # Globals:
-  #   ZIMP
+  #   ZIMP 
   # Arguments:
   #   $1 The repository
+  #
+  # TODO: At present, this function will compile every
+  # script in ohmyzsh/ohmyzsh! Rein it in.
   ##########################################################
   _zimp_clone_repo() {
     local start_dir
