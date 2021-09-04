@@ -10,7 +10,7 @@ commands=(
 	'unload:unload a prompt or plugin'
 	'update:update all plugins and snippets'
 	'list:list all loaded plugins and snippets'
-	'-h|--help|help:print this help text'
+	'-h\|--help\|help:print this help text'
 )
 
 if (( CURRENT == 2 )); then
