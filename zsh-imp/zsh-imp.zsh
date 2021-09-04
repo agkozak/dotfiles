@@ -175,7 +175,7 @@ zimp() {
       _zimp_clone_repo $repo || return 1
       if (( $# )); then
         while (( $# )); do
-          # Example: zimp prompt sindresorhus/pure async.zsh pure.zsh
+          # Example: zimp load sindresorhus/pure async.zsh pure.zsh
           if [[ -f ${ZIMP[REPOS_DIR]}/${repo}/$1 ]]; then
             source ${ZIMP[REPOS_DIR]}/${repo}/$1 &&
               fpath=( ${ZIMP[REPOS_DIR]}/${repo} $fpath ) &&
