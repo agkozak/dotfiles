@@ -193,7 +193,7 @@ zimp() {
   # Clone a repository, switch to a branch/tag/commit if
   # requested, and compile the scripts
   # Globals:
-  #   ZIMP 
+  #   ZIMP
   # Arguments:
   #   $1 The repository
   ##########################################################
