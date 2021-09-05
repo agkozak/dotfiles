@@ -33,9 +33,6 @@ _zimp_compile() {
   done
 }
 
-# Keep a current compile version of zsh-imp.zsh
-# _zimp_compile ${ZIMP[SCRIPT]}
-
 ############################################################
 # The main command
 # Globals:
@@ -58,8 +55,6 @@ _zimp_compile() {
 #   Status updates
 ############################################################
 zimp() {
-
-  setopt NULL_GLOB
 
   typeset -gUa ZIMP_PROMPTS ZIMP_PLUGINS ZIMP_SNIPPETS ZIMP_TRIGGERS
 
@@ -92,13 +87,13 @@ zimp() {
         elif [[ -s ${source_path}/${3%*/}.plugin.zsh ]]; then
           file=${source_path}/${3%*/}.plugin.zsh 
         else
-          files=( ${source_path}/*.plugin.zsh )
+          files=( ${source_path}/*.plugin.zsh(N) )
           if (( ${#files} == 1 )); then
             file=${files[1]}
           elif [[ -s ${source_path}/init.zsh ]]; then
             file=${source_path}/init.zsh
           else
-            files=( ${source_path}/*.sh )
+            files=( ${source_path}/*.sh(N) )
             if (( ${#files} == 1 )); then
               file=${files[1]}
             fi
@@ -112,11 +107,11 @@ zimp() {
         elif [[ -s ${source_path}/${repo#*/}.zsh-theme ]]; then
           file=${source_path}/${repo#*/}.zsh-theme
         else
-          files=( ${source_path}/*.zsh-theme )
+          files=( ${source_path}/*.zsh-theme(N) )
           if (( ${#files} == 1 )); then
             file=${files[1]}
           else
-            files=( ${source_path}/*.plugin.zsh )
+            files=( ${source_path}/*.plugin.zsh(N) )
             if (( ${#files} == 1 )); then
               file=${files[1]}
             fi
@@ -209,7 +204,7 @@ zimp() {
       command git clone https://github.com/${1} ${ZIMP[REPOS_DIR]}/${1}
       cd ${ZIMP[REPOS_DIR]}/${1} || exit
       [[ -n $branch ]] && command git checkout $branch
-      for file in **/*; do
+      for file in **/*(N); do
         [[ -s $file &&
            $file == *.zsh ||
            $file == prompt_*_setup ||
@@ -315,11 +310,11 @@ zimp() {
     update)
       [[ -d ${ZIMP[REPOS_DIR]} ]] && cd ${ZIMP[REPOS_DIR]} || exit
       local i
-      for i in */*; do
+      for i in */*(N); do
         cd $i
         print -Pn "%B%F{yellow}${i}:%f%b "
         command git pull
-        for file in **/*; do
+        for file in **/*(N); do
           [[ -s $file &&
             $file == *.zsh ||
             $file == prompt_*_setup ||
@@ -334,7 +329,7 @@ zimp() {
         cd ../..
       done
       local -a snippets
-      snippets=( ${ZIMP[SNIPPETS_DIR]}/**/* )
+      snippets=( ${ZIMP[SNIPPETS_DIR]}/**/*(N) )
       for i in $snippets; do
         if [[ $i == *.zsh || $i == *.sh ]]; then
           print -P "%B%F{yellow}${i#${ZIMP[SNIPPETS_DIR]}/}:%f%b"
