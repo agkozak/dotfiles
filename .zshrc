@@ -83,7 +83,8 @@ for i in .zshenv \
          .zshrc \
          .shrc \
          .shrc.local \
-         .zshrc.local; do
+         .zshrc.local \
+         .zcompdump_${ZSH_VERSION}; do
   if [[ -e ${HOME}/${i}       &&
         ! -e ${HOME}/${i}.zwc ||
         ${HOME}/${i} -nt ${HOME}/${i}.zwc ]]; then
