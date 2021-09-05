@@ -34,7 +34,7 @@ _zimp_compile() {
 }
 
 # Keep a current compile version of zsh-imp.zsh
-_zimp_compile ${ZIMP[SCRIPT]}
+# _zimp_compile ${ZIMP[SCRIPT]}
 
 ############################################################
 # The main command
