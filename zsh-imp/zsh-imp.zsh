@@ -211,11 +211,11 @@ zimp() {
       [[ -n $branch ]] && command git checkout $branch
       for file in **/*; do
         [[ -s $file &&
-          $file == *.zsh ||
-          $file == prompt_*_setup ||
-          $file == *.zsh-theme ||
-          $file == *.sh ||
-          $file == _* ]] && _zimp_compile $file
+           $file == *.zsh ||
+           $file == prompt_*_setup ||
+           $file == *.zsh-theme ||
+           $file == *.sh ||
+           $file == _* ]] && _zimp_compile $file
       done
       cd $start_dir || exit
     fi
