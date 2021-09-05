@@ -15,26 +15,10 @@ ZIMP[HOME_DIR]=${ZIMP[HOME_DIR]:-${HOME}/.zsh-imp}
 ZIMP[REPOS_DIR]=${ZIMP[REPOS_DIR]:-${ZIMP[HOME_DIR]}/repos}
 ZIMP[SNIPPETS_DIR]=${ZIMP[SNIPPETS_DIR]:-${ZIMP[HOME_DIR]}/snippets}
 
-# Conditionally compile or recompile ZSH scripts
-
-############################################################
-# Compile scripts to wordcode or recompile them when they
-# have changed.
-# Arguments:
-#   Files to compile or recompile
-############################################################
-_zimp_compile() {
-  while (( $# )); do
-    if [[ -s $1 && ( ! -s ${1}.zwc || $1 -nt ${1}.zwc ) ]]; then
-      # TODO: Debug mode
-      zcompile $1 &> /dev/null
-    fi
-    shift
-  done
-}
+autoload -Uz zrecompile
 
 # Keep a current compile version of zsh-imp.zsh
-_zimp_compile ${ZIMP[SCRIPT]}
+zrecompile -q ${ZIMP[SCRIPT]}
 
 ############################################################
 # The main command
@@ -209,13 +193,12 @@ zimp() {
       command git clone https://github.com/${1} ${ZIMP[REPOS_DIR]}/${1}
       cd ${ZIMP[REPOS_DIR]}/${1} || exit
       [[ -n $branch ]] && command git checkout $branch
-      for file in **/*; do
-        [[ -s $file &&
-          $file == *.zsh ||
-          $file == prompt_*_setup ||
-          $file == *.zsh-theme ||
-          $file == *.sh ||
-          $file == _* ]] && _zimp_compile $file
+      for file in **/*(.); do
+        [[ $file == *.zsh ||
+           $file == prompt_*_setup ||
+           $file == *.zsh-theme ||
+           $file == *.sh ||
+           $file == _* ]] && zrecompile -q $file
       done
       cd $start_dir || exit
     fi
@@ -287,7 +270,7 @@ zimp() {
           mkdir -p ${ZIMP[SNIPPETS_DIR]}/${snippet%/*}
         print -P "%B%F{yellow}Downloading snippet ${snippet}:%f%b"
         curl ${repo}${snippet#OMZ::} > ${ZIMP[SNIPPETS_DIR]}/${snippet}
-        _zimp_compile ${ZIMP[SNIPPETS_DIR]}/${snippet}
+        zrecompile -q ${ZIMP[SNIPPETS_DIR]}/${snippet}
       fi
       source ${ZIMP[SNIPPETS_DIR]}/${snippet} && _zimp_add_list $cmd $snippet
       ;;
@@ -319,12 +302,11 @@ zimp() {
         cd $i
         print -Pn "%B%F{yellow}${i}:%f%b "
         command git pull
-        for file in **/*; do
-          [[ -s $file &&
-            $file == *.zsh ||
-            $file == prompt_*_setup ||
-            $file == *.zsh-theme ||
-            $file == *.sh ]] && _zimp_compile $file
+        for file in **/*(.); do
+          [[ $file == *.zsh ||
+             $file == prompt_*_setup ||
+             $file == *.zsh-theme ||
+             $file == *.sh ]] && zrecompile -q $file
         done
         if (( ${ZIMP_PLUGINS[(Ie)$i]} )); then
           zimp load $i
@@ -339,7 +321,7 @@ zimp() {
         if [[ $i == *.zsh || $i == *.sh ]]; then
           print -P "%B%F{yellow}${i#${ZIMP[SNIPPETS_DIR]}/}:%f%b"
           zimp snippet --update ${i#${ZIMP[SNIPPETS_DIR]}/}
-        _zimp_compile $i
+        zrecompile -q $i
         (( ${ZIMP_SNIPPETS[(Ie)$i]} )) &&
           zimp snippet ${i#${ZIMP[SNIPPETS_DIR]}/}
         fi
