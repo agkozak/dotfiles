@@ -1,9 +1,13 @@
 () {
 local -r home_dir=${1}
 
+if [[ -f ~zimp/zsh-imp.zsh ]]; then
+  cp ~zimp/zsh-imp.zsh ${home_dir}
+else
 # download the repository
-command curl -Ss -L https://raw.githubusercontent.com/agkozak/dotfiles/zsh-imp/zsh-imp/zsh-imp.zsh \
-  > ${home_dir}/zsh-imp.zsh
+  command curl -Ss -L https://raw.githubusercontent.com/agkozak/dotfiles/zsh-imp/zsh-imp/zsh-imp.zsh \
+    > ${home_dir}/zsh-imp.zsh
+fi
 
 # add modules to .zshrc
 print 'source ${HOME}/zsh-imp.zsh
