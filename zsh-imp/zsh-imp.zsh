@@ -209,12 +209,13 @@ zimp() {
       command git clone https://github.com/${1} ${ZIMP[REPOS_DIR]}/${1}
       cd ${ZIMP[REPOS_DIR]}/${1} || exit
       [[ -n $branch ]] && command git checkout $branch
-      for file in **/*(N-.); do
-        [[ $file == *.zsh          ||
-           $file == prompt_*_setup ||
-           $file == *.zsh-theme    ||
-           $file == *.sh           ||
-           $file == _* ]] && _zimp_compile $file
+      for file in **/*; do
+        [[ -s $file &&
+          $file == *.zsh ||
+          $file == prompt_*_setup ||
+          $file == *.zsh-theme ||
+          $file == *.sh ||
+          $file == _* ]] && _zimp_compile $file
       done
       cd $start_dir || exit
     fi
@@ -318,11 +319,12 @@ zimp() {
         cd $i
         print -Pn "%B%F{yellow}${i}:%f%b "
         command git pull
-        for file in **/*(N-.); do
-          [[ $file == *.zsh          ||
-             $file == prompt_*_setup ||
-             $file == *.zsh-theme    ||
-             $file == *.sh ]] && _zimp_compile $file
+        for file in **/*; do
+          [[ -s $file &&
+            $file == *.zsh ||
+            $file == prompt_*_setup ||
+            $file == *.zsh-theme ||
+            $file == *.sh ]] && _zimp_compile $file
         done
         if (( ${ZIMP_PLUGINS[(Ie)$i]} )); then
           zimp load $i
