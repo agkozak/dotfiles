@@ -1,4 +1,4 @@
-#compdef zimp
+#compdef zcomet
 
 local -a commands
 commands=(

@@ -379,14 +379,14 @@ AGKOZAK_CUSTOM_RPROMPT=''
 
 # }}}1
 
-# zimp {{{1
+# zcomet {{{1
 
 if (( ${+commands[git]} )); then
 
   # Load plugins and snippets {{{2
-  source ~/dotfiles/zsh-imp/zsh-imp.zsh
+  source ~/dotfiles/zcomet/zcomet.zsh
 
-  zimp prompt agkozak/agkozak-zsh-prompt@develop
+  zcomet prompt agkozak/agkozak-zsh-prompt@develop
 
   # zinit light agkozak/polyglot
   # if which kubectl &> /dev/null; then
@@ -398,15 +398,15 @@ if (( ${+commands[git]} )); then
   # In FreeBSD, /home is /usr/home
   ZSHZ_DEBUG=1
   [[ $OSTYPE == freebsd* ]] && typeset -g ZSHZ_NO_RESOLVE_SYMLINKS=1
-  zimp load agkozak/zsh-z@develop
+  zcomet load agkozak/zsh-z@develop
   ZSHZ_UNCOMMON=1
   ZSHZ_CASE='smart'
   ZSHZ_ECHO=1
   # ZSHZ_TILDE=1
   ZSHZ_TRAILING_SLASH=1
 
-  zimp trigger zhooks agkozak/zhooks@develop
-  zimp load jreese/zsh-titles
+  zcomet trigger zhooks agkozak/zhooks@develop
+  zcomet load jreese/zsh-titles
 
   # if [[ $AGKDOT_SYSTEMINFO != *ish* ]]; then
   #   if (( AGKDOT_USE_TURBO )); then
@@ -417,10 +417,10 @@ if (( ${+commands[git]} )); then
   #   zinit load zdharma/zbrowse
   # fi
 
-  zimp load ohmyzsh/ohmyzsh plugins/extract
-  zimp load ohmyzsh/ohmyzsh plugins/gitfast
+  zcomet load ohmyzsh/ohmyzsh plugins/extract
+  zcomet load ohmyzsh/ohmyzsh plugins/gitfast
 
-  zimp trigger zsh-prompt-benchmark romkatv/zsh-prompt-benchmark
+  zcomet trigger zsh-prompt-benchmark romkatv/zsh-prompt-benchmark
 
   # (( AGKDOT_USE_TURBO )) && zinit ice silent wait'0h'
   # zinit load zpm-zsh/clipboard
@@ -445,8 +445,8 @@ fi
   hash -d agk="${HOME}/.zinit/plugins/agkozak---agkozak-zsh-prompt"
 [[ -d ${HOME}/.zinit/plugins/agkozak---zsh-z ]] &&
   hash -d z="${HOME}/.zinit/plugins/agkozak---zsh-z"
-[[ -d ${HOME}/dotfiles/zsh-imp ]] &&
-  hash -d zimp="${HOME}/dotfiles/zsh-imp"
+[[ -d ${HOME}/dotfiles/zcomet ]] &&
+  hash -d zcomet="${HOME}/dotfiles/zcomet"
 
 # }}}2
 
@@ -584,8 +584,8 @@ fi
 ############################################################
 zsh_update() {
   update_dotfiles
-  if (( ${+functions[zimp]} )); then
-    zimp update
+  if (( ${+functions[zcomet]} )); then
+    zcomet update
   fi
   source "${HOME}/.zshrc"
 }

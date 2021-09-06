@@ -1,19 +1,19 @@
-# ZSH-Imp
+# zcomet
 #
-# https://github.com/agkozak/dotfiles/zsh-imp
+# https://github.com/agkozak/dotfiles/zcomet
 #
 # MIT License / Copyright (c) 2021 Alexandros Kozak
 
-typeset -A ZIMP
+typeset -A ZCOMET
 0=${${ZERO:-${0:#$ZSH_ARGZERO}}:-${(%):-%N}}
-ZIMP[SCRIPT]=${${(M)0:#/*}:-$PWD/$0}
-# Add zimp completions to fpath
-fpath=( ${ZIMP[SCRIPT]:A:h} $fpath )
+ZCOMET[SCRIPT]=${${(M)0:#/*}:-$PWD/$0}
+# Add zcomet completions to FPATH
+fpath=( ${ZCOMET[SCRIPT]:A:h} $fpath )
 
 # Allow the user to specify custom directories
-ZIMP[HOME_DIR]=${ZIMP[HOME_DIR]:-${HOME}/.zsh-imp}
-ZIMP[REPOS_DIR]=${ZIMP[REPOS_DIR]:-${ZIMP[HOME_DIR]}/repos}
-ZIMP[SNIPPETS_DIR]=${ZIMP[SNIPPETS_DIR]:-${ZIMP[HOME_DIR]}/snippets}
+ZCOMET[HOME_DIR]=${ZCOMET[HOME_DIR]:-${HOME}/.zcomet}
+ZCOMET[REPOS_DIR]=${ZCOMET[REPOS_DIR]:-${ZCOMET[HOME_DIR]}/repos}
+ZCOMET[SNIPPETS_DIR]=${ZCOMET[SNIPPETS_DIR]:-${ZCOMET[HOME_DIR]}/snippets}
 
 # Conditionally compile or recompile ZSH scripts
 
@@ -23,7 +23,7 @@ ZIMP[SNIPPETS_DIR]=${ZIMP[SNIPPETS_DIR]:-${ZIMP[HOME_DIR]}/snippets}
 # Arguments:
 #   Files to compile or recompile
 ############################################################
-_zimp_compile() {
+_zcomet_compile() {
   while (( $# )); do
     if [[ -s $1 && ( ! -s ${1}.zwc || $1 -nt ${1}.zwc ) ]]; then
       # TODO: Debug mode
@@ -36,11 +36,11 @@ _zimp_compile() {
 ############################################################
 # The main command
 # Globals:
-#   ZIMP
-#   ZIMP_PLUGINS
-#   ZIMP_PROMPTS
-#   ZIMP_SNIPPETS
-#   ZIMP_TRIGGERS
+#   ZCOMET
+#   ZCOMET_PLUGINS
+#   ZCOMET_PROMPTS
+#   ZCOMET_SNIPPETS
+#   ZCOMET_TRIGGERS
 # Arguments:
 #   load <repo> [...]
 #   trigger <trigger> <repo] [...]
@@ -54,17 +54,17 @@ _zimp_compile() {
 # Outputs:
 #   Status updates
 ############################################################
-zimp() {
+zcomet() {
 
-  typeset -gUa ZIMP_PROMPTS ZIMP_PLUGINS ZIMP_SNIPPETS ZIMP_TRIGGERS
+  typeset -gUa ZCOMET_PROMPTS ZCOMET_PLUGINS ZCOMET_SNIPPETS ZCOMET_TRIGGERS
 
 
   ##########################################################
   # Find plugin file to source and/or add directories to
   # FPATH and adds the repo and optional argument to a list
-  # that can be displayed with `zimp list'
+  # that can be displayed with `zcomet list'
   # Globals:
-  #   ZIMP
+  #   ZCOMET
   # Arguments:
   #   $1 The command being executed (`load' or `prompt')
   #   $2 A Git repository
@@ -74,9 +74,9 @@ zimp() {
   #   0 if a file was successfully sourced or a directory
   #   was added to FPATH; otherwise 1
   ##########################################################
-  _zimp_smart_source() {
+  _zcomet_smart_source() {
     local cmd file repo source_path
-    cmd=$1 repo=$2 source_path="${ZIMP[REPOS_DIR]}/${repo}${3:+/${3}}"
+    cmd=$1 repo=$2 source_path="${ZCOMET[REPOS_DIR]}/${repo}${3:+/${3}}"
     local -a files
 
     case $cmd in
@@ -126,19 +126,19 @@ zimp() {
       success=1 
     fi
 
-    # Add directories to fpath
+    # Add directories to FPATH
 
-    # E.g., zimp load zimfw/git add /path/to/zimfw/git/functions to fpath
+    # E.g., zcomet load zimfw/git add /path/to/zimfw/git/functions to FPATH
     if [[ -d ${source_path}/functions ]] &&
        (( ! ${fpath[(Ie)${source_path}]} )); then
       fpath=( "${source_path}/functions" $fpath )
       success=1
-    # E.g., zimp load ohmyzsh/ohmyzsh plugins/extract adds
-    # /path/to/extract to fpath
+    # E.g., zcomet load ohmyzsh/ohmyzsh plugins/extract adds
+    # /path/to/extract to FPATH
     elif [[ -n $3                                   &&
           -f ${source_path}/_${3#*/}              ||
           -f ${source_path}/${3#*/}.plugin.zsh ]] ||
-       # E.g., zimp load agkozak/zsh-z adds /path/to/zsh-z to fpath
+       # E.g., zcomet load agkozak/zsh-z adds /path/to/zsh-z to FPATH
        [[ -f ${source_path}/_${repo#*/}           ||
           -f ${source_path}/${repo#*/}.plugin.zsh ]] &&
        (( ! ${fpath[(Ie)${source_path}]} )); then
@@ -146,13 +146,13 @@ zimp() {
       success=1
     fi
 
-    # If a script has been sourced or a directory added to fpath or both, make
-    # the repo and any subpackage visible in `zimp list'
+    # If a script has been sourced or a directory added to FPATH or both, make
+    # the repo and any subpackage visible in `zcomet list'
     if (( success )); then
-      _zimp_add_list $cmd "${repo} ${3}"
+      _zcomet_add_list $cmd "${repo} ${3}"
 
     # Report failure if a script has not been sourced nor a directory added to
-    # fpath
+    # FPATH
     else
       >&2 print "Could not load ${repo}."
       return 1
@@ -160,27 +160,27 @@ zimp() {
   }
 
   ##########################################################
-  # Manage the arrays used when running `zimp list'
+  # Manage the arrays used when running `zcomet list'
   # Globals:
-  #   ZIMP_PLUGINS
-  #   ZIMP_PROMPTS
-  #   ZIMP_SNIPPETS
-  #   ZIMP_TRIGGERS
+  #   ZCOMET_PLUGINS
+  #   ZCOMET_PROMPTS
+  #   ZCOMET_SNIPPETS
+  #   ZCOMET_TRIGGERS
   # Arguments:
   #   $1 The command being run (load/prompt/snippet/trigger)
   #   $2 Repository and optional subpackage, e.g.,
   #     themes/robbyrussell
   ##########################################################
-  _zimp_add_list() {
+  _zcomet_add_list() {
     2="${2% }"
     if [[ $1 == 'load' ]]; then
-      ZIMP_PLUGINS+=( "$2" )
+      ZCOMET_PLUGINS+=( "$2" )
     elif [[ $1 == 'prompt' ]]; then
-      ZIMP_PROMPTS+=( "$2" )
+      ZCOMET_PROMPTS+=( "$2" )
     elif [[ $1 == 'snippet' ]]; then
-      ZIMP_SNIPPETS+=( "$2" )
+      ZCOMET_SNIPPETS+=( "$2" )
     elif [[ $1 == 'trigger' ]]; then
-      ZIMP_TRIGGERS+=( "$2" )
+      ZCOMET_TRIGGERS+=( "$2" )
     fi
   }
 
@@ -188,21 +188,21 @@ zimp() {
   # Clone a repository, switch to a branch/tag/commit if
   # requested, and compile the scripts
   # Globals:
-  #   ZIMP 
+  #   ZCOMET
   # Arguments:
   #   $1 The repository
   #
   # TODO: At present, this function will compile every
   # script in ohmyzsh/ohmyzsh! Rein it in.
   ##########################################################
-  _zimp_clone_repo() {
+  _zcomet_clone_repo() {
     local start_dir
     start_dir=$PWD
 
-    if [[ ! -d ${ZIMP[REPOS_DIR]}/${1} ]]; then
+    if [[ ! -d ${ZCOMET[REPOS_DIR]}/${1} ]]; then
       print -P "%B%F{yellow}Cloning ${1}:%f%b"
-      command git clone https://github.com/${1} ${ZIMP[REPOS_DIR]}/${1}
-      cd ${ZIMP[REPOS_DIR]}/${1} || exit
+      command git clone https://github.com/${1} ${ZCOMET[REPOS_DIR]}/${1}
+      cd ${ZCOMET[REPOS_DIR]}/${1} || exit
       [[ -n $branch ]] && command git checkout $branch
       for file in **/*(N); do
         [[ -s $file &&
@@ -210,7 +210,7 @@ zimp() {
            $file == prompt_*_setup ||
            $file == *.zsh-theme ||
            $file == *.sh ||
-           $file == _* ]] && _zimp_compile $file
+           $file == _* ]] && _zcomet_compile $file
       done
       cd $start_dir || exit
     fi
@@ -233,29 +233,29 @@ zimp() {
         [[ $1 == *@* ]] && branch=${1#*@}
         shift
       fi
-      _zimp_clone_repo $repo || return 1
+      _zcomet_clone_repo $repo || return 1
       if (( $# )); then
         while (( $# )); do
-          # Example: zimp load sindresorhus/pure async.zsh pure.zsh
-          if [[ -f ${ZIMP[REPOS_DIR]}/${repo}/$1 ]]; then
-            source ${ZIMP[REPOS_DIR]}/${repo}/$1 &&
-              fpath=( ${ZIMP[REPOS_DIR]}/${repo} $fpath ) &&
-              _zimp_add_list $cmd "${repo} ${1}"
-          # Example: zimp load ohmyzsh/ohmyzsh plugins/common-aliases
-          elif [[ -d ${ZIMP[REPOS_DIR]}/${repo}/${1} ]]; then
-            _zimp_smart_source $cmd ${repo} $1
-              _zimp_add_list $cmd "${repo} ${1}"
-          # Example: zimp load ohmyzsh/ohmyzsh lib/git
+          # Example: zcomet load sindresorhus/pure async.zsh pure.zsh
+          if [[ -f ${ZCOMET[REPOS_DIR]}/${repo}/$1 ]]; then
+            source ${ZCOMET[REPOS_DIR]}/${repo}/$1 &&
+              fpath=( ${ZCOMET[REPOS_DIR]}/${repo} $fpath ) &&
+              _zcomet_add_list $cmd "${repo} ${1}"
+          # Example: zcomet load ohmyzsh/ohmyzsh plugins/common-aliases
+          elif [[ -d ${ZCOMET[REPOS_DIR]}/${repo}/${1} ]]; then
+            _zcomet_smart_source $cmd ${repo} $1
+              _zcomet_add_list $cmd "${repo} ${1}"
+          # Example: zcomet load ohmyzsh/ohmyzsh lib/git
           elif [[ $cmd == 'load' &&
-                  -f ${ZIMP[REPOS_DIR]}/${repo}/${1}.zsh ]]; then
-            source ${ZIMP[REPOS_DIR]}/${repo}/${1}.zsh &&
-              fpath=( ${ZIMP[REPOS_DIR]}/${repo} $fpath ) &&
-              _zimp_add_list $cmd "${repo} ${1}"
-          # Example: zimp load ohmyzsh/ohmyzsh themes/robbyrussell
-          elif [[ -f ${ZIMP[REPOS_DIR]}/${repo}/${1}.zsh-theme ]]; then
-            source ${ZIMP[REPOS_DIR]}/${repo}/${1}.zsh-theme &&
-              fpath=( ${ZIMP[REPOS_DIR]}/${repo} $fpath ) &&
-              _zimp_add_list $cmd "${repo} ${1}"
+                  -f ${ZCOMET[REPOS_DIR]}/${repo}/${1}.zsh ]]; then
+            source ${ZCOMET[REPOS_DIR]}/${repo}/${1}.zsh &&
+              fpath=( ${ZCOMET[REPOS_DIR]}/${repo} $fpath ) &&
+              _zcomet_add_list $cmd "${repo} ${1}"
+          # Example: zcomet load ohmyzsh/ohmyzsh themes/robbyrussell
+          elif [[ -f ${ZCOMET[REPOS_DIR]}/${repo}/${1}.zsh-theme ]]; then
+            source ${ZCOMET[REPOS_DIR]}/${repo}/${1}.zsh-theme &&
+              fpath=( ${ZCOMET[REPOS_DIR]}/${repo} $fpath ) &&
+              _zcomet_add_list $cmd "${repo} ${1}"
           else
             >&2 print "Cannot source ${repo} $1."
             return 1
@@ -263,13 +263,13 @@ zimp() {
           shift
         done
       else
-        _zimp_smart_source $cmd ${repo}
+        _zcomet_smart_source $cmd ${repo}
       fi
       ;;
     fpath)
       [[ -z $1 ]] && return
-      _zimp_clone_repo $1 || return 1
-      fpath=( ${ZIMP[REPOS_DIR]}/${1}/${2} $fpath )
+      _zcomet_clone_repo $1 || return 1
+      fpath=( ${ZCOMET[REPOS_DIR]}/${1}/${2} $fpath )
       ;;
     snippet)
       [[ -z $1 ]] && return 1
@@ -277,38 +277,38 @@ zimp() {
       [[ $1 == '--update' ]] && update=1 && shift
       snippet=$1 repo='https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/'
       shift
-      if [[ ! -f ${ZIMP[SNIPPETS_DIR]}/${snippet} ]] || (( update )); then
-        [[ ! -d ${ZIMP[SNIPPETS_DIR]}/${snippet%/*} ]] &&
-          mkdir -p ${ZIMP[SNIPPETS_DIR]}/${snippet%/*}
+      if [[ ! -f ${ZCOMET[SNIPPETS_DIR]}/${snippet} ]] || (( update )); then
+        [[ ! -d ${ZCOMET[SNIPPETS_DIR]}/${snippet%/*} ]] &&
+          mkdir -p ${ZCOMET[SNIPPETS_DIR]}/${snippet%/*}
         print -P "%B%F{yellow}Downloading snippet ${snippet}:%f%b"
-        curl ${repo}${snippet#OMZ::} > ${ZIMP[SNIPPETS_DIR]}/${snippet}
-        _zimp_compile ${ZIMP[SNIPPETS_DIR]}/${snippet}
+        curl ${repo}${snippet#OMZ::} > ${ZCOMET[SNIPPETS_DIR]}/${snippet}
+        _zcomet_compile ${ZCOMET[SNIPPETS_DIR]}/${snippet}
       fi
-      source ${ZIMP[SNIPPETS_DIR]}/${snippet} && _zimp_add_list $cmd $snippet
+      source ${ZCOMET[SNIPPETS_DIR]}/${snippet} && _zcomet_add_list $cmd $snippet
       ;;
     trigger)
       [[ -z $1 ]] && return 1
       local trigger
       trigger=$1 && shift
       ! (( ${+functions[$trigger]} )) &&
-        functions[$trigger]="ZIMP_TRIGGERS=( "\${(@)ZIMP_TRIGGERS:#${trigger}}" );
+        functions[$trigger]="ZCOMET_TRIGGERS=( "\${(@)ZCOMET_TRIGGERS:#${trigger}}" );
           unfunction $trigger;
-          zimp load $@;
+          zcomet load $@;
           eval $trigger \$@" &&
-        _zimp_add_list $cmd $trigger
+        _zcomet_add_list $cmd $trigger
       ;;
     unload)
       [[ -z $1 ]] && return 1
       if (( ${+functions[${1#*/}_plugin_unload]} )) &&
         ${1#*/}_plugin_unload; then
-        ZIMP_PROMPTS=( ${(@)ZIMP_PROMPTS:#${1}} )
-        ZIMP_PROMPTS=( ${(@)ZIMP_PROMPTS:#${1} *} )
-        ZIMP_PLUGINS=( ${(@)ZIMP_PLUGINS:#${1}} )
-        ZIMP_PLUGINS=( ${(@)ZIMP_PLUGINS:#${1} *} )
+        ZCOMET_PROMPTS=( ${(@)ZCOMET_PROMPTS:#${1}} )
+        ZCOMET_PROMPTS=( ${(@)ZCOMET_PROMPTS:#${1} *} )
+        ZCOMET_PLUGINS=( ${(@)ZCOMET_PLUGINS:#${1}} )
+        ZCOMET_PLUGINS=( ${(@)ZCOMET_PLUGINS:#${1} *} )
       fi
       ;;
     update)
-      [[ -d ${ZIMP[REPOS_DIR]} ]] && cd ${ZIMP[REPOS_DIR]} || exit
+      [[ -d ${ZCOMET[REPOS_DIR]} ]] && cd ${ZCOMET[REPOS_DIR]} || exit
       local i
       for i in */*(N); do
         cd $i
@@ -319,37 +319,37 @@ zimp() {
             $file == *.zsh ||
             $file == prompt_*_setup ||
             $file == *.zsh-theme ||
-            $file == *.sh ]] && _zimp_compile $file
+            $file == *.sh ]] && _zcomet_compile $file
         done
-        if (( ${ZIMP_PLUGINS[(Ie)$i]} )); then
-          zimp load $i
-        elif (( ${ZIMP_PROMPT[(Ie)$i]} )); then
-          zimp prompt $i
+        if (( ${ZCOMET_PLUGINS[(Ie)$i]} )); then
+          zcomet load $i
+        elif (( ${ZCOMET_PROMPT[(Ie)$i]} )); then
+          zcomet prompt $i
         fi
         cd ../..
       done
       local -a snippets
-      snippets=( ${ZIMP[SNIPPETS_DIR]}/**/*(N) )
+      snippets=( ${ZCOMET[SNIPPETS_DIR]}/**/*(N) )
       for i in $snippets; do
         if [[ $i == *.zsh || $i == *.sh ]]; then
-          print -P "%B%F{yellow}${i#${ZIMP[SNIPPETS_DIR]}/}:%f%b"
-          zimp snippet --update ${i#${ZIMP[SNIPPETS_DIR]}/}
-        _zimp_compile $i
-        (( ${ZIMP_SNIPPETS[(Ie)$i]} )) &&
-          zimp snippet ${i#${ZIMP[SNIPPETS_DIR]}/}
+          print -P "%B%F{yellow}${i#${ZCOMET[SNIPPETS_DIR]}/}:%f%b"
+          zcomet snippet --update ${i#${ZCOMET[SNIPPETS_DIR]}/}
+        _zcomet_compile $i
+        (( ${ZCOMET_SNIPPETS[(Ie)$i]} )) &&
+          zcomet snippet ${i#${ZCOMET[SNIPPETS_DIR]}/}
         fi
       done
       cd $orig_dir
       ;;
     list)
-      (( ${#ZIMP_PROMPTS} )) && print -P '%B%F{yellow}Prompts:%f%b' &&
-        print -l -f '  %s\n' ${(@o)ZIMP_PROMPTS}
-      (( ${#ZIMP_PLUGINS} )) && print -P '%B%F{yellow}Plugins:%f%b' &&
-        print -l -f '  %s\n' ${(@o)ZIMP_PLUGINS}
-      (( ${#ZIMP_SNIPPETS} )) && print -P '%B%F{yellow}Snippets:%f%b' &&
-        print -l -f '  %s\n' ${(@o)ZIMP_SNIPPETS}
-      (( ${#ZIMP_TRIGGERS} )) && print -P '%B%F{yellow}Triggers:%f%b' &&
-        print "  ${(@o)ZIMP_TRIGGERS}"
+      (( ${#ZCOMET_PROMPTS} )) && print -P '%B%F{yellow}Prompts:%f%b' &&
+        print -l -f '  %s\n' ${(@o)ZCOMET_PROMPTS}
+      (( ${#ZCOMET_PLUGINS} )) && print -P '%B%F{yellow}Plugins:%f%b' &&
+        print -l -f '  %s\n' ${(@o)ZCOMET_PLUGINS}
+      (( ${#ZCOMET_SNIPPETS} )) && print -P '%B%F{yellow}Snippets:%f%b' &&
+        print -l -f '  %s\n' ${(@o)ZCOMET_SNIPPETS}
+      (( ${#ZCOMET_TRIGGERS} )) && print -P '%B%F{yellow}Triggers:%f%b' &&
+        print "  ${(@o)ZCOMET_TRIGGERS}"
       ;;
     -h|--help|help)
       print "usage: $0 command [...]
@@ -364,6 +364,6 @@ update          update all plugins and snippets
 list            list all loaded plugins and snippets
 -h|--help|help  print this help text" | fold -s -w $COLUMNS
       ;;
-    *) zimp help; return 1 ;;
+    *) zcomet help; return 1 ;;
   esac
 }
