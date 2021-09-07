@@ -113,15 +113,15 @@ zcomet() {
        (( ! ${fpath[(Ie)${source_path}]} )); then
       fpath=( "${source_path}/functions" $fpath )
       success=1
-    # E.g., zcomet load ohmyzsh/ohmyzsh plugins/extract adds
-    # /path/to/extract to FPATH
-    elif [[ -n $3                                   &&
-          -f ${source_path}/_${3#*/}              ||
-          -f ${source_path}/${3#*/}.plugin.zsh ]] ||
-       # E.g., zcomet load agkozak/zsh-z adds /path/to/zsh-z to FPATH
-       [[ -f ${source_path}/_${repo#*/}           ||
-          -f ${source_path}/${repo#*/}.plugin.zsh ]] &&
-       (( ! ${fpath[(Ie)${source_path}]} )); then
+    # E.g., zcomet load ohmyzsh/ohmyzsh plugins/extract adds /path/to/extract to
+    # FPATH
+    elif [[ ( -n $3                      &&
+              -f ${source_path}/_${3#*/} ||
+              -f ${source_path}/${3#*/}.plugin.zsh ) ||
+            # E.g., zcomet load agkozak/zsh-z adds /path/to/zsh-z to FPATH
+            ( -f ${source_path}/_${repo#*/} ||
+              -f ${source_path}/${repo#*/}.plugin.zsh ) ]] &&
+         (( ! ${fpath[(Ie)${source_path}]} )); then
       fpath=( ${source_path} $fpath )
       success=1
     fi
