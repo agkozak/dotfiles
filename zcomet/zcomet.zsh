@@ -57,7 +57,6 @@ zcomet() {
 
   typeset -gUa ZCOMET_PROMPTS ZCOMET_PLUGINS ZCOMET_SNIPPETS ZCOMET_TRIGGERS
 
-
   ##########################################################
   # Find plugin file to source and/or add directories to
   # FPATH and adds the repo and optional argument to a list
@@ -74,27 +73,27 @@ zcomet() {
   #   was added to FPATH; otherwise 1
   ##########################################################
   _zcomet_smart_source() {
-    local cmd file repo source_path
-    cmd=$1 repo=$2 source_path="${ZCOMET[REPOS_DIR]}/${repo}${3:+/${3}}"
+    local cmd file repo plugin_path
+    cmd=$1 repo=$2 plugin_path="${ZCOMET[REPOS_DIR]}/${repo}${3:+/${3}}"
     local -a files
 
     case $cmd in
       load)
         files=(
-                ${source_path}/${repo#*/}.plugin.zsh(N.)
-                ${source_path}/${3%*/}.plugin.zsh(N.)
-                ${source_path}/*.plugin.zsh(N.)
-                ${source_path}/init.zsh(N.)
-                ${source_path}/*.sh(N.)
+                ${plugin_path}/${repo#*/}.plugin.zsh(N.)
+                ${plugin_path}/${3%*/}.plugin.zsh(N.)
+                ${plugin_path}/*.plugin.zsh(N.)
+                ${plugin_path}/init.zsh(N.)
+                ${plugin_path}/*.sh(N.)
               )
         file=${files[1]}
         ;;
       prompt)
         files=(
-                ${source_path}/prompt_${repo#*/}_setup(N.)
-                ${source_path}/${repo#*/}.zsh-theme(N.)
-                ${source_path}/*.zsh-theme(N.)
-                ${source_path}/*.plugin.zsh(N.)
+                ${plugin_path}/prompt_${repo#*/}_setup(N.)
+                ${plugin_path}/${repo#*/}.zsh-theme(N.)
+                ${plugin_path}/*.zsh-theme(N.)
+                ${plugin_path}/*.plugin.zsh(N.)
               )
         file=${files[1]}
         ;;
@@ -105,12 +104,12 @@ zcomet() {
 
     # Add directories to FPATH
 
-    if [[ -d ${source_path}/functions ]] &&
-       (( ! ${fpath[(Ie)${source_path}]} )); then
-      fpath=( "${source_path}/functions" $fpath )
-    elif [[ -d ${source_path} ]] &&
-         (( ! ${fpath[(Ie)${source_path}]} )); then
-      fpath=( ${source_path} $fpath )
+    if [[ -d ${plugin_path}/functions ]] &&
+       (( ! ${fpath[(Ie)${plugin_path}]} )); then
+      fpath=( "${plugin_path}/functions" $fpath )
+    elif [[ -d ${plugin_path} ]] &&
+         (( ! ${fpath[(Ie)${plugin_path}]} )); then
+      fpath=( ${plugin_path} $fpath )
     else
       return 1
     fi
