@@ -81,42 +81,23 @@ zcomet() {
 
     case $cmd in
       load)
-        # TODO: Check these conditions.
-        if [[ -s ${source_path}/${repo#*/}.plugin.zsh ]]; then
-          file=${source_path}/${repo#*/}.plugin.zsh
-        elif [[ -s ${source_path}/${3%*/}.plugin.zsh ]]; then
-          file=${source_path}/${3%*/}.plugin.zsh 
-        else
-          files=( ${source_path}/*.plugin.zsh(N) )
-          if (( ${#files} == 1 )); then
-            file=${files[1]}
-          elif [[ -s ${source_path}/init.zsh ]]; then
-            file=${source_path}/init.zsh
-          else
-            files=( ${source_path}/*.sh(N) )
-            if (( ${#files} == 1 )); then
-              file=${files[1]}
-            fi
-          fi
-        fi
+        files=(
+                ${source_path}/${repo#*/}.plugin.zsh(N.)
+                ${source_path}/${3%*/}.plugin.zsh(N.)
+                ${source_path}/*.plugin.zsh(N.)
+                ${source_path}/init.zsh(N.)
+                ${source_path}/*.sh(N.)
+              )
+        file=${files[1]}
         ;;
       prompt)
-        # TODO: Check these conditions.
-        if [[ -s ${source_path}/prompt_${repo#*/}_setup ]]; then
-          file=${source_path}/prompt_${repo#*/}_setup
-        elif [[ -s ${source_path}/${repo#*/}.zsh-theme ]]; then
-          file=${source_path}/${repo#*/}.zsh-theme
-        else
-          files=( ${source_path}/*.zsh-theme(N) )
-          if (( ${#files} == 1 )); then
-            file=${files[1]}
-          else
-            files=( ${source_path}/*.plugin.zsh(N) )
-            if (( ${#files} == 1 )); then
-              file=${files[1]}
-            fi
-          fi
-        fi
+        files=(
+                ${source_path}/prompt_${repo#*/}_setup(N.)
+                ${source_path}/${repo#*/}.zsh-theme(N.)
+                ${source_path}/*.zsh-theme(N.)
+                ${source_path}/*.plugin.zsh(N.)
+              )
+        file=${files[1]}
         ;;
     esac
     local success

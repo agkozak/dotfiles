@@ -1,26 +1,26 @@
-zimp unload agkozak/agkozak-zsh-prompt
+zcomet unload agkozak/agkozak-zsh-prompt
 
-zimp load willghatch/zsh-saneopt
+zcomet load willghatch/zsh-saneopt
 
-# zimp load mafredri/zsh-async
+# zcomet load mafredri/zsh-async
 
-zimp unload agkozak/zsh-z
+zcomet unload agkozak/zsh-z
 (( ${+aliases[z]} )) && unalias z
-zimp trigger z rupa/z
+zcomet trigger z rupa/z
 
-zimp load zdharma/fast-syntax-highlighting
+zcomet load zdharma/fast-syntax-highlighting
 
-zimp unload agkozak/agkozak-zsh-prompt
-zimp load sindresorhus/pure async.zsh pure.zsh
+zcomet unload agkozak/agkozak-zsh-prompt
+zcomet load sindresorhus/pure async.zsh pure.zsh
 
-zimp load zsh-users/zsh-autosuggestions
+zcomet load zsh-users/zsh-autosuggestions
 
-zimp load oldratlee/hacker-quotes
+zcomet load oldratlee/hacker-quotes
 
-zimp trigger hist marlonrichert/zsh-hist
+zcomet trigger hist marlonrichert/zsh-hist
 
-zimp load zsh-users/zsh-completions
+zcomet load zsh-users/zsh-completions
 
-zimp load ohmyzsh/ohmyzsh lib/git
+zcomet load ohmyzsh/ohmyzsh lib/git
 
-# zimp prompt ohmyzsh/ohmyzsh themes/agnoster
+# zcomet prompt ohmyzsh/ohmyzsh themes/agnoster
