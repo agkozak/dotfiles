@@ -73,15 +73,16 @@ zcomet() {
   #   was added to FPATH; otherwise 1
   ##########################################################
   _zcomet_smart_source() {
-    local cmd file repo plugin_path
-    cmd=$1 repo=$2 plugin_path="${ZCOMET[REPOS_DIR]}/${repo}${3:+/${3}}"
+    local cmd repo subdir plugin_path file
+    cmd=$1 repo=$2 subdir=$3
+    plugin_path="${ZCOMET[REPOS_DIR]}/${repo}${subdir:+/${subdir}}"
     local -a files
 
     case $cmd in
       load)
         files=(
                 ${plugin_path}/${repo#*/}.plugin.zsh(N.)
-                ${plugin_path}/${3%*/}.plugin.zsh(N.)
+                ${plugin_path}/${subdir%*/}.plugin.zsh(N.)
                 ${plugin_path}/*.plugin.zsh(N.)
                 ${plugin_path}/init.zsh(N.)
                 ${plugin_path}/*.sh(N.)
@@ -107,14 +108,13 @@ zcomet() {
     if [[ -d ${plugin_path}/functions ]] &&
        (( ! ${fpath[(Ie)${plugin_path}]} )); then
       fpath=( "${plugin_path}/functions" $fpath )
-    elif [[ -d ${plugin_path} ]] &&
-         (( ! ${fpath[(Ie)${plugin_path}]} )); then
+    elif (( ! ${fpath[(Ie)${plugin_path}]} )); then
       fpath=( ${plugin_path} $fpath )
     else
       return 1
     fi
 
-    _zcomet_add_list $cmd "${repo} ${3}"
+    _zcomet_add_list $cmd "${repo} ${subdir}"
 
   }
 
