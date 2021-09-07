@@ -25,7 +25,7 @@ ZCOMET[SNIPPETS_DIR]=${ZCOMET[SNIPPETS_DIR]:-${ZCOMET[HOME_DIR]}/snippets}
 ############################################################
 _zcomet_compile() {
   while (( $# )); do
-    if [[ -s $1 &&
+    if [[ -s $1                                &&
           ( ! -s ${1}.zwc || $1 -nt ${1}.zwc ) &&
           # Don't compile zsh-syntax-highlighting's test data
           $1 != */test-data/* ]]; then
