@@ -32,6 +32,9 @@ _zcomet_compile() {
   done
 }
 
+# Conditionally compile zcomet.zsh
+_zcomet_compile ${ZCOMET[SCRIPT]}
+
 ############################################################
 # The main command
 # Globals:
