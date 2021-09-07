@@ -101,7 +101,8 @@ zcomet() {
     esac
 
     # Try to source a script
-    [[ -f $file ]] && source $file &> /dev/null
+    [[ -f $file ]] && source $file &> /dev/null &&
+      _zcomet_add_list $cmd "${repo} ${subdir}"
 
     # Add directories to FPATH
 
