@@ -48,6 +48,7 @@ _zcomet_compile() {
 #   prompt <repo> [...]
 #   unload <repo>
 #   list
+#   compile
 #   help
 # Outputs:
 #   Status updates
@@ -324,6 +325,7 @@ zcomet() {
       (( ${#ZCOMET_TRIGGERS} )) && print -P '%B%F{yellow}Triggers:%f%b' &&
         print "  ${(@o)ZCOMET_TRIGGERS}"
       ;;
+    compile) _zcomet_compile $@ ;;
     -h|--help|help)
       print "usage: $0 command [...]
 
@@ -334,6 +336,7 @@ snippet         load a snippet of code from Oh-My-ZSH
 unload          unload a prompt or plugin
 update          update all plugins and snippets
 list            list all loaded plugins and snippets
+compile         (re)compile script(s) (only when necessary)
 -h|--help|help  print this help text" | fold -s -w $COLUMNS
       ;;
     *) zcomet help; return 1 ;;

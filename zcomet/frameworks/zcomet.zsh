@@ -23,6 +23,10 @@ zcomet load zsh-users/zsh-completions
 zcomet load zsh-users/zsh-autosuggestions
 zcomet load zsh-users/zsh-syntax-highlighting
 zcomet load zsh-users/zsh-history-substring-search
+[[ $TERM != dumb ]] && () {
+  zcomet compile ${HOME}/.zcompdump_${ZSH_VERSION}
+  autoload -Uz compinit; compinit -C -d ${HOME}/.zcompdump_${ZSH_VERSION}
+}
 # zcomet adds functions to fpath but does not autoload them!
 () {
   setopt LOCAL_OPTIONS EXTENDED_GLOB
