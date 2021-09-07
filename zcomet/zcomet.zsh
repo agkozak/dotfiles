@@ -26,8 +26,7 @@ ZCOMET[SNIPPETS_DIR]=${ZCOMET[SNIPPETS_DIR]:-${ZCOMET[HOME_DIR]}/snippets}
 _zcomet_compile() {
   while (( $# )); do
     if [[ -s $1 && ( ! -s ${1}.zwc || $1 -nt ${1}.zwc ) ]]; then
-      # TODO: Debug mode
-      zcompile $1 &> /dev/null
+      zcompile $1
     fi
     shift
   done
@@ -185,13 +184,12 @@ zcomet() {
       command git clone https://github.com/${1} ${ZCOMET[REPOS_DIR]}/${1}
       cd ${ZCOMET[REPOS_DIR]}/${1} || exit
       [[ -n $branch ]] && command git checkout $branch
-      for file in **/*(N); do
-        [[ -s $file &&
-           $file == *.zsh ||
-           $file == prompt_*_setup ||
-           $file == *.zsh-theme ||
-           $file == *.sh ||
-           $file == _* ]] && _zcomet_compile $file
+      local file
+      for file in **/*.zsh(N.) \
+                  **/prompt_*_setup(N.) \
+                  **/*.zsh-theme(N.) \
+                  _*(N.); do
+        _zcomet_compile $file
       done
       cd $start_dir || exit
     fi
@@ -295,12 +293,12 @@ zcomet() {
         cd $i
         print -Pn "%B%F{yellow}${i}:%f%b "
         command git pull
-        for file in **/*(N); do
-          [[ -s $file &&
-            $file == *.zsh ||
-            $file == prompt_*_setup ||
-            $file == *.zsh-theme ||
-            $file == *.sh ]] && _zcomet_compile $file
+        local file
+        for file in **/*.zsh(N.) \
+                    **/prompt_*_setup(N.) \
+                    **/*.zsh_theme(N.) \
+                    **/_*(N.); do
+          _zcomet_compile $file
         done
         if (( ${ZCOMET_PLUGINS[(Ie)$i]} )); then
           zcomet load $i
