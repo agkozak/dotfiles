@@ -99,44 +99,24 @@ zcomet() {
         file=${files[1]}
         ;;
     esac
-    local success
 
     # Try to source a script
-    if source $file &> /dev/null; then
-      success=1 
-    fi
+    [[ -f $file ]] && source $file &> /dev/null
 
     # Add directories to FPATH
 
-    # E.g., zcomet load zimfw/git add /path/to/zimfw/git/functions to FPATH
     if [[ -d ${source_path}/functions ]] &&
        (( ! ${fpath[(Ie)${source_path}]} )); then
       fpath=( "${source_path}/functions" $fpath )
-      success=1
-    # E.g., zcomet load ohmyzsh/ohmyzsh plugins/extract adds /path/to/extract to
-    # FPATH
-    elif [[ ( -n $3                      &&
-              -f ${source_path}/_${3#*/} ||
-              -f ${source_path}/${3#*/}.plugin.zsh ) ||
-            # E.g., zcomet load agkozak/zsh-z adds /path/to/zsh-z to FPATH
-            ( -f ${source_path}/_${repo#*/} ||
-              -f ${source_path}/${repo#*/}.plugin.zsh ) ]] &&
+    elif [[ -d ${source_path} ]] &&
          (( ! ${fpath[(Ie)${source_path}]} )); then
       fpath=( ${source_path} $fpath )
-      success=1
-    fi
-
-    # If a script has been sourced or a directory added to FPATH or both, make
-    # the repo and any subpackage visible in `zcomet list'
-    if (( success )); then
-      _zcomet_add_list $cmd "${repo} ${3}"
-
-    # Report failure if a script has not been sourced nor a directory added to
-    # FPATH
     else
-      >&2 print "Could not load ${repo}."
       return 1
     fi
+
+    _zcomet_add_list $cmd "${repo} ${3}"
+
   }
 
   ##########################################################
