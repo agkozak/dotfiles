@@ -168,7 +168,7 @@ zcomet() {
       for file in **/*.zsh(N.) \
                   **/prompt_*_setup(N.) \
                   **/*.zsh-theme(N.) \
-                  _*(N.); do
+                  **/_*~*.zwc(N.); do
         _zcomet_compile $file
       done
       cd $start_dir || exit
@@ -268,11 +268,10 @@ zcomet() {
         cd $i
         print -Pn "%B%F{yellow}${i}:%f%b "
         command git pull
-        local file
         for file in **/*.zsh(N.) \
                     **/prompt_*_setup(N.) \
                     **/*.zsh_theme(N.) \
-                    **/_*(N.); do
+                    **/_*~*.zwc(N.); do
           _zcomet_compile $file
         done
         if (( ${ZCOMET_PLUGINS[(Ie)$i]} )); then
