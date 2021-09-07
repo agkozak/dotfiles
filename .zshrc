@@ -164,7 +164,7 @@ alias -g V='|& vim - +AnsiEsc'
 
 # 9.1 Autoloading Functions {{{1
 
-autoload -Uz compinit edit-command-line zmv
+autoload -Uz edit-command-line zmv
 
 # }}}1
 
@@ -425,8 +425,11 @@ if (( ${+commands[git]} )); then
   # (( AGKDOT_USE_TURBO )) && zinit ice silent wait'0h'
   # zinit load zpm-zsh/clipboard
 
-  compinit -u -d "${HOME}/.zcompdump_${ZSH_VERSION}"
-  compdef mosh=ssh
+  if [[ $TERM != 'dumb' ]]; then
+    autoload -Uz compinit
+    compinit -u -d "${HOME}/.zcompdump_${ZSH_VERSION}"
+    compdef mosh=ssh
+  fi
 
 else
   print 'Please install git.' >&2

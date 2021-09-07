@@ -46,7 +46,6 @@ _zcomet_compile() {
 #   snippet <snippet>
 #   update
 #   prompt <repo> [...]
-#   fpath <repo> [...]
 #   unload <repo>
 #   list
 #   help
@@ -245,11 +244,6 @@ zcomet() {
         _zcomet_smart_source $cmd ${repo}
       fi
       ;;
-    fpath)
-      [[ -z $1 ]] && return
-      _zcomet_clone_repo $1 || return 1
-      fpath=( ${ZCOMET[REPOS_DIR]}/${1}/${2} $fpath )
-      ;;
     snippet)
       [[ -z $1 ]] && return 1
       local update snippet repo
@@ -336,7 +330,6 @@ zcomet() {
 load            load a plugin
 trigger         create a shortcut for loading and running a plugin
 prompt          load a prompt
-fpath           clone a repo and add it to FPATH
 snippet         load a snippet of code from Oh-My-ZSH
 unload          unload a prompt or plugin
 update          update all plugins and snippets
