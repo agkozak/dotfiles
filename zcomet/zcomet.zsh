@@ -63,7 +63,7 @@ zcomet() {
     typeset -a files
     repo=$1
     shift
-    if [[ -f ${ZCOMET[REPOS_DIR]}/${repo}/$1 ]]; then
+    if [[ -n $1 && -f ${ZCOMET[REPOS_DIR]}/${repo}/$1 ]]; then
       files=( $@ )
     else
       (( ${+1} )) && subdir=$1 && shift
