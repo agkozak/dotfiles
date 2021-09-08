@@ -409,8 +409,8 @@ if (( ${+commands[git]} )); then
   #   zinit load zdharma/zbrowse
   # fi
 
-  zcomet load ohmyzsh/ohmyzsh plugins/extract
-  zcomet load ohmyzsh/ohmyzsh plugins/gitfast
+  zcomet load ohmyzsh plugins/extract
+  zcomet load ohmyzsh plugins/gitfast
 
   zcomet trigger zsh-prompt-benchmark romkatv/zsh-prompt-benchmark
 

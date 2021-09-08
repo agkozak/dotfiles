@@ -62,6 +62,11 @@ zcomet() {
     typeset repo subdir file plugin_path
     typeset -a files
     repo=$1
+    if [[ $repo == 'ohmyzsh' ]]; then
+      repo='ohmyzsh/ohmyzsh'
+    elif [[ $repo == 'prezto' ]]; then
+      repo='sorin-ionescu/prezto'
+    fi
     shift
     if [[ -n $1 && -f ${ZCOMET[REPOS_DIR]}/${repo}/$1 ]]; then
       files=( $@ )
