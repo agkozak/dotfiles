@@ -18,23 +18,34 @@ zcomet load zimfw/termtitle
 zcomet load zimfw/utility
 zcomet load zimfw/duration-info
 zcomet load zimfw/git-info
-zcomet prompt zimfw/asciiship
+zcomet load zimfw/asciiship
 zcomet load zsh-users/zsh-completions
 zcomet load zsh-users/zsh-autosuggestions
 zcomet load zsh-users/zsh-syntax-highlighting
 zcomet load zsh-users/zsh-history-substring-search
+# zcomet adds functions to fpath but does not autoload them!
+autoload -Uz git-alias-lookup \\
+         git-branch-current \\
+         git-branch-delete-interactive \\
+         git-dir \\
+         git-ignore-add \\
+         git-root \\
+         git-stash-clear-interactive \\
+         git-stash-recover \\
+         git-submodule-move \\
+         git-submodule-remove \\
+         mkcd \\
+         mkpw \\
+         duration-info-precmd \\
+         duration-info-prexec \\
+         coalesce \\
+         git-action \\
+         git-info
 [[ $TERM != dumb ]] && () {
   zcomet compile ${HOME}/.zcompdump_${ZSH_VERSION}
   autoload -Uz compinit; compinit -C -d ${HOME}/.zcompdump_${ZSH_VERSION}
 }
-# zcomet adds functions to fpath but does not autoload them!
-() {
-  setopt LOCAL_OPTIONS EXTENDED_GLOB
-  local zfunction
-  for zfunction in ${HOME}/.zcomet/repos/zimfw/*/functions/^(*~|*.zwc(|.old)|_*|prompt_*_setup)(N-.:t); do
-    autoload -Uz ${zfunction}
-  done
-}
+
 bindkey "^[[A" history-substring-search-up
 bindkey "^[[B" history-substring-search-down
 ' >>! ${home_dir}/.zshrc
