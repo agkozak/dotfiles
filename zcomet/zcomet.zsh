@@ -33,6 +33,19 @@ _zcomet_compile() {
   done
 }
 
+_zcomet_repo_shorthand() {
+  typeset -g REPLY
+  if [[ $1 == 'ohmyzsh' ]]; then
+    REPLY='ohmyzsh/ohmyzsh'
+  elif [[ $1 == 'prezto' ]]; then
+    REPLY='sorin-ionescu/prezto'
+  else
+    REPLY=$1
+  fi
+}
+
+
+
 ############################################################
 # The main command
 # Globals:
@@ -62,11 +75,8 @@ zcomet() {
     typeset repo subdir file plugin_path
     typeset -a files
     repo=$1
-    if [[ $repo == 'ohmyzsh' ]]; then
-      repo='ohmyzsh/ohmyzsh'
-    elif [[ $repo == 'prezto' ]]; then
-      repo='sorin-ionescu/prezto'
-    fi
+    _zcomet_repo_shorthand $repo
+    repo=$REPLY
     shift
     if [[ -n $1 && -f ${ZCOMET[REPOS_DIR]}/${repo}/$1 ]]; then
       files=( $@ )
@@ -169,6 +179,8 @@ zcomet() {
   _zcomet_clone_repo() {
     local start_dir
     start_dir=$PWD
+    _zcomet_repo_shorthand $1
+    1=$REPLY
 
     if [[ ! -d ${ZCOMET[REPOS_DIR]}/${1} ]]; then
       print -P "%B%F{yellow}Cloning ${1}:%f%b"
