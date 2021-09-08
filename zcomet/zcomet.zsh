@@ -74,7 +74,7 @@ zcomet() {
     if (( ${#files} )); then
       for file in $files; do
         source ${plugin_path}/${file} &&
-        _zcomet_add_list load "${repo}${subdir:+ ${subdir}}${file:+ ${file}}" ||
+          _zcomet_add_list load "${repo}${subdir:+ ${subdir}}${file:+ ${file}}" ||
           return 1
       done
     else
