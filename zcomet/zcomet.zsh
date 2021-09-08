@@ -95,9 +95,6 @@ zcomet() {
       fi
       (( ${#files} )) ||
         files+=(
-                 # E.g., ohmyzsh/ohmyzsh themes/agnoster
-                 ${plugin_path}.zsh-theme(N.)
-                 # E.g., ohmyzsh/ohmyzsh lib/git
                  ${plugin_path}.zsh(N.)
                  ${plugin_path}/*.plugin.zsh(N.)
                  ${plugin_path}/init.zsh(N.)
@@ -105,12 +102,6 @@ zcomet() {
                  ${plugin_path}/*.sh(N.)
              )
       file=${files[1]}
-
-      # Correcting for Oh-My-Zsh shorthand
-      if [[ $file == ${plugin_path}.zsh-theme ||
-            $file == ${plugin_path}.zsh ]]; then
-        plugin_path=${plugin_path:h}
-      fi
 
       if [[ -n $file ]]; then
         if source $file; then

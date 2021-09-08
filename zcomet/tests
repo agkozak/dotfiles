@@ -18,6 +18,6 @@ zcomet trigger hist marlonrichert/zsh-hist
 
 zcomet load zsh-users/zsh-completions
 
-zcomet load ohmyzsh/ohmyzsh lib/git
+zcomet load ohmyzsh/ohmyzsh lib git.zsh
 
-# zcomet prompt ohmyzsh/ohmyzsh themes/agnoster
+# zcomet prompt ohmyzsh/ohmyzsh themes agnoster.zsh-theme
