@@ -427,7 +427,7 @@ if (( ${+commands[git]} )); then
 
   if [[ $TERM != 'dumb' ]]; then
     autoload -Uz compinit
-    compinit -u -d "${HOME}/.zcompdump_${ZSH_VERSION}"
+    compinit -C -d "${HOME}/.zcompdump_${ZSH_VERSION}"
     compdef mosh=ssh
   fi
 
