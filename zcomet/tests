@@ -1,11 +1,8 @@
-zcomet unload agkozak/agkozak-zsh-prompt
-
 zcomet load willghatch/zsh-saneopt
 
 # zcomet load mafredri/zsh-async
 
 zcomet unload agkozak/zsh-z
-(( ${+aliases[z]} )) && unalias z
 zcomet trigger z rupa/z
 
 zcomet load zdharma/fast-syntax-highlighting

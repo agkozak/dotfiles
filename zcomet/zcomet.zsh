@@ -15,8 +15,6 @@ ZCOMET[HOME_DIR]=${ZCOMET[HOME_DIR]:-${HOME}/.zcomet}
 ZCOMET[REPOS_DIR]=${ZCOMET[REPOS_DIR]:-${ZCOMET[HOME_DIR]}/repos}
 ZCOMET[SNIPPETS_DIR]=${ZCOMET[SNIPPETS_DIR]:-${ZCOMET[HOME_DIR]}/snippets}
 
-# Conditionally compile or recompile ZSH scripts
-
 ############################################################
 # Compile scripts to wordcode or recompile them when they
 # have changed.
@@ -60,66 +58,79 @@ zcomet() {
 
   typeset -gUa ZCOMET_PROMPTS ZCOMET_PLUGINS ZCOMET_SNIPPETS ZCOMET_TRIGGERS
 
-  ##########################################################
-  # Find plugin file to source and/or add directories to
-  # FPATH and adds the repo and optional argument to a list
-  # that can be displayed with `zcomet list'
-  # Globals:
-  #   ZCOMET
-  # Arguments:
-  #   $1 The command being executed (`load' or `prompt')
-  #   $2 A Git repository
-  #   $3 A continuation of the repo path, e.g.,
-  #     `plugins/common-aliases'
-  # Returns:
-  #   0 if a file was successfully sourced or a directory
-  #   was added to FPATH; otherwise 1
-  ##########################################################
-  _zcomet_smart_load() {
-    local cmd repo subdir plugin_path file
-    cmd=$1 repo=$2 subdir=$3
+  _zcomet_load() {
+    typeset repo subdir file plugin_path
+    typeset -a files
+    repo=$1
+    shift
+    if [[ -f ${ZCOMET[REPOS_DIR]}/${repo}/$1 ]]; then
+      files=( $@ )
+    else
+      (( ${+1} )) && subdir=$1 && shift
+      (( $# )) && files=( $@ )
+    fi
     plugin_path="${ZCOMET[REPOS_DIR]}/${repo}${subdir:+/${subdir}}"
-    local -a files
 
-    case $cmd in
-      load)
+    if (( ${#files} )); then
+      for file in $files; do
+        source ${plugin_path}/${file} &&
+        _zcomet_add_list load "${repo}${subdir:+ ${subdir}}${file:+ ${file}}" ||
+          return 1
+      done
+    else
+      if [[ -n $subdir ]]; then
         files=(
-                ${plugin_path}/${repo#*/}.plugin.zsh(N.)
-                ${plugin_path}/${subdir%*/}.plugin.zsh(N.)
+                ${plugin_path}/prompt_${subdir##*/}_setup(N.)
+                ${plugin_path}/${subdir##*/}.zsh_theme(N.)
+                ${plugin_path}/${subdir##*/}.plugin.zsh(N.)
+                ${plugin_path}/${subdir##*/}.zsh(N.)
+              )
+      else
+        files=(
+                ${plugin_path}/prompt_${repo##*/}_setup(N.)
+                ${plugin_path}/${repo##*/}.zsh_theme(N.)
+                ${plugin_path}/${repo##*/}.plugin.zsh(N.)
+                ${plugin_path}/${repo##*/}.zsh(N.)
+              )
+      fi
+      files+=(
+                # E.g., ohmyzsh/ohmyzsh themes/agnoster
+                ${plugin_path}.zsh-theme(N.)
+                # E.g., ohmyzsh/ohmyzsh lib/git
+                ${plugin_path}.zsh(N.)
                 ${plugin_path}/*.plugin.zsh(N.)
                 ${plugin_path}/init.zsh(N.)
+                ${plugin_path}/*.zsh(N.)
                 ${plugin_path}/*.sh(N.)
-              )
-        file=${files[1]}
-        ;;
-      prompt)
-        files=(
-                ${plugin_path}/prompt_${repo#*/}_setup(N.)
-                ${plugin_path}/${repo#*/}.zsh-theme(N.)
-                ${plugin_path}/*.zsh-theme(N.)
-                ${plugin_path}/*.plugin.zsh(N.)
-              )
-        file=${files[1]}
-        ;;
-    esac
+             )
+      file=${files[1]}
 
-    # Try to source a script
-    [[ -n $file ]] && source $file &> /dev/null &&
-      _zcomet_add_list $cmd "${repo} ${subdir}"
+      # Correcting for Oh-My-Zsh shorthand
+      if [[ $file == ${plugin_path}.zsh-theme ||
+            $file == ${plugin_path}.zsh ]]; then
+        plugin_path=${plugin_path:h}
+      fi
 
-    # Add directories to FPATH
-
-    if [[ -d ${plugin_path}/functions ]] &&
-       (( ! ${fpath[(Ie)${plugin_path}]} )); then
-      fpath=( "${plugin_path}/functions" $fpath )
-    elif (( ! ${fpath[(Ie)${plugin_path}]} )); then
-      fpath=( ${plugin_path} $fpath )
-    else
-      return 1
+      if [[ -n $file ]]; then
+        if source $file; then
+          _zcomet_add_list load "${repo}${subdir:+ ${subdir}}"
+        else
+          >&2 print "Cannot source ${file}." && return 1
+        fi
+      fi
     fi
 
-    _zcomet_add_list $cmd "${repo} ${subdir}"
-
+    if [[ -d ${plugin_path}/functions ]]; then
+      (( ! ${fpath[(Ie)${plugin_path}]} )) &&
+        fpath=( "${plugin_path}/functions" $fpath )
+      _zcomet_add_list load "${repo}${subdir:+ ${subdir}}"
+    elif [[ -d ${plugin_path} ]]; then
+      (( ! ${fpath[(Ie)${plugin_path}]} )) &&
+        fpath=( ${plugin_path} $fpath )
+      _zcomet_add_list load "${repo}${subdir:+ ${subdir}}"
+    else
+      >&2 print "Cannot add ${plugin_path} or ${plugin_path}/functions to FPATH."
+    fi
   }
 
   ##########################################################
@@ -196,37 +207,7 @@ zcomet() {
         shift
       fi
       _zcomet_clone_repo $repo || return 1
-      if (( $# )); then
-        while (( $# )); do
-          # Example: zcomet load sindresorhus/pure async.zsh pure.zsh
-          if [[ -f ${ZCOMET[REPOS_DIR]}/${repo}/$1 ]]; then
-            source ${ZCOMET[REPOS_DIR]}/${repo}/$1 &&
-              fpath=( ${ZCOMET[REPOS_DIR]}/${repo} $fpath ) &&
-              _zcomet_add_list $cmd "${repo} ${1}"
-          # Example: zcomet load ohmyzsh/ohmyzsh plugins/common-aliases
-          elif [[ -d ${ZCOMET[REPOS_DIR]}/${repo}/${1} ]]; then
-            _zcomet_smart_load $cmd ${repo} $1
-              _zcomet_add_list $cmd "${repo} ${1}"
-          # Example: zcomet load ohmyzsh/ohmyzsh lib/git
-          elif [[ $cmd == 'load' &&
-                  -f ${ZCOMET[REPOS_DIR]}/${repo}/${1}.zsh ]]; then
-            source ${ZCOMET[REPOS_DIR]}/${repo}/${1}.zsh &&
-              fpath=( ${ZCOMET[REPOS_DIR]}/${repo} $fpath ) &&
-              _zcomet_add_list $cmd "${repo} ${1}"
-          # Example: zcomet load ohmyzsh/ohmyzsh themes/robbyrussell
-          elif [[ -f ${ZCOMET[REPOS_DIR]}/${repo}/${1}.zsh-theme ]]; then
-            source ${ZCOMET[REPOS_DIR]}/${repo}/${1}.zsh-theme &&
-              fpath=( ${ZCOMET[REPOS_DIR]}/${repo} $fpath ) &&
-              _zcomet_add_list $cmd "${repo} ${1}"
-          else
-            >&2 print "Cannot load ${repo} $1."
-            return 1
-          fi
-          shift
-        done
-      else
-        _zcomet_smart_load $cmd ${repo}
-      fi
+      _zcomet_load $repo $@
       ;;
     snippet)
       [[ -z $1 ]] && return 1
