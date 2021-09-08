@@ -64,9 +64,9 @@ fi
 # }}}1
 
 # Optional Zinit binary module
-if [[ -f "${HOME}/.zinit/bin/zmodules/Src/zdharma/zplugin.so" ]]; then
-  if [[ -z ${module_path[(re)"${HOME}/.zinit/bin/zmodules/Src"]} ]]; then
-    module_path=( "${HOME}/.zinit/bin/zmodules/Src" ${module_path[@]} )
+if [[ -f "${HOME}/.zinit/mod-bin/zmodules/Src/zdharma/zplugin.so" ]]; then
+  if [[ -z ${module_path[(re)"${HOME}/.zinit/-mod-bin/zmodules/Src"]} ]]; then
+    module_path=( "${HOME}/.zinit/mod-bin/zmodules/Src" ${module_path[@]} )
   fi
   zmodload zdharma/zplugin
 fi
