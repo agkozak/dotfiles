@@ -444,10 +444,10 @@ fi
 # Static named directories
 [[ -d ${HOME}/public_html/wp-content ]] &&
   hash -d wp-content="${HOME}/public_html/wp-content"
-[[ -d ${HOME}/.zinit/plugins/agkozak---agkozak-zsh-prompt ]] &&
-  hash -d agk="${HOME}/.zinit/plugins/agkozak---agkozak-zsh-prompt"
-[[ -d ${HOME}/.zinit/plugins/agkozak---zsh-z ]] &&
-  hash -d z="${HOME}/.zinit/plugins/agkozak---zsh-z"
+[[ -d ${HOME}/.zcomet/repos/agkozak/agkozak-zsh-prompt ]] &&
+  hash -d agk="${HOME}/.zcomet/repos/agkozak/agkozak-zsh-prompt"
+[[ -d ${HOME}/.zcomet/repos/agkozak/zsh-z ]] &&
+  hash -d z="${HOME}/.zcomet/repos/agkozak/zsh-z"
 [[ -d ${HOME}/dotfiles/zcomet ]] &&
   hash -d zcomet="${HOME}/dotfiles/zcomet"
 
