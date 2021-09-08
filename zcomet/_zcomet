@@ -5,11 +5,11 @@ commands=(
 	'load:load a plugin'
 	'trigger:create a shortcut for loading and running a plugin'
 	'prompt:load a prompt'
-	'fpath:clone a repo and add it to FPATH'
 	'snippet:load a snippet of code from Oh-My-ZSH'
 	'unload:unload a prompt or plugin'
 	'update:update all plugins and snippets'
 	'list:list all loaded plugins and snippets'
+	'compile:(re)compile script(s) (only when necessary)'
 	'help:print this help text'
 )
 

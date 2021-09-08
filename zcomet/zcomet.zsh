@@ -208,7 +208,9 @@ zcomet() {
 
   case $cmd in
     load|prompt)
-      [[ -z $1 ]] && return 1
+      [[ -z $1 ]] &&
+        >&2 print 'What would you like to load?' &&
+        return 1
       local repo branch
       if [[ -n $1 ]]; then
         repo=${1%@*}
@@ -219,7 +221,9 @@ zcomet() {
       _zcomet_load $repo $@
       ;;
     snippet)
-      [[ -z $1 ]] && return 1
+      [[ -z $1 ]] &&
+        >&2 print 'Which snippet?' &&
+        return 1
       local update snippet repo
       [[ $1 == '--update' ]] && update=1 && shift
       snippet=$1 repo='https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/'
@@ -234,7 +238,9 @@ zcomet() {
       source ${ZCOMET[SNIPPETS_DIR]}/${snippet} && _zcomet_add_list $cmd $snippet
       ;;
     trigger)
-      [[ -z $1 ]] && return 1
+      [[ -z $1 ]] &&
+        >&2 print 'You must provide arguments.' &&
+        return 1
       local trigger
       trigger=$1 && shift
       ! (( ${+functions[$trigger]} )) &&
@@ -245,7 +251,9 @@ zcomet() {
         _zcomet_add_list $cmd $trigger
       ;;
     unload)
-      [[ -z $1 ]] && return 1
+      [[ -z $1 ]] &&
+        >&2 print 'What would you like to unload?' &&
+        return 1
       if (( ${+functions[${1#*/}_plugin_unload]} )) &&
         ${1#*/}_plugin_unload; then
         ZCOMET_PROMPTS=( ${(@)ZCOMET_PROMPTS:#${1}} )
@@ -297,7 +305,12 @@ zcomet() {
       (( ${#ZCOMET_TRIGGERS} )) && print -P '%B%F{yellow}Triggers:%f%b' &&
         print "  ${(@o)ZCOMET_TRIGGERS}"
       ;;
-    compile) _zcomet_compile $@ ;;
+    compile)
+      [[ -n $1 ]] ||
+        >&2 print 'What would you like to zcompile?' &&
+        return 1
+      _zcomet_compile $@
+      ;;
     -h|--help|help)
       print "usage: $0 command [...]
 
@@ -309,7 +322,7 @@ unload          unload a prompt or plugin
 update          update all plugins and snippets
 list            list all loaded plugins and snippets
 compile         (re)compile script(s) (only when necessary)
--h|--help|help  print this help text" | fold -s -w $COLUMNS
+help            print this help text" | fold -s -w $COLUMNS
       ;;
     *) zcomet help; return 1 ;;
   esac
