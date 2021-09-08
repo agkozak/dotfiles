@@ -21,7 +21,7 @@
 #
 # AGKDOT_XTRACE=1 zsh
 if (( AGKDOT_XTRACE )); then
-  zmodload zsh/datetime
+  (( ${+EPOCHREALTIME} )) || zmodload zsh/datetime
   setopt PROMPT_SUBST
   PS4='+$EPOCHREALTIME %N:%i> '
 
