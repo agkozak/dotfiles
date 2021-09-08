@@ -75,7 +75,7 @@ zcomet() {
   #   0 if a file was successfully sourced or a directory
   #   was added to FPATH; otherwise 1
   ##########################################################
-  _zcomet_smart_source() {
+  _zcomet_smart_load() {
     local cmd repo subdir plugin_path file
     cmd=$1 repo=$2 subdir=$3
     plugin_path="${ZCOMET[REPOS_DIR]}/${repo}${subdir:+/${subdir}}"
@@ -205,7 +205,7 @@ zcomet() {
               _zcomet_add_list $cmd "${repo} ${1}"
           # Example: zcomet load ohmyzsh/ohmyzsh plugins/common-aliases
           elif [[ -d ${ZCOMET[REPOS_DIR]}/${repo}/${1} ]]; then
-            _zcomet_smart_source $cmd ${repo} $1
+            _zcomet_smart_load $cmd ${repo} $1
               _zcomet_add_list $cmd "${repo} ${1}"
           # Example: zcomet load ohmyzsh/ohmyzsh lib/git
           elif [[ $cmd == 'load' &&
@@ -219,13 +219,13 @@ zcomet() {
               fpath=( ${ZCOMET[REPOS_DIR]}/${repo} $fpath ) &&
               _zcomet_add_list $cmd "${repo} ${1}"
           else
-            >&2 print "Cannot source ${repo} $1."
+            >&2 print "Cannot load ${repo} $1."
             return 1
           fi
           shift
         done
       else
-        _zcomet_smart_source $cmd ${repo}
+        _zcomet_smart_load $cmd ${repo}
       fi
       ;;
     snippet)
