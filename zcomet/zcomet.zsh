@@ -256,10 +256,9 @@ zcomet() {
         return 1
       if (( ${+functions[${1#*/}_plugin_unload]} )) &&
         ${1#*/}_plugin_unload; then
-        ZCOMET_PROMPTS=( ${(@)ZCOMET_PROMPTS:#${1}} )
-        ZCOMET_PROMPTS=( ${(@)ZCOMET_PROMPTS:#${1} *} )
-        ZCOMET_PLUGINS=( ${(@)ZCOMET_PLUGINS:#${1}} )
-        ZCOMET_PLUGINS=( ${(@)ZCOMET_PLUGINS:#${1} *} )
+        # TODO: Something much better is needed.
+        ZCOMET_PLUGINS=( ${(@)ZCOMET_PLUGINS:#*/${1}} )
+        ZCOMET_PLUGINS=( ${(@)ZCOMET_PLUGINS:#*/${1} *} )
       fi
       ;;
     update)
