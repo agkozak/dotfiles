@@ -184,7 +184,8 @@ zcomet() {
 
     if [[ ! -d ${ZCOMET[REPOS_DIR]}/${1} ]]; then
       print -P "%B%F{yellow}Cloning ${1}:%f%b"
-      command git clone https://github.com/${1} ${ZCOMET[REPOS_DIR]}/${1}
+      command git clone https://github.com/${1} ${ZCOMET[REPOS_DIR]}/${1} ||
+        return $?
       cd ${ZCOMET[REPOS_DIR]}/${1} || exit
       [[ -n $branch ]] && command git checkout $branch
       local file
