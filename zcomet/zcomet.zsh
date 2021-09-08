@@ -81,27 +81,28 @@ zcomet() {
       if [[ -n $subdir ]]; then
         files=(
                 ${plugin_path}/prompt_${subdir##*/}_setup(N.)
-                ${plugin_path}/${subdir##*/}.zsh_theme(N.)
+                ${plugin_path}/${subdir##*/}.zsh-theme(N.)
                 ${plugin_path}/${subdir##*/}.plugin.zsh(N.)
                 ${plugin_path}/${subdir##*/}.zsh(N.)
               )
       else
         files=(
                 ${plugin_path}/prompt_${repo##*/}_setup(N.)
-                ${plugin_path}/${repo##*/}.zsh_theme(N.)
+                ${plugin_path}/${repo##*/}.zsh-theme(N.)
                 ${plugin_path}/${repo##*/}.plugin.zsh(N.)
                 ${plugin_path}/${repo##*/}.zsh(N.)
               )
       fi
-      files+=(
-                # E.g., ohmyzsh/ohmyzsh themes/agnoster
-                ${plugin_path}.zsh-theme(N.)
-                # E.g., ohmyzsh/ohmyzsh lib/git
-                ${plugin_path}.zsh(N.)
-                ${plugin_path}/*.plugin.zsh(N.)
-                ${plugin_path}/init.zsh(N.)
-                ${plugin_path}/*.zsh(N.)
-                ${plugin_path}/*.sh(N.)
+      (( ${#files} )) ||
+        files+=(
+                 # E.g., ohmyzsh/ohmyzsh themes/agnoster
+                 ${plugin_path}.zsh-theme(N.)
+                 # E.g., ohmyzsh/ohmyzsh lib/git
+                 ${plugin_path}.zsh(N.)
+                 ${plugin_path}/*.plugin.zsh(N.)
+                 ${plugin_path}/init.zsh(N.)
+                 ${plugin_path}/*.zsh(N.)
+                 ${plugin_path}/*.sh(N.)
              )
       file=${files[1]}
 
