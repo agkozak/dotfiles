@@ -90,7 +90,7 @@ zcomet() {
       for file in $files; do
         source ${plugin_path}/${file} &&
           _zcomet_add_list load "${repo}${subdir:+ ${subdir}}${file:+ ${file}}" ||
-          return 1
+          return $?
       done
     else
       if [[ -n $subdir ]]; then
@@ -218,7 +218,7 @@ zcomet() {
         [[ $1 == *@* ]] && branch=${1#*@}
         shift
       fi
-      _zcomet_clone_repo $repo || return 1
+      _zcomet_clone_repo $repo || return $?
       _zcomet_load $repo $@
       ;;
     snippet)
