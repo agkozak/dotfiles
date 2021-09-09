@@ -294,14 +294,10 @@ zcomet() {
       local trigger
       trigger=$1 && shift
       # TODO: Add a pre-clone option
-      if ! (( ${+functions[$trigger]} )); then
         functions[$trigger]="ZCOMET_TRIGGERS=( "\${(@)ZCOMET_TRIGGERS:#${trigger}}" );
           unfunction $trigger;
           zcomet load $@;
           eval $trigger \$@" && _zcomet_add_list $cmd $trigger
-      else
-        >&2 print "There is already a trigger named \`$trigger'."
-      fi
       ;;
     unload)
       [[ -z $1 ]] && return 1
