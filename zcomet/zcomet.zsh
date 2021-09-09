@@ -55,7 +55,6 @@ _zcomet_repo_shorthand() {
 # Globals:
 #   ZCOMET
 #   ZCOMET_PLUGINS
-#   ZCOMET_PROMPTS
 #   ZCOMET_SNIPPETS
 #   ZCOMET_TRIGGERS
 # Arguments:
@@ -63,7 +62,6 @@ _zcomet_repo_shorthand() {
 #   trigger <trigger> <repo] [...]
 #   snippet <snippet>
 #   update
-#   prompt <repo> [...]
 #   unload <repo>
 #   list
 #   compile
@@ -259,6 +257,7 @@ zcomet() {
       [[ -z $1 ]] && return 1
       local trigger
       trigger=$1 && shift
+      _zcomet_clone_repo ${1%@*}
       ! (( ${+functions[$trigger]} )) &&
         functions[$trigger]="ZCOMET_TRIGGERS=( "\${(@)ZCOMET_TRIGGERS:#${trigger}}" );
           unfunction $trigger;
