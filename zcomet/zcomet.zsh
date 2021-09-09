@@ -21,6 +21,22 @@ ZCOMET[HOME_DIR]=${ZCOMET[HOME_DIR]:-${HOME}/.zcomet}
 ZCOMET[REPOS_DIR]=${ZCOMET[REPOS_DIR]:-${ZCOMET[HOME_DIR]}/repos}
 ZCOMET[SNIPPETS_DIR]=${ZCOMET[SNIPPETS_DIR]:-${ZCOMET[HOME_DIR]}/snippets}
 
+# Global parameter with PREFIX for make, configure, etc.
+# https://github.com/zdharma/Zsh-100-Commits-Club/blob/master/Zsh-Plugin-Standard.adoc#8-global-parameter-with-prefix-for-make-configure-etc
+typeset -gx ZPFX
+: ${ZPFX:=${ZCOMET[HOME_DIR]}/polaris}
+[[ -z ${path[(re)$ZPFX/bin]} ]] &&
+  [[ -d "$ZPFX/bin" ]] &&
+  path=( "$ZPFX/bin" "${path[@]}" )
+[[ -z ${path[(re)$ZPFX/sbin]} ]] &&
+  [[ -d "$ZPFX/sbin" ]] &&
+  path=( "$ZPFX/sbin" "${path[@]}" )
+
+# Global Parameter holding the plugin-manager’s capabilities
+# https://github.com/zdharma/Zsh-100-Commits-Club/blob/master/Zsh-Plugin-Standard.adoc#9-global-parameter-holding-the-plugin-managers-capabilities
+typeset -g PMSPEC
+PMSPEC="0fuiPs"
+
 ############################################################
 # Compile scripts to wordcode or recompile them when they
 # have changed.
@@ -137,7 +153,7 @@ _zcomet_load() {
 ##########################################################
 # Manage the arrays used when running `zcomet list'
 # Globals:
-#   ZCOMET_PLUGINS
+#   zsh_loaded_plugins
 #   ZCOMET_SNIPPETS
 #   ZCOMET_TRIGGERS
 # Arguments:
@@ -148,7 +164,7 @@ _zcomet_load() {
 _zcomet_add_list() {
   2="${2% }"
   if [[ $1 == 'load' ]]; then
-    ZCOMET_PLUGINS+=( "$2" )
+    zsh_loaded_plugins+=( "$2" )
   elif [[ $1 == 'snippet' ]]; then
     ZCOMET_SNIPPETS+=( "$2" )
   elif [[ $1 == 'trigger' ]]; then
@@ -195,7 +211,7 @@ _zcomet_clone_repo() {
 # The main command
 # Globals:
 #   ZCOMET
-#   ZCOMET_PLUGINS
+#   zsh_loaded_plugins
 #   ZCOMET_SNIPPETS
 #   ZCOMET_TRIGGERS
 # Arguments:
@@ -212,7 +228,7 @@ _zcomet_clone_repo() {
 ############################################################
 zcomet() {
 
-  typeset -gUa ZCOMET_PLUGINS ZCOMET_SNIPPETS ZCOMET_TRIGGERS
+  typeset -gUa zsh_loaded_plugins ZCOMET_SNIPPETS ZCOMET_TRIGGERS
 
   ##########################################################
   # THE MAIN ROUTINE
@@ -271,8 +287,8 @@ zcomet() {
       if (( ${+functions[${1#*/}_plugin_unload]} )) &&
         ${1#*/}_plugin_unload; then
         # TODO: Something much better is needed.
-        ZCOMET_PLUGINS=( ${(@)ZCOMET_PLUGINS:#*/${1}} )
-        ZCOMET_PLUGINS=( ${(@)ZCOMET_PLUGINS:#*/${1} *} )
+        zsh_loaded_plugins=( ${(@)ZCOMET_PLUGINS:#*/${1}} )
+        zsh_loaded_plugins=( ${(@)ZCOMET_PLUGINS:#*/${1} *} )
       fi
       ;;
     update)
