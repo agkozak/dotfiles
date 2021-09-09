@@ -211,9 +211,7 @@ zcomet() {
 
   case $cmd in
     load|prompt)
-      [[ -z $1 ]] &&
-        >&2 print 'What would you like to load?' &&
-        return 1
+      [[ -z $1 ]] && return 1
       local repo branch
       if [[ -n $1 ]]; then
         repo=${1%@*}
@@ -224,9 +222,7 @@ zcomet() {
       _zcomet_load $repo $@
       ;;
     snippet)
-      [[ -z $1 ]] &&
-        >&2 print 'Which snippet?' &&
-        return 1
+      [[ -z $1 ]] && return 1
       local update snippet repo
       [[ $1 == '--update' ]] && update=1 && shift
       snippet=$1 repo='https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/'
@@ -241,9 +237,7 @@ zcomet() {
       source ${ZCOMET[SNIPPETS_DIR]}/${snippet} && _zcomet_add_list $cmd $snippet
       ;;
     trigger)
-      [[ -z $1 ]] &&
-        >&2 print 'You must provide arguments.' &&
-        return 1
+      [[ -z $1 ]] && return 1
       local trigger
       trigger=$1 && shift
       ! (( ${+functions[$trigger]} )) &&
@@ -254,9 +248,7 @@ zcomet() {
         _zcomet_add_list $cmd $trigger
       ;;
     unload)
-      [[ -z $1 ]] &&
-        >&2 print 'What would you like to unload?' &&
-        return 1
+      [[ -z $1 ]] && return 1
       if (( ${+functions[${1#*/}_plugin_unload]} )) &&
         ${1#*/}_plugin_unload; then
         # TODO: Something much better is needed.
@@ -303,9 +295,7 @@ zcomet() {
         print "  ${(@o)ZCOMET_TRIGGERS}"
       ;;
     compile)
-      [[ -n $1 ]] ||
-        >&2 print 'What would you like to zcompile?' &&
-        return 1
+      [[ -z $1 ]] && return 1
       _zcomet_compile $@
       ;;
     -h|--help|help)
