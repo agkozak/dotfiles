@@ -378,9 +378,6 @@ if (( ${+commands[git]} )); then
   # Load plugins and snippets {{{2
   source ~/dotfiles/zcomet/zcomet.zsh
 
-  # Clone any triggers ahead of time but don't load them 
-  zstyle ':zcomet:trigger' pre-clone yes
-
   zcomet load agkozak/agkozak-zsh-prompt@develop
 
   # zinit light agkozak/polyglot
@@ -412,8 +409,9 @@ if (( ${+commands[git]} )); then
   #   zinit load zdharma/zbrowse
   # fi
 
-  zcomet load ohmyzsh/ohmyzsh plugins/extract
   zcomet load ohmyzsh/ohmyzsh plugins/gitfast
+  zcomet trigger extract ohmyzsh/ohmyzsh plugins/extract
+  zcomet trigger x ohmyzsh/ohmyzsh plugins/extract
 
   zcomet trigger zsh-prompt-benchmark romkatv/zsh-prompt-benchmark
 

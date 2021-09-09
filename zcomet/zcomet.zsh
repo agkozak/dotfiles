@@ -50,6 +50,152 @@ _zcomet_repo_shorthand() {
   fi
 }
 
+##########################################################
+# This function loads plugins that have already been
+# cloned. Loading consists of sourcing a main file or
+# adding the root directory or a /functions/ subdirectory
+# to FPATH or both.
+# Globals:
+#   REPLY
+#   ZCOMET
+# Arguments:
+#   A repo
+#   A subdirectory [Optional]
+#   A file to be sourced [Optional]
+# Returns:
+#   0 if a file is successfully sourced or an element is
+#     added to FPATH; otherwise 1
+# Outputs:
+#   Error messages
+##########################################################
+_zcomet_load() {
+  typeset repo subdir file plugin_path
+  typeset -a files
+  repo=$1
+  _zcomet_repo_shorthand $repo
+  repo=$REPLY
+  shift
+  if [[ -n $1 && -f ${ZCOMET[REPOS_DIR]}/${repo}/$1 ]]; then
+    files=( $@ )
+  else
+    (( ${+1} )) && subdir=$1 && shift
+    (( $# )) && files=( $@ )
+  fi
+  plugin_path="${ZCOMET[REPOS_DIR]}/${repo}${subdir:+/${subdir}}"
+
+  if (( ${#files} )); then
+    for file in $files; do
+      source ${plugin_path}/${file} &&
+        _zcomet_add_list load "${repo}${subdir:+ ${subdir}}${file:+ ${file}}" ||
+        return $?
+    done
+  else
+    if [[ -n $subdir ]]; then
+      files=(
+              ${plugin_path}/prompt_${subdir##*/}_setup(N.)
+              ${plugin_path}/${subdir##*/}.zsh-theme(N.)
+              ${plugin_path}/${subdir##*/}.plugin.zsh(N.)
+              ${plugin_path}/${subdir##*/}.zsh(N.)
+            )
+    else
+      files=(
+              ${plugin_path}/prompt_${repo##*/}_setup(N.)
+              ${plugin_path}/${repo##*/}.zsh-theme(N.)
+              ${plugin_path}/${repo##*/}.plugin.zsh(N.)
+              ${plugin_path}/${repo##*/}.zsh(N.)
+            )
+    fi
+    (( ${#files} )) ||
+      files+=(
+               ${plugin_path}.zsh(N.)
+               ${plugin_path}/*.plugin.zsh(N.)
+               ${plugin_path}/init.zsh(N.)
+               ${plugin_path}/*.zsh(N.)
+               ${plugin_path}/*.sh(N.)
+           )
+    file=${files[1]}
+
+    if [[ -n $file ]]; then
+      if source $file; then
+        _zcomet_add_list load "${repo}${subdir:+ ${subdir}}"
+      else
+        >&2 print "Cannot source ${file}." && return 1
+      fi
+    fi
+  fi
+
+  if [[ -d ${plugin_path}/functions ]]; then
+    (( ! ${fpath[(Ie)${plugin_path}]} )) &&
+      fpath=( "${plugin_path}/functions" $fpath )
+    _zcomet_add_list load "${repo}${subdir:+ ${subdir}}"
+  elif [[ -d ${plugin_path} ]]; then
+    (( ! ${fpath[(Ie)${plugin_path}]} )) &&
+      fpath=( ${plugin_path} $fpath )
+    _zcomet_add_list load "${repo}${subdir:+ ${subdir}}"
+  else
+    >&2 print "Cannot add ${plugin_path} or ${plugin_path}/functions to FPATH." &&
+      return 1
+  fi
+}
+
+##########################################################
+# Manage the arrays used when running `zcomet list'
+# Globals:
+#   ZCOMET_PLUGINS
+#   ZCOMET_SNIPPETS
+#   ZCOMET_TRIGGERS
+# Arguments:
+#   $1 The command being run (load/snippet/trigger)
+#   $2 Repository and optional subpackage, e.g.,
+#     themes/robbyrussell
+##########################################################
+_zcomet_add_list() {
+  2="${2% }"
+  if [[ $1 == 'load' ]]; then
+    ZCOMET_PLUGINS+=( "$2" )
+  elif [[ $1 == 'snippet' ]]; then
+    ZCOMET_SNIPPETS+=( "$2" )
+  elif [[ $1 == 'trigger' ]]; then
+    ZCOMET_TRIGGERS+=( "$2" )
+  fi
+}
+
+
+##########################################################
+# Clone a repository, switch to a branch/tag/commit if
+# requested, and compile the scripts
+# Globals:
+#   ZCOMET
+# Arguments:
+#   $1 The repository
+#   $2 The branch/tag/commit
+#
+# TODO: At present, this function will compile every
+# script in ohmyzsh/ohmyzsh! Rein it in.
+##########################################################
+_zcomet_clone_repo() {
+  local start_dir
+  start_dir=$PWD
+  _zcomet_repo_shorthand $1
+  1=$REPLY
+
+  if [[ ! -d ${ZCOMET[REPOS_DIR]}/${1} ]]; then
+    print -P "%B%F{yellow}Cloning ${1}:%f%b"
+    command git clone https://github.com/${1} ${ZCOMET[REPOS_DIR]}/${1} ||
+      return $?
+    [[ -n $branch ]] &&
+      command git --git-dir=${ZCOMET[REPOS_DIR]}/${1}/.git \
+        --work-tree=${ZCOMET[REPOS_DIR]}/${1} \
+        checkout -q $2
+    local file
+    for file in ${ZCOMET[REPOS_DIR]}/${1}/**/*.zsh(N.) \
+                ${ZCOMET[REPOS_DIR]}/${1}/**/prompt_*_setup(N.) \
+                ${ZCOMET[REPOS_DIR]}/${1}/**/*.zsh-theme(N.); do
+      _zcomet_compile $file
+    done
+  fi
+}
+
 ############################################################
 # The main command
 # Globals:
@@ -72,151 +218,6 @@ _zcomet_repo_shorthand() {
 zcomet() {
 
   typeset -gUa ZCOMET_PLUGINS ZCOMET_SNIPPETS ZCOMET_TRIGGERS
-
-  ##########################################################
-  # This function loads plugins that have already been
-  # cloned. Loading consists of sourcing a main file or
-  # adding the root directory or a /functions/ subdirectory
-  # to FPATH or both.
-  # Globals:
-  #   REPLY
-  #   ZCOMET
-  # Arguments:
-  #   A repo
-  #   A subdirectory [Optional]
-  #   A file to be sourced [Optional]
-  # Returns:
-  #   0 if a file is successfully sourced or an element is
-  #     added to FPATH; otherwise 1
-  # Outputs:
-  #   Error messages
-  ##########################################################
-  _zcomet_load() {
-    typeset repo subdir file plugin_path
-    typeset -a files
-    repo=$1
-    _zcomet_repo_shorthand $repo
-    repo=$REPLY
-    shift
-    if [[ -n $1 && -f ${ZCOMET[REPOS_DIR]}/${repo}/$1 ]]; then
-      files=( $@ )
-    else
-      (( ${+1} )) && subdir=$1 && shift
-      (( $# )) && files=( $@ )
-    fi
-    plugin_path="${ZCOMET[REPOS_DIR]}/${repo}${subdir:+/${subdir}}"
-
-    if (( ${#files} )); then
-      for file in $files; do
-        source ${plugin_path}/${file} &&
-          _zcomet_add_list load "${repo}${subdir:+ ${subdir}}${file:+ ${file}}" ||
-          return $?
-      done
-    else
-      if [[ -n $subdir ]]; then
-        files=(
-                ${plugin_path}/prompt_${subdir##*/}_setup(N.)
-                ${plugin_path}/${subdir##*/}.zsh-theme(N.)
-                ${plugin_path}/${subdir##*/}.plugin.zsh(N.)
-                ${plugin_path}/${subdir##*/}.zsh(N.)
-              )
-      else
-        files=(
-                ${plugin_path}/prompt_${repo##*/}_setup(N.)
-                ${plugin_path}/${repo##*/}.zsh-theme(N.)
-                ${plugin_path}/${repo##*/}.plugin.zsh(N.)
-                ${plugin_path}/${repo##*/}.zsh(N.)
-              )
-      fi
-      (( ${#files} )) ||
-        files+=(
-                 ${plugin_path}.zsh(N.)
-                 ${plugin_path}/*.plugin.zsh(N.)
-                 ${plugin_path}/init.zsh(N.)
-                 ${plugin_path}/*.zsh(N.)
-                 ${plugin_path}/*.sh(N.)
-             )
-      file=${files[1]}
-
-      if [[ -n $file ]]; then
-        if source $file; then
-          _zcomet_add_list load "${repo}${subdir:+ ${subdir}}"
-        else
-          >&2 print "Cannot source ${file}." && return 1
-        fi
-      fi
-    fi
-
-    if [[ -d ${plugin_path}/functions ]]; then
-      (( ! ${fpath[(Ie)${plugin_path}]} )) &&
-        fpath=( "${plugin_path}/functions" $fpath )
-      _zcomet_add_list load "${repo}${subdir:+ ${subdir}}"
-    elif [[ -d ${plugin_path} ]]; then
-      (( ! ${fpath[(Ie)${plugin_path}]} )) &&
-        fpath=( ${plugin_path} $fpath )
-      _zcomet_add_list load "${repo}${subdir:+ ${subdir}}"
-    else
-      >&2 print "Cannot add ${plugin_path} or ${plugin_path}/functions to FPATH." &&
-        return 1
-    fi
-  }
-
-  ##########################################################
-  # Manage the arrays used when running `zcomet list'
-  # Globals:
-  #   ZCOMET_PLUGINS
-  #   ZCOMET_SNIPPETS
-  #   ZCOMET_TRIGGERS
-  # Arguments:
-  #   $1 The command being run (load/snippet/trigger)
-  #   $2 Repository and optional subpackage, e.g.,
-  #     themes/robbyrussell
-  ##########################################################
-  _zcomet_add_list() {
-    2="${2% }"
-    if [[ $1 == 'load' ]]; then
-      ZCOMET_PLUGINS+=( "$2" )
-    elif [[ $1 == 'snippet' ]]; then
-      ZCOMET_SNIPPETS+=( "$2" )
-    elif [[ $1 == 'trigger' ]]; then
-      ZCOMET_TRIGGERS+=( "$2" )
-    fi
-  }
-
-  ##########################################################
-  # Clone a repository, switch to a branch/tag/commit if
-  # requested, and compile the scripts
-  # Globals:
-  #   ZCOMET
-  # Arguments:
-  #   $1 The repository
-  #   $2 The branch/tag/commit
-  #
-  # TODO: At present, this function will compile every
-  # script in ohmyzsh/ohmyzsh! Rein it in.
-  ##########################################################
-  _zcomet_clone_repo() {
-    local start_dir
-    start_dir=$PWD
-    _zcomet_repo_shorthand $1
-    1=$REPLY
-
-    if [[ ! -d ${ZCOMET[REPOS_DIR]}/${1} ]]; then
-      print -P "%B%F{yellow}Cloning ${1}:%f%b"
-      command git clone https://github.com/${1} ${ZCOMET[REPOS_DIR]}/${1} ||
-        return $?
-      [[ -n $branch ]] &&
-        command git --git-dir=${ZCOMET[REPOS_DIR]}/${1}/.git \
-          --work-tree=${ZCOMET[REPOS_DIR]}/${1} \
-          checkout -q $2
-      local file
-      for file in ${ZCOMET[REPOS_DIR]}/${1}/**/*.zsh(N.) \
-                  ${ZCOMET[REPOS_DIR]}/${1}/**/prompt_*_setup(N.) \
-                  ${ZCOMET[REPOS_DIR]}/${1}/**/*.zsh-theme(N.); do
-        _zcomet_compile $file
-      done
-    fi
-  }
 
   ##########################################################
   # THE MAIN ROUTINE
@@ -280,7 +281,7 @@ zcomet() {
     update)
       local i
       for i in ${ZCOMET[REPOS_DIR]}/**/.git(N/); do
-        print -Pn "%B%F{yellow}${i}:%f%b "
+        print -Pn "%B%F{yellow}${${i:h}#${ZCOMET[REPOS_DIR]}/}:%f%b "
         command git --git-dir=${i} --work-tree=${i:h} pull
         for file in ${i:h}/*.zsh(N.) \
                     ${i:h}/prompt_*_setup(N.) \
