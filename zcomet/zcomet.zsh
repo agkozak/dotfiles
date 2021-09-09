@@ -333,8 +333,8 @@ zcomet() {
       done
       ;;
     list)
-      (( ${#ZCOMET_PLUGINS} )) && print -P '%B%F{yellow}Plugins:%f%b' &&
-        print -l -f '  %s\n' ${(@o)ZCOMET_PLUGINS}
+      (( ${#zsh_loaded_plugins} )) && print -P '%B%F{yellow}Plugins:%f%b' &&
+        print -l -f '  %s\n' ${(@o)zsh_loaded_plugins}
       (( ${#ZCOMET_SNIPPETS} )) && print -P '%B%F{yellow}Snippets:%f%b' &&
         print -l -f '  %s\n' ${(@o)ZCOMET_SNIPPETS}
       (( ${#ZCOMET_TRIGGERS} )) && print -P '%B%F{yellow}Triggers:%f%b' &&
