@@ -37,6 +37,11 @@ typeset -gx ZPFX
 typeset -g PMSPEC
 PMSPEC="0fuiPs"
 
+_zcomet_source() {
+  emulate -L zsh
+  source $@
+}
+
 ############################################################
 # Compile scripts to wordcode or recompile them when they
 # have changed.
@@ -61,7 +66,6 @@ _zcomet_compile() {
 # sorin-ionescu/prezto
 ###########################################################
 _zcomet_repo_shorthand() {
-  typeset -g REPLY
   if [[ $1 == 'ohmyzsh' ]]; then
     REPLY='ohmyzsh/ohmyzsh'
   elif [[ $1 == 'prezto' ]]; then
@@ -77,7 +81,6 @@ _zcomet_repo_shorthand() {
 # adding the root directory or a /functions/ subdirectory
 # to FPATH or both.
 # Globals:
-#   REPLY
 #   ZCOMET
 # Arguments:
 #   A repo
@@ -106,7 +109,7 @@ _zcomet_load() {
 
   if (( ${#files} )); then
     for file in $files; do
-      source ${plugin_path}/${file} &&
+      _zcomet_source ${plugin_path}/${file} &&
         _zcomet_add_list load "${repo}${subdir:+ ${subdir}}${file:+ ${file}}" ||
         return $?
     done
@@ -128,7 +131,7 @@ _zcomet_load() {
     file=${files[1]}
 
     if [[ -n $file ]]; then
-      if source $file; then
+      if _zcomet_source $file; then
         _zcomet_add_list load "${repo}${subdir:+ ${subdir}}"
       else
         >&2 print "Cannot source ${file}." && return 1
@@ -227,6 +230,12 @@ _zcomet_clone_repo() {
 #   Status updates
 ############################################################
 zcomet() {
+  emulate -L zsh
+  setopt EXTENDED_GLOB WARN_CREATE_GLOBAL TYPESET_SILENT
+  setopt NO_SHORT_LOOPS RC_QUOTES NO_AUTO_PUSHD
+
+  local MATCH REPLY; integer MBEGIN MEND
+  local -a match mbegin mend reply
 
   typeset -gUa zsh_loaded_plugins ZCOMET_SNIPPETS ZCOMET_TRIGGERS
 
@@ -264,7 +273,7 @@ zcomet() {
         curl ${repo}${snippet#OMZ::} > ${ZCOMET[SNIPPETS_DIR]}/${snippet}
         _zcomet_compile ${ZCOMET[SNIPPETS_DIR]}/${snippet}
       fi
-      source ${ZCOMET[SNIPPETS_DIR]}/${snippet} &&
+      _zcomet_source ${ZCOMET[SNIPPETS_DIR]}/${snippet} &&
         _zcomet_add_list $cmd $snippet
       ;;
     trigger)
