@@ -75,6 +75,24 @@ zcomet() {
 
   typeset -gUa ZCOMET_PROMPTS ZCOMET_PLUGINS ZCOMET_SNIPPETS ZCOMET_TRIGGERS
 
+  ##########################################################
+  # This function loads plugins that have already been
+  # cloned. Loading consists of sourcing a main file or
+  # adding the root directory or a /functions/ subdirectory
+  # to FPATH or both.
+  # Globals:
+  #   REPLY
+  #   ZCOMET
+  # Arguments:
+  #   A repo
+  #   A subdirectory [Optional]
+  #   A file to be sourced [Optional]
+  # Returns:
+  #   0 if a file is successfully sourced or an element is
+  #     added to FPATH; otherwise 1
+  # Outputs:
+  #   Error messages
+  ##########################################################
   _zcomet_load() {
     typeset repo subdir file plugin_path
     typeset -a files
@@ -140,7 +158,8 @@ zcomet() {
         fpath=( ${plugin_path} $fpath )
       _zcomet_add_list load "${repo}${subdir:+ ${subdir}}"
     else
-      >&2 print "Cannot add ${plugin_path} or ${plugin_path}/functions to FPATH."
+      >&2 print "Cannot add ${plugin_path} or ${plugin_path}/functions to FPATH." &&
+        return 1
     fi
   }
 
