@@ -190,6 +190,7 @@ zcomet() {
   #   ZCOMET
   # Arguments:
   #   $1 The repository
+  #   $2 The branch/tag/commit
   #
   # TODO: At present, this function will compile every
   # script in ohmyzsh/ohmyzsh! Rein it in.
@@ -207,7 +208,7 @@ zcomet() {
       [[ -n $branch ]] &&
         command git --git-dir=${ZCOMET[REPOS_DIR]}/${1}/.git \
           --work-tree=${ZCOMET[REPOS_DIR]}/${1} \
-          checkout -q $branch
+          checkout -q $2
       local file
       for file in ${ZCOMET[REPOS_DIR]}/${1}/**/*.zsh(N.) \
                   ${ZCOMET[REPOS_DIR]}/${1}/**/prompt_*_setup(N.) \
@@ -234,7 +235,7 @@ zcomet() {
         [[ $1 == *@* ]] && branch=${1#*@}
         shift
       fi
-      _zcomet_clone_repo $repo || return $?
+      _zcomet_clone_repo $repo $branch || return $?
       _zcomet_load $repo $@
       ;;
     snippet)
@@ -256,9 +257,7 @@ zcomet() {
       [[ -z $1 ]] && return 1
       local trigger
       trigger=$1 && shift
-      if zstyle -t ':zcomet:trigger' pre-clone; then
-        _zcomet_clone_repo ${1%@*} || return $?
-      fi
+      # TODO: Add a pre-clone option
       if ! (( ${+functions[$trigger]} )); then
         functions[$trigger]="ZCOMET_TRIGGERS=( "\${(@)ZCOMET_TRIGGERS:#${trigger}}" );
           unfunction $trigger;
