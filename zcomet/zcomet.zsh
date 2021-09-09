@@ -5,10 +5,16 @@
 # MIT License / Copyright (c) 2021 Alexandros Kozak
 
 typeset -A ZCOMET
+
+# Standardized $0 Handling
+# https://github.com/zdharma/Zsh-100-Commits-Club/blob/master/Zsh-Plugin-Standard.adoc#zero-handling
 0=${${ZERO:-${0:#$ZSH_ARGZERO}}:-${(%):-%N}}
-ZCOMET[SCRIPT]=${${(M)0:#/*}:-$PWD/$0}
+0="${${(M)0:#/*}:-$PWD/$0}"
+
+ZCOMET[SCRIPT]=$0
+
 # Add zcomet completions to FPATH
-fpath=( ${ZCOMET[SCRIPT]:A:h} $fpath )
+fpath=( ${0:A:h} $fpath )
 
 # Allow the user to specify custom directories
 ZCOMET[HOME_DIR]=${ZCOMET[HOME_DIR]:-${HOME}/.zcomet}
