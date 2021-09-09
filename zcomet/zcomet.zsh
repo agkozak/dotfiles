@@ -186,16 +186,14 @@ zcomet() {
       print -P "%B%F{yellow}Cloning ${1}:%f%b"
       command git clone https://github.com/${1} ${ZCOMET[REPOS_DIR]}/${1} ||
         return $?
-      cd ${ZCOMET[REPOS_DIR]}/${1} || exit
-      [[ -n $branch ]] && command git checkout $branch
+      [[ -n $branch ]] &&
+        command git --git-dir=${ZCOMET[REPOS_DIR]}/${1}/.git checkout -q $branch
       local file
-      for file in **/*.zsh(N.) \
-                  **/prompt_*_setup(N.) \
-                  **/*.zsh-theme(N.) \
-                  **/_*~*.zwc(N.); do
+      for file in ${ZCOMET[REPOS_DIR]}/${1}/**/*.zsh(N.) \
+                  ${ZCOMET[REPOS_DIR]}/${1}/**/prompt_*_setup(N.) \
+                  ${ZCOMET[REPOS_DIR]}/${1}/**/*.zsh-theme(N.); do
         _zcomet_compile $file
       done
-      cd $start_dir || exit
     fi
   }
 
