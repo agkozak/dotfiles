@@ -378,6 +378,9 @@ if (( ${+commands[git]} )); then
   # Load plugins and snippets {{{2
   source ~/dotfiles/zcomet/zcomet.zsh
 
+  # Clone any triggers ahead of time but don't load them 
+  zstyle ':zcomet:trigger' pre-clone yes
+
   zcomet load agkozak/agkozak-zsh-prompt@develop
 
   # zinit light agkozak/polyglot
