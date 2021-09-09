@@ -254,6 +254,7 @@ zcomet() {
       source ${ZCOMET[SNIPPETS_DIR]}/${snippet} && _zcomet_add_list $cmd $snippet
       ;;
     trigger)
+      # TODO: Allow user to create more than one trigger per command
       [[ -z $1 ]] && return 1
       local trigger
       trigger=$1 && shift
