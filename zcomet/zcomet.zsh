@@ -44,8 +44,6 @@ _zcomet_repo_shorthand() {
   fi
 }
 
-
-
 ############################################################
 # The main command
 # Globals:
@@ -261,16 +259,13 @@ zcomet() {
       fi
       ;;
     update)
-      [[ -d ${ZCOMET[REPOS_DIR]} ]] && cd ${ZCOMET[REPOS_DIR]} || exit
       local i
-      for i in */*(N); do
-        cd $i
+      for i in ${ZCOMET[REPOS_DIR]}/**/.git(N/); do
         print -Pn "%B%F{yellow}${i}:%f%b "
-        command git pull
-        for file in **/*.zsh(N.) \
-                    **/prompt_*_setup(N.) \
-                    **/*.zsh_theme(N.) \
-                    **/_*~*.zwc(N.); do
+        command git --git-dir ${i} pull
+        for file in ${i:h}/*.zsh(N.) \
+                    ${i:h}/prompt_*_setup(N.) \
+                    ${i:h}/*.zsh_theme(N.); do
           _zcomet_compile $file
         done
         if (( ${ZCOMET_PLUGINS[(Ie)$i]} )); then
@@ -278,7 +273,6 @@ zcomet() {
         elif (( ${ZCOMET_PROMPT[(Ie)$i]} )); then
           zcomet prompt $i
         fi
-        cd ../..
       done
       local -a snippets
       snippets=( ${ZCOMET[SNIPPETS_DIR]}/**/*(N) )
@@ -291,7 +285,6 @@ zcomet() {
           zcomet snippet ${i#${ZCOMET[SNIPPETS_DIR]}/}
         fi
       done
-      cd $orig_dir
       ;;
     list)
       (( ${#ZCOMET_PROMPTS} )) && print -P '%B%F{yellow}Prompts:%f%b' &&
