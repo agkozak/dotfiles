@@ -74,7 +74,7 @@ _zcomet_repo_shorthand() {
 #   Error messages
 ##########################################################
 _zcomet_load() {
-  typeset repo subdir file plugin_path
+  typeset repo subdir file plugin_path plugin_name
   typeset -a files
   repo=$1
   _zcomet_repo_shorthand $repo
@@ -95,24 +95,15 @@ _zcomet_load() {
         return $?
     done
   else
-    if [[ -n $subdir ]]; then
-      files=(
-              ${plugin_path}/prompt_${subdir##*/}_setup(N.)
-              ${plugin_path}/${subdir##*/}.zsh-theme(N.)
-              ${plugin_path}/${subdir##*/}.plugin.zsh(N.)
-              ${plugin_path}/${subdir##*/}.zsh(N.)
-            )
-    else
-      files=(
-              ${plugin_path}/prompt_${repo##*/}_setup(N.)
-              ${plugin_path}/${repo##*/}.zsh-theme(N.)
-              ${plugin_path}/${repo##*/}.plugin.zsh(N.)
-              ${plugin_path}/${repo##*/}.zsh(N.)
-            )
-    fi
+    plugin_name=${${subdir:+subdir##*/}:-$repo##*/}
+    files=(
+            ${plugin_path}/prompt_${plugin_name}_setup(N.)
+            ${plugin_path}/${plugin_name}.zsh-theme(N.)
+            ${plugin_path}/${plugin_name}.plugin.zsh(N.)
+            ${plugin_path}/${plugin_name}.zsh(N.)
+          )
     (( ${#files} )) ||
       files+=(
-               ${plugin_path}.zsh(N.)
                ${plugin_path}/*.plugin.zsh(N.)
                ${plugin_path}/init.zsh(N.)
                ${plugin_path}/*.zsh(N.)
