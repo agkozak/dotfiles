@@ -37,11 +37,6 @@ typeset -gx ZPFX
 typeset -g PMSPEC
 PMSPEC="0fuiPs"
 
-_zcomet_source() {
-  emulate -L zsh
-  source $@
-}
-
 ############################################################
 # Compile scripts to wordcode or recompile them when they
 # have changed.
@@ -49,6 +44,11 @@ _zcomet_source() {
 #   Files to compile or recompile
 ############################################################
 _zcomet_compile() {
+
+  emulate -L zsh
+  setopt EXTENDED_GLOB WARN_CREATE_GLOBAL TYPESET_SILENT
+  setopt NO_SHORT_LOOPS RC_QUOTES NO_AUTO_PUSHD
+
   while (( $# )); do
     if [[ -s $1                                &&
           ( ! -s ${1}.zwc || $1 -nt ${1}.zwc ) &&
@@ -66,6 +66,11 @@ _zcomet_compile() {
 # sorin-ionescu/prezto
 ###########################################################
 _zcomet_repo_shorthand() {
+
+  emulate -L zsh
+  setopt EXTENDED_GLOB WARN_CREATE_GLOBAL TYPESET_SILENT
+  setopt NO_SHORT_LOOPS RC_QUOTES NO_AUTO_PUSHD
+
   if [[ $1 == 'ohmyzsh' ]]; then
     REPLY='ohmyzsh/ohmyzsh'
   elif [[ $1 == 'prezto' ]]; then
@@ -109,7 +114,7 @@ _zcomet_load() {
 
   if (( ${#files} )); then
     for file in $files; do
-      _zcomet_source ${plugin_path}/${file} &&
+      source ${plugin_path}/${file} &&
         _zcomet_add_list load "${repo}${subdir:+ ${subdir}}${file:+ ${file}}" ||
         return $?
     done
@@ -131,7 +136,7 @@ _zcomet_load() {
     file=${files[1]}
 
     if [[ -n $file ]]; then
-      if _zcomet_source $file; then
+      if source $file; then
         _zcomet_add_list load "${repo}${subdir:+ ${subdir}}"
       else
         >&2 print "Cannot source ${file}." && return 1
@@ -165,6 +170,11 @@ _zcomet_load() {
 #     themes/robbyrussell
 ##########################################################
 _zcomet_add_list() {
+
+  emulate -L zsh
+  setopt EXTENDED_GLOB WARN_CREATE_GLOBAL TYPESET_SILENT
+  setopt NO_SHORT_LOOPS RC_QUOTES NO_AUTO_PUSHD
+
   2="${2% }"
   if [[ $1 == 'load' ]]; then
     zsh_loaded_plugins+=( "$2" )
@@ -188,6 +198,11 @@ _zcomet_add_list() {
 # script in ohmyzsh/ohmyzsh! Rein it in.
 ##########################################################
 _zcomet_clone_repo() {
+
+  emulate -L zsh
+  setopt EXTENDED_GLOB WARN_CREATE_GLOBAL TYPESET_SILENT
+  setopt NO_SHORT_LOOPS RC_QUOTES NO_AUTO_PUSHD
+
   local start_dir
   start_dir=$PWD
   _zcomet_repo_shorthand $1
@@ -230,9 +245,6 @@ _zcomet_clone_repo() {
 #   Status updates
 ############################################################
 zcomet() {
-  emulate -L zsh
-  setopt EXTENDED_GLOB WARN_CREATE_GLOBAL TYPESET_SILENT
-  setopt NO_SHORT_LOOPS RC_QUOTES NO_AUTO_PUSHD
 
   local MATCH REPLY; integer MBEGIN MEND
   local -a match mbegin mend reply
@@ -273,7 +285,7 @@ zcomet() {
         curl ${repo}${snippet#OMZ::} > ${ZCOMET[SNIPPETS_DIR]}/${snippet}
         _zcomet_compile ${ZCOMET[SNIPPETS_DIR]}/${snippet}
       fi
-      _zcomet_source ${ZCOMET[SNIPPETS_DIR]}/${snippet} &&
+      source ${ZCOMET[SNIPPETS_DIR]}/${snippet} &&
         _zcomet_add_list $cmd $snippet
       ;;
     trigger)
