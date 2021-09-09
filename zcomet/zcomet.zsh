@@ -205,7 +205,9 @@ zcomet() {
       command git clone https://github.com/${1} ${ZCOMET[REPOS_DIR]}/${1} ||
         return $?
       [[ -n $branch ]] &&
-        command git --git-dir=${ZCOMET[REPOS_DIR]}/${1}/.git checkout -q $branch
+        command git --git-dir=${ZCOMET[REPOS_DIR]}/${1}/.git \
+          --work-tree=${ZCOMET[REPOS_DIR]}/${1} \
+          checkout -q $branch
       local file
       for file in ${ZCOMET[REPOS_DIR]}/${1}/**/*.zsh(N.) \
                   ${ZCOMET[REPOS_DIR]}/${1}/**/prompt_*_setup(N.) \
@@ -279,7 +281,7 @@ zcomet() {
       local i
       for i in ${ZCOMET[REPOS_DIR]}/**/.git(N/); do
         print -Pn "%B%F{yellow}${i}:%f%b "
-        command git --git-dir ${i} pull
+        command git --git-dir=${i} --work-tree=${i:h} pull
         for file in ${i:h}/*.zsh(N.) \
                     ${i:h}/prompt_*_setup(N.) \
                     ${i:h}/*.zsh_theme(N.); do
