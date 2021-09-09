@@ -44,11 +44,6 @@ PMSPEC="0fuiPs"
 #   Files to compile or recompile
 ############################################################
 _zcomet_compile() {
-
-  emulate -L zsh
-  setopt EXTENDED_GLOB WARN_CREATE_GLOBAL TYPESET_SILENT
-  setopt NO_SHORT_LOOPS RC_QUOTES NO_AUTO_PUSHD
-
   while (( $# )); do
     if [[ -s $1                                &&
           ( ! -s ${1}.zwc || $1 -nt ${1}.zwc ) &&
@@ -191,35 +186,31 @@ _zcomet_add_list() {
 # Globals:
 #   ZCOMET
 # Arguments:
-#   $1 The repository
-#   $2 The branch/tag/commit
+#   $1 The repository and branch/tag/commit
 #
 # TODO: At present, this function will compile every
 # script in ohmyzsh/ohmyzsh! Rein it in.
 ##########################################################
 _zcomet_clone_repo() {
+  [[ -z $1 ]] && return 1
+  local repo branch
+  repo=${1%@*}
+  [[ $1 == *@* ]] && branch=${1#*@}
+  _zcomet_repo_shorthand $repo
+  repo=$REPLY
 
-  emulate -L zsh
-  setopt EXTENDED_GLOB WARN_CREATE_GLOBAL TYPESET_SILENT
-  setopt NO_SHORT_LOOPS RC_QUOTES NO_AUTO_PUSHD
-
-  local start_dir
-  start_dir=$PWD
-  _zcomet_repo_shorthand $1
-  1=$REPLY
-
-  if [[ ! -d ${ZCOMET[REPOS_DIR]}/${1} ]]; then
-    print -P "%B%F{yellow}Cloning ${1}:%f%b"
-    command git clone https://github.com/${1} ${ZCOMET[REPOS_DIR]}/${1} ||
+  if [[ ! -d ${ZCOMET[REPOS_DIR]}/${repo} ]]; then
+    print -P "%B%F{yellow}Cloning ${repo}:%f%b"
+    command git clone https://github.com/${repo} ${ZCOMET[REPOS_DIR]}/${repo} ||
       return $?
     [[ -n $branch ]] &&
-      command git --git-dir=${ZCOMET[REPOS_DIR]}/${1}/.git \
-        --work-tree=${ZCOMET[REPOS_DIR]}/${1} \
-        checkout -q $2
+      command git --git-dir=${ZCOMET[REPOS_DIR]}/${repo}/.git \
+        --work-tree=${ZCOMET[REPOS_DIR]}/${repo} \
+        checkout -q $branch
     local file
-    for file in ${ZCOMET[REPOS_DIR]}/${1}/**/*.zsh(N.) \
-                ${ZCOMET[REPOS_DIR]}/${1}/**/prompt_*_setup(N.) \
-                ${ZCOMET[REPOS_DIR]}/${1}/**/*.zsh-theme(N.); do
+    for file in ${ZCOMET[REPOS_DIR]}/${repo}/**/*.zsh(N.) \
+                ${ZCOMET[REPOS_DIR]}/${repo}/**/prompt_*_setup(N.) \
+                ${ZCOMET[REPOS_DIR]}/${repo}/**/*.zsh-theme(N.); do
       _zcomet_compile $file
     done
   fi
@@ -262,14 +253,10 @@ zcomet() {
   case $cmd in
     load)
       [[ -z $1 ]] && return 1
-      local repo branch
-      if [[ -n $1 ]]; then
-        repo=${1%@*}
-        [[ $1 == *@* ]] && branch=${1#*@}
-        shift
-      fi
-      _zcomet_clone_repo $repo $branch || return $?
-      _zcomet_load $repo $@
+      local repo_branch
+      repo_branch=$1 && shift
+      _zcomet_clone_repo $repo_branch || return $?
+      _zcomet_load ${repo_branch%@*} $@
       ;;
     snippet)
       [[ -z $1 ]] && return 1
