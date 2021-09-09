@@ -71,7 +71,7 @@ _zcomet_repo_shorthand() {
 ############################################################
 zcomet() {
 
-  typeset -gUa ZCOMET_PROMPTS ZCOMET_PLUGINS ZCOMET_SNIPPETS ZCOMET_TRIGGERS
+  typeset -gUa ZCOMET_PLUGINS ZCOMET_SNIPPETS ZCOMET_TRIGGERS
 
   ##########################################################
   # This function loads plugins that have already been
@@ -165,11 +165,10 @@ zcomet() {
   # Manage the arrays used when running `zcomet list'
   # Globals:
   #   ZCOMET_PLUGINS
-  #   ZCOMET_PROMPTS
   #   ZCOMET_SNIPPETS
   #   ZCOMET_TRIGGERS
   # Arguments:
-  #   $1 The command being run (load/prompt/snippet/trigger)
+  #   $1 The command being run (load/snippet/trigger)
   #   $2 Repository and optional subpackage, e.g.,
   #     themes/robbyrussell
   ##########################################################
@@ -177,8 +176,6 @@ zcomet() {
     2="${2% }"
     if [[ $1 == 'load' ]]; then
       ZCOMET_PLUGINS+=( "$2" )
-    elif [[ $1 == 'prompt' ]]; then
-      ZCOMET_PROMPTS+=( "$2" )
     elif [[ $1 == 'snippet' ]]; then
       ZCOMET_SNIPPETS+=( "$2" )
     elif [[ $1 == 'trigger' ]]; then
@@ -227,7 +224,7 @@ zcomet() {
   orig_dir=$PWD
 
   case $cmd in
-    load|prompt)
+    load)
       [[ -z $1 ]] && return 1
       local repo branch
       if [[ -n $1 ]]; then
@@ -284,11 +281,7 @@ zcomet() {
                     ${i:h}/*.zsh_theme(N.); do
           _zcomet_compile $file
         done
-        if (( ${ZCOMET_PLUGINS[(Ie)$i]} )); then
-          zcomet load $i
-        elif (( ${ZCOMET_PROMPT[(Ie)$i]} )); then
-          zcomet prompt $i
-        fi
+        (( ${ZCOMET_PLUGINS[(Ie)$i]} )) && zcomet load $i
       done
       local -a snippets
       snippets=( ${ZCOMET[SNIPPETS_DIR]}/**/*(N) )
@@ -303,8 +296,6 @@ zcomet() {
       done
       ;;
     list)
-      (( ${#ZCOMET_PROMPTS} )) && print -P '%B%F{yellow}Prompts:%f%b' &&
-        print -l -f '  %s\n' ${(@o)ZCOMET_PROMPTS}
       (( ${#ZCOMET_PLUGINS} )) && print -P '%B%F{yellow}Plugins:%f%b' &&
         print -l -f '  %s\n' ${(@o)ZCOMET_PLUGINS}
       (( ${#ZCOMET_SNIPPETS} )) && print -P '%B%F{yellow}Snippets:%f%b' &&
@@ -321,9 +312,8 @@ zcomet() {
 
 load            load a plugin
 trigger         create a shortcut for loading and running a plugin
-prompt          load a prompt
 snippet         load a snippet of code from Oh-My-ZSH
-unload          unload a prompt or plugin
+unload          unload a plugin
 update          update all plugins and snippets
 list            list all loaded plugins and snippets
 compile         (re)compile script(s) (only when necessary)

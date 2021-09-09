@@ -378,7 +378,7 @@ if (( ${+commands[git]} )); then
   # Load plugins and snippets {{{2
   source ~/dotfiles/zcomet/zcomet.zsh
 
-  zcomet prompt agkozak/agkozak-zsh-prompt@develop
+  zcomet load agkozak/agkozak-zsh-prompt@develop
 
   # zinit light agkozak/polyglot
   # if which kubectl &> /dev/null; then
@@ -409,8 +409,8 @@ if (( ${+commands[git]} )); then
   #   zinit load zdharma/zbrowse
   # fi
 
-  zcomet load ohmyzsh plugins/extract
-  zcomet load ohmyzsh plugins/gitfast
+  zcomet load ohmyzsh/ohmyzsh plugins/extract
+  zcomet load ohmyzsh/ohmyzsh plugins/gitfast
 
   zcomet trigger zsh-prompt-benchmark romkatv/zsh-prompt-benchmark
 
