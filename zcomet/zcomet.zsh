@@ -39,6 +39,11 @@ _zcomet_compile() {
   done
 }
 
+###########################################################
+# Allow the user to employ the shorthand `ohmyzsh' for the
+# ohmyzsh/ohmyzsh repo and `prezto' for
+# sorin-ionescu/prezto
+###########################################################
 _zcomet_repo_shorthand() {
   typeset -g REPLY
   if [[ $1 == 'ohmyzsh' ]]; then
@@ -61,7 +66,7 @@ _zcomet_repo_shorthand() {
 # Arguments:
 #   A repo
 #   A subdirectory [Optional]
-#   A file to be sourced [Optional]
+#   A specific file to be sourced [Optional]
 # Returns:
 #   0 if a file is successfully sourced or an element is
 #     added to FPATH; otherwise 1
@@ -160,7 +165,6 @@ _zcomet_add_list() {
   fi
 }
 
-
 ##########################################################
 # Clone a repository, switch to a branch/tag/commit if
 # requested, and compile the scripts
@@ -243,7 +247,8 @@ zcomet() {
       [[ -z $1 ]] && return 1
       local update snippet repo
       [[ $1 == '--update' ]] && update=1 && shift
-      snippet=$1 repo='https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/'
+      snippet=$1
+      repo='https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/'
       shift
       if [[ ! -f ${ZCOMET[SNIPPETS_DIR]}/${snippet} ]] || (( update )); then
         [[ ! -d ${ZCOMET[SNIPPETS_DIR]}/${snippet%/*} ]] &&
@@ -252,7 +257,8 @@ zcomet() {
         curl ${repo}${snippet#OMZ::} > ${ZCOMET[SNIPPETS_DIR]}/${snippet}
         _zcomet_compile ${ZCOMET[SNIPPETS_DIR]}/${snippet}
       fi
-      source ${ZCOMET[SNIPPETS_DIR]}/${snippet} && _zcomet_add_list $cmd $snippet
+      source ${ZCOMET[SNIPPETS_DIR]}/${snippet} &&
+        _zcomet_add_list $cmd $snippet
       ;;
     trigger)
       # TODO: Allow user to create more than one trigger per command
