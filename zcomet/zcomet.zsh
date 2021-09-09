@@ -254,8 +254,9 @@ zcomet() {
       [[ -z $1 ]] && return 1
       local trigger
       trigger=$1 && shift
-      zstyle -t ':zcomet:trigger' pre-clone &&
+      if zstyle -t ':zcomet:trigger' pre-clone; then
         _zcomet_clone_repo ${1%@*} || return $?
+      fi
       if ! (( ${+functions[$trigger]} )); then
         functions[$trigger]="ZCOMET_TRIGGERS=( "\${(@)ZCOMET_TRIGGERS:#${trigger}}" );
           unfunction $trigger;
