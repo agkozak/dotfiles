@@ -25,11 +25,11 @@ ZCOMET[SNIPPETS_DIR]=${ZCOMET[SNIPPETS_DIR]:-${ZCOMET[HOME_DIR]}/snippets}
 # https://github.com/zdharma/Zsh-100-Commits-Club/blob/master/Zsh-Plugin-Standard.adoc#8-global-parameter-with-prefix-for-make-configure-etc
 typeset -gx ZPFX
 : ${ZPFX:=${ZCOMET[HOME_DIR]}/polaris}
-[[ -z ${path[(re)$ZPFX/bin]} ]] &&
-  [[ -d "$ZPFX/bin" ]] &&
+[[ -z ${path[(re)$ZPFX/bin]} ]]  &&
+  [[ -d "$ZPFX/bin" ]]           &&
   path=( "$ZPFX/bin" "${path[@]}" )
 [[ -z ${path[(re)$ZPFX/sbin]} ]] &&
-  [[ -d "$ZPFX/sbin" ]] &&
+  [[ -d "$ZPFX/sbin" ]]          &&
   path=( "$ZPFX/sbin" "${path[@]}" )
 
 # Global Parameter holding the plugin-manager’s capabilities
@@ -44,14 +44,12 @@ PMSPEC="0fuiPs"
 #   Files to compile or recompile
 ############################################################
 _zcomet_compile() {
-  setopt NO_KSH_ARRAYS NO_SH_WORD_SPLIT
-
   while (( $# )); do
     if [[ -s $1                                &&
           ( ! -s ${1}.zwc || $1 -nt ${1}.zwc ) &&
           # Don't compile zsh-syntax-highlighting's test data
           $1 != */test-data/* ]]; then
-      zcompile $1
+      zcompile "$1"
     fi
     shift
   done
@@ -110,9 +108,12 @@ _zcomet_load() {
 
   if (( ${#files} )); then
     for file in ${files[@]}; do
-      source ${plugin_path}/${file} &&
+      if source ${plugin_path}/${file}; then
         _zcomet_add_list load "${repo}${subdir:+ ${subdir}}${file:+ ${file}}" &&
-        plugin_loaded=1 || return $?
+        plugin_loaded=1
+      else
+        return $?
+      fi
     done
   else
     plugin_name=${${subdir:+${subdir##*/}}:-${repo##*/}}
@@ -122,14 +123,15 @@ _zcomet_load() {
             ${plugin_path}/${plugin_name}.plugin.zsh(N.)
             ${plugin_path}/${plugin_name}.zsh(N.)
           )
-    (( ${#files} )) ||
+    if ! (( ${#files} )); then
       files+=(
                ${plugin_path}/*.zsh-theme(N.)
                ${plugin_path}/*.plugin.zsh(N.)
                ${plugin_path}/init.zsh(N.)
                ${plugin_path}/*.zsh(N.)
                ${plugin_path}/*.sh(N.)
-           )
+             )
+    fi
     [[ -o noksharrays ]] && file=${files[1]} || file=${files[0]}
 
     if [[ -n $file ]]; then
@@ -142,15 +144,19 @@ _zcomet_load() {
   fi
 
   if [[ -d ${plugin_path}/functions ]]; then
-    (( ! ${fpath[(Ie)${plugin_path}]} )) &&
+    if (( ! ${fpath[(Ie)${plugin_path}]} )); then
       fpath=( "${plugin_path}/functions" ${fpath[@]} )
-        ! (( plugin_loaded )) &&
-          _zcomet_add_list load "${repo}${subdir:+ ${subdir}}"
+      if (( ! plugin_loaded )); then
+        _zcomet_add_list load "${repo}${subdir:+ ${subdir}}"
+      fi
+    fi
   elif [[ -d ${plugin_path} ]]; then
-    (( ! ${fpath[(Ie)${plugin_path}]} )) &&
+    if (( ! ${fpath[(Ie)${plugin_path}]} )); then
       fpath=( ${plugin_path} ${fpath[@]} )
-        ! (( plugin_loaded )) &&
-          _zcomet_add_list load "${repo}${subdir:+ ${subdir}}"
+      if (( ! plugin_loaded )); then
+        _zcomet_add_list load "${repo}${subdir:+ ${subdir}}"
+      fi
+    fi
   else
     >&2 print "Cannot add ${plugin_path} or ${plugin_path}/functions to FPATH." &&
       return 1
@@ -208,10 +214,11 @@ _zcomet_clone_repo() {
     print -P "%B%F{yellow}Cloning ${repo}:%f%b"
     command git clone https://github.com/${repo} ${ZCOMET[REPOS_DIR]}/${repo} ||
       return $?
-    [[ -n $branch ]] &&
+    if [[ -n $branch ]]; then
       command git --git-dir=${ZCOMET[REPOS_DIR]}/${repo}/.git \
         --work-tree=${ZCOMET[REPOS_DIR]}/${repo} \
         checkout -q $branch
+    fi
     local file
     for file in ${ZCOMET[REPOS_DIR]}/${repo}/**/*.zsh(N.) \
                 ${ZCOMET[REPOS_DIR]}/${repo}/**/prompt_*_setup(N.) \
@@ -255,8 +262,9 @@ zcomet() {
 
   case $cmd in
     load)
-      [[ $1 != ?*/?* && $1 != 'ohmyzsh' && $1 != 'prezto' ]] &&
+      if [[ $1 != ?*/?* && $1 != 'ohmyzsh' && $1 != 'prezto' ]] then
         >&2 print 'You need to specify a valid repository.' && return 1
+      fi
       repo_branch=$1 && shift
       _zcomet_clone_repo $repo_branch || return $?
       _zcomet_load ${repo_branch%@*} $@
@@ -268,26 +276,31 @@ zcomet() {
       local url
       url='https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/'
       if [[ ! -f ${ZCOMET[SNIPPETS_DIR]}/${snippet} ]] || (( update )); then
-        [[ ! -d ${ZCOMET[SNIPPETS_DIR]}/${snippet%/*} ]] &&
+        if [[ ! -d ${ZCOMET[SNIPPETS_DIR]}/${snippet%/*} ]]; then
           mkdir -p ${ZCOMET[SNIPPETS_DIR]}/${snippet%/*}
+        fi
         print -P "%B%F{yellow}Downloading snippet ${snippet}:%f%b"
         curl ${url}${snippet#OMZ::} > ${ZCOMET[SNIPPETS_DIR]}/${snippet}
         _zcomet_compile ${ZCOMET[SNIPPETS_DIR]}/${snippet}
       fi
-      source ${ZCOMET[SNIPPETS_DIR]}/${snippet} &&
+      if source ${ZCOMET[SNIPPETS_DIR]}/${snippet}; then
         _zcomet_add_list $cmd $snippet
+      else
+        >&2 print "Could not source snippet ${snippet}."
+      fi
       ;;
     trigger)
       [[ -z $1 ]] && >&2 print 'You need to name a trigger.' && return 1
       trigger=$1 && shift
       # TODO: Allow user to create more than one trigger per command
       # TODO: Add a pre-clone option
-        functions[$trigger]="ZCOMET_TRIGGERS=( "\${ZCOMET_TRIGGERS[@]:#${trigger}}" );
-          unfunction $trigger;
-          zcomet load $@;
-          eval $trigger \$@" && _zcomet_add_list $cmd $trigger
+      functions[$trigger]="ZCOMET_TRIGGERS=( "\${ZCOMET_TRIGGERS[@]:#${trigger}}" );
+        unfunction $trigger;
+        zcomet load $@;
+        eval $trigger \$@" && _zcomet_add_list $cmd $trigger
       ;;
     unload)
+      # TODO: The following needs work.
       [[ -z $1 ]] && >&2 print 'What would you like to unload?' && return 1
       if (( ${+functions[${1#*/}_plugin_unload]} )) &&
         ${1#*/}_plugin_unload; then
@@ -314,23 +327,29 @@ zcomet() {
         if [[ $i == *.zsh || $i == *.sh ]]; then
           print -P "%B%F{yellow}${i#${ZCOMET[SNIPPETS_DIR]}/}:%f%b"
           zcomet snippet --update ${i#${ZCOMET[SNIPPETS_DIR]}/}
-        _zcomet_compile $i
-        (( ${ZCOMET_SNIPPETS[(Ie)$i]} )) &&
-          zcomet snippet ${i#${ZCOMET[SNIPPETS_DIR]}/}
+          _zcomet_compile $i
+          if (( ${ZCOMET_SNIPPETS[(Ie)$i]} )); then
+            zcomet snippet ${i#${ZCOMET[SNIPPETS_DIR]}/}
+          fi
         fi
       done
       ;;
     list)
-      (( ${#zsh_loaded_plugins} )) && print -P '%B%F{yellow}Plugins:%f%b' &&
+      (( ${#zsh_loaded_plugins} ))           &&
+        print -P '%B%F{yellow}Plugins:%f%b'  &&
         print -l -f '  %s\n' ${(o)zsh_loaded_plugins[@]}
-      (( ${#ZCOMET_SNIPPETS} )) && print -P '%B%F{yellow}Snippets:%f%b' &&
+      (( ${#ZCOMET_SNIPPETS} ))              &&
+        print -P '%B%F{yellow}Snippets:%f%b' &&
         print -l -f '  %s\n' ${(o)ZCOMET_SNIPPETS[@]}
-      (( ${#ZCOMET_TRIGGERS} )) && print -P '%B%F{yellow}Triggers:%f%b' &&
+      (( ${#ZCOMET_TRIGGERS} ))              &&
+        print -P '%B%F{yellow}Triggers:%f%b' &&
         print "  ${(o)ZCOMET_TRIGGERS[@]}"
       ;;
     compile)
-      [[ -z $1 ]] && >&2 print 'Which script(s) would you like to zcompile?' &&
+      if [[ -z $1 ]]; then
+        >&2 print 'Which script(s) would you like to zcompile?'
         return 1
+      fi
       _zcomet_compile $@
       ;;
     -h|--help|help)
