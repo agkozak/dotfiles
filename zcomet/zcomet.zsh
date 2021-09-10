@@ -94,7 +94,7 @@ _zcomet_repo_shorthand() {
 #   Error messages
 ##########################################################
 _zcomet_load() {
-  typeset repo subdir file plugin_path plugin_name
+  typeset repo subdir file plugin_path plugin_name plugin_loaded
   typeset -a files
   repo=$1
   _zcomet_repo_shorthand $repo
@@ -111,8 +111,8 @@ _zcomet_load() {
   if (( ${#files} )); then
     for file in ${files[@]}; do
       source ${plugin_path}/${file} &&
-        _zcomet_add_list load "${repo}${subdir:+ ${subdir}}${file:+ ${file}}" ||
-        return $?
+        _zcomet_add_list load "${repo}${subdir:+ ${subdir}}${file:+ ${file}}" &&
+        plugin_loaded=1 || return $?
     done
   else
     plugin_name=${${subdir:+${subdir##*/}}:-${repo##*/}}
@@ -134,7 +134,7 @@ _zcomet_load() {
 
     if [[ -n $file ]]; then
       if source $file; then
-        _zcomet_add_list load "${repo}${subdir:+ ${subdir}}"
+        _zcomet_add_list load "${repo}${subdir:+ ${subdir}}" && plugin_loaded=1
       else
         >&2 print "Cannot source ${file}." && return 1
       fi
@@ -144,11 +144,13 @@ _zcomet_load() {
   if [[ -d ${plugin_path}/functions ]]; then
     (( ! ${fpath[(Ie)${plugin_path}]} )) &&
       fpath=( "${plugin_path}/functions" ${fpath[@]} )
-    _zcomet_add_list load "${repo}${subdir:+ ${subdir}}"
+        ! (( plugin_loaded )) &&
+          _zcomet_add_list load "${repo}${subdir:+ ${subdir}}"
   elif [[ -d ${plugin_path} ]]; then
     (( ! ${fpath[(Ie)${plugin_path}]} )) &&
       fpath=( ${plugin_path} ${fpath[@]} )
-    _zcomet_add_list load "${repo}${subdir:+ ${subdir}}"
+        ! (( plugin_loaded )) &&
+          _zcomet_add_list load "${repo}${subdir:+ ${subdir}}"
   else
     >&2 print "Cannot add ${plugin_path} or ${plugin_path}/functions to FPATH." &&
       return 1
