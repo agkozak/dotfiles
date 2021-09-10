@@ -280,9 +280,11 @@ zcomet() {
           mkdir -p ${ZCOMET[SNIPPETS_DIR]}/${snippet%/*}
         fi
         print -P "%B%F{yellow}Downloading snippet ${snippet}:%f%b"
-        curl ${url}${snippet#OMZ::} > ${ZCOMET[SNIPPETS_DIR]}/${snippet}
-        _zcomet_compile ${ZCOMET[SNIPPETS_DIR]}/${snippet}
+        if curl ${url}${snippet#OMZ::} > ${ZCOMET[SNIPPETS_DIR]}/${snippet}; then
+          _zcomet_compile ${ZCOMET[SNIPPETS_DIR]}/${snippet}
+        fi
       fi
+      (( update )) && return
       if source ${ZCOMET[SNIPPETS_DIR]}/${snippet}; then
         _zcomet_add_list $cmd $snippet
       else
@@ -322,17 +324,20 @@ zcomet() {
         (( ${ZCOMET_PLUGINS[(Ie)$i]} )) && zcomet load $i
       done
       local -a snippets
-      snippets=( ${ZCOMET[SNIPPETS_DIR]}/**/*(N) )
+      snippets=( ${ZCOMET[SNIPPETS_DIR]}/**/*(N.) )
       for i in ${snippets[@]}; do
-        if [[ $i == *.zsh || $i == *.sh ]]; then
+        if [[ $i != *.zwc ]]; then
           print -P "%B%F{yellow}${i#${ZCOMET[SNIPPETS_DIR]}/}:%f%b"
           zcomet snippet --update ${i#${ZCOMET[SNIPPETS_DIR]}/}
           _zcomet_compile $i
-          if (( ${ZCOMET_SNIPPETS[(Ie)$i]} )); then
-            zcomet snippet ${i#${ZCOMET[SNIPPETS_DIR]}/}
-          fi
         fi
       done
+      i=
+      if (( ${#ZCOMET_SNIPPETS} )); then
+        for i in ${ZCOMET_SNIPPETS[@]}; do
+          zcomet snippet $i
+        done
+      fi
       ;;
     list)
       (( ${#zsh_loaded_plugins} ))           &&
