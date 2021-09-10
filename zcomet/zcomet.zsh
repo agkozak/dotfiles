@@ -246,24 +246,32 @@ zcomet() {
   # THE MAIN ROUTINE
   ##########################################################
 
-  local cmd
+  local cmd update trigger snippet repo_branch
   [[ -n $1 ]] && cmd=$1 && shift
+  if [[ -n $1 ]]; then
+    if [[ $cmd == 'snippet' ]]; then
+      if [[ $1 == '--update' ]]; then
+        update=1 && shift
+      fi
+      snippet=$1
+    elif [[ $cmd == 'trigger' ]]; then
+      trigger=$1
+    else
+      repo_branch=$1
+    fi
+    shift
+  fi
 
   case $cmd in
     load)
-      [[ -z $1 ]] && return 1
-      local repo_branch
-      repo_branch=$1 && shift
+      [[ -z $repo_branch ]] && return 1
       _zcomet_clone_repo $repo_branch || return $?
       _zcomet_load ${repo_branch%@*} $@
       ;;
     snippet)
-      [[ -z $1 ]] && return 1
-      local update snippet repo
-      [[ $1 == '--update' ]] && update=1 && shift
-      snippet=$1
+      [[ -z $snippet ]] && return 1
+      local repo
       repo='https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/'
-      shift
       if [[ ! -f ${ZCOMET[SNIPPETS_DIR]}/${snippet} ]] || (( update )); then
         [[ ! -d ${ZCOMET[SNIPPETS_DIR]}/${snippet%/*} ]] &&
           mkdir -p ${ZCOMET[SNIPPETS_DIR]}/${snippet%/*}
@@ -275,10 +283,8 @@ zcomet() {
         _zcomet_add_list $cmd $snippet
       ;;
     trigger)
-      # TODO: Allow user to create more than one trigger per command
       [[ -z $1 ]] && return 1
-      local trigger
-      trigger=$1 && shift
+      # TODO: Allow user to create more than one trigger per command
       # TODO: Add a pre-clone option
         functions[$trigger]="ZCOMET_TRIGGERS=( "\${(@)ZCOMET_TRIGGERS:#${trigger}}" );
           unfunction $trigger;
