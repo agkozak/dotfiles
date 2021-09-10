@@ -44,6 +44,8 @@ PMSPEC="0fuiPs"
 #   Files to compile or recompile
 ############################################################
 _zcomet_compile() {
+  setopt NO_KSH_ARRAYS NO_SH_WORD_SPLIT
+
   while (( $# )); do
     if [[ -s $1                                &&
           ( ! -s ${1}.zwc || $1 -nt ${1}.zwc ) &&
@@ -61,7 +63,6 @@ _zcomet_compile() {
 # sorin-ionescu/prezto
 ###########################################################
 _zcomet_repo_shorthand() {
-
   emulate -L zsh
   setopt EXTENDED_GLOB WARN_CREATE_GLOBAL TYPESET_SILENT
   setopt NO_SHORT_LOOPS RC_QUOTES NO_AUTO_PUSHD
@@ -108,7 +109,7 @@ _zcomet_load() {
   plugin_path="${ZCOMET[REPOS_DIR]}/${repo}${subdir:+/${subdir}}"
 
   if (( ${#files} )); then
-    for file in $files; do
+    for file in ${files[@]}; do
       source ${plugin_path}/${file} &&
         _zcomet_add_list load "${repo}${subdir:+ ${subdir}}${file:+ ${file}}" ||
         return $?
@@ -129,7 +130,7 @@ _zcomet_load() {
                ${plugin_path}/*.zsh(N.)
                ${plugin_path}/*.sh(N.)
            )
-    file=${files[1]}
+    [[ -o noksharrays ]] && file=${files[1]} || file=${files[0]}
 
     if [[ -n $file ]]; then
       if source $file; then
@@ -142,11 +143,11 @@ _zcomet_load() {
 
   if [[ -d ${plugin_path}/functions ]]; then
     (( ! ${fpath[(Ie)${plugin_path}]} )) &&
-      fpath=( "${plugin_path}/functions" $fpath )
+      fpath=( "${plugin_path}/functions" ${fpath[@]} )
     _zcomet_add_list load "${repo}${subdir:+ ${subdir}}"
   elif [[ -d ${plugin_path} ]]; then
     (( ! ${fpath[(Ie)${plugin_path}]} )) &&
-      fpath=( ${plugin_path} $fpath )
+      fpath=( ${plugin_path} ${fpath[@]} )
     _zcomet_add_list load "${repo}${subdir:+ ${subdir}}"
   else
     >&2 print "Cannot add ${plugin_path} or ${plugin_path}/functions to FPATH." &&
@@ -166,7 +167,6 @@ _zcomet_load() {
 #     themes/robbyrussell
 ##########################################################
 _zcomet_add_list() {
-
   emulate -L zsh
   setopt EXTENDED_GLOB WARN_CREATE_GLOBAL TYPESET_SILENT
   setopt NO_SHORT_LOOPS RC_QUOTES NO_AUTO_PUSHD
@@ -193,6 +193,8 @@ _zcomet_add_list() {
 # script in ohmyzsh/ohmyzsh! Rein it in.
 ##########################################################
 _zcomet_clone_repo() {
+  setopt NO_KSH_ARRAYS NO_SH_WORD_SPLIT
+
   [[ -z $1 ]] && return 1
   local repo branch
   repo=${1%@*}
@@ -237,7 +239,6 @@ _zcomet_clone_repo() {
 #   Status updates
 ############################################################
 zcomet() {
-
   local MATCH REPLY; integer MBEGIN MEND
   local -a match mbegin mend reply
 
@@ -279,7 +280,7 @@ zcomet() {
       trigger=$1 && shift
       # TODO: Allow user to create more than one trigger per command
       # TODO: Add a pre-clone option
-        functions[$trigger]="ZCOMET_TRIGGERS=( "\${(@)ZCOMET_TRIGGERS:#${trigger}}" );
+        functions[$trigger]="ZCOMET_TRIGGERS=( "\${ZCOMET_TRIGGERS[@]:#${trigger}}" );
           unfunction $trigger;
           zcomet load $@;
           eval $trigger \$@" && _zcomet_add_list $cmd $trigger
@@ -289,8 +290,8 @@ zcomet() {
       if (( ${+functions[${1#*/}_plugin_unload]} )) &&
         ${1#*/}_plugin_unload; then
         # TODO: Something much better is needed.
-        zsh_loaded_plugins=( ${(@)ZCOMET_PLUGINS:#*/${1}} )
-        zsh_loaded_plugins=( ${(@)ZCOMET_PLUGINS:#*/${1} *} )
+        zsh_loaded_plugins=( ${ZCOMET_PLUGINS[@]:#*/${1}} )
+        zsh_loaded_plugins=( ${ZCOMET_PLUGINS[@]:#*/${1} *} )
       fi
       ;;
     update)
@@ -307,7 +308,7 @@ zcomet() {
       done
       local -a snippets
       snippets=( ${ZCOMET[SNIPPETS_DIR]}/**/*(N) )
-      for i in $snippets; do
+      for i in ${snippets[@]}; do
         if [[ $i == *.zsh || $i == *.sh ]]; then
           print -P "%B%F{yellow}${i#${ZCOMET[SNIPPETS_DIR]}/}:%f%b"
           zcomet snippet --update ${i#${ZCOMET[SNIPPETS_DIR]}/}
@@ -319,11 +320,11 @@ zcomet() {
       ;;
     list)
       (( ${#zsh_loaded_plugins} )) && print -P '%B%F{yellow}Plugins:%f%b' &&
-        print -l -f '  %s\n' ${(@o)zsh_loaded_plugins}
+        print -l -f '  %s\n' ${(o)zsh_loaded_plugins[@]}
       (( ${#ZCOMET_SNIPPETS} )) && print -P '%B%F{yellow}Snippets:%f%b' &&
-        print -l -f '  %s\n' ${(@o)ZCOMET_SNIPPETS}
+        print -l -f '  %s\n' ${(o)ZCOMET_SNIPPETS[@]}
       (( ${#ZCOMET_TRIGGERS} )) && print -P '%B%F{yellow}Triggers:%f%b' &&
-        print "  ${(@o)ZCOMET_TRIGGERS}"
+        print "  ${(o)ZCOMET_TRIGGERS[@]}"
       ;;
     compile)
       [[ -z $1 ]] && >&2 print 'Which script(s) would you like to zcompile?' &&
