@@ -249,42 +249,34 @@ zcomet() {
 
   local cmd update trigger snippet repo_branch
   [[ -n $1 ]] && cmd=$1 && shift
-  if [[ -n $1 && $cmd != 'compile' ]]; then
-    if [[ $cmd == 'snippet' ]]; then
-      if [[ $1 == '--update' ]]; then
-        update=1 && shift
-      fi
-      snippet=$1
-    elif [[ $cmd == 'trigger' ]]; then
-      trigger=$1
-    else
-      repo_branch=$1
-    fi
-    shift
-  fi
 
   case $cmd in
     load)
-      [[ -z $repo_branch ]] && return 1
+      [[ $1 != ?*/?* && $1 != 'ohmyzsh' && $1 != 'prezto' ]] &&
+        >&2 print 'You need to specify a valid repository.' && return 1
+      repo_branch=$1 && shift
       _zcomet_clone_repo $repo_branch || return $?
       _zcomet_load ${repo_branch%@*} $@
       ;;
     snippet)
-      [[ -z $snippet ]] && return 1
-      local repo
-      repo='https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/'
+      [[ -z $1 ]] && print 'You need to specify a snippet.' && return 1
+      [[ $1 == '--update' ]] && update=1 && shift
+      snippet=$1 && shift
+      local url
+      url='https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/'
       if [[ ! -f ${ZCOMET[SNIPPETS_DIR]}/${snippet} ]] || (( update )); then
         [[ ! -d ${ZCOMET[SNIPPETS_DIR]}/${snippet%/*} ]] &&
           mkdir -p ${ZCOMET[SNIPPETS_DIR]}/${snippet%/*}
         print -P "%B%F{yellow}Downloading snippet ${snippet}:%f%b"
-        curl ${repo}${snippet#OMZ::} > ${ZCOMET[SNIPPETS_DIR]}/${snippet}
+        curl ${url}${snippet#OMZ::} > ${ZCOMET[SNIPPETS_DIR]}/${snippet}
         _zcomet_compile ${ZCOMET[SNIPPETS_DIR]}/${snippet}
       fi
       source ${ZCOMET[SNIPPETS_DIR]}/${snippet} &&
         _zcomet_add_list $cmd $snippet
       ;;
     trigger)
-      [[ -z $1 ]] && return 1
+      [[ -z $1 ]] && >&2 print 'You need to name a trigger.' && return 1
+      trigger=$1 && shift
       # TODO: Allow user to create more than one trigger per command
       # TODO: Add a pre-clone option
         functions[$trigger]="ZCOMET_TRIGGERS=( "\${(@)ZCOMET_TRIGGERS:#${trigger}}" );
@@ -293,7 +285,7 @@ zcomet() {
           eval $trigger \$@" && _zcomet_add_list $cmd $trigger
       ;;
     unload)
-      [[ -z $1 ]] && return 1
+      [[ -z $1 ]] && >&2 print 'What would you like to unload?' && return 1
       if (( ${+functions[${1#*/}_plugin_unload]} )) &&
         ${1#*/}_plugin_unload; then
         # TODO: Something much better is needed.
@@ -334,7 +326,8 @@ zcomet() {
         print "  ${(@o)ZCOMET_TRIGGERS}"
       ;;
     compile)
-      [[ -z $1 ]] && return 1
+      [[ -z $1 ]] && >&2 print 'Which script(s) would you like to zcompile?' &&
+        return 1
       _zcomet_compile $@
       ;;
     -h|--help|help)
