@@ -246,9 +246,8 @@ zcomet() {
   # THE MAIN ROUTINE
   ##########################################################
 
-  local cmd orig_dir
+  local cmd
   [[ -n $1 ]] && cmd=$1 && shift
-  orig_dir=$PWD
 
   case $cmd in
     load)
