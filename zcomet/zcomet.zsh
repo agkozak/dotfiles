@@ -249,7 +249,7 @@ zcomet() {
 
   local cmd update trigger snippet repo_branch
   [[ -n $1 ]] && cmd=$1 && shift
-  if [[ -n $1 ]]; then
+  if [[ -n $1 && $cmd != 'compile' ]]; then
     if [[ $cmd == 'snippet' ]]; then
       if [[ $1 == '--update' ]]; then
         update=1 && shift

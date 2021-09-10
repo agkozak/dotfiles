@@ -42,7 +42,8 @@ autoload -Uz git-alias-lookup \\
          git-action \\
          git-info
 [[ $TERM != dumb ]] && () {
-  zcomet compile ${HOME}/.zcompdump_${ZSH_VERSION}
+  [[ -f ${HOME}/.zcompdump_${ZSH_VERSION} ]] &&
+    zcomet compile ${HOME}/.zcompdump_${ZSH_VERSION}
   autoload -Uz compinit; compinit -C -d ${HOME}/.zcompdump_${ZSH_VERSION}
 }
 
