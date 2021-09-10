@@ -14,7 +14,7 @@ typeset -A ZCOMET
 ZCOMET[SCRIPT]=$0
 
 # Add zcomet completions to FPATH
-fpath=( ${0:A:h} $fpath )
+fpath=( ${0:A:h} ${fpath[@]} )
 
 # Allow the user to specify custom directories
 ZCOMET[HOME_DIR]=${ZCOMET[HOME_DIR]:-${HOME}/.zcomet}
@@ -345,3 +345,5 @@ help            print this help text" | fold -s -w $COLUMNS
     *) zcomet help; return 1 ;;
   esac
 }
+
+zcomet compile ${ZCOMET[SCRIPT]}
