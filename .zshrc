@@ -376,6 +376,9 @@ AGKOZAK_CUSTOM_RPROMPT=''
 if (( ${+commands[git]} )); then
 
   # Load plugins and snippets {{{2
+  if [[ ! -f ${HOME}/dotfiles/zcomet/zcomet.zsh ]]; then
+    command git clone git@github.com:agkozak/zcomet.git ${HOME}/dotfiles/zcomet
+  fi
   source ~/dotfiles/zcomet/zcomet.zsh
 
   zcomet load agkozak/agkozak-zsh-prompt@develop
