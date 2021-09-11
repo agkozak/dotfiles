@@ -132,15 +132,16 @@ alias -g H='| head'
 # Cygwin
 autoload -Uz is-at-least
 
-if [[ $OSTYPE == (msys|cygwin) ]] && is-at-least 5.6; then
-  less() {
-    if [[ -p /dev/fd/0 ]]; then
-      (command less $@)
-    else
-      command less $@
-    fi
-  }
-fi
+# The following does not seem to be necessary anymore
+# if [[ $OSTYPE == (msys|cygwin) ]] && is-at-least 5.6; then
+#   less() {
+#     if [[ -p /dev/fd/0 ]]; then
+#       (command less $@)
+#     else
+#       command less $@
+#     fi
+#   }
+# fi
 
 alias -g L='| less'
 
