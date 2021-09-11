@@ -418,16 +418,11 @@ update_dotfiles() {
     i=${i#\./}
     [ "$i" = '.git' ] && continue
     i=${i%/\.git}
-    case $i in
-      *zsh-framework-benchmark) ;;
-      *)
-        printf 'Updating %s: ' "${i##*/}"
-        cd "$i" || exit
-        cd ..
-        git pull
-        cd "${HOME}/dotfiles" || exit
-        ;;
-    esac
+    printf 'Updating %s: ' "${i##*/}"
+    cd "$i" || exit
+    cd ..
+    git pull
+    cd "${HOME}/dotfiles" || exit
   done
   cd "$CUR_DIR" || exit
   unset CUR_DIR i
