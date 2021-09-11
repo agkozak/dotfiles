@@ -380,8 +380,12 @@ if (( ${+commands[git]} )); then
     command git clone git@github.com:agkozak/zcomet.git ${HOME}/dotfiles/zcomet
   fi
   source ~/dotfiles/zcomet/zcomet.zsh
+ 
+  zcomet fpath agkozak/agkozak-zsh-prompt@develop
+  autoload promptinit; promptinit
+  prompt agkozak-zsh-prompt
 
-  zcomet load agkozak/agkozak-zsh-prompt@develop
+  # zcomet load agkozak/agkozak-zsh-prompt@develop
 
   # zinit light agkozak/polyglot
   # if which kubectl &> /dev/null; then
