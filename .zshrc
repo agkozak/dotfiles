@@ -447,7 +447,7 @@ fi
   hash -d agk="${HOME}/.zcomet/repos/agkozak/agkozak-zsh-prompt"
 [[ -d ${HOME}/.zcomet/repos/agkozak/zsh-z ]] &&
   hash -d z="${HOME}/.zcomet/repos/agkozak/zsh-z"
-[[ -d ${HOME}/dotfiles/zcomet ]] &&
+[[ -d ${HOME}/.zcomet/bin ]] &&
   hash -d zc="${HOME}/.zcomet/bin"
 
 # }}}2
