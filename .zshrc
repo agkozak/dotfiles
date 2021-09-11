@@ -381,11 +381,11 @@ if (( ${+commands[git]} )); then
   fi
   source ~/dotfiles/zcomet/zcomet.zsh
  
-  zcomet fpath agkozak/agkozak-zsh-prompt@develop
-  autoload promptinit; promptinit
-  prompt agkozak-zsh-prompt
+  # zcomet fpath agkozak/agkozak-zsh-prompt@develop
+  # autoload promptinit; promptinit
+  # prompt agkozak-zsh-prompt
 
-  # zcomet load agkozak/agkozak-zsh-prompt@develop
+  zcomet load agkozak/agkozak-zsh-prompt@develop
 
   # zinit light agkozak/polyglot
   # if which kubectl &> /dev/null; then
