@@ -377,9 +377,9 @@ if (( ${+commands[git]} )); then
 
   # Load plugins and snippets {{{2
   if [[ ! -f ${HOME}/dotfiles/zcomet/zcomet.zsh ]]; then
-    command git clone git@github.com:agkozak/zcomet.git ${HOME}/dotfiles/zcomet
+    command git clone git@github.com:agkozak/zcomet.git ${HOME}/.zcomet/bin
   fi
-  source ~/dotfiles/zcomet/zcomet.zsh
+  source ~/.zcomet/bin/zcomet.zsh
  
   # zcomet fpath agkozak/agkozak-zsh-prompt@develop
   # autoload promptinit; promptinit
@@ -448,7 +448,7 @@ fi
 [[ -d ${HOME}/.zcomet/repos/agkozak/zsh-z ]] &&
   hash -d z="${HOME}/.zcomet/repos/agkozak/zsh-z"
 [[ -d ${HOME}/dotfiles/zcomet ]] &&
-  hash -d zcomet="${HOME}/dotfiles/zcomet"
+  hash -d zc="${HOME}/.zcomet/bin"
 
 # }}}2
 

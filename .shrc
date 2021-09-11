@@ -414,7 +414,7 @@ update_dotfiles() {
   cd "${HOME}/dotfiles" || exit
   git pull && ./install.sh
   # shellcheck disable=SC2044
-  for i in $(find . -name '.git' | grep -v zsh-framework-benchmark); do
+  for i in $(find . -name '.git'); do
     i=${i#\./}
     [ "$i" = '.git' ] && continue
     i=${i%/\.git}
