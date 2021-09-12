@@ -18,6 +18,10 @@ endfunction
 
 " Tests to see if ale can be used for syntax checking
 function! ALECompatible() abort
+  " ALE seems to slow down WSL2 startup
+  if $AGKDOT_SYSTEMINFO =~# 'microsoft'
+    return 0
+  endif
   return ((v:version >= 800 && has('job') && has('timers') && has('channel'))
         \ || has('nvim'))
 endfunction
@@ -117,16 +121,9 @@ endif
 if has('gui_running')
   set guioptions-=T               " Remove toolbar
   if WINDOWS()
-    " if has('autocmd')
-    "   augroup GUI
-    "     autocmd!
-    "     autocmd GUIEnter * simalt ~x   " Start full-screen when GUI is enabled
-    "   augroup END
-    " endif
     " Windows GUI font (Consolas tends to leave artefacts)
-    set guifont=DejaVu\ Sans\ Mono:h18:cANSI,Consolas:h18:cANSI
+    set guifont=DejaVu\ Sans\ Mono:h12:cANSI,Consolas:h12:cANSI
   else
-    " set lines=100 columns=200     " Open large window
     set guifont=DejaVu\ Sans\ Mono\ 12
   endif
 endif
@@ -176,10 +173,6 @@ set showmatch               " Show matching brackets/parentheses
 
 " => 15 tabs and indenting {{{2
 
-" set tabstop=4               " Indentation set to 4 columns
-" set shiftwidth=4
-" set softtabstop=4           " Let backspace delete indent
-" set noexpandtab             " Use tabs, not spaces
 set autoread                " Reload files changed outside of Vim
 set autoindent              " Indent at level of previous line
 
@@ -205,11 +198,6 @@ nnoremap <Leader>cc :call ColorColumnToggle()<CR>
 
 " `\ev' edits .vimrc
 nnoremap <leader>ev :vsplit $MYVIMRC<CR>
-
-" `\sc' runs Syntastic, if it is available
-if ! ALECompatible()
-  nnoremap <Leader>sc :SyntasticCheck<CR>
-endif
 
 " `\sh' shows the  syntax highlighting group of the word the cursor is on
 nnoremap <Leader>sh :call <SID>SynStack()<CR>
@@ -320,7 +308,7 @@ if executable('git') && (executable('curl') || executable('wget') || WINDOWS())
     " Bundles
 
     " General
-    Plug 'ctrlpvim/ctrlp.vim'
+    " Plug 'ctrlpvim/ctrlp.vim'
     Plug 'mhinz/vim-startify'
     if ALECompatible()
       Plug 'dense-analysis/ale'
@@ -339,43 +327,22 @@ if executable('git') && (executable('curl') || executable('wget') || WINDOWS())
     Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
     Plug 'tweekmonster/startuptime.vim', { 'on': 'StartupTime' }
     Plug 'tpope/vim-commentary'
-    if has('gui') && has('python')
-      Plug 'mbadran/headlights'
-    endif
     Plug 'ciaranm/securemodelines'
     Plug 'fedorenchik/AnsiEsc'
     
     " Git
-    Plug 'tpope/vim-fugitive'
-    if has('nvim') || has('patch-8.0.902')
-      Plug 'mhinz/vim-signify'
-    else
+    " vim-signify seems to slow down WSL2 startup
+    if $AGKDOT_SYSTEMINFO =~# 'microsoft' || ! has('nvim')
+          \ || ! has('patch-8.0.902')
       Plug 'mhinz/vim-signify', { 'branch': 'legacy' }
+    else
+      Plug 'mhinz/vim-signify'
     endif
-    Plug 'junegunn/gv.vim'
-
-    " PHP
-    if v:version < 802  " stanangeloff/php.vim is no longer being updated
-      Plug 'stanangeloff/php.vim', { 'for': 'php' }
-    endif
-    Plug 'shawncplus/phpcomplete.vim', { 'for': 'php' }
-    Plug 'tobyS/vmustache', { 'for': 'php' }  " Required for PDV
-    Plug 'tobyS/pdv', { 'for': 'php' }        " PHP Documentor for Vim
-
-    " HTML5
-    Plug 'othree/html5.vim'
+    Plug 'tpope/vim-fugitive'
+    Plug 'junegunn/gv.vim', { 'on': 'GV' }
 
     " CSS/SCSS/Sass
-    Plug 'hail2u/vim-css3-syntax', { 'for': 'css' }
-    Plug 'cakebaker/scss-syntax.vim', { 'for': 'scss' }
-    Plug 'tpope/vim-haml'
     Plug 'ap/vim-css-color', { 'for': 'css' }
-    Plug 'csscomb/vim-csscomb', { 'for': 'css' }
-
-    " PowerShell
-    if executable('powershell.exe')
-      Plug 'PProvost/vim-ps1'
-    endif
 
     " VimL
     if ! ALECompatible() && !executable('vint')
@@ -386,17 +353,8 @@ if executable('git') && (executable('curl') || executable('wget') || WINDOWS())
     " Color Schemes
     Plug 'jnurmine/Zenburn'
 
-    " Taskpaper
-    Plug 'davidoc/taskpaper.vim'
-
-    " .tmux.conf
-    Plug 'tmux-plugins/vim-tmux', { 'for': 'tmux' }
-
     " Apache logs
     Plug 'vim-scripts/httplog'
-
-    " zsh
-    Plug 'zinit-zsh/zinit-vim-syntax', { 'for': 'zsh' }
 
     call plug#end()
 
@@ -422,8 +380,6 @@ if executable('git') && (executable('curl') || executable('wget') || WINDOWS())
     echo ''
 
     :PlugInstall
-
-    source $MYVIMRC
 
   endif
 else
@@ -492,19 +448,6 @@ endif
 " Startify
 let g:startify_custom_header = [ '' ]
 
-" phpcomplete.vim
-if has('autocmd')
-  augroup PHPComplete
-    autocmd!
-    autocmd FileType php setlocal omnifunc=phpcomplete#CompletePHP
-  augroup END
-endif
-let g:phpcomplete_parse_docblock_comments = 1
-let g:phpcomplete_complete_for_unknown_classes = 1
-
-" wordpress.vim
-let g:wordpress_vim_php_syntax_highlight = 1
-
 " Syntastic
 if ! ALECompatible()
   let g:syntastic_php_checkers = ['php', 'phpcs', 'phpmd']
@@ -522,7 +465,7 @@ endif
 let g:is_posix=1
 
 " CtrlP
-let g:ctrlp_custom_ignore = '\v[\/]Music$'
+" let g:ctrlp_custom_ignore = '\v[\/]Music$'
 
 " NERDTree
 
@@ -533,7 +476,10 @@ let g:NERDTreeDirArrowCollapsible = '~'
 let g:tagbar_autofocus = 1
 
 " Colorizer
-let g:colorizer_auto_filetype='css,scss,html'
+" let g:colorizer_auto_filetype='css,scss,html'
+
+" vim-signify
+let g:signify_vcs_list = [ 'git' ]
 
 " }}}1
 
@@ -567,11 +513,9 @@ if has('autocmd')
 
     " Syntax {{{2
 
-    " access.log is an Apache log
-    autocmd BufReadPost *access.log* set filetype=httplog
-
-    " Use JSON syntax highlighting for CSON files
-    autocmd BufNewFile,BufReadPost *.cson set filetype=coffee
+    " Apache logs
+    autocmd BufReadPost access.log* set filetype=httplog
+    autocmd BufReadPost error.log* set filetype=httplog
 
     " Treat *.md files as Markdown, not Modula-2
     autocmd BufNewFile,BufReadPost *.md setlocal filetype=markdown linebreak
@@ -579,27 +523,12 @@ if has('autocmd')
     " mintty config file syntax
     autocmd BufNewFile,BufReadPost .minttyrc set filetype=dosini
 
-    " .todo extension is TaskPaper
-    autocmd BufNewFile,BufReadPost *.todo set filetype=taskpaper
-
     " JetBrains IDE color schemes
     autocmd BufNewFile,BufReadPost *.icls set filetype=xml
 
     " }}}2
   augroup END
 endif
-
-
-" Reload .vimrc when it changes
-" From http://stackoverflow.com/questions/2400264/is-it-possible-to-apply-vim-configurations-without-restarting/2403926#2403926
-" if has('autocmd')
-"   augroup myvimrc
-"     autocmd!
-"     if $MYVIMRC !=# ''
-"       autocmd BufWritePost .vimrc source $MYVIMRC
-"     endif
-"   augroup END
-" endif
 
 " Enable fenced code block syntax highlighting in Markdown documents
 let g:markdown_fenced_languages = ['html', 'javascript', 'css', 'python', 'bash=sh', 'sh']
@@ -609,21 +538,21 @@ set t_ut= " Disable background color erase
 " rg/ag/ack {{{2
 
 " Avoid problems with native Windows rg/ag 
-if ! has('win32unix') 
+" if ! has('win32unix') 
 
-  if executable('rg')
-    set grepprg=rg\ --vimgrep\ --noheading
-    let g:ctrlp_user_command = 'rg %s --files --color=never --glob ""'
-    let g:ctrlp_use_caching  = 0
-  elseif executable('ag')
-    set grepprg=ag\ --nogroup\ --nocolor
-    let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
-    let g:ctrlp_use_caching = 0
-  elseif executable('ack')
-    set grepprg=ack\ -aH
-  endif
+"   if executable('rg')
+"     set grepprg=rg\ --vimgrep\ --noheading
+"     let g:ctrlp_user_command = 'rg %s --files --color=never --glob ""'
+"     let g:ctrlp_use_caching  = 0
+"   elseif executable('ag')
+"     set grepprg=ag\ --nogroup\ --nocolor
+"     let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
+"     let g:ctrlp_use_caching = 0
+"   elseif executable('ack')
+"     set grepprg=ack\ -aH
+"   endif
 
-endif
+" endif
 
 " }}}2
 

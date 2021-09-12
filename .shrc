@@ -116,8 +116,7 @@ if [ -n "$INSIDE_EMACS" ]; then
   unset LS_COLORS
 # If dircolors is available, install.sh will have installed ~/.dircolors
 # Try not to run dircolors more than once unless TERM has changed
-elif [ "$TERM" != "$AGKDOT_ORIG_TERM" ] &&
-  command -v dircolors > /dev/null 2>&1; then
+elif [ "$TERM" != "$AGKDOT_ORIG_TERM" ] && [ -f "${HOME}/.dircolors" ]; then
   case $AGKDOT_SYSTEMINFO in
     SunOS*) eval "$(dircolors -b)" ;;
     *)
@@ -206,12 +205,12 @@ case $KSH_VERSION in
     ;;
 esac
 
-if  command -v composer.phar > /dev/null 2>&1 &&
-  ! command -v composer      > /dev/null 2>&1; then
-  alias composer='composer.phar'
-fi
-command -v dos2unix > /dev/null 2>&1 || command -v perl > /dev/null 2>&1 &&
-  alias dos2unix='perl -p -i -e "s/\\r\\n/\\n/g"'
+# if  command -v composer.phar > /dev/null 2>&1 &&
+#   ! command -v composer      > /dev/null 2>&1; then
+#   alias composer='composer.phar'
+# fi
+# command -v dos2unix > /dev/null 2>&1 || command -v perl > /dev/null 2>&1 &&
+#   alias dos2unix='perl -p -i -e "s/\\r\\n/\\n/g"'
 
 ############################################################
 # If a given command exists, make an alias for it
@@ -220,23 +219,22 @@ command -v dos2unix > /dev/null 2>&1 || command -v perl > /dev/null 2>&1 &&
 #   $1 The command
 #   $2 The alias
 ############################################################
-_agkdot_cond_aliases() {
-  until [ $# = 0 ]; do
-    command -v "$1" > /dev/null 2>&1 && alias "$2"
-    shift
-    shift
-  done
-}
+# _agkdot_cond_aliases() {
+#   until [ $# = 0 ]; do
+#     command -v "$1" > /dev/null 2>&1 && alias "$2"
+#     shift
+#     shift
+#   done
+# }
 
-_agkdot_cond_aliases \
-  batcat bat='batcat' \
-  github-stats github-stats='github-stats --token ${GITHUB_STATS_TOKEN}' \
-  hue bri='hue set all -b' \
-  vim vi='vim' \
-  wp-cli.phar wp='wp-cli.phar' \
-  youtube-dl yta='youtube-dl --audio-format best -x '
+# command -v can be slow
+alias github-stats='github-stats --token ${GITHUB_STATS_TOKEN}'
+alias bri='hue set all -b'
+[ "$EDITOR" = vim ] && alias vi='vim'
+alias wp='wp-cli.phar'
+alias yta='youtube-dl --audio-format best -x '
 
-unset -f _agkdot_cond_aliases
+# unset -f _agkdot_cond_aliases
 
 # System-specific aliases {{{2
 
@@ -246,34 +244,41 @@ unset -f _agkdot_cond_aliases
 # Arguments:
 #   $1, $2, etc.  Programs that should be run with winpty
 ############################################################
-_agkdot_winpty_alias() {
-  command -v winpty > /dev/null 2>&1 || echo 'Install winpty.' >&2 && return 1
-  while [ $# -ne 0 ]; do
-    # shellcheck disable=SC2139,SC2140
-    command -v "$1" > /dev/null 2>&1 && alias "$1"="winpty $1"
-    shift
-  done
-}
+# _agkdot_winpty_alias() {
+#   command -v winpty > /dev/null 2>&1 || echo 'Install winpty.' >&2 && return 1
+#   while [ $# -ne 0 ]; do
+#     # shellcheck disable=SC2139,SC2140
+#     command -v "$1" > /dev/null 2>&1 && alias "$1"="winpty $1"
+#     shift
+#   done
+# }
+
+if [ -x /usr/bin/winpty ] || [ -x /usr/local/bin/winpty ]; then 
+   AGKDOT_WINPTY=1
+fi
 
 case $AGKDOT_SYSTEMINFO in
   *Msys|*Cygwin)
-    _agkdot_winpty_alias node php
+    if [ "$AGKDOT_WINPTY" -eq 1 ]; then
+      alias node='winpty node'
+      alias php='winpty php'
 
-    # Workaround for https://github.com/msys2/MSYS2-packages/issues/1568#issuecomment-847004378
-    alias choco='temp= tmp= winpty choco'
-    alias cinst='temp= tmp= winpty cinst'
-    alias cuninst='temp= tmp= winpty cuninst'
-    alias cup='temp= tmp= winpty cup'
+      # Workaround for https://github.com/msys2/MSYS2-packages/issues/1568#issuecomment-847004378
+      alias choco='temp= tmp= winpty choco'
+      alias cinst='temp= tmp= winpty cinst'
+      alias cuninst='temp= tmp= winpty cuninst'
+      alias cup='temp= tmp= winpty cup'
 
-    command -v winpty > /dev/null 2>&1 &&
       alias eslint='winpty ${APPDATA}/npm/eslint.cmd'
+    fi
+
     alias ghci='ghcii.sh'
     ;;
 esac
 
 case $AGKDOT_SYSTEMINFO in
   *Msys)
-    if command -v winpty > /dev/null 2>&1; then
+    if [ "$AGKDOT_WINPTY" -eq 1 ]; then
       alias npm='winpty /c/Program\ Files/nodejs/npm.cmd'
       alias wp='winpty php $HOME/bin/wp-cli.phar --no-color'
     fi
@@ -281,12 +286,13 @@ case $AGKDOT_SYSTEMINFO in
     ;;
   *Cygwin)
     alias composer='php $(cygpath -w "${HOME}/bin/composer.phar")'
-    command -v winpty > /dev/null 2>&1 &&
+    if [ "$AGKDOT_WINPTY" -eq 1 ]; then
       alias npm='winpty /cygdrive/c/Program\ Files/nodejs/npm.cmd'
+    fi
     alias gvim='/cygdrive/c/Windows/gvim.bat'
     ;;
   *CYGWIN_NT-10.0-WOW*|*[Mm]icrosoft*)
-    command -v tmux > /dev/null 2>&1 && tmux='tmux -S "${HOME}/.tmsock"'
+    tmux='tmux -S "${HOME}/.tmsock"'
     ;;
   *raspberrypi*)
     alias temp='/opt/vc/bin/vcgencmd measure_temp | egrep "[0-9.]{4,}" -o'
@@ -303,19 +309,18 @@ case $AGKDOT_SYSTEMINFO in
     # Arguments:
     #   $@  A list of Windows programs
     ############################################################
-    _agkdot_exe_alias() {
-      for i in "$@"; do
-        command -v "${i}.exe" > /dev/null 2>&1 || return
-        # shellcheck disable=SC2139,SC2140
-        alias "$i"="${i}.exe"
-      done
-      unset i
-    }
+    # _agkdot_exe_alias() {
+    #   for i in "$@"; do
+    #     command -v "${i}.exe" > /dev/null 2>&1 || return
+    #     # shellcheck disable=SC2139,SC2140
+    #     alias "$i"="${i}.exe"
+    #   done
+    #   unset i
+    # }
 
-    _agkdot_exe_alias explorer \
-                      shexview \
-                      subl \
-                      wsl
+    alias explorer='explorer.exe'
+    alias subl='subl.exe'
+    alias wsl='wsl.exe'
     ;;
 esac
 
@@ -443,7 +448,7 @@ if [ -n "$AGKDOT_SHRC_START" ]; then
 fi
 
 unset AGKDOT_SHRC_START AGKDOT_SHRC_FINISH AGKDOT_DIFFERENCE
-unset -f _agkdot_is_bsd_sh _agkdot_winpty_alias # _agkdot_is_uwin
+unset -f _agkdot_is_bsd_sh # _agkdot_winpty_alias _agkdot_is_uwin
 
 # }}}1
 

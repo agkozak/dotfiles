@@ -83,12 +83,12 @@ if [[ -f ${HOME}/dotfiles/plugins/bash-z/bash-z.sh ]]; then
 else
   if [[ ! -d ${HOME}/dotfiles/plugins/z ]]; then
     if type git &> /dev/null; then
-      git clone https://github.com/agkozak/z.git "$HOME/dotfiles/plugins/z"
+      git clone https://github.com/rupa/z.git "$HOME/dotfiles/plugins/z"
     else
       >&2 echo 'Please install Git.'
     fi
   fi
-  if [[ -f ${HOME}/dotfiles/plugins/z/z.sh ]]; then
+  if [[ $OSTYPE != solaris* && -f ${HOME}/dotfiles/plugins/z/z.sh ]]; then
     . "${HOME}/dotfiles/plugins/z/z.sh"
   fi
 fi

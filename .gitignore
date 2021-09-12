@@ -3,3 +3,4 @@ plugins/
 prompts/
 zenburn.minttyrc/
 tags
+*.zwc
