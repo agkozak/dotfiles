@@ -47,4 +47,4 @@ That will copy relevant configuration files to your home directory. The files co
 
 in any POSIX-compliant shell. `update_dotfiles` is a function that pulls in the latest commits to my dotfiles repository and does what is necessary to update the system.
 
-My `.zshrc` also provides a `zsh_update` function that runs `update_dotfiles` and updates `zinit` and any plugins or snippets.
+My `.zshrc` also provides a `zsh_update` function that runs `update_dotfiles`  and then uses my own plugin manager ([`zcomet`](https://github.com/agkozak/zcomet)) to update the various plugins.

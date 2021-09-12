@@ -378,7 +378,7 @@ if (( ${+commands[git]} )); then
 
   # Load plugins and snippets {{{2
   if [[ ! -f ${HOME}/.zcomet/bin/zcomet.zsh ]]; then
-    command git clone git@github.com:agkozak/zcomet.git ${HOME}/.zcomet/bin
+    command git clone https://github.com/agkozak/zcomet.git ${HOME}/.zcomet/bin
   fi
   source ~/.zcomet/bin/zcomet.zsh
  
