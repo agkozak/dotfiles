@@ -132,16 +132,15 @@ alias -g H='| head'
 # Cygwin
 autoload -Uz is-at-least
 
-# The following does not seem to be necessary anymore
-# if [[ $OSTYPE == (msys|cygwin) ]] && is-at-least 5.6; then
-#   less() {
-#     if [[ -p /dev/fd/0 ]]; then
-#       (command less $@)
-#     else
-#       command less $@
-#     fi
-#   }
-# fi
+if [[ $OSTYPE == (msys|cygwin) ]] && is-at-least 5.6; then
+  less() {
+    if [[ -p /dev/fd/0 ]]; then
+      (command less $@)
+    else
+      command less $@
+    fi
+  }
+fi
 
 alias -g L='| less'
 
@@ -406,7 +405,7 @@ if (( ${+commands[git]} )); then
   ZSHZ_TRAILING_SLASH=1
 
   zcomet trigger zhooks agkozak/zhooks@develop
-  zcomet load jreese/zsh-titles
+  # zcomet load jreese/zsh-titles
 
   # if [[ $AGKDOT_SYSTEMINFO != *ish* ]]; then
   #   if (( AGKDOT_USE_TURBO )); then
@@ -421,6 +420,8 @@ if (( ${+commands[git]} )); then
   zcomet trigger extract x ohmyzsh plugins/extract
 
   zcomet trigger zsh-prompt-benchmark romkatv/zsh-prompt-benchmark
+
+  zcomet snippet https://github.com/jreese/zsh-titles/blob/master/titles.plugin.zsh
 
   # (( AGKDOT_USE_TURBO )) && zinit ice silent wait'0h'
   # zinit load zpm-zsh/clipboard
