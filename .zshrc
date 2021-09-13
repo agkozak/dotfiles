@@ -405,7 +405,7 @@ if (( ${+commands[git]} )); then
   ZSHZ_TRAILING_SLASH=1
 
   zcomet trigger zhooks agkozak/zhooks@develop
-  zcomet load jreese/zsh-titles
+  # zcomet load jreese/zsh-titles
 
   # if [[ $AGKDOT_SYSTEMINFO != *ish* ]]; then
   #   if (( AGKDOT_USE_TURBO )); then
@@ -420,6 +420,8 @@ if (( ${+commands[git]} )); then
   zcomet trigger extract x ohmyzsh plugins/extract
 
   zcomet trigger zsh-prompt-benchmark romkatv/zsh-prompt-benchmark
+
+  zcomet snippet https://github.com/jreese/zsh-titles/blob/master/titles.plugin.zsh
 
   # (( AGKDOT_USE_TURBO )) && zinit ice silent wait'0h'
   # zinit load zpm-zsh/clipboard
