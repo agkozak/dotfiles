@@ -405,8 +405,8 @@ if (( ${+commands[git]} )); then
   ZSHZ_TRAILING_SLASH=1
 
   zcomet trigger zhooks agkozak/zhooks@develop
-  zcomet load jreese/zsh-titles
-
+  # zcomet load jreese/zsh-titles
+  zcomet snippet https://github.com/jreese/zsh-titles/blob/master/titles.plugin.zsh
   # if [[ $AGKDOT_SYSTEMINFO != *ish* ]]; then
   #   if (( AGKDOT_USE_TURBO )); then
   #     zinit ice lucid wait'0e'
