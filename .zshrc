@@ -65,14 +65,10 @@ fi
 
 # Compile dotfiles {{{1
 
-for i in .zshenv \
-         .profile \
+for i in .profile \
          .profile.local \
-         .zprofile \
          .zshenv.local \
-         .zprofile \
          .zprofile.local \
-         .zshrc \
          .shrc \
          .shrc.local \
          .zshrc.local \
