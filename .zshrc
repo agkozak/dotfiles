@@ -128,16 +128,15 @@ alias -g H='| head'
 # Cygwin
 autoload -Uz is-at-least
 
-# The following does not seem to be necessary anymore
-# if [[ $OSTYPE == (msys|cygwin) ]] && is-at-least 5.6; then
-#   less() {
-#     if [[ -p /dev/fd/0 ]]; then
-#       (command less $@)
-#     else
-#       command less $@
-#     fi
-#   }
-# fi
+if [[ $OSTYPE == (msys|cygwin) ]] && is-at-least 5.6; then
+  less() {
+    if [[ -p /dev/fd/0 ]]; then
+      (command less $@)
+    else
+      command less $@
+    fi
+  }
+fi
 
 alias -g L='| less'
 
@@ -374,7 +373,7 @@ if (( ${+commands[git]} )); then
 
   # Load plugins and snippets {{{2
   if [[ ! -f ${HOME}/.zcomet/bin/zcomet.zsh ]]; then
-    command git clone git@github.com:agkozak/zcomet.git ${HOME}/.zcomet/bin
+    command git clone https://github.com/agkozak/zcomet.git ${HOME}/.zcomet/bin
   fi
   source ~/.zcomet/bin/zcomet.zsh
  
@@ -402,8 +401,8 @@ if (( ${+commands[git]} )); then
   ZSHZ_TRAILING_SLASH=1
 
   zcomet trigger zhooks agkozak/zhooks@develop
-  zcomet load jreese/zsh-titles
-
+  # zcomet load jreese/zsh-titles
+  zcomet snippet https://github.com/jreese/zsh-titles/blob/master/titles.plugin.zsh
   # if [[ $AGKDOT_SYSTEMINFO != *ish* ]]; then
   #   if (( AGKDOT_USE_TURBO )); then
   #     zinit ice lucid wait'0e'
