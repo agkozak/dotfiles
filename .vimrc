@@ -18,7 +18,7 @@ endfunction
 
 " Tests to see if ale can be used for syntax checking
 function! ALECompatible() abort
-  " ALE seems to slow down WSL2 startup
+  " ALE seems to slow down Vim startup on WSL2
   if $AGKDOT_SYSTEMINFO =~# 'microsoft'
     return 0
   endif
@@ -331,7 +331,6 @@ if executable('git') && (executable('curl') || executable('wget') || WINDOWS())
     Plug 'fedorenchik/AnsiEsc'
     
     " Git
-    " vim-signify seems to slow down WSL2 startup
     if $AGKDOT_SYSTEMINFO =~# 'microsoft' || ! has('nvim')
           \ || ! has('patch-8.0.902')
       Plug 'mhinz/vim-signify', { 'branch': 'legacy' }
@@ -409,7 +408,6 @@ if &term !=# 'cygwin' && &term !=# 'win32'
     nnoremap <Char-0x07F> <BS>
   endif
 
-  syntax on
   if has('iVim')
     silent! colorscheme desert
   else
@@ -419,8 +417,9 @@ if &term !=# 'cygwin' && &term !=# 'win32'
 
 else
   colorscheme industry
-  syntax on
 endif
+
+syntax on
 
 " }}}1
 
