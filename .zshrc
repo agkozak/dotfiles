@@ -88,7 +88,7 @@ for i in .profile \
         ! -e ${HOME}/${i}.zwc ||
         ${HOME}/${i} -nt ${HOME}/${i}.zwc ]]; then
     (( AGKDOT_BENCHMARKS )) && >&2 print -P "%F{red}Compiling ${i}%f"
-    zcompile "${HOME}/${i}"
+    zcompile -R "${HOME}/${i}"
   fi
 done
 unset i
