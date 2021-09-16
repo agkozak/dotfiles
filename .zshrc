@@ -516,7 +516,7 @@ zstyle ':completion:*' select-prompt '%SScrolling active: current selection at %
 
 # vi mode exceptions {{{2
 
-# bindkey -v    # `set -o vi` is in .shrc
+[[ -o vi ]] || bindkey -v                             # `set -o vi` is in .shrc
 
 # Borrowed from emacs mode
 bindkey '^P' up-history
