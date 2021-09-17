@@ -219,7 +219,10 @@ setopt INTERACTIVE_COMMENTS # Allow comments in interactive mode
 # 16.2.7 Job Control {{{2
 
 # Disable nice for background processes in WSL1
-[[ $AGKDOT_SYSTEMINFO == *Microsoft* ]] && unsetopt BG_NICE
+# [[ $AGKDOT_SYSTEMINFO == *Microsoft* ]] && unsetopt BG_NICE
+
+# Do not run background jobs at a lower priority
+setopt NO_BG_NICE
 
 # }}}2
 
