@@ -511,13 +511,17 @@ bindkey '^S' history-incremental-search-forward   # FLOW_CONTROL must be off
 # }}}2
 
 # Show completion "waiting dots" {{{2
-expand-or-complete-with-dots() {
-  print -n '...'
-  zle expand-or-complete
-  zle .redisplay
-}
-zle -N expand-or-complete-with-dots
-bindkey '^I' expand-or-complete-with-dots
+
+# zle bug in Zsh ~v5.3-5.7.1
+if is-at-least 5.7.1 || ! is-at-least 5.3; then
+  expand-or-complete-with-dots() {
+    print -n '...'
+    zle expand-or-complete
+    zle .redisplay
+  }
+  zle -N expand-or-complete-with-dots
+  bindkey '^I' expand-or-complete-with-dots
+fi
 
 # }}}2
 
