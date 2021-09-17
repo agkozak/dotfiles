@@ -430,19 +430,17 @@ if (( ${+commands[git]} )); then
   # (( AGKDOT_USE_TURBO )) && zinit ice silent wait'0h'
   # zinit load zpm-zsh/clipboard
 
-  if [[ $TERM != 'dumb' ]]; then
-    if (( ${+functions[zcomet]} )); then
-      zcomet compinit
-    else
-      autoload -Uz compinit
-      compinit -C -d "${HOME}/.zcompdump_${ZSH_VERSION}"
-    fi
-    compdef mosh=ssh
-  fi
+  [[ $TERM != 'dumb' ]] && zcomet compinit
 
 else
+
   print 'Please install git.' >&2
+
+  autoload -Uz compinit
+  compinit -C -d "${HOME}/.zcompdump_${ZSH_VERSION}"
 fi
+
+compdef mosh=ssh
 
 # }}}1
 
