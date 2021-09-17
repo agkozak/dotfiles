@@ -219,7 +219,10 @@ setopt INTERACTIVE_COMMENTS # Allow comments in interactive mode
 # 16.2.7 Job Control {{{2
 
 # Disable nice for background processes in WSL1
-[[ $AGKDOT_SYSTEMINFO == *Microsoft* ]] && unsetopt BG_NICE
+# [[ $AGKDOT_SYSTEMINFO == *Microsoft* ]] && unsetopt BG_NICE
+
+# Do not run background jobs at a lower priority
+setopt NO_BG_NICE
 
 # }}}2
 
@@ -508,13 +511,17 @@ bindkey '^S' history-incremental-search-forward   # FLOW_CONTROL must be off
 # }}}2
 
 # Show completion "waiting dots" {{{2
-expand-or-complete-with-dots() {
-  print -n '...'
-  zle expand-or-complete
-  zle .redisplay
-}
-zle -N expand-or-complete-with-dots
-bindkey '^I' expand-or-complete-with-dots
+
+# zle bug in Zsh ~v5.3-5.7.1
+if is-at-least 5.7.1 || ! is-at-least 5.3; then
+  expand-or-complete-with-dots() {
+    print -n '...'
+    zle expand-or-complete
+    zle .redisplay
+  }
+  zle -N expand-or-complete-with-dots
+  bindkey '^I' expand-or-complete-with-dots
+fi
 
 # }}}2
 
