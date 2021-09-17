@@ -74,26 +74,6 @@ fi
 
 # }}}1
 
-# Compile dotfiles {{{1
-
-for i in .profile \
-         .profile.local \
-         .zshenv.local \
-         .zprofile.local \
-         .shrc \
-         .shrc.local \
-         .zshrc.local; do
-  if [[ -e ${HOME}/${i}       &&
-        ! -e ${HOME}/${i}.zwc ||
-        ${HOME}/${i} -nt ${HOME}/${i}.zwc ]]; then
-    (( AGKDOT_BENCHMARKS )) && >&2 print -P "%F{red}Compiling ${i}%f"
-    zcompile -R "${HOME}/${i}"
-  fi
-done
-unset i
-
-# }}}1
-
 # Source ~/.shrc {{{1
 
 if [[ -f ${HOME}/.shrc ]];then
