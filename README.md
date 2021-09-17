@@ -12,14 +12,15 @@ I have tested these dotfiles primarily on
 * Windows
     - MSYS2 with mintty
     - Cygwin with mintty
-    - The Windows Subsystem for Linux (a.ka. Bash on Ubuntu on Windows)
+    - The Windows Subsystem for Linux (WSL1 and WSL2) with Windows Terminal
 * Linux
     - Ubuntu/Linux Mint/Raspbian (based on Debian)
     - CloudLinux (based on CentOS)
 * BSD
-    - FreeBSD/TrueOS/GhostBSD
+    - FreeBSD
     - NetBSD
     - OpenBSD
+    - DragonFly BSD
 * Unix
     - Solaris 11
     - OpenIndiana
