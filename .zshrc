@@ -82,8 +82,7 @@ for i in .profile \
          .zprofile.local \
          .shrc \
          .shrc.local \
-         .zshrc.local \
-         .zcompdump_${ZSH_VERSION}; do
+         .zshrc.local; do
   if [[ -e ${HOME}/${i}       &&
         ! -e ${HOME}/${i}.zwc ||
         ${HOME}/${i} -nt ${HOME}/${i}.zwc ]]; then
@@ -432,8 +431,12 @@ if (( ${+commands[git]} )); then
   # zinit load zpm-zsh/clipboard
 
   if [[ $TERM != 'dumb' ]]; then
-    autoload -Uz compinit
-    compinit -C -d "${HOME}/.zcompdump_${ZSH_VERSION}"
+    if (( ${+functions[zcomet]} )); then
+      zcomet compinit
+    else
+      autoload -Uz compinit
+      compinit -C -d "${HOME}/.zcompdump_${ZSH_VERSION}"
+    fi
     compdef mosh=ssh
   fi
 
