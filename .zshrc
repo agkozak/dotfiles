@@ -63,28 +63,14 @@ fi
 
 # }}}1
 
-# Compile dotfiles {{{1
+# Zinit binary module {{{1
 
-for i in .zshenv \
-         .profile \
-         .profile.local \
-         .zprofile \
-         .zshenv.local \
-         .zprofile \
-         .zprofile.local \
-         .zshrc \
-         .shrc \
-         .shrc.local \
-         .zshrc.local \
-         .zcompdump_${ZSH_VERSION}; do
-  if [[ -e ${HOME}/${i}       &&
-        ! -e ${HOME}/${i}.zwc ||
-        ${HOME}/${i} -nt ${HOME}/${i}.zwc ]]; then
-    (( AGKDOT_BENCHMARKS )) && >&2 print -P "%F{red}Compiling ${i}%f"
-    zcompile "${HOME}/${i}"
-  fi
-done
-unset i
+# if [[ -f "${HOME}/.zinit/mod-bin/zmodules/Src/zdharma/zplugin.so" ]]; then
+#   if [[ -z ${module_path[(re)"${HOME}/.zinit/-mod-bin/zmodules/Src"]} ]]; then
+#     module_path=( "${HOME}/.zinit/mod-bin/zmodules/Src" ${module_path[@]} )
+#   fi
+#   zmodload zdharma/zplugin
+# fi
 
 # }}}1
 
@@ -424,15 +410,17 @@ if (( ${+commands[git]} )); then
   # (( AGKDOT_USE_TURBO )) && zinit ice silent wait'0h'
   # zinit load zpm-zsh/clipboard
 
-  if [[ $TERM != 'dumb' ]]; then
-    autoload -Uz compinit
-    compinit -C -d "${HOME}/.zcompdump_${ZSH_VERSION}"
-    compdef mosh=ssh
-  fi
+  [[ $TERM != 'dumb' ]] && zcomet compinit
 
 else
+
   print 'Please install git.' >&2
+
+  autoload -Uz compinit
+  compinit -C -d "${HOME}/.zcompdump_${ZSH_VERSION}"
 fi
+
+compdef mosh=ssh
 
 # }}}1
 
@@ -509,7 +497,7 @@ zstyle ':completion:*' select-prompt '%SScrolling active: current selection at %
 
 # vi mode exceptions {{{2
 
-# bindkey -v    # `set -o vi` is in .shrc
+[[ -o vi ]] || bindkey -v                             # `set -o vi` is in .shrc
 
 # Borrowed from emacs mode
 bindkey '^P' up-history
