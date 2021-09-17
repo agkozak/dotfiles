@@ -65,32 +65,12 @@ fi
 
 # Zinit binary module {{{1
 
-if [[ -f "${HOME}/.zinit/mod-bin/zmodules/Src/zdharma/zplugin.so" ]]; then
-  if [[ -z ${module_path[(re)"${HOME}/.zinit/-mod-bin/zmodules/Src"]} ]]; then
-    module_path=( "${HOME}/.zinit/mod-bin/zmodules/Src" ${module_path[@]} )
-  fi
-  zmodload zdharma/zplugin
-fi
-
-# }}}1
-
-# Compile dotfiles {{{1
-
-for i in .profile \
-         .profile.local \
-         .zshenv.local \
-         .zprofile.local \
-         .shrc \
-         .shrc.local \
-         .zshrc.local; do
-  if [[ -e ${HOME}/${i}       &&
-        ! -e ${HOME}/${i}.zwc ||
-        ${HOME}/${i} -nt ${HOME}/${i}.zwc ]]; then
-    (( AGKDOT_BENCHMARKS )) && >&2 print -P "%F{red}Compiling ${i}%f"
-    zcompile -R "${HOME}/${i}"
-  fi
-done
-unset i
+# if [[ -f "${HOME}/.zinit/mod-bin/zmodules/Src/zdharma/zplugin.so" ]]; then
+#   if [[ -z ${module_path[(re)"${HOME}/.zinit/-mod-bin/zmodules/Src"]} ]]; then
+#     module_path=( "${HOME}/.zinit/mod-bin/zmodules/Src" ${module_path[@]} )
+#   fi
+#   zmodload zdharma/zplugin
+# fi
 
 # }}}1
 
@@ -239,7 +219,10 @@ setopt INTERACTIVE_COMMENTS # Allow comments in interactive mode
 # 16.2.7 Job Control {{{2
 
 # Disable nice for background processes in WSL1
-[[ $AGKDOT_SYSTEMINFO == *Microsoft* ]] && unsetopt BG_NICE
+# [[ $AGKDOT_SYSTEMINFO == *Microsoft* ]] && unsetopt BG_NICE
+
+# Do not run background jobs at a lower priority
+setopt NO_BG_NICE
 
 # }}}2
 
@@ -430,19 +413,17 @@ if (( ${+commands[git]} )); then
   # (( AGKDOT_USE_TURBO )) && zinit ice silent wait'0h'
   # zinit load zpm-zsh/clipboard
 
-  if [[ $TERM != 'dumb' ]]; then
-    if (( ${+functions[zcomet]} )); then
-      zcomet compinit
-    else
-      autoload -Uz compinit
-      compinit -C -d "${HOME}/.zcompdump_${ZSH_VERSION}"
-    fi
-    compdef mosh=ssh
-  fi
+  [[ $TERM != 'dumb' ]] && zcomet compinit
 
 else
+
   print 'Please install git.' >&2
+
+  autoload -Uz compinit
+  compinit -C -d "${HOME}/.zcompdump_${ZSH_VERSION}"
 fi
+
+compdef mosh=ssh
 
 # }}}1
 
@@ -530,13 +511,17 @@ bindkey '^S' history-incremental-search-forward   # FLOW_CONTROL must be off
 # }}}2
 
 # Show completion "waiting dots" {{{2
-expand-or-complete-with-dots() {
-  print -n '...'
-  zle expand-or-complete
-  zle .redisplay
-}
-zle -N expand-or-complete-with-dots
-bindkey '^I' expand-or-complete-with-dots
+
+# zle bug in Zsh ~v5.3-5.7.1
+if is-at-least 5.7.1 || ! is-at-least 5.3; then
+  expand-or-complete-with-dots() {
+    print -n '...'
+    zle expand-or-complete
+    zle .redisplay
+  }
+  zle -N expand-or-complete-with-dots
+  bindkey '^I' expand-or-complete-with-dots
+fi
 
 # }}}2
 
