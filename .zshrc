@@ -65,12 +65,12 @@ fi
 
 # Zinit binary module {{{1
 
-if [[ -f "${HOME}/.zinit/mod-bin/zmodules/Src/zdharma/zplugin.so" ]]; then
-  if [[ -z ${module_path[(re)"${HOME}/.zinit/-mod-bin/zmodules/Src"]} ]]; then
-    module_path=( "${HOME}/.zinit/mod-bin/zmodules/Src" ${module_path[@]} )
-  fi
-  zmodload zdharma/zplugin
-fi
+# if [[ -f "${HOME}/.zinit/mod-bin/zmodules/Src/zdharma/zplugin.so" ]]; then
+#   if [[ -z ${module_path[(re)"${HOME}/.zinit/-mod-bin/zmodules/Src"]} ]]; then
+#     module_path=( "${HOME}/.zinit/mod-bin/zmodules/Src" ${module_path[@]} )
+#   fi
+#   zmodload zdharma/zplugin
+# fi
 
 # }}}1
 
