@@ -12,7 +12,7 @@ I have tested these dotfiles primarily on
 * Windows
     - MSYS2 with mintty
     - Cygwin with mintty
-    - The Windows Subsystem for Linux (versions 1 and 2)
+    - The Windows Subsystem for Linux (versions 1 and 2) with Windows Terminal
 * Linux
     - Ubuntu/Raspbian (based on Debian)
     - CloudLinux (based on CentOS)
