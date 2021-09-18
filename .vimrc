@@ -12,6 +12,10 @@ silent function! WINDOWS() abort        " Returns true when the environment is
   return (has('win32') || has('win64')) " Windows (but not Cygwin/MSYS2/WSL)
 endfunction
 
+silent function! WSL2() abort
+  return ($AGKDOT_SYSTEMINFO =~# 'microsoft' || system('uname -a'))
+endfunction
+
 " }}}1
 
 " ALE Compatibility {{{
@@ -19,7 +23,7 @@ endfunction
 " Tests to see if ale can be used for syntax checking
 function! ALECompatible() abort
   " ALE seems to slow down Vim startup on WSL2
-  if $AGKDOT_SYSTEMINFO =~# 'microsoft'
+  if WSL2()
     return 0
   endif
   return ((v:version >= 800 && has('job') && has('timers') && has('channel'))
@@ -331,7 +335,7 @@ if executable('git') && (executable('curl') || executable('wget') || WINDOWS())
     Plug 'fedorenchik/AnsiEsc'
     
     " Git
-    if $AGKDOT_SYSTEMINFO =~# 'microsoft' || ! has('nvim')
+    if WSL2() || ! has('nvim')
           \ || ! has('patch-8.0.902')
       Plug 'mhinz/vim-signify', { 'branch': 'legacy' }
     else
