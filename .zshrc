@@ -410,8 +410,6 @@ if (( ${+commands[git]} )); then
 
   zcomet trigger zsh-prompt-benchmark romkatv/zsh-prompt-benchmark
 
-  zcomet trigger k supercrabtree/k k.sh
-
   # (( AGKDOT_USE_TURBO )) && zinit ice silent wait'0h'
   # zinit load zpm-zsh/clipboard
 
