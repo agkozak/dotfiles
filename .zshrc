@@ -498,6 +498,9 @@ zstyle ':completion:*' group-name ''
 # In menu-style completion, give a status bar
 zstyle ':completion:*' select-prompt '%SScrolling active: current selection at %p%s'
 
+# Privilege named directories when completing cd
+zstyle ':completion:*:*:cd:*' group-order named-directories
+
 # vi mode exceptions {{{2
 
 [[ -o vi ]] || bindkey -v
