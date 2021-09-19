@@ -370,7 +370,7 @@ fi
 # For ksh93/mksh
 
 # vi-style line editing
-set -o vi
+[ -z "$ZSH_VERSION" ] && set -o vi
 
 case $KSH_VERSION in
   *93*)
