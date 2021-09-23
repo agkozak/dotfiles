@@ -13,7 +13,9 @@ silent function! WINDOWS() abort        " Returns true when the environment is
 endfunction
 
 silent function! WSL2() abort
-  return ($AGKDOT_SYSTEMINFO =~# 'microsoft' || system('uname -a'))
+  if has('unix')
+    return ($AGKDOT_SYSTEMINFO =~# 'microsoft' || system('uname -a'))
+  endif
 endfunction
 
 " }}}1
@@ -302,8 +304,10 @@ if executable('git') && (executable('curl') || executable('wget') || WINDOWS())
       set runtimepath=~/.vim,$VIMRUNTIME
 
     " Avoid multiple threads on CloudLinux and iSH
-    elseif $AGKDOT_SYSTEMINFO =~# 'lve' || $AGKDOT_SYSTEMINFO =~# 'iSH'
-          \ || $VIM !~# 'iVim' && system('uname -a') =~# 'lve'
+    elseif has('unix') && ($AGKDOT_SYSTEMINFO =~# 'lve' 
+        \ || $AGKDOT_SYSTEMINFO =~# 'iSH'
+        \ || $VIM !~# 'iVim'
+        \ && system('uname -a') =~# 'lve')
       let g:plug_threads=1
     endif
 
