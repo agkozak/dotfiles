@@ -67,7 +67,6 @@ endif
 
 if ( $?VISUAL && "$VISUAL" == vim ) alias vi vim
 
-setenv LESSOPEN "|/usr/local/bin/lesspipe.sh %s"
 setenv ENV "$HOME/.shrc"
 
 # vim: ts=2:sts=2:sw=2:et:ai
