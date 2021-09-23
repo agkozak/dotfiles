@@ -147,10 +147,6 @@ if command -v emacs > /dev/null 2>&1; then
   cp ./.emacs.d/init.el "$HOME/.emacs.d"
 fi
 
-conditional_install less .lessfilter
-
-conditional_install lynx .lynx.cfg
-
 conditional_install mysql .editrc
 
 if command -v phpstorm > /dev/null 2>&1        ||

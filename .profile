@@ -27,7 +27,7 @@ BAT_THEME=zenburn
 
 export EDITOR VISUAL
 if command -v vim > /dev/null 2>&1; then
-  EDITOR=vim
+  EDITOR='vim'
 else
   EDITOR='vi'
 fi
@@ -41,22 +41,6 @@ case $AGKDOT_SYSTEMINFO in
   UWIN*) LESS=-i ;;
   *) LESS=-FiRX ;;
 esac
-
-# export LESSOPEN
-# if command -v lessfile > /dev/null 2>&1; then
-#   eval "$(lessfile)"                      # Sets LESSOPEN and uses ~/.lessfilter
-# elif command -v lesspipe > /dev/null 2>&1; then
-# 	LESSOPEN='| lesspipe %s'
-# elif command -v lesspipe.sh > /dev/null 2>&1; then
-# 	LESSOPEN='| lesspipe.sh %s'
-# else
-#   LESSOPEN="| ${HOME}/.lessfilter %s"
-# fi
-
-if [ -f "$HOME/.lynx.cfg" ]; then
-  export LYNX_CFG
-  LYNX_CFG="${HOME}/.lynx.cfg"
-fi
 
 # Always use Unicode line-drawing characters, not VT100-style ones
 export NCURSES_NO_UTF8_ACS
@@ -104,7 +88,8 @@ case $AGKDOT_SYSTEMINFO in
 		SSL_CERT_DIR=/etc/ssl/certs
 		SSL_CERT_FILE=/etc/ssl/cert.pem
 	  ;;
-  *Microsoft*)                                                            # WSL1
+  # WSL1
+  *Microsoft*)
     [ ! -d "${HOME}/.screen" ] && mkdir "${HOME}/.screen" &&
       chmod 700 "${HOME}/.screen"
     export SCREENDIR
