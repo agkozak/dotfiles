@@ -401,6 +401,11 @@ endif
 
 " => UI {{{1
 
+" For compatibility with true-color terminals
+if &term == 'xterm-direct'
+  set termguicolors
+endif
+
 " Rule out certain Cygwin/MSYS2 shells in ConEmu
 " Rule out cmd.exe and Powershell in the Windows Console
 if &term !=# 'cygwin' && &term !=# 'win32'
