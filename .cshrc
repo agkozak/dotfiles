@@ -10,6 +10,8 @@ alias ll	ls -lA
 if ( `uname -s` != 'SunOS' ) then
 	alias ls	ls -G
 endif
+alias .. cd ..
+alias ... cd ../..
 
 # A righteous umask
 umask 22
@@ -50,6 +52,8 @@ if ($?prompt) then
 		bindkey -k up history-search-backward
 		bindkey -k down history-search-forward
     bindkey -v
+    # Like Zsh's `setopt AUTO_CD'
+    set implicitcd
 	endif
 endif
 
