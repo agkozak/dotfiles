@@ -323,7 +323,7 @@ fi
 # AGKOZAK_LEFT_PROMPT_ONLY=1
 # AGKOZAK_MULTILINE=0
 # AGKOZAK_PROMPT_CHAR=( '❯' '❯' '❮' )
-AGKOZAK_PROMPT_DEBUG=1
+# AGKOZAK_PROMPT_DEBUG=1
 
 # Make sure the zsh/terminfo module is loaded
 (( ${+modules[zsh/terminfo]} )) || zmodload zsh/terminfo
