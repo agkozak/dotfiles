@@ -115,8 +115,10 @@ alias -g G='| grep'
 alias -g H='| head'
 
 # Prevent pipes to `less' from being pushed into the background on MSYS2 and
-# Cygwin - bug from Zsh v5.6 onwards
-if [[ $OSTYPE == (msys|cygwin) ]]; then
+# Cygwin
+autoload -Uz is-at-least
+
+if [[ $OSTYPE == (msys|cygwin) ]] && is-at-least 5.6; then
   less() {
     if [[ -p /dev/fd/0 ]]; then
       (command less $@)
@@ -508,6 +510,21 @@ bindkey '^S' history-incremental-search-forward   # FLOW_CONTROL must be off
 
 # }}}2
 
+# Show completion "waiting dots" {{{2
+
+# zle bug before Zsh 5.7.1
+if is-at-least 5.7.1; then
+  expand-or-complete-with-dots() {
+    print -n '...'
+    zle expand-or-complete
+    zle .redisplay
+  }
+  zle -N expand-or-complete-with-dots
+  bindkey '^I' expand-or-complete-with-dots
+fi
+
+# }}}2
+
 # }}}1
 
 # 22.7 The zsh/complist Module {{{1
@@ -552,7 +569,7 @@ bindkey -M vicmd 'j' history-beginning-search-forward-end
 
 # While tinkering with ZSH-z
 
-if (( SHLVL == 1  && ! $+TMUX )) && [[ $OSTYPE != (msys|cygwin) ]]; then
+if (( SHLVL == 1  && ! $+TMUX )) || [[ $OSTYPE == (msys|cygwin) ]]; then
   [[ ! -d ${HOME}/.zbackup ]] && mkdir -p "${HOME}/.zbackup"
   cp "${HOME}/.z" "${HOME}/.zbackup/.z_${EPOCHSECONDS}" 2> /dev/null
 fi
