@@ -13,7 +13,7 @@ silent function! WINDOWS() abort        " Returns true when the environment is
 endfunction
 
 silent function! WSL2() abort
-  if has('unix')
+  if has('unix') && $VIM !~# 'iVim'
     return ($AGKDOT_SYSTEMINFO =~# 'microsoft' || system('uname -a'))
   endif
 endfunction
