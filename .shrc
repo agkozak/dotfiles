@@ -79,6 +79,7 @@ if [ "$TERM" != "$AGKDOT_ORIG_TERM" ]; then
   esac
 fi
 
+# if /bin/ls is a symlink, then it's BusyBox ls
 if [ -h /bin/ls ]; then
   AGKDOT_IS_BUSYBOX_LS=1
 fi
@@ -370,6 +371,7 @@ fi
 # For ksh93/mksh
 
 # vi-style line editing
+# Zsh handles this itself
 [ -z "$ZSH_VERSION" ] && set -o vi
 
 case $KSH_VERSION in
