@@ -407,10 +407,11 @@ else
   if [[ $TERM != 'dumb' ]]; then
     autoload -Uz compinit
     compinit -C -d "${HOME}/.zcompdump_${ZSH_VERSION}"
+
+    compdef mosh=ssh
   fi
 fi
 
-compdef mosh=ssh
 
 # }}}1
 
@@ -545,8 +546,10 @@ zle -N history-beginning-search-backward-end history-search-end
 zle -N history-beginning-search-forward-end history-search-end
 bindkey '^P' history-beginning-search-backward-end
 bindkey '^N' history-beginning-search-forward-end
-bindkey ${terminfo[kcuu1]} history-beginning-search-backward-end
-bindkey ${terminfo[kcud1]} history-beginning-search-forward-end
+if [[ $TERM != 'dumb' ]]; then
+  bindkey ${terminfo[kcuu1]} history-beginning-search-backward-end
+  bindkey ${terminfo[kcud1]} history-beginning-search-forward-end
+fi
 bindkey -M vicmd 'k' history-beginning-search-backward-end
 bindkey -M vicmd 'j' history-beginning-search-forward-end
 
