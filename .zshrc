@@ -63,17 +63,6 @@ fi
 
 # }}}1
 
-# Zinit binary module {{{1
-
-# if [[ -f "${HOME}/.zinit/mod-bin/zmodules/Src/zdharma/zplugin.so" ]]; then
-#   if [[ -z ${module_path[(re)"${HOME}/.zinit/-mod-bin/zmodules/Src"]} ]]; then
-#     module_path=( "${HOME}/.zinit/mod-bin/zmodules/Src" ${module_path[@]} )
-#   fi
-#   zmodload zdharma/zplugin
-# fi
-
-# }}}1
-
 # Source ~/.shrc {{{1
 
 if [[ -f ${HOME}/.shrc ]];then
@@ -96,16 +85,16 @@ export AGKDOT_SYSTEMINFO
 
 # }}}1
 
-# 6.8 ZSH-specific aliases - POSIX aliases are in .shrc {{{1
+# 6.8 Zsh-specific aliases - POSIX aliases are in .shrc {{{1
 
 # Disable echo escape sequences in MSys2 or Cygwin - variables inherited from
 # Windows may have backslashes in them
-[[ $OSTYPE == (msys|cygwin) ]] && alias echo='echo -E'
+# [[ $OSTYPE == (msys|cygwin) ]] && alias echo='echo -E'
 
 alias hgrep='fc -fl 0 | grep'
 alias ls='ls ${=LS_OPTIONS}'
 
-# which should not be aliased in ZSH
+# which should not be aliased in Zsh
 (( ${+aliases[which]} )) && unalias which
 
 # Global Aliases {{{2
@@ -217,9 +206,6 @@ setopt INTERACTIVE_COMMENTS # Allow comments in interactive mode
 # }}}2
 
 # 16.2.7 Job Control {{{2
-
-# Disable nice for background processes in WSL1
-# [[ $AGKDOT_SYSTEMINFO == *Microsoft* ]] && unsetopt BG_NICE
 
 # Do not run background jobs at a lower priority
 setopt NO_BG_NICE
@@ -369,17 +355,19 @@ if (( ${+commands[git]} )); then
     command git clone https://github.com/agkozak/zcomet.git ${HOME}/.zcomet/bin
   fi
   source ~/.zcomet/bin/zcomet.zsh
- 
+
+  # An optional way of loading agkozak-zsh-prompt using promptinit
   # zcomet fpath agkozak/agkozak-zsh-prompt@develop
   # autoload promptinit; promptinit
   # prompt agkozak-zsh-prompt
 
   zcomet load agkozak/agkozak-zsh-prompt@develop
 
-  # zinit light agkozak/polyglot
+  # For when I'm testing the Polyglot Prompt in Zsh
+  # zcomet agkozak/polyglot
   # if which kubectl &> /dev/null; then
-  #   zinit light jonmosco/kube-ps1
-  #   zinit light agkozak/polyglot-kube-ps1
+  #   zcomet load jonmosco/kube-ps1
+  #   zcomet load agkozak/polyglot-kube-ps1
   # fi
 
   # agkozak/zsh-z
@@ -394,15 +382,13 @@ if (( ${+commands[git]} )); then
   ZSHZ_TRAILING_SLASH=1
 
   zcomet trigger zhooks agkozak/zhooks@develop
+
   # zcomet load jreese/zsh-titles
   zcomet snippet https://github.com/jreese/zsh-titles/blob/master/titles.plugin.zsh
+
   # if [[ $AGKDOT_SYSTEMINFO != *ish* ]]; then
-  #   if (( AGKDOT_USE_TURBO )); then
-  #     zinit ice lucid wait'0e'
-  #   fi
-  #   zinit load zdharma/zui
-  #   (( AGKDOT_USE_TURBO )) && zinit ice lucid wait'(( $+ZUI ))'
-  #   zinit load zdharma/zbrowse
+  #   zcomet load zdharma/zui
+  #   zcomet load zdharma/zbrowse
   # fi
 
   zcomet load ohmyzsh plugins/gitfast
@@ -410,17 +396,18 @@ if (( ${+commands[git]} )); then
 
   zcomet trigger zsh-prompt-benchmark romkatv/zsh-prompt-benchmark
 
-  # (( AGKDOT_USE_TURBO )) && zinit ice silent wait'0h'
-  # zinit load zpm-zsh/clipboard
+  # zcomet load zpm-zsh/clipboard
 
-  [[ $TERM != 'dumb' ]] && zcomet compinit
+  zcomet compinit
 
 else
 
   print 'Please install git.' >&2
 
-  autoload -Uz compinit
-  compinit -C -d "${HOME}/.zcompdump_${ZSH_VERSION}"
+  if [[ $TERM != 'dumb' ]]; then
+    autoload -Uz compinit
+    compinit -C -d "${HOME}/.zcompdump_${ZSH_VERSION}"
+  fi
 fi
 
 compdef mosh=ssh
@@ -576,7 +563,7 @@ fi
 
 ############################################################
 # Download the latest dotfiles, then the latest version of
-# Zinit, then the latest Zinit plugins and snippets, and
+# zcomet, then the latest zcomet plugins and snippets, and
 # source .zshrc
 ############################################################
 zsh_update() {
