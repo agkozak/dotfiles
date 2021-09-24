@@ -142,7 +142,7 @@ alias -g V='|& vim - +AnsiEsc'
 
 # 9.1 Autoloading Functions {{{1
 
-autoload -Uz edit-command-line is-at-least zmv
+autoload -Uz edit-command-line zmv
 
 # }}}1
 
