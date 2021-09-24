@@ -160,6 +160,7 @@ alias l='ls -CF'
 alias la='ls -A'
 alias lart='ls -1Fcart'
 
+# ldot display dotfiles
 ldot() {
   [ -n "$ZSH_VERSION" ] &&
     setopt LOCAL_OPTIONS SH_WORD_SPLIT NO_WARN_CREATE_GLOBAL
@@ -239,21 +240,6 @@ alias yta='youtube-dl --audio-format best -x '
 
 # System-specific aliases {{{2
 
-############################################################
-# Create winpty aliases for MSYS2 and Cygwin
-#
-# Arguments:
-#   $1, $2, etc.  Programs that should be run with winpty
-############################################################
-# _agkdot_winpty_alias() {
-#   command -v winpty > /dev/null 2>&1 || echo 'Install winpty.' >&2 && return 1
-#   while [ $# -ne 0 ]; do
-#     # shellcheck disable=SC2139,SC2140
-#     command -v "$1" > /dev/null 2>&1 && alias "$1"="winpty $1"
-#     shift
-#   done
-# }
-
 if [ -x /usr/bin/winpty ] || [ -x /usr/local/bin/winpty ]; then 
    AGKDOT_WINPTY=1
 fi
@@ -304,21 +290,6 @@ esac
 
 case $AGKDOT_SYSTEMINFO in
   *[Mm]icrosoft*)
-    ############################################################
-    # Create aliases for Windows .exe programs
-    #
-    # Arguments:
-    #   $@  A list of Windows programs
-    ############################################################
-    # _agkdot_exe_alias() {
-    #   for i in "$@"; do
-    #     command -v "${i}.exe" > /dev/null 2>&1 || return
-    #     # shellcheck disable=SC2139,SC2140
-    #     alias "$i"="${i}.exe"
-    #   done
-    #   unset i
-    # }
-
     alias explorer='explorer.exe'
     alias subl='subl.exe'
     alias wsl='wsl.exe'
@@ -334,7 +305,7 @@ esac
 # Prompt {{{1
 
 # If possible, load the pan-POSIX Polyglot Prompt
-# But not in zsh -- it uses agkozak-zsh-prompt
+# But not in Zsh -- it uses agkozak-zsh-prompt
 
 ############################################################
 # Are we using FreeBSD sh?
@@ -365,7 +336,7 @@ fi
 
 # Miscellaneous {{{1
 
-# search path for cd(1)
+# search path for cd
 # CDPATH=:$HOME
 
 # For ksh93/mksh
