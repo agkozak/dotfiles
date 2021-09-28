@@ -398,8 +398,8 @@ if (( ${+commands[git]} )); then
 
   # zcomet load zpm-zsh/clipboard
 
-  zcomet load junegunn/fzf shell completion.zsh key-bindings.zsh
-  (( ${+commands[fzf]} )) || ~[fzf]/install
+  # zcomet load junegunn/fzf shell completion.zsh key-bindings.zsh
+  # (( ${+commands[fzf]} )) || ~[fzf]/install
 
   zcomet compinit
 
