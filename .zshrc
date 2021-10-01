@@ -402,6 +402,10 @@ if (( ${+commands[git]} )); then
     (( ${+commands[fzf]} )) || ~[fzf]/install
   fi
 
+  if [[ $OSTYPE != (msys|cygwin) && $AGKDOT_SYSTEMINFO != *microsoft* ]]; then
+    zcomet load zsh-users/zsh-syntax-highlighting
+  fi
+
   # }}}2
 
   # Other {{{2
