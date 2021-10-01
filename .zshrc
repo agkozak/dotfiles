@@ -395,7 +395,7 @@ if (( ${+commands[git]} )); then
     sorin-ionescu/prezto modules/archive
   alias x='unarchive' extract='unarchive'
 
-  if [[ $OSTYPE != (msys|cygwin) ]]; then
+  if [[ $OSTYPE != (msys|cygwin|solaris*) ]]; then
     zcomet load junegunn/fzf shell completion.zsh key-bindings.zsh
     (( ${+commands[fzf]} )) || ~[fzf]/install
   fi
