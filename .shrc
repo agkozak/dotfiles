@@ -134,6 +134,10 @@ AGKDOT_ORIG_TERM=$TERM
 
 case $AGKDOT_SYSTEMINFO in
   *ish*|UWIN*) ;;
+  *solaris*)
+    alias dir='dir --color'
+    alias vdir='vdir --color'
+    ;;
   *)
     if [ "${AGKDOT_IS_BUSYBOX_LS:-0}" -eq 0 ] &&
        [ "$AGKDOT_TERM_COLORS"        -ge 8 ]; then
