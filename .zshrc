@@ -304,64 +304,97 @@ fi
 
 # }}}1
 
-# agkozak-zsh-prompt {{{1
-
-# AGKOZAK_COLORS_PROMPT_CHAR='magenta'
-# AGKOZAK_CUSTOM_SYMBOLS=( '⇣⇡' '⇣' '⇡' '+' 'x' '!' '>' '?' 'S' )
-# AGKOZAK_LEFT_PROMPT_ONLY=1
-# AGKOZAK_MULTILINE=0
-# AGKOZAK_PROMPT_CHAR=( '❯' '❯' '❮' )
-# AGKOZAK_PROMPT_DEBUG=1
-
-# Make sure the zsh/terminfo module is loaded
-(( ${+modules[zsh/terminfo]} )) || zmodload zsh/terminfo
-# If there are 256 colors, use the following colors; otherwise use the defaults
-if (( ${terminfo[colors]:-0} >= 256 )); then
-  AGKOZAK_COLORS_USER_HOST=108
-  AGKOZAK_COLORS_PATH=116
-  AGKOZAK_COLORS_BRANCH_STATUS=228
-  AGKOZAK_COLORS_EXIT_STATUS=174
-  AGKOZAK_COLORS_CMD_EXEC_TIME=245
-  AGKOZAK_COLORS_VIRTUALENV=151
-fi
-AGKOZAK_CUSTOM_PROMPT=''
-# Exit status
-AGKOZAK_CUSTOM_PROMPT+='%(?..%B%F{${AGKOZAK_COLORS_EXIT_STATUS}}(%?%)%f%b )'
-# Command execution time
-AGKOZAK_CUSTOM_PROMPT+='%(9V.%F{${AGKOZAK_COLORS_CMD_EXEC_TIME}}%b%9v%b%f .)'
-# Username and hostname
-AGKOZAK_CUSTOM_PROMPT+='%(!.%S%B.%B%F{${AGKOZAK_COLORS_USER_HOST}})%n%1v%(!.%b%s.%f%b) '
-# Path
-AGKOZAK_CUSTOM_PROMPT+='%B%F{${AGKOZAK_COLORS_PATH}}%2v%f%b'
-# Virtual environment indicator
-AGKOZAK_CUSTOM_PROMPT+='%(10V. %F{${AGKOZAK_COLORS_VIRTUALENV:-green}}[%10v]%f.)'
-# Git status
-AGKOZAK_CUSTOM_PROMPT+=$'%(3V.%F{${AGKOZAK_COLORS_BRANCH_STATUS}}%3v%f.)\n'
-# SHLVL and prompt character
-AGKOZAK_CUSTOM_PROMPT+='[%L] %(4V.:.%#) '
-AGKOZAK_COLORS_BRANCH_STATUS=228
-
-# No right prompt
-AGKOZAK_CUSTOM_RPROMPT=''
-
-# }}}1
-
 # zcomet {{{1
 
 if (( ${+commands[git]} )); then
 
-  # Load plugins and snippets {{{2
   if [[ ! -f ${HOME}/.zcomet/bin/zcomet.zsh ]]; then
     command git clone https://github.com/agkozak/zcomet.git ${HOME}/.zcomet/bin
   fi
   source ~/.zcomet/bin/zcomet.zsh
+
+  # agkozak-zsh-prompt {{{2
+
+  # AGKOZAK_PROMPT_DEBUG=1
+  zcomet load agkozak/agkozak-zsh-prompt@develop
 
   # An optional way of loading agkozak-zsh-prompt using promptinit
   # zcomet fpath agkozak/agkozak-zsh-prompt@develop
   # autoload promptinit; promptinit
   # prompt agkozak-zsh-prompt
 
-  zcomet load agkozak/agkozak-zsh-prompt@develop
+  # Configuration
+
+  # AGKOZAK_COLORS_PROMPT_CHAR='magenta'
+  # AGKOZAK_CUSTOM_SYMBOLS=( '⇣⇡' '⇣' '⇡' '+' 'x' '!' '>' '?' 'S' )
+  # AGKOZAK_LEFT_PROMPT_ONLY=1
+  # AGKOZAK_MULTILINE=0
+  # AGKOZAK_PROMPT_CHAR=( '❯' '❯' '❮' )
+
+  # "Zenburn" prompt {{{3
+
+  # Make sure the zsh/terminfo module is loaded
+  (( ${+modules[zsh/terminfo]} )) || zmodload zsh/terminfo
+  # If there are 256 colors, use the following colors; otherwise use the defaults
+  if (( ${terminfo[colors]:-0} >= 256 )); then
+    AGKOZAK_COLORS_USER_HOST=108
+    AGKOZAK_COLORS_PATH=116
+    AGKOZAK_COLORS_BRANCH_STATUS=228
+    AGKOZAK_COLORS_EXIT_STATUS=174
+    AGKOZAK_COLORS_CMD_EXEC_TIME=245
+    AGKOZAK_COLORS_VIRTUALENV=151
+  fi
+  AGKOZAK_CUSTOM_PROMPT=''
+  # Exit status
+  AGKOZAK_CUSTOM_PROMPT+='%(?..%B%F{${AGKOZAK_COLORS_EXIT_STATUS}}(%?%)%f%b )'
+  # Command execution time
+  AGKOZAK_CUSTOM_PROMPT+='%(9V.%F{${AGKOZAK_COLORS_CMD_EXEC_TIME}}%b%9v%b%f .)'
+  # Username and hostname
+  AGKOZAK_CUSTOM_PROMPT+='%(!.%S%B.%B%F{${AGKOZAK_COLORS_USER_HOST}})%n%1v%(!.%b%s.%f%b) '
+  # Path
+  AGKOZAK_CUSTOM_PROMPT+='%B%F{${AGKOZAK_COLORS_PATH}}%2v%f%b'
+  # Virtual environment indicator
+  AGKOZAK_CUSTOM_PROMPT+='%(10V. %F{${AGKOZAK_COLORS_VIRTUALENV:-green}}[%10v]%f.)'
+  # Git status
+  AGKOZAK_CUSTOM_PROMPT+=$'%(3V.%F{${AGKOZAK_COLORS_BRANCH_STATUS}}%3v%f.)\n'
+  # SHLVL and prompt character
+  AGKOZAK_CUSTOM_PROMPT+='[%L] %(4V.:.%#) '
+  AGKOZAK_COLORS_BRANCH_STATUS=228
+
+  # No right prompt
+  AGKOZAK_CUSTOM_RPROMPT=''
+
+  # }}}3
+
+  # }}}2
+
+  # agkozak/zsh-z {{{2
+  ZSHZ_DEBUG=1
+  zcomet load agkozak/zsh-z@develop
+  ZSHZ_CASE='smart'
+  ZSHZ_ECHO=1
+  # In FreeBSD, /home is /usr/home
+  [[ $OSTYPE == freebsd* ]] && typeset -g ZSHZ_NO_RESOLVE_SYMLINKS=1
+  # ZSHZ_TILDE=1
+  ZSHZ_TRAILING_SLASH=1
+  ZSHZ_UNCOMMON=1
+
+  # }}}2
+
+  # Other plugins {{{2
+
+  zcomet trigger zhooks agkozak/zhooks@develop
+
+  # zcomet load jreese/zsh-titles
+  zcomet snippet https://github.com/jreese/zsh-titles/blob/master/titles.plugin.zsh
+
+  zcomet load ohmyzsh plugins/gitfast
+  zcomet trigger extract x ohmyzsh plugins/extract
+  zcomet trigger zsh-prompt-benchmark romkatv/zsh-prompt-benchmark
+
+  # }}}2
+
+  # Other {{{2
 
   # For when I'm testing the Polyglot Prompt in Zsh
   # zcomet agkozak/polyglot
@@ -370,51 +403,33 @@ if (( ${+commands[git]} )); then
   #   zcomet load agkozak/polyglot-kube-ps1
   # fi
 
-  # agkozak/zsh-z
-  # In FreeBSD, /home is /usr/home
-  ZSHZ_DEBUG=1
-  [[ $OSTYPE == freebsd* ]] && typeset -g ZSHZ_NO_RESOLVE_SYMLINKS=1
-  zcomet load agkozak/zsh-z@develop
-  ZSHZ_UNCOMMON=1
-  ZSHZ_CASE='smart'
-  ZSHZ_ECHO=1
-  # ZSHZ_TILDE=1
-  ZSHZ_TRAILING_SLASH=1
+  # zcomet load junegunn/fzf shell completion.zsh key-bindings.zsh
+  # (( ${+commands[fzf]} )) || ~[fzf]/install
 
-  zcomet trigger zhooks agkozak/zhooks@develop
-
-  # zcomet load jreese/zsh-titles
-  zcomet snippet https://github.com/jreese/zsh-titles/blob/master/titles.plugin.zsh
+  # zcomet load zpm-zsh/clipboard
 
   # if [[ $AGKDOT_SYSTEMINFO != *ish* ]]; then
   #   zcomet load zdharma/zui
   #   zcomet load zdharma/zbrowse
   # fi
 
-  zcomet load ohmyzsh plugins/gitfast
-  zcomet trigger extract x ohmyzsh plugins/extract
+  # }}}2
 
-  zcomet trigger zsh-prompt-benchmark romkatv/zsh-prompt-benchmark
-
-  # zcomet load zpm-zsh/clipboard
-
-  # zcomet load junegunn/fzf shell completion.zsh key-bindings.zsh
-  # (( ${+commands[fzf]} )) || ~[fzf]/install
+  # I'm doing this here just to prove that `zcomet compinit' can handle it
+  compdef mosh=ssh
 
   zcomet compinit
 
 else
 
-  print 'Please install git.' >&2
+  >&2 print 'Please install git.'
 
   if [[ $TERM != 'dumb' ]]; then
     autoload -Uz compinit
     compinit -C -d "${HOME}/.zcompdump_${ZSH_VERSION}"
-
     compdef mosh=ssh
   fi
 fi
-
 
 # }}}1
 
