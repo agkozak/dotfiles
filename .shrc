@@ -137,6 +137,13 @@ case $AGKDOT_SYSTEMINFO in
   *solaris*)
     alias dir='dir --color'
     alias vdir='vdir --color'
+    case $AGKDOT_SYSTEMINFO in
+      *joyent*)
+        alias grep='grep --color'
+        alias fgrep='fgrep --color'
+        alias egrep='egrep --color'
+        ;;
+    esac
     ;;
   *)
     if [ "${AGKDOT_IS_BUSYBOX_LS:-0}" -eq 0 ] &&
@@ -146,13 +153,13 @@ case $AGKDOT_SYSTEMINFO in
       alias grep='grep --color'
       alias fgrep='fgrep --color'
       alias egrep='egrep --color'
-
-      # Zenburn-like colors for GNU grep
-      export GREP_COLORS
-      GREP_COLORS='sl=49;39:cx=49;39:mt=48;5;22;38;5;230;1:fn=49;38;5;224:ln=49;38;5;78:bn=49;38;5;78:se=49;38;5;116';
     fi
     ;;
 esac
+
+# Zenburn-like colors for GNU grep
+export GREP_COLORS
+GREP_COLORS='sl=49;39:cx=49;39:mt=48;5;22;38;5;230;1:fn=49;38;5;224:ln=49;38;5;78:bn=49;38;5;78:se=49;38;5;116';
 
 unset AGKDOT_BUSYBOX_LS
 
