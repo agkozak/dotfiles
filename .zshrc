@@ -389,8 +389,11 @@ if (( ${+commands[git]} )); then
   zcomet snippet https://github.com/jreese/zsh-titles/blob/master/titles.plugin.zsh
 
   zcomet load ohmyzsh plugins/gitfast
-  zcomet trigger extract x ohmyzsh plugins/extract
   zcomet trigger zsh-prompt-benchmark romkatv/zsh-prompt-benchmark
+
+  zcomet trigger archive unarchive lsarchive \
+    sorin-ionescu/prezto modules/archive
+  alias x='unarchive' extract='unarchive'
 
   if [[ $OSTYPE != (msys|cygwin) ]]; then
     zcomet load junegunn/fzf shell completion.zsh key-bindings.zsh
