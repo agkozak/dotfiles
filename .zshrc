@@ -392,6 +392,11 @@ if (( ${+commands[git]} )); then
   zcomet trigger extract x ohmyzsh plugins/extract
   zcomet trigger zsh-prompt-benchmark romkatv/zsh-prompt-benchmark
 
+  if [[ $OSTYPE != (msys|cygwin) ]]; then
+    zcomet load junegunn/fzf shell completion.zsh key-bindings.zsh
+    (( ${+commands[fzf]} )) || ~[fzf]/install
+  fi
+
   # }}}2
 
   # Other {{{2
