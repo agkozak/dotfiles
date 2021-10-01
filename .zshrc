@@ -403,7 +403,6 @@ if (( ${+commands[git]} )); then
   #   zcomet load agkozak/polyglot-kube-ps1
   # fi
 
-zcomet snippet OMZ::plugins/git/git.plugin.zsh
   # zcomet load junegunn/fzf shell completion.zsh key-bindings.zsh
   # (( ${+commands[fzf]} )) || ~[fzf]/install
 
