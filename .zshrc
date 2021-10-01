@@ -395,7 +395,9 @@ if (( ${+commands[git]} )); then
     sorin-ionescu/prezto modules/archive
   alias x='unarchive' extract='unarchive'
 
-  if [[ $OSTYPE != (msys|cygwin|solaris*) ]]; then
+  # fzf does not run on a number of platforms and its install script requires
+  # bash
+  if [[ $OSTYPE != (msys|cygwin|solaris*) && ${+commands[bash]} ]]; then
     zcomet load junegunn/fzf shell completion.zsh key-bindings.zsh
     (( ${+commands[fzf]} )) || ~[fzf]/install
   fi
