@@ -403,6 +403,7 @@ if (( ${+commands[git]} )); then
   #   zcomet load agkozak/polyglot-kube-ps1
   # fi
 
+zcomet snippet OMZ::plugins/git/git.plugin.zsh
   # zcomet load junegunn/fzf shell completion.zsh key-bindings.zsh
   # (( ${+commands[fzf]} )) || ~[fzf]/install
 
@@ -559,7 +560,7 @@ elif [[ $TERM == 'dumb' ]]; then
 fi
 
 # 26.7.1 history-search-end
-autoload -U history-search-end
+autoload -Uz history-search-end
 zle -N history-beginning-search-backward-end history-search-end
 zle -N history-beginning-search-forward-end history-search-end
 bindkey '^P' history-beginning-search-backward-end
