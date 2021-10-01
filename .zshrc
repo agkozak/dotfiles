@@ -399,7 +399,7 @@ if (( ${+commands[git]} )); then
   # bash
   if [[ $OSTYPE != (msys|cygwin|solaris*) && ${+commands[bash]} ]]; then
     zcomet load junegunn/fzf shell completion.zsh key-bindings.zsh
-    (( ${+commands[fzf]} )) || ~[fzf]/install
+    (( ${+commands[fzf]} )) || ~[fzf]/install --bin
   fi
 
   if [[ $OSTYPE != (msys|cygwin) && $AGKDOT_SYSTEMINFO != *microsoft* ]]; then
