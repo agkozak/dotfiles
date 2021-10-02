@@ -316,7 +316,7 @@ if (( ${+commands[git]} )); then
   # agkozak-zsh-prompt {{{2
 
   # AGKOZAK_PROMPT_DEBUG=1
-  zcomet load agkozak/agkozak-zsh-prompt@develop
+  zcomet load crai0/agkozak-zsh-prompt@develop
 
   # An optional way of loading agkozak-zsh-prompt using promptinit
   # zcomet fpath agkozak/agkozak-zsh-prompt@develop
@@ -343,8 +343,11 @@ if (( ${+commands[git]} )); then
     AGKOZAK_COLORS_EXIT_STATUS=174
     AGKOZAK_COLORS_CMD_EXEC_TIME=245
     AGKOZAK_COLORS_VIRTUALENV=151
+    AGKOZAK_COLORS_BG_STRING=223
   fi
   AGKOZAK_CUSTOM_PROMPT=''
+  # Background job status
+  AGKOZAK_CUSTOM_PROMPT+='%(11V.%F{${AGKOZAK_COLORS_BG_STRING}}%11vj%f .)'
   # Exit status
   AGKOZAK_CUSTOM_PROMPT+='%(?..%B%F{${AGKOZAK_COLORS_EXIT_STATUS}}(%?%)%f%b )'
   # Command execution time
@@ -354,7 +357,7 @@ if (( ${+commands[git]} )); then
   # Path
   AGKOZAK_CUSTOM_PROMPT+='%B%F{${AGKOZAK_COLORS_PATH}}%2v%f%b'
   # Virtual environment indicator
-  AGKOZAK_CUSTOM_PROMPT+='%(10V. %F{${AGKOZAK_COLORS_VIRTUALENV:-green}}[%10v]%f.)'
+  AGKOZAK_CUSTOM_PROMPT+='%(10V. %F{${AGKOZAK_COLORS_VIRTUALENV}}[%10v]%f.)'
   # Git status
   AGKOZAK_CUSTOM_PROMPT+=$'%(3V.%F{${AGKOZAK_COLORS_BRANCH_STATUS}}%3v%f.)\n'
   # SHLVL and prompt character
