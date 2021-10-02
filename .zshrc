@@ -316,7 +316,7 @@ if (( ${+commands[git]} )); then
   # agkozak-zsh-prompt {{{2
 
   # AGKOZAK_PROMPT_DEBUG=1
-  zcomet load crai0/agkozak-zsh-prompt@develop
+  zcomet load agkozak/agkozak-zsh-prompt@develop
 
   # An optional way of loading agkozak-zsh-prompt using promptinit
   # zcomet fpath agkozak/agkozak-zsh-prompt@develop
