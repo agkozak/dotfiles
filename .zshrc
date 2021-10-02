@@ -397,7 +397,9 @@ if (( ${+commands[git]} )); then
 
   # fzf does not run on a number of platforms and its install script requires
   # bash
-  if [[ $OSTYPE != (msys|cygwin|solaris*) && ${+commands[bash]} ]]; then
+  if [[ $OSTYPE != (msys|cygwin|solaris*) ]] &&
+     (( ${+commands[bash]} )) &&
+     is-at-least 5; then
     zcomet load junegunn/fzf shell completion.zsh key-bindings.zsh
     (( ${+commands[fzf]} )) || ~[fzf]/install --bin
   fi
