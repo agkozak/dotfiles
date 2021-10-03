@@ -394,7 +394,7 @@ if (( ${+commands[git]} )); then
   zcomet load ohmyzsh plugins/gitfast
   zcomet trigger zsh-prompt-benchmark romkatv/zsh-prompt-benchmark
 
-  zcomet trigger archive unarchive lsarchive \
+  zcomet trigger --no-submodules archive unarchive lsarchive \
     sorin-ionescu/prezto modules/archive
   alias x='unarchive' extract='unarchive'
 
