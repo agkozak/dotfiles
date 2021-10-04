@@ -339,11 +339,10 @@ if executable('git') && (executable('curl') || executable('wget') || WINDOWS())
     Plug 'fedorenchik/AnsiEsc'
     
     " Git
-    if WSL2() || ! has('nvim')
-          \ || ! has('patch-8.0.902')
-      Plug 'mhinz/vim-signify', { 'branch': 'legacy' }
-    else
+    if (has('nvim') || has('patch-8.0.902')) && ! WSL2()
       Plug 'mhinz/vim-signify'
+    else
+      Plug 'mhinz/vim-signify', { 'branch': 'legacy' }
     endif
     Plug 'tpope/vim-fugitive'
     Plug 'junegunn/gv.vim', { 'on': 'GV' }
