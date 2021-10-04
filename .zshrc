@@ -395,7 +395,7 @@ if (( ${+commands[git]} )); then
   zcomet trigger zsh-prompt-benchmark romkatv/zsh-prompt-benchmark
 
   zcomet trigger --no-submodules archive unarchive lsarchive \
-    sorin-ionescu/prezto modules/archive
+    prezto modules/archive
   alias x='unarchive' extract='unarchive'
 
   # # fzf does not run on a number of platforms and its install script requires
