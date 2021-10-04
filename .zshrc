@@ -422,9 +422,6 @@ if (( ${+commands[git]} )); then
   #   zcomet load agkozak/polyglot-kube-ps1
   # fi
 
-  # zcomet load junegunn/fzf shell completion.zsh key-bindings.zsh
-  # (( ${+commands[fzf]} )) || ~[fzf]/install
-
   # zcomet load zpm-zsh/clipboard
 
   # if [[ $AGKDOT_SYSTEMINFO != *ish* ]]; then
