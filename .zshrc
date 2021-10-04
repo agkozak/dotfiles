@@ -398,18 +398,18 @@ if (( ${+commands[git]} )); then
     sorin-ionescu/prezto modules/archive
   alias x='unarchive' extract='unarchive'
 
-  # fzf does not run on a number of platforms and its install script requires
-  # bash
-  if [[ $OSTYPE != (msys|cygwin|solaris*) ]] &&
-     (( ${+commands[bash]} )) &&
-     is-at-least 5; then
-    zcomet load junegunn/fzf shell completion.zsh key-bindings.zsh
-    (( ${+commands[fzf]} )) || ~[fzf]/install --bin
-  fi
+  # # fzf does not run on a number of platforms and its install script requires
+  # # bash
+  # if [[ $OSTYPE != (msys|cygwin|solaris*) ]] &&
+  #    (( ${+commands[bash]} )) &&
+  #    is-at-least 5; then
+  #   zcomet load junegunn/fzf shell completion.zsh key-bindings.zsh
+  #   (( ${+commands[fzf]} )) || ~[fzf]/install --bin
+  # fi
 
-  if [[ $OSTYPE != (msys|cygwin) && $AGKDOT_SYSTEMINFO != *microsoft* ]]; then
-    zcomet load zsh-users/zsh-syntax-highlighting
-  fi
+  # if [[ $OSTYPE != (msys|cygwin) && $AGKDOT_SYSTEMINFO != *microsoft* ]]; then
+  #   zcomet load zsh-users/zsh-syntax-highlighting
+  # fi
 
   # }}}2
 
