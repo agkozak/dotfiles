@@ -609,7 +609,7 @@ zsh_update() {
     zcomet self-update
     zcomet update
   fi
-  source "${HOME}/.zshrc"
+  exec zsh
 }
 
 # }}}1
