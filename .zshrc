@@ -310,6 +310,10 @@ if (( ${+commands[git]} )); then
 
   if [[ ! -f ${HOME}/.zcomet/bin/zcomet.zsh ]]; then
     command git clone https://github.com/agkozak/zcomet.git ${HOME}/.zcomet/bin
+    (
+      cd ${HOME}/.zcomet
+      git checkout develop
+    )
   fi
   source ~/.zcomet/bin/zcomet.zsh
 
