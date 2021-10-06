@@ -429,6 +429,8 @@ if (( ${+commands[git]} )); then
   #   zcomet load zdharma/zbrowse
   # fi
 
+  # zcomet load marlonrichert/zsh-autocomplete
+
   # }}}2
 
   # I'm doing this here just to prove that `zcomet compinit' can handle it
@@ -491,8 +493,9 @@ bindkey -M isearch . self-insert
 
 # }}}2
 
-# Menu-style completion
-zstyle ':completion:*' menu select
+# Menu-style completion (clashes with zsh-autocomplete)
+(( ${+functions[.autocomplete.async.stop]} )) ||
+  zstyle ':completion:*' menu select
 
 # Use dircolors $LS_COLORS for completion when possible
 zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
