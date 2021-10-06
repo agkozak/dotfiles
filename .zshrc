@@ -342,7 +342,6 @@ if (( ${+commands[git]} )); then
     AGKOZAK_COLORS_BRANCH_STATUS=228
     AGKOZAK_COLORS_EXIT_STATUS=174
     AGKOZAK_COLORS_CMD_EXEC_TIME=245
-    AGKOZAK_COLORS_VIRTUALENV=151
     AGKOZAK_COLORS_BG_STRING=223
   fi
   AGKOZAK_CUSTOM_PROMPT=''
@@ -354,10 +353,10 @@ if (( ${+commands[git]} )); then
   AGKOZAK_CUSTOM_PROMPT+='%(11V.%F{${AGKOZAK_COLORS_BG_STRING}}%11vj%f .)'
   # Username and hostname
   AGKOZAK_CUSTOM_PROMPT+='%(!.%S%B.%B%F{${AGKOZAK_COLORS_USER_HOST}})%n%1v%(!.%b%s.%f%b) '
+  # Virtual environment indicator
+  AGKOZAK_CUSTOM_PROMPT+='%(10V.%F{${AGKOZAK_COLORS_VIRTUALENV}}[%10v]%f .)'
   # Path
   AGKOZAK_CUSTOM_PROMPT+='%B%F{${AGKOZAK_COLORS_PATH}}%2v%f%b'
-  # Virtual environment indicator
-  AGKOZAK_CUSTOM_PROMPT+='%(10V. %F{${AGKOZAK_COLORS_VIRTUALENV}}[%10v]%f.)'
   # Git status
   AGKOZAK_CUSTOM_PROMPT+=$'%(3V.%F{${AGKOZAK_COLORS_BRANCH_STATUS}}%3v%f.)\n'
   # SHLVL and prompt character
