@@ -429,7 +429,7 @@ if (( ${+commands[git]} )); then
   #   zcomet load zdharma/zbrowse
   # fi
 
-  # zcomet load marlonrichert/zsh-autocomplete
+  zcomet load agkozak/zsh-autocomplete
 
   # }}}2
 
