@@ -420,20 +420,20 @@ if (( ${+commands[git]} )); then
   # Other {{{2
 
   # For when I'm testing the Polyglot Prompt in Zsh
-  # zcomet agkozak/polyglot
+  # zcomet load agkozak/polyglot@develop
   # if which kubectl &> /dev/null; then
   #   zcomet load jonmosco/kube-ps1
   #   zcomet load agkozak/polyglot-kube-ps1
   # fi
 
-  # zcomet load zpm-zsh/clipboard
+  zcomet load agkozak/clipboard
 
   # if [[ $AGKDOT_SYSTEMINFO != *ish* ]]; then
   #   zcomet load zdharma/zui
   #   zcomet load zdharma/zbrowse
   # fi
 
-  # zcomet load agkozak/zsh-autocomplete
+  # zcomet load marlonrichert/zsh-autocomplete
 
   # }}}2
 
