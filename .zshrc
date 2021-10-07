@@ -426,7 +426,7 @@ if (( ${+commands[git]} )); then
   #   zcomet load agkozak/polyglot-kube-ps1
   # fi
 
-  zcomet load agkozak/clipboard
+  zcomet trigger clip open pbcopy pbpaste agkozak/clipboard
 
   # if [[ $AGKDOT_SYSTEMINFO != *ish* ]]; then
   #   zcomet load zdharma/zui
