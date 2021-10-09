@@ -619,6 +619,13 @@ endfunction
 
 " }}}1
 
+" Avoid issues after vim-8.2.0767 with terminals presumably too old
+" to handle t_TI and t_TE. See:
+" - https://github.com/vim/vim/issues/6111
+" - https://github.com/vim/vim/issues/6112
+" - https://github.com/vim/vim/issues/6122
+set t_TI= t_TE=
+
 " .vimrc.local {{{1
 
 " Source ~/.vimrc.local, if it exists
