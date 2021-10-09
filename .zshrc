@@ -163,13 +163,14 @@ setopt PUSHD_IGNORE_DUPS  # Don't push duplicates onto the stack
 
 # 16.2.2 Completion {{{2
 
-unsetopt LIST_BEEP        # Don't beep on an ambiguous completion
+setopt NO_LIST_BEEP       # Don't beep on an ambiguous completion
+setopt LIST_PACKED        # Use columns of varying widths
 
 # }}}2
 
 # 16.2.3 Expansion and Globbing {{{2
 
-setopt EQUALS             # Perform = filename expansion
+# setopt EQUALS             # Perform = filename expansion (default behavior)
 
 # }}}2
 
@@ -194,13 +195,13 @@ setopt HIST_IGNORE_DUPS     # Do not enter 2 consecutive duplicates into history
 setopt HIST_IGNORE_SPACE    # Ignore command lines with leading spaces
 setopt HIST_VERIFY          # Reload results of history expansion before executing
 setopt INC_APPEND_HISTORY   # Constantly update $HISTFILE
-setopt SHARE_HISTORY        # Constantly share history between shell instances
+# setopt SHARE_HISTORY        # Constantly share history between shell instances
 
 # }}}2
 
 # 16.2.6 Input/Output {{{2
 
-unsetopt FLOW_CONTROL       # Free up Ctrl-Q and Ctrl-S
+setopt NO_FLOW_CONTROL      # Free up Ctrl-Q and Ctrl-S
 setopt INTERACTIVE_COMMENTS # Allow comments in interactive mode
 
 # }}}2
@@ -214,7 +215,7 @@ setopt NO_BG_NICE
 
 # 16.2.12 Zle {{{2
 
-unsetopt BEEP
+setopt NO_BEEP
 
 # }}}2
 
