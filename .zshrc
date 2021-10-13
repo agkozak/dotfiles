@@ -442,7 +442,8 @@ if (( ${+commands[git]} )); then
   # I'm doing this here just to prove that `zcomet compinit' can handle it
   compdef mosh=ssh
 
-  [[ $OSTYPE == (msys|cygwin) ]] && zstyle ':zcomet:compinit' arguments -u
+  [[ $OSTYPE == (msys|cygwin) ]] &&
+      zstyle ':zcomet:compinit' arguments -u -C
   zcomet compinit
 
 else
