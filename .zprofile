@@ -7,13 +7,16 @@ typeset -gx AGKDOT_SYSTEMINFO
 
 # Compile dotfiles that won't be handled by zcomet {{{1
 
-for i in .profile \
-	 .profile.local \
+for i in .zshenv \
 	 .zshenv.local \
+	 .zprofile \
 	 .zprofile.local \
+         .profile \
+	 .profile.local \
+	 .zshrc \
+	 .zshrc.local \
 	 .shrc \
-         .shrc.local \
-         .zshrc.local; do
+	 .shrc.local; do
   if [[ -e ${HOME}/${i}       &&
         ! -e ${HOME}/${i}.zwc ||
         ${HOME}/${i} -nt ${HOME}/${i}.zwc ]]; then
