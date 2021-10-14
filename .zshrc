@@ -397,7 +397,6 @@ if (( ${+commands[git]} )); then
   zcomet snippet https://github.com/jreese/zsh-titles/blob/master/titles.plugin.zsh
 
   zcomet load ohmyzsh plugins/gitfast
-  zcomet fpath ohmyzsh plugins/docker
   zcomet trigger zsh-prompt-benchmark romkatv/zsh-prompt-benchmark
 
   zcomet trigger --no-submodules archive unarchive lsarchive \
