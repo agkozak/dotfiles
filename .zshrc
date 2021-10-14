@@ -310,11 +310,8 @@ fi
 if (( ${+commands[git]} )); then
 
   if [[ ! -f ${HOME}/.zcomet/bin/zcomet.zsh ]]; then
-    command git clone https://github.com/agkozak/zcomet.git ${HOME}/.zcomet/bin
-    (
-      cd ${HOME}/.zcomet
-      git checkout develop
-    )
+    command git clone --branch develop https://github.com/agkozak/zcomet.git \
+        ${HOME}/.zcomet/bin
   fi
   source ~/.zcomet/bin/zcomet.zsh
 
@@ -323,7 +320,7 @@ if (( ${+commands[git]} )); then
   # AGKOZAK_PROMPT_DEBUG=1
   zcomet load agkozak/agkozak-zsh-prompt@develop
 
-  # An optional way of loading agkozak-zsh-prompt using promptinit
+  # # An optional way of loading agkozak-zsh-prompt using promptinit
   # zcomet fpath agkozak/agkozak-zsh-prompt@develop
   # autoload promptinit; promptinit
   # prompt agkozak-zsh-prompt
@@ -441,7 +438,8 @@ if (( ${+commands[git]} )); then
   # I'm doing this here just to prove that `zcomet compinit' can handle it
   compdef mosh=ssh
 
-  [[ $OSTYPE == (msys|cygwin) ]] && zstyle ':zcomet:compinit' arguments -u
+  [[ $OSTYPE == (msys|cygwin) ]] &&
+      zstyle ':zcomet:compinit' arguments -u
   zcomet compinit
 
 else
