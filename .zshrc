@@ -443,7 +443,7 @@ if (( ${+commands[git]} )); then
   compdef mosh=ssh
 
   [[ $OSTYPE == (msys|cygwin) ]] &&
-      zstyle ':zcomet:compinit' arguments -u -C
+      zstyle ':zcomet:compinit' arguments -u
   zcomet compinit
 
 else
