@@ -390,8 +390,10 @@ if (( ${+commands[git]} )); then
 
   zcomet trigger zhooks agkozak/zhooks@develop
 
-  # zcomet load jreese/zsh-titles
-  zcomet snippet https://github.com/jreese/zsh-titles/blob/master/titles.plugin.zsh
+  if [[ $TERM != 'cons25' ]]; then
+    # zcomet load jreese/zsh-titles
+    zcomet snippet https://github.com/jreese/zsh-titles/blob/master/titles.plugin.zsh
+  fi
 
   zcomet load ohmyzsh plugins/gitfast
   zcomet fpath ohmyzsh plugins/docker
