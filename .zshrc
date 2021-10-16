@@ -635,9 +635,7 @@ if (( ${+functions[zcomet]} )); then
 
   ZSH_AUTOSUGGEST_MANUAL_REBIND=1
 
-  if [[ $AGKDOT_SYSTEMINFO != *microsoft* ]]; then
-    zcomet load zsh-users/zsh-autosuggestions
-  fi
+  zcomet load zsh-users/zsh-autosuggestions
 
   if [[ $OSTYPE != (msys|cygwin) && $AGKDOT_SYSTEMINFO != *microsoft* ]]; then
     zcomet load zsh-users/zsh-syntax-highlighting
