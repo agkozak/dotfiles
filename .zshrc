@@ -432,6 +432,8 @@ if (( ${+commands[git]} )); then
 
   # zcomet load marlonrichert/zsh-autocomplete
 
+  zcomet load zsh-users/zsh-autosuggestions
+
   # }}}2
 
   # I'm doing this here just to prove that `zcomet compinit' can handle it
@@ -623,6 +625,8 @@ zsh_update() {
 # Source ~/.zshrc.local, if present {{{1
 
 if [[ -f ${HOME}/.zshrc.local ]]; then
+  local zshrc_local
+  zshrc_local=1
   source "${HOME}/.zshrc.local"
 fi
 
@@ -630,8 +634,8 @@ fi
 
 # Syntax highlighting should always come last {{{1
 
-if [[ $OSTYPE != (msys|cygwin) ]]; then
-  zcomet load romkatv/zsh-syntax-highlighting@perf
+if [[ $OSTYPE != (msys|cygwin) && $AGKDOT_SYSTEMINFO != *microsoft* ]]; then
+  zcomet load zsh-users/zsh-syntax-highlighting
 fi
 
 # }}}1
@@ -639,8 +643,11 @@ fi
 # End .zshrc benchmark {{{1
 
 if (( AGKDOT_BENCHMARKS )); then
-  _agkdot_benchmark_message \
-    ".zshrc loaded in ${$(( SECONDS * 1000 ))%.*}ms total."
+  local message
+  message='.zshrc '
+  (( zshrc_local )) && message+='and .zshrc.local '
+  message+="loaded in ${$(( SECONDS * 1000 ))%.*}ms total."
+  _agkdot_benchmark_message "$message"
   typeset -i SECONDS
 fi
 
