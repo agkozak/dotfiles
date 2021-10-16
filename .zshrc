@@ -139,8 +139,8 @@ autoload -Uz edit-command-line zmv
 
 # History environment variables
 HISTFILE="${HOME}/.zsh_history"
-HISTSIZE=120000  # Larger than $SAVEHIST for HIST_EXPIRE_DUPS_FIRST to work
-SAVEHIST=100000
+HISTSIZE=1200000000  # Larger than $SAVEHIST for HIST_EXPIRE_DUPS_FIRST to work
+SAVEHIST=1000000000
 
 # 10ms for key sequences
 KEYTIMEOUT=1
@@ -633,13 +633,16 @@ fi
 # Syntax highlighting should always come last {{{1
 if (( ${+functions[zcomet]} )); then
 
-  if [[ $OSTYPE != (msys|cygwin) && $AGKDOT_SYSTEMINFO != *microsoft* ]]; then
-    zcomet load zsh-users/zsh-syntax-highlighting
-  fi
+  ZSH_AUTOSUGGEST_MANUAL_REBIND=1
 
   if [[ $AGKDOT_SYSTEMINFO != *microsoft* ]]; then
     zcomet load zsh-users/zsh-autosuggestions
   fi
+
+  if [[ $OSTYPE != (msys|cygwin) && $AGKDOT_SYSTEMINFO != *microsoft* ]]; then
+    zcomet load zsh-users/zsh-syntax-highlighting
+  fi
+
 fi
 
 # }}}1
