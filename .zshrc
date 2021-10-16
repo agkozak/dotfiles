@@ -432,7 +432,9 @@ if (( ${+commands[git]} )); then
 
   # zcomet load marlonrichert/zsh-autocomplete
 
-  zcomet load zsh-users/zsh-autosuggestions
+  if [[ $AGKDOT_SYSTEMINFO != *microsoft* ]]; then
+    zcomet load zsh-users/zsh-autosuggestions
+  fi
 
   # }}}2
 
