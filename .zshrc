@@ -432,6 +432,9 @@ if (( ${+commands[git]} )); then
 
   # zcomet load marlonrichert/zsh-autocomplete
 
+  ZSH_AUTOSUGGEST_MANUAL_REBIND=1
+  zcomet load zsh-users/zsh-autosuggestions
+
   # }}}2
 
   # I'm doing this here just to prove that `zcomet compinit' can handle it
@@ -632,10 +635,6 @@ fi
 
 # Syntax highlighting should always come last {{{1
 if (( ${+functions[zcomet]} )); then
-
-  ZSH_AUTOSUGGEST_MANUAL_REBIND=1
-
-  zcomet load zsh-users/zsh-autosuggestions
 
   if [[ $OSTYPE != (msys|cygwin) && $AGKDOT_SYSTEMINFO != *microsoft* ]]; then
     zcomet load zsh-users/zsh-syntax-highlighting
