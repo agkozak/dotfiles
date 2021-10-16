@@ -333,7 +333,7 @@ if (( ${+commands[git]} )); then
   # AGKOZAK_MULTILINE=0
   # AGKOZAK_PROMPT_CHAR=( '❯' '❯' '❮' )
 
-  # "Zenburn" prompt {{{3
+  # Zenburn prompt {{{3
 
   # Make sure the zsh/terminfo module is loaded
   (( ${+modules[zsh/terminfo]} )) || zmodload zsh/terminfo
@@ -374,6 +374,7 @@ if (( ${+commands[git]} )); then
   # }}}2
 
   # agkozak/zsh-z {{{2
+
   ZSHZ_DEBUG=1
   zcomet load agkozak/zsh-z@develop
   ZSHZ_CASE='smart'
@@ -411,10 +412,6 @@ if (( ${+commands[git]} )); then
   #   (( ${+commands[fzf]} )) || ~[fzf]/install --bin
   # fi
 
-  # if [[ $OSTYPE != (msys|cygwin) && $AGKDOT_SYSTEMINFO != *microsoft* ]]; then
-  #   zcomet load zsh-users/zsh-syntax-highlighting
-  # fi
-
   # }}}2
 
   # Other {{{2
@@ -434,6 +431,11 @@ if (( ${+commands[git]} )); then
   # fi
 
   # zcomet load marlonrichert/zsh-autocomplete
+
+  # Syntax highlighting should always come last
+  if [[ $OSTYPE != (msys|cygwin) && $AGKDOT_SYSTEMINFO != *microsoft* ]]; then
+    zcomet load zsh-users/zsh-syntax-highlighting
+  fi
 
   # }}}2
 
