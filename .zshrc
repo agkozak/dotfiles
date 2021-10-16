@@ -636,7 +636,7 @@ fi
 # Syntax highlighting should always come last {{{1
 if (( ${+functions[zcomet]} )); then
 
-  if [[ $OSTYPE != (msys|cygwin) && $AGKDOT_SYSTEMINFO != *microsoft* ]]; then
+  if [[ $OSTYPE != (msys|cygwin) ]]; then
     zcomet load zsh-users/zsh-syntax-highlighting
   fi
 
