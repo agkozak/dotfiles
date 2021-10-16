@@ -143,6 +143,8 @@ set shortmess+=atTI
 
 set ruler
 
+set visualbell
+
 " }}}2
 
 " 13 selecting text {{{2
