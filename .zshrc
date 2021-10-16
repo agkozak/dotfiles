@@ -432,11 +432,6 @@ if (( ${+commands[git]} )); then
 
   # zcomet load marlonrichert/zsh-autocomplete
 
-  # Syntax highlighting should always come last
-  if [[ $OSTYPE != (msys|cygwin) && $AGKDOT_SYSTEMINFO != *microsoft* ]]; then
-    zcomet load zsh-users/zsh-syntax-highlighting
-  fi
-
   # }}}2
 
   # I'm doing this here just to prove that `zcomet compinit' can handle it
@@ -625,6 +620,22 @@ zsh_update() {
 
 # }}}1
 
+# Source ~/.zshrc.local, if present {{{1
+
+if [[ -f ${HOME}/.zshrc.local ]]; then
+  source "${HOME}/.zshrc.local"
+fi
+
+# }}}1
+
+# Syntax highlighting should always come last {{{1
+
+if [[ $OSTYPE != (msys|cygwin) ]]; then
+  zcomet load romkatv/zsh-syntax-highlighting@perf
+fi
+
+# }}}1
+
 # End .zshrc benchmark {{{1
 
 if (( AGKDOT_BENCHMARKS )); then
@@ -634,14 +645,6 @@ if (( AGKDOT_BENCHMARKS )); then
 fi
 
 unfunction _agkdot_benchmark_message
-
-# }}}1
-
-# Source ~/.zshrc.local, if present {{{1
-
-if [[ -f ${HOME}/.zshrc.local ]]; then
-  source "${HOME}/.zshrc.local"
-fi
 
 # }}}1
 
