@@ -631,13 +631,15 @@ fi
 # }}}1
 
 # Syntax highlighting should always come last {{{1
+if (( ${+functions[zcomet]} )); then
 
-if [[ $OSTYPE != (msys|cygwin) && $AGKDOT_SYSTEMINFO != *microsoft* ]]; then
-  zcomet load zsh-users/zsh-syntax-highlighting
-fi
+  if [[ $OSTYPE != (msys|cygwin) && $AGKDOT_SYSTEMINFO != *microsoft* ]]; then
+    zcomet load zsh-users/zsh-syntax-highlighting
+  fi
 
-if [[ $AGKDOT_SYSTEMINFO != *microsoft* ]]; then
-  zcomet load zsh-users/zsh-autosuggestions
+  if [[ $AGKDOT_SYSTEMINFO != *microsoft* ]]; then
+    zcomet load zsh-users/zsh-autosuggestions
+  fi
 fi
 
 # }}}1
