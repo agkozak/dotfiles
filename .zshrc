@@ -432,10 +432,6 @@ if (( ${+commands[git]} )); then
 
   # zcomet load marlonrichert/zsh-autocomplete
 
-  if [[ $AGKDOT_SYSTEMINFO != *microsoft* ]]; then
-    zcomet load zsh-users/zsh-autosuggestions
-  fi
-
   # }}}2
 
   # I'm doing this here just to prove that `zcomet compinit' can handle it
@@ -638,6 +634,10 @@ fi
 
 if [[ $OSTYPE != (msys|cygwin) && $AGKDOT_SYSTEMINFO != *microsoft* ]]; then
   zcomet load zsh-users/zsh-syntax-highlighting
+fi
+
+if [[ $AGKDOT_SYSTEMINFO != *microsoft* ]]; then
+  zcomet load zsh-users/zsh-autosuggestions
 fi
 
 # }}}1
