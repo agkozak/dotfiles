@@ -437,22 +437,10 @@ if (( ${+commands[git]} )); then
 
   # }}}2
 
-  # I'm doing this here just to prove that `zcomet compinit' can handle it
-  compdef mosh=ssh
-
-  [[ $OSTYPE == (msys|cygwin) ]] &&
-      zstyle ':zcomet:compinit' arguments -u
-  zcomet compinit
-
 else
 
-  >&2 print 'Please install git.'
+  >&2 print 'Please install Git.'
 
-  if [[ $TERM != 'dumb' ]]; then
-    autoload -Uz compinit
-    compinit -C -d "${HOME}/.zcompdump_${ZSH_VERSION}"
-    compdef mosh=ssh
-  fi
 fi
 
 # }}}1
@@ -640,6 +628,26 @@ if (( ${+functions[zcomet]} )); then
     zcomet load zsh-users/zsh-syntax-highlighting
   fi
 
+fi
+
+# compinit {{{1
+
+if (( ${+functions[zcomet]} )); then
+
+  # I'm doing this here just to prove that `zcomet compinit' can handle it
+  compdef mosh=ssh
+
+  [[ $OSTYPE == (msys|cygwin) ]] &&
+      zstyle ':zcomet:compinit' arguments -u
+  zcomet compinit
+
+else
+
+  if [[ $TERM != 'dumb' ]]; then
+    autoload -Uz compinit
+    compinit -C -d "${HOME}/.zcompdump_${ZSH_VERSION}"
+    compdef mosh=ssh
+  fi
 fi
 
 # }}}1
