@@ -359,7 +359,7 @@ if (( ${+commands[git]} )); then
   # Path
   AGKOZAK_CUSTOM_PROMPT+='%B%F{${AGKOZAK_COLORS_PATH}}%2v%f%b'
   # Background job status
-  AGKOZAK_CUSTOM_PROMPT+='%(11V. %F{${AGKOZAK_COLORS_BG_STRING}}%11vj%f.)'
+  AGKOZAK_CUSTOM_PROMPT+='%(1j. %F{${AGKOZAK_COLORS_BG_STRING}}%jj%f.)'
   # Git status
   AGKOZAK_CUSTOM_PROMPT+=$'%(3V.%F{${AGKOZAK_COLORS_BRANCH_STATUS}}%3v%f.)\n'
   # SHLVL and prompt character
