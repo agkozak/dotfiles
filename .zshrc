@@ -139,8 +139,8 @@ autoload -Uz edit-command-line zmv
 
 # History environment variables
 HISTFILE="${HOME}/.zsh_history"
-HISTSIZE=120000  # Larger than $SAVEHIST for HIST_EXPIRE_DUPS_FIRST to work
-SAVEHIST=100000
+HISTSIZE=1200000000  # Larger than $SAVEHIST for HIST_EXPIRE_DUPS_FIRST to work
+SAVEHIST=1000000000
 
 # 10ms for key sequences
 KEYTIMEOUT=1
@@ -310,11 +310,8 @@ fi
 if (( ${+commands[git]} )); then
 
   if [[ ! -f ${HOME}/.zcomet/bin/zcomet.zsh ]]; then
-    command git clone https://github.com/agkozak/zcomet.git ${HOME}/.zcomet/bin
-    (
-      cd ${HOME}/.zcomet
-      git checkout develop
-    )
+    command git clone --branch develop https://github.com/agkozak/zcomet.git \
+        ${HOME}/.zcomet/bin
   fi
   source ~/.zcomet/bin/zcomet.zsh
 
@@ -323,7 +320,7 @@ if (( ${+commands[git]} )); then
   # AGKOZAK_PROMPT_DEBUG=1
   zcomet load agkozak/agkozak-zsh-prompt@develop
 
-  # An optional way of loading agkozak-zsh-prompt using promptinit
+  # # An optional way of loading agkozak-zsh-prompt using promptinit
   # zcomet fpath agkozak/agkozak-zsh-prompt@develop
   # autoload promptinit; promptinit
   # prompt agkozak-zsh-prompt
@@ -336,7 +333,7 @@ if (( ${+commands[git]} )); then
   # AGKOZAK_MULTILINE=0
   # AGKOZAK_PROMPT_CHAR=( '❯' '❯' '❮' )
 
-  # "Zenburn" prompt {{{3
+  # Zenburn prompt {{{3
 
   # Make sure the zsh/terminfo module is loaded
   (( ${+modules[zsh/terminfo]} )) || zmodload zsh/terminfo
@@ -362,7 +359,7 @@ if (( ${+commands[git]} )); then
   # Path
   AGKOZAK_CUSTOM_PROMPT+='%B%F{${AGKOZAK_COLORS_PATH}}%2v%f%b'
   # Background job status
-  AGKOZAK_CUSTOM_PROMPT+='%(11V. %F{${AGKOZAK_COLORS_BG_STRING}}%11vj%f.)'
+  AGKOZAK_CUSTOM_PROMPT+='%(1j. %F{${AGKOZAK_COLORS_BG_STRING}}%jj%f.)'
   # Git status
   AGKOZAK_CUSTOM_PROMPT+=$'%(3V.%F{${AGKOZAK_COLORS_BRANCH_STATUS}}%3v%f.)\n'
   # SHLVL and prompt character
@@ -377,6 +374,7 @@ if (( ${+commands[git]} )); then
   # }}}2
 
   # agkozak/zsh-z {{{2
+
   ZSHZ_DEBUG=1
   zcomet load agkozak/zsh-z@develop
   ZSHZ_CASE='smart'
@@ -393,11 +391,12 @@ if (( ${+commands[git]} )); then
 
   zcomet trigger zhooks agkozak/zhooks@develop
 
-  # zcomet load jreese/zsh-titles
-  zcomet snippet https://github.com/jreese/zsh-titles/blob/master/titles.plugin.zsh
+  if [[ $TERM != 'cons25' ]]; then
+    # zcomet load jreese/zsh-titles
+    zcomet snippet https://github.com/jreese/zsh-titles/blob/master/titles.plugin.zsh
+  fi
 
   zcomet load ohmyzsh plugins/gitfast
-  zcomet fpath ohmyzsh plugins/docker
   zcomet trigger zsh-prompt-benchmark romkatv/zsh-prompt-benchmark
 
   zcomet trigger --no-submodules archive unarchive lsarchive \
@@ -411,10 +410,6 @@ if (( ${+commands[git]} )); then
   #    is-at-least 5; then
   #   zcomet load junegunn/fzf shell completion.zsh key-bindings.zsh
   #   (( ${+commands[fzf]} )) || ~[fzf]/install --bin
-  # fi
-
-  # if [[ $OSTYPE != (msys|cygwin) && $AGKDOT_SYSTEMINFO != *microsoft* ]]; then
-  #   zcomet load zsh-users/zsh-syntax-highlighting
   # fi
 
   # }}}2
@@ -437,22 +432,15 @@ if (( ${+commands[git]} )); then
 
   # zcomet load marlonrichert/zsh-autocomplete
 
+  ZSH_AUTOSUGGEST_MANUAL_REBIND=1
+  zcomet load zsh-users/zsh-autosuggestions
+
   # }}}2
-
-  # I'm doing this here just to prove that `zcomet compinit' can handle it
-  compdef mosh=ssh
-
-  zcomet compinit
 
 else
 
-  >&2 print 'Please install git.'
+  >&2 print 'Please install Git.'
 
-  if [[ $TERM != 'dumb' ]]; then
-    autoload -Uz compinit
-    compinit -C -d "${HOME}/.zcompdump_${ZSH_VERSION}"
-    compdef mosh=ssh
-  fi
 fi
 
 # }}}1
@@ -623,23 +611,59 @@ zsh_update() {
 
 # }}}1
 
+# Source ~/.zshrc.local, if present {{{1
+
+if [[ -f ${HOME}/.zshrc.local ]]; then
+  local zshrc_local
+  zshrc_local=1
+  source "${HOME}/.zshrc.local"
+fi
+
+# }}}1
+
+# Syntax highlighting should always come last {{{1
+if (( ${+functions[zcomet]} )); then
+
+  if [[ $OSTYPE != (msys|cygwin) ]]; then
+    zcomet load zsh-users/zsh-syntax-highlighting
+  fi
+
+fi
+
+# compinit {{{1
+
+if (( ${+functions[zcomet]} )); then
+
+  # I'm doing this here just to prove that `zcomet compinit' can handle it
+  compdef mosh=ssh
+
+  [[ $OSTYPE == (msys|cygwin) ]] &&
+      zstyle ':zcomet:compinit' arguments -u
+  zcomet compinit
+
+else
+
+  if [[ $TERM != 'dumb' ]]; then
+    autoload -Uz compinit
+    compinit -C -d "${HOME}/.zcompdump_${ZSH_VERSION}"
+    compdef mosh=ssh
+  fi
+fi
+
+# }}}1
+
 # End .zshrc benchmark {{{1
 
 if (( AGKDOT_BENCHMARKS )); then
-  _agkdot_benchmark_message \
-    ".zshrc loaded in ${$(( SECONDS * 1000 ))%.*}ms total."
+  local message
+  message='.zshrc '
+  (( zshrc_local )) && message+='and .zshrc.local '
+  message+="loaded in ${$(( SECONDS * 1000 ))%.*}ms total."
+  _agkdot_benchmark_message "$message"
   typeset -i SECONDS
 fi
 
 unfunction _agkdot_benchmark_message
-
-# }}}1
-
-# Source ~/.zshrc.local, if present {{{1
-
-if [[ -f ${HOME}/.zshrc.local ]]; then
-  source "${HOME}/.zshrc.local"
-fi
 
 # }}}1
 
