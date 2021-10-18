@@ -335,6 +335,19 @@ if (( ${+commands[git]} )); then
 
   # Zenburn prompt {{{3
 
+
+  _andy_pipestatus() {
+    typeset -g ANDY_PIPESTATUS="${${pipestatus#0}:+(${"${pipestatus[*]}"// /|})}"
+    [[ -z $ANDY_PIPESTATUS ]] && return
+    if [[ $ANDY_PIPESTATUS == *0\) ]]; then
+      typeset -g ANDY_PIPESTATUS="%F{108}${ANDY_PIPESTATUS}%f "
+    else
+      typeset -g ANDY_PIPESTATUS="%B%F{${AGKOZAK_COLORS_EXIT_STATUS}\}${ANDY_PIPESTATUS}%f%b "
+    fi
+  }
+  autoload -Uz add-zsh-hook
+  add-zsh-hook precmd _andy_pipestatus
+
   # Make sure the zsh/terminfo module is loaded
   (( ${+modules[zsh/terminfo]} )) || zmodload zsh/terminfo
   # If there are 256 colors, use the following colors; otherwise use the defaults
@@ -350,8 +363,8 @@ if (( ${+commands[git]} )); then
   AGKOZAK_CUSTOM_PROMPT=''
   # Command execution time
   AGKOZAK_CUSTOM_PROMPT+='%(9V.%F{${AGKOZAK_COLORS_CMD_EXEC_TIME}}%b%9v%b%f .)'
-  # Exit status
-  AGKOZAK_CUSTOM_PROMPT+='%(?..%B%F{${AGKOZAK_COLORS_EXIT_STATUS}}(%?%)%f%b )'
+  # pipestatus
+  AGKOZAK_CUSTOM_PROMPT+='${ANDY_PIPESTATUS}'
   # Username and hostname
   AGKOZAK_CUSTOM_PROMPT+='%(!.%S%B.%B%F{${AGKOZAK_COLORS_USER_HOST}})%n%1v%(!.%b%s.%f%b) '
   # Virtual environment indicator
