@@ -393,6 +393,8 @@ f() {
 # Pull in updates from the dotfiles repo and install them {{{1
 
 update_dotfiles() {
+  [ -n "$ZSH_VERSION" ] && setopt NO_WARN_CREATE_GLOBAL NO_WARN_NESTED_VAR
+
   CUR_DIR="$PWD"
   printf '%s' 'Updating dotfiles: '
   cd "${HOME}/dotfiles" || exit
