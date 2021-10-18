@@ -223,8 +223,8 @@ setopt NO_BEEP
 
 # # The Debian solution to Del/Home/End/etc. keybindings {{{1
 
-# No need to load the following code if I'm using Debian
-if [[ ! -f /etc/debian-version ]]; then
+# No need to run the following code if I'm using a Debian-based distro
+if [[ ! -f /etc/debian_version ]]; then
 
   typeset -A key
   key=(
