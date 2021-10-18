@@ -432,8 +432,8 @@ if (( ${+commands[git]} )); then
 
   # zcomet load marlonrichert/zsh-autocomplete
 
-  ZSH_AUTOSUGGEST_MANUAL_REBIND=1
-  zcomet load zsh-users/zsh-autosuggestions
+  # ZSH_AUTOSUGGEST_MANUAL_REBIND=1
+  # zcomet load zsh-users/zsh-autosuggestions
 
   # }}}2
 
@@ -622,13 +622,13 @@ fi
 # }}}1
 
 # Syntax highlighting should always come last {{{1
-if (( ${+functions[zcomet]} )); then
+# if (( ${+functions[zcomet]} )); then
 
-  if [[ $OSTYPE != (msys|cygwin) ]]; then
-    zcomet load zsh-users/zsh-syntax-highlighting
-  fi
+#   if [[ $OSTYPE != (msys|cygwin) ]]; then
+#     zcomet load zsh-users/zsh-syntax-highlighting
+#   fi
 
-fi
+# fi
 
 # compinit {{{1
 
