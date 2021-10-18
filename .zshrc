@@ -335,7 +335,6 @@ if (( ${+commands[git]} )); then
 
   # Zenburn prompt {{{3
 
-
   _andy_pipestatus() {
     typeset -g ANDY_PIPESTATUS="${${pipestatus#0}:+(${"${pipestatus[*]}"// /|})}"
     [[ -z $ANDY_PIPESTATUS ]] && return
