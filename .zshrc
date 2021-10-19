@@ -7,15 +7,15 @@
 
 # Begin .zshrc benchmarks {{{1
 
-# zprof {{{1
+# zprof {{{2
 #
 # To run zprof, execute
 #
 #   env ZSH_PROF='' zsh -ic zprof
 (( $+ZSH_PROF )) && zmodload zsh/zprof
-# }}}1
+# }}}2
 
-# xtrace {{{1
+# xtrace {{{2
 #
 # To run xtrace, execute
 #
@@ -31,7 +31,7 @@ if (( AGKDOT_XTRACE )); then
 
   setopt XTRACE
 fi
-# }}}1
+# }}}2
 
 # For simple script running times, execute
 #
@@ -444,8 +444,8 @@ if (( ${+commands[git]} )); then
 
   # zcomet load marlonrichert/zsh-autocomplete
 
-  ZSH_AUTOSUGGEST_MANUAL_REBIND=1
-  zcomet load zsh-users/zsh-autosuggestions
+  # ZSH_AUTOSUGGEST_MANUAL_REBIND=1
+  # zcomet load zsh-users/zsh-autosuggestions
 
   # }}}2
 
@@ -634,6 +634,7 @@ fi
 # }}}1
 
 # Syntax highlighting should always come last {{{1
+
 if (( ${+functions[zcomet]} )); then
 
   if [[ $OSTYPE != (msys|cygwin) ]]; then
@@ -641,6 +642,8 @@ if (( ${+functions[zcomet]} )); then
   fi
 
 fi
+
+# }}}1
 
 # compinit {{{1
 
