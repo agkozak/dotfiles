@@ -72,8 +72,9 @@ if [[ -f ${HOME}/.shrc ]];then
     (( $+EPOCHREALTIME )) || zmodload zsh/datetime
     typeset -g AGKDOT_ZSHRC_START=$(( EPOCHREALTIME * 1000 ))
     AGKDOT_ZSHRC_LOADING=1 source "${HOME}/.shrc"
+    [[ -f ${HOME}/.shrc.local ]] && AGKDOT_LOCAL_MESSAGE='and .shrc.local '
     _agkdot_benchmark_message \
-      ".shrc loaded in ${$(( (EPOCHREALTIME * 1000) - AGKDOT_ZSHRC_START ))%\.*}ms."
+      ".shrc ${AGKDOT_LOCAL_MESSAGE}loaded in ${$(( (EPOCHREALTIME * 1000) - AGKDOT_ZSHRC_START ))%\.*}ms."
     unset AGKDOT_ZSHRC_START
   else
     source "${HOME}/.shrc"
@@ -177,7 +178,7 @@ setopt LIST_PACKED        # Use columns of varying widths
 # 16.2.4 History {{{2
 
 setopt EXTENDED_HISTORY       # Save time stamps and durations
-setopt HIST_EXPIRE_DUPS_FIRST # Expire duplicates first
+# setopt HIST_EXPIRE_DUPS_FIRST # Expire duplicates first
 
 # Enable history on CloudLinux for a custom build of zsh in ~/bin
 # with HAVE_SYMLINKS=0 set at compile time
@@ -191,7 +192,7 @@ if [[ -f '/var/.cagefs/.cagefs.token' ]]; then
   fi
 fi
 
-setopt HIST_IGNORE_DUPS     # Do not enter 2 consecutive duplicates into history
+# setopt HIST_IGNORE_DUPS     # Do not enter 2 consecutive duplicates into history
 setopt HIST_IGNORE_SPACE    # Ignore command lines with leading spaces
 setopt HIST_VERIFY          # Reload results of history expansion before executing
 setopt INC_APPEND_HISTORY   # Constantly update $HISTFILE

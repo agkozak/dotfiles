@@ -425,22 +425,26 @@ fi
 
 # }}}1
 
+# Source ~/.shrc.local {{{1
+
+if [ -f "${HOME}/.shrc.local" ]; then
+  . "${HOME}/.shrc.local" && AGKDOT_SHRC_LOCAL=1
+fi
+
+# }}}1
+
 # End .shrc benchmark {{{1
 
 if [ -n "$AGKDOT_SHRC_START" ]; then
   AGKDOT_SHRC_FINISH="$(/bin/date +%s%N)"
   AGKDOT_DIFFERENCE=$(( AGKDOT_SHRC_FINISH - AGKDOT_SHRC_START ))
-  echo ".shrc loaded in $((AGKDOT_DIFFERENCE/1000000))ms."
+  printf '%s' '.shrc '
+  [ -n "$AGKDOT_SHRC_LOCAL" ] && printf '%s' 'and .shrc.local '
+  printf '%s\n' "loaded in $((AGKDOT_DIFFERENCE/1000000))ms."
 fi
 
 unset AGKDOT_SHRC_START AGKDOT_SHRC_FINISH AGKDOT_DIFFERENCE
 unset -f _agkdot_is_bsd_sh # _agkdot_winpty_alias _agkdot_is_uwin
-
-# }}}1
-
-# Source ~/.shrc.local {{{1
-
-if [ -f "${HOME}/.shrc.local" ]; then . "${HOME}/.shrc.local"; fi
 
 # }}}1
 
