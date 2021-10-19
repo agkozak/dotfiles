@@ -63,6 +63,13 @@ fi
 
 # }}}1
 
+# AGKDOT_TERM_COLORS {{{1
+
+zmodload zsh/terminfo
+AGKDOT_TERM_COLORS=${terminfo[colors]}
+
+# }}}1
+
 # Source ~/.shrc {{{1
 
 if [[ -f ${HOME}/.shrc ]];then
