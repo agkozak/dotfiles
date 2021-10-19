@@ -183,7 +183,7 @@ ldot() {
 
   until [ $# -eq 0 ]; do
     if [ -d "$1" ]; then
-      LDOT_ARGS="$LDOT_ARGS $(\ls -d "${1}"/.*)"
+      ldot "${1}/.*"
     else
       LDOT_ARGS="$LDOT_ARGS ${1}"
     fi
