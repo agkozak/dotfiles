@@ -444,8 +444,9 @@ if (( ${+commands[git]} )); then
 
   # zcomet load marlonrichert/zsh-autocomplete
 
-  # ZSH_AUTOSUGGEST_MANUAL_REBIND=1
-  # zcomet load zsh-users/zsh-autosuggestions
+  ZSH_AUTOSUGGEST_MANUAL_REBIND=1
+  ZSH_AUTOSUGGEST_CLEAR_WIDGETS+=(history-beginning-search-backward-end history-beginning-search-forward-end)
+  zcomet load zsh-users/zsh-autosuggestions
 
   # }}}2
 
