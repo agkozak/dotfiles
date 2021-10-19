@@ -75,7 +75,7 @@ if [[ -f ${HOME}/.shrc ]];then
     [[ -f ${HOME}/.shrc.local ]] && AGKDOT_LOCAL_MESSAGE='and .shrc.local '
     _agkdot_benchmark_message \
       ".shrc ${AGKDOT_LOCAL_MESSAGE}loaded in ${$(( (EPOCHREALTIME * 1000) - AGKDOT_ZSHRC_START ))%\.*}ms."
-    unset AGKDOT_ZSHRC_START
+    unset AGKDOT_ZSHRC_START AGKDOT_LOCAL_MESSAGE
   else
     source "${HOME}/.shrc"
   fi
