@@ -65,8 +65,7 @@ fi
 
 # AGKDOT_TERM_COLORS {{{1
 
-zmodload zsh/terminfo
-AGKDOT_TERM_COLORS=${terminfo[colors]}
+AGKDOT_TERM_COLORS=${terminfo[colors]:-0}
 
 # }}}1
 
@@ -176,16 +175,9 @@ setopt LIST_PACKED        # Use columns of varying widths
 
 # }}}2
 
-# 16.2.3 Expansion and Globbing {{{2
-
-# setopt EQUALS             # Perform = filename expansion (default behavior)
-
-# }}}2
-
 # 16.2.4 History {{{2
 
 setopt EXTENDED_HISTORY       # Save time stamps and durations
-# setopt HIST_EXPIRE_DUPS_FIRST # Expire duplicates first
 
 # Enable history on CloudLinux for a custom build of zsh in ~/bin
 # with HAVE_SYMLINKS=0 set at compile time

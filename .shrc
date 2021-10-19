@@ -63,9 +63,10 @@ fi
 
 # Aliases {{{1
 
+# enable color support of ls and also add handy aliases {{{2
+
 # .zshrc sets AGKDOT_TERM_COLORS from terminfo[colors]
 if [ -z "$ZSH_VERSION" ]; then
-  # enable color support of ls and also add handy aliases {{{2
   if [ "$TERM" != "$AGKDOT_ORIG_TERM" ]; then
     export AGKDOT_TERM_COLORS
     case $TERM in
