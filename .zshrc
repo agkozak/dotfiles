@@ -336,12 +336,13 @@ if (( ${+commands[git]} )); then
   # Zenburn prompt {{{3
 
   _andy_pipestatus() {
-    typeset -g ANDY_PIPESTATUS="${${pipestatus#0}:+(${"${pipestatus[*]}"// /|})}"
+    psvar[12]='' psvar[13]=''
+    typeset -g ANDY_PIPESTATUS="${${pipestatus#0}:+${"${pipestatus[*]}"// /${ANDY_PIPESTATUS_SEPARATOR:-|}}}"
     [[ -z $ANDY_PIPESTATUS ]] && return
-    if [[ $ANDY_PIPESTATUS == *0\) ]]; then
-      typeset -g ANDY_PIPESTATUS="%F{108}${ANDY_PIPESTATUS}%f "
+    if [[ $ANDY_PIPESTATUS == *"${ANDY_PIPESTATUS_SEPARATOR:-|}"0 ]]; then
+      typeset -g psvar[12]="${ANDY_PIPESTATUS}"
     else
-      typeset -g ANDY_PIPESTATUS="%B%F{${AGKOZAK_COLORS_EXIT_STATUS}}${ANDY_PIPESTATUS}%f%b "
+      typeset -g psvar[13]="${ANDY_PIPESTATUS}"
     fi
   }
   autoload -Uz add-zsh-hook
@@ -363,7 +364,7 @@ if (( ${+commands[git]} )); then
   # Command execution time
   AGKOZAK_CUSTOM_PROMPT+='%(9V.%F{${AGKOZAK_COLORS_CMD_EXEC_TIME}}%b%9v%b%f .)'
   # pipestatus
-  AGKOZAK_CUSTOM_PROMPT+='${ANDY_PIPESTATUS}'
+  AGKOZAK_CUSTOM_PROMPT+='%(13V.%B%F{${AGKOZAK_COLORS_EXIT_STATUS}\}(%13v%)%f%b .%(12V.%F{${AGKOZAK_COLORS_USER_HOST}\}(%12v%)%f .))'
   # Username and hostname
   AGKOZAK_CUSTOM_PROMPT+='%(!.%S%B.%B%F{${AGKOZAK_COLORS_USER_HOST}})%n%1v%(!.%b%s.%f%b) '
   # Virtual environment indicator
