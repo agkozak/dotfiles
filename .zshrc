@@ -329,24 +329,11 @@ if (( ${+commands[git]} )); then
 
   # AGKOZAK_COLORS_PROMPT_CHAR='magenta'
   # AGKOZAK_CUSTOM_SYMBOLS=( '⇣⇡' '⇣' '⇡' '+' 'x' '!' '>' '?' 'S' )
-  AGKOZAK_LEFT_PROMPT_ONLY=1
+  # AGKOZAK_LEFT_PROMPT_ONLY=1
   # AGKOZAK_MULTILINE=0
   # AGKOZAK_PROMPT_CHAR=( '❯' '❯' '❮' )
 
   # # Zenburn prompt {{{3
-
-  # _andy_pipestatus() {
-  #   psvar[12]='' psvar[13]=''
-  #   typeset -g ANDY_PIPESTATUS="${${pipestatus#0}:+${"${pipestatus[*]}"// /${ANDY_PIPESTATUS_SEPARATOR:-|}}}"
-  #   [[ -z $ANDY_PIPESTATUS ]] && return
-  #   if [[ $ANDY_PIPESTATUS == *"${ANDY_PIPESTATUS_SEPARATOR:-|}"0 ]]; then
-  #     typeset -g psvar[12]="${ANDY_PIPESTATUS}"
-  #   else
-  #     typeset -g psvar[13]="${ANDY_PIPESTATUS}"
-  #   fi
-  # }
-  # autoload -Uz add-zsh-hook
-  # add-zsh-hook precmd _andy_pipestatus
 
   # Make sure the zsh/terminfo module is loaded
   (( ${+modules[zsh/terminfo]} )) || zmodload zsh/terminfo
@@ -360,27 +347,29 @@ if (( ${+commands[git]} )); then
     AGKOZAK_COLORS_VIRTUALENV=188
     AGKOZAK_COLORS_BG_STRING=223
   fi
-  # AGKOZAK_CUSTOM_PROMPT=''
-  # # Command execution time
-  # AGKOZAK_CUSTOM_PROMPT+='%(9V.%F{${AGKOZAK_COLORS_CMD_EXEC_TIME}}%b%9v%b%f .)'
-  # # pipestatus
-  # AGKOZAK_CUSTOM_PROMPT+='%(13V.%B%F{${AGKOZAK_COLORS_EXIT_STATUS}\}(%13v%)%f%b .%(12V.%F{${AGKOZAK_COLORS_USER_HOST}\}(%12v%)%f .))'
-  # # Username and hostname
-  # AGKOZAK_CUSTOM_PROMPT+='%(!.%S%B.%B%F{${AGKOZAK_COLORS_USER_HOST}})%n%1v%(!.%b%s.%f%b) '
-  # # Virtual environment indicator
-  # AGKOZAK_CUSTOM_PROMPT+='%(10V.%F{${AGKOZAK_COLORS_VIRTUALENV}}[%10v]%f .)'
-  # # Path
-  # AGKOZAK_CUSTOM_PROMPT+='%B%F{${AGKOZAK_COLORS_PATH}}%2v%f%b'
-  # # Background job status
-  # AGKOZAK_CUSTOM_PROMPT+='%(1j. %F{${AGKOZAK_COLORS_BG_STRING}}%jj%f.)'
-  # # Git status
-  # AGKOZAK_CUSTOM_PROMPT+=$'%(3V.%F{${AGKOZAK_COLORS_BRANCH_STATUS}}%3v%f.)\n'
-  # # SHLVL and prompt character
-  # AGKOZAK_CUSTOM_PROMPT+='[%L] %(4V.:.%#) '
-  # AGKOZAK_COLORS_BRANCH_STATUS=228
+  AGKOZAK_CUSTOM_PROMPT=''
+  # Command execution time
+  AGKOZAK_CUSTOM_PROMPT+='%(9V.%F{${AGKOZAK_COLORS_CMD_EXEC_TIME}}%b%9v%b%f .)'
+  # Exit status
+  AGKOZAK_CUSTOM_PROMPT+='%(?..%B%F{${AGKOZAK_COLORS_EXIT_STATUS}}(%?%)%f%b )'
+  # pipestatus
+  AGKOZAK_CUSTOM_PROMPT+='%(13V.%B%F{${AGKOZAK_COLORS_EXIT_STATUS}\}(%13v%)%f%b .%(12V.%F{${AGKOZAK_COLORS_USER_HOST}\}(%12v%)%f .))'
+  # Username and hostname
+  AGKOZAK_CUSTOM_PROMPT+='%(!.%S%B.%B%F{${AGKOZAK_COLORS_USER_HOST}})%n%1v%(!.%b%s.%f%b) '
+  # Virtual environment indicator
+  AGKOZAK_CUSTOM_PROMPT+='%(10V.%F{${AGKOZAK_COLORS_VIRTUALENV}}[%10v]%f .)'
+  # Path
+  AGKOZAK_CUSTOM_PROMPT+='%B%F{${AGKOZAK_COLORS_PATH}}%2v%f%b'
+  # Background job status
+  AGKOZAK_CUSTOM_PROMPT+='%(1j. %F{${AGKOZAK_COLORS_BG_STRING}}%jj%f.)'
+  # Git status
+  AGKOZAK_CUSTOM_PROMPT+=$'%(3V.%F{${AGKOZAK_COLORS_BRANCH_STATUS}}%3v%f.)\n'
+  # SHLVL and prompt character
+  AGKOZAK_CUSTOM_PROMPT+='[%L] %(4V.:.%#) '
+  AGKOZAK_COLORS_BRANCH_STATUS=228
 
-  # # No right prompt
-  # AGKOZAK_CUSTOM_RPROMPT=''
+  # No right prompt
+  AGKOZAK_CUSTOM_RPROMPT=''
 
   # }}}3
 
