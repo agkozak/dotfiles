@@ -341,7 +341,7 @@ if (( ${+commands[git]} )); then
     if [[ $ANDY_PIPESTATUS == *0\) ]]; then
       typeset -g ANDY_PIPESTATUS="%F{108}${ANDY_PIPESTATUS}%f "
     else
-      typeset -g ANDY_PIPESTATUS="%B%F{${AGKOZAK_COLORS_EXIT_STATUS}\}${ANDY_PIPESTATUS}%f%b "
+      typeset -g ANDY_PIPESTATUS="%B%F{${AGKOZAK_COLORS_EXIT_STATUS}}${ANDY_PIPESTATUS}%f%b "
     fi
   }
   autoload -Uz add-zsh-hook
