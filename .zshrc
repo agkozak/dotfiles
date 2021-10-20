@@ -410,6 +410,7 @@ if (( ${+commands[git]} )); then
   fi
 
   zcomet load ohmyzsh plugins/gitfast
+  zcomet load ohmyzsh plugins/docker
   zcomet trigger zsh-prompt-benchmark romkatv/zsh-prompt-benchmark
 
   zcomet trigger --no-submodules archive unarchive lsarchive \
