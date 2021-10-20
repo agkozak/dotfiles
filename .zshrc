@@ -640,9 +640,11 @@ if (( ${+functions[zcomet]} )); then
 
   # Or almost last?
 
-  ZSH_AUTOSUGGEST_MANUAL_REBIND=1
-  ZSH_AUTOSUGGEST_CLEAR_WIDGETS+=(history-beginning-search-backward-end history-beginning-search-forward-end)
-  zcomet load zsh-users/zsh-autosuggestions
+  [[ -o KSH_ARRAYS ]] || {
+    ZSH_AUTOSUGGEST_MANUAL_REBIND=1
+    ZSH_AUTOSUGGEST_CLEAR_WIDGETS+=(history-beginning-search-backward-end history-beginning-search-forward-end)
+    zcomet load zsh-users/zsh-autosuggestions
+  }
 
 fi
 
