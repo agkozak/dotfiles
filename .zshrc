@@ -587,19 +587,6 @@ elif [[ $TERM == 'dumb' ]]; then
   unset zle_bracketed_paste # Avoid ugly control sequences in dumb terminal
 fi
 
-# 26.7.1 history-search-end
-autoload -Uz history-search-end
-zle -N history-beginning-search-backward-end history-search-end
-zle -N history-beginning-search-forward-end history-search-end
-bindkey '^P' history-beginning-search-backward-end
-bindkey '^N' history-beginning-search-forward-end
-if [[ $TERM != 'dumb' ]]; then
-  bindkey ${terminfo[kcuu1]} history-beginning-search-backward-end
-  bindkey ${terminfo[kcud1]} history-beginning-search-forward-end
-fi
-bindkey -M vicmd 'k' history-beginning-search-backward-end
-bindkey -M vicmd 'j' history-beginning-search-forward-end
-
 # }}}1
 
 # Miscellaneous {{{1
@@ -656,6 +643,22 @@ if (( ${+functions[zcomet]} )); then
   (( AGKDOT_P10K )) && is-at-least 5.1 && zcomet load romkatv/powerlevel10k
 
 fi
+
+# }}}1
+
+# 26.7.1 history-search-end - must come after zsh-autosuggestions {{{1
+
+autoload -Uz history-search-end
+zle -N history-beginning-search-backward-end history-search-end
+zle -N history-beginning-search-forward-end history-search-end
+bindkey '^P' history-beginning-search-backward-end
+bindkey '^N' history-beginning-search-forward-end
+if [[ $TERM != 'dumb' ]]; then
+  bindkey ${terminfo[kcuu1]} history-beginning-search-backward-end
+  bindkey ${terminfo[kcud1]} history-beginning-search-forward-end
+fi
+bindkey -M vicmd 'k' history-beginning-search-backward-end
+bindkey -M vicmd 'j' history-beginning-search-forward-end
 
 # }}}1
 
