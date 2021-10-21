@@ -121,7 +121,7 @@ alias ls='ls ${=LS_OPTIONS}'
 # Global Aliases {{{2
 
 # alias -g CA='2>&1 | cat -A'
-alias -g G='| grep'
+# alias -g G='| grep' # Interferes with some versions of bashcompinit
 alias -g H='| head'
 
 # Prevent pipes to `less' from being pushed into the background on MSYS2 and
