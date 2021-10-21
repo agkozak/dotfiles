@@ -1,3 +1,4 @@
+# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
 # ~/.zshrc
 #
 # https://github.com/agkozak/dotfiles
@@ -62,6 +63,16 @@ if (( AGKDOT_BENCHMARKS )); then
 fi
 
 # }}}1
+
+# # powerlevel10k Instant Prompt {{{1
+
+# # Initialization code that may require console input (password prompts, [y/n]
+# # confirmations, etc.) must go above this block; everything else may go below.
+# if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+#   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+# fi
+
+# # }}}1
 
 # AGKDOT_TERM_COLORS {{{1
 
@@ -637,9 +648,15 @@ if (( ${+functions[zcomet]} )); then
     zcomet load zsh-users/zsh-autosuggestions
   }
 
+  # zcomet load romkatv/powerlevel10k
+
 fi
 
 # }}}1
+
+# # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh. {{{1
+# [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+# # }}}1
 
 # compinit {{{1
 
