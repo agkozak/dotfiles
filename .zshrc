@@ -1,4 +1,3 @@
-# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
 # ~/.zshrc
 #
 # https://github.com/agkozak/dotfiles
@@ -64,15 +63,19 @@ fi
 
 # }}}1
 
-# # powerlevel10k Instant Prompt {{{1
+autoload -Uz is-at-least
 
-# # Initialization code that may require console input (password prompts, [y/n]
-# # confirmations, etc.) must go above this block; everything else may go below.
-# if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
-#   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
-# fi
+# powerlevel10k Instant Prompt {{{1
 
-# # }}}1
+# Initialization code that may require console input (password prompts, [y/n]
+# confirmations, etc.) must go above this block; everything else may go below.
+if is-at-least 5.1 &&
+   (( AGKDOT_P10K )) &&
+   [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+fi
+
+# }}}1
 
 # AGKDOT_TERM_COLORS {{{1
 
@@ -123,7 +126,6 @@ alias -g H='| head'
 
 # Prevent pipes to `less' from being pushed into the background on MSYS2 and
 # Cygwin
-autoload -Uz is-at-least
 
 if [[ $OSTYPE == (msys|cygwin) ]] && is-at-least 5.6; then
   less() {
@@ -329,7 +331,10 @@ if (( ${+commands[git]} )); then
   # agkozak-zsh-prompt {{{2
 
   # AGKOZAK_PROMPT_DEBUG=1
-  zcomet load agkozak/agkozak-zsh-prompt@develop
+  if ! is-at-least 5.1 ||
+     (( ! AGKDOT_P10K )); then
+    zcomet load agkozak/agkozak-zsh-prompt@develop
+  fi
 
   # # An optional way of loading agkozak-zsh-prompt using promptinit
   # zcomet fpath agkozak/agkozak-zsh-prompt@develop
@@ -648,15 +653,17 @@ if (( ${+functions[zcomet]} )); then
     zcomet load zsh-users/zsh-autosuggestions
   }
 
-  # zcomet load romkatv/powerlevel10k
+  (( AGKDOT_P10K )) && is-at-least 5.1 && zcomet load romkatv/powerlevel10k
 
 fi
 
 # }}}1
 
-# # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh. {{{1
-# [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
-# # }}}1
+# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh. {{{1
+if (( AGKDOT_P10K)) && is-at-least 5.1; then
+  [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+fi
+# }}}1
 
 # compinit {{{1
 
