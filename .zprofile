@@ -4,7 +4,7 @@
 
 [[ $OSTYPE == msys ]] || return
 
-typeset -F SECONDS
+typeset -F SECONDS=0
 
 typeset -gx AGKDOT_SYSTEMINFO
 : ${AGKDOT_SYSTEMINFO:=$(uname -a)}
