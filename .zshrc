@@ -330,69 +330,6 @@ if (( ${+commands[git]} )); then
   fi
   source ~/.zcomet/bin/zcomet.zsh
 
-  # agkozak-zsh-prompt {{{2
-
-  # AGKOZAK_PROMPT_DEBUG=1
-  if ! is-at-least 5.1 ||
-     (( ! AGKDOT_P10K )); then
-    zcomet load agkozak/agkozak-zsh-prompt@develop
-  fi
-
-  # # An optional way of loading agkozak-zsh-prompt using promptinit
-  # zcomet fpath agkozak/agkozak-zsh-prompt@develop
-  # autoload promptinit; promptinit
-  # prompt agkozak-zsh-prompt
-
-  # Configuration
-
-  # AGKOZAK_COLORS_PROMPT_CHAR='magenta'
-  # AGKOZAK_CUSTOM_SYMBOLS=( '⇣⇡' '⇣' '⇡' '+' 'x' '!' '>' '?' 'S' )
-  # AGKOZAK_LEFT_PROMPT_ONLY=1
-  # AGKOZAK_MULTILINE=0
-  # AGKOZAK_PROMPT_CHAR=( '❯' '❯' '❮' )
-
-  # # Zenburn prompt {{{3
-
-  # Make sure the zsh/terminfo module is loaded
-  (( ${+modules[zsh/terminfo]} )) || zmodload zsh/terminfo
-  # If there are 256 colors, use the following colors; otherwise use the defaults
-  if (( ${terminfo[colors]:-0} >= 256 )); then
-    AGKOZAK_COLORS_USER_HOST=108
-    AGKOZAK_COLORS_PATH=116
-    AGKOZAK_COLORS_BRANCH_STATUS=228
-    AGKOZAK_COLORS_EXIT_STATUS=174
-    AGKOZAK_COLORS_CMD_EXEC_TIME=245
-    AGKOZAK_COLORS_VIRTUALENV=188
-    AGKOZAK_COLORS_BG_STRING=223
-  fi
-  AGKOZAK_CUSTOM_PROMPT=''
-  # Command execution time
-  AGKOZAK_CUSTOM_PROMPT+='%(9V.%F{${AGKOZAK_COLORS_CMD_EXEC_TIME}}%b%9v%b%f .)'
-  # Exit status
-  AGKOZAK_CUSTOM_PROMPT+='%(?..%B%F{${AGKOZAK_COLORS_EXIT_STATUS}}(%?%)%f%b )'
-  # pipestatus
-  AGKOZAK_CUSTOM_PROMPT+='%(13V.%B%F{${AGKOZAK_COLORS_EXIT_STATUS}\}(%13v%)%f%b .%(12V.%F{${AGKOZAK_COLORS_USER_HOST}\}(%12v%)%f .))'
-  # Username and hostname
-  AGKOZAK_CUSTOM_PROMPT+='%(!.%S%B.%B%F{${AGKOZAK_COLORS_USER_HOST}})%n%1v%(!.%b%s.%f%b) '
-  # Virtual environment indicator
-  AGKOZAK_CUSTOM_PROMPT+='%(10V.%F{${AGKOZAK_COLORS_VIRTUALENV}}[%10v]%f .)'
-  # Path
-  AGKOZAK_CUSTOM_PROMPT+='%B%F{${AGKOZAK_COLORS_PATH}}%2v%f%b'
-  # Background job status
-  AGKOZAK_CUSTOM_PROMPT+='%(1j. %F{${AGKOZAK_COLORS_BG_STRING}}%jj%f.)'
-  # Git status
-  AGKOZAK_CUSTOM_PROMPT+=$'%(3V.%F{${AGKOZAK_COLORS_BRANCH_STATUS}}%3v%f.)\n'
-  # SHLVL and prompt character
-  AGKOZAK_CUSTOM_PROMPT+='[%L] %(4V.:.%#) '
-  AGKOZAK_COLORS_BRANCH_STATUS=228
-
-  # No right prompt
-  AGKOZAK_CUSTOM_RPROMPT=''
-
-  # }}}3
-
-  # }}}2
-
   # agkozak/zsh-z {{{2
 
   ZSHZ_DEBUG=1
@@ -655,6 +592,69 @@ if (( ${+functions[zcomet]} )); then
   if [[ $OSTYPE != (msys|cygwin) ]]; then
     zcomet load zsh-users/zsh-syntax-highlighting
   fi
+
+  # agkozak-zsh-prompt {{{2
+
+  # AGKOZAK_PROMPT_DEBUG=1
+  if ! is-at-least 5.1 ||
+     (( ! AGKDOT_P10K )); then
+    zcomet load agkozak/agkozak-zsh-prompt@develop
+  fi
+
+  # # An optional way of loading agkozak-zsh-prompt using promptinit
+  # zcomet fpath agkozak/agkozak-zsh-prompt@develop
+  # autoload promptinit; promptinit
+  # prompt agkozak-zsh-prompt
+
+  # Configuration
+
+  # AGKOZAK_COLORS_PROMPT_CHAR='magenta'
+  # AGKOZAK_CUSTOM_SYMBOLS=( '⇣⇡' '⇣' '⇡' '+' 'x' '!' '>' '?' 'S' )
+  # AGKOZAK_LEFT_PROMPT_ONLY=1
+  # AGKOZAK_MULTILINE=0
+  # AGKOZAK_PROMPT_CHAR=( '❯' '❯' '❮' )
+
+  # # Zenburn prompt {{{3
+
+  # Make sure the zsh/terminfo module is loaded
+  (( ${+modules[zsh/terminfo]} )) || zmodload zsh/terminfo
+  # If there are 256 colors, use the following colors; otherwise use the defaults
+  if (( ${terminfo[colors]:-0} >= 256 )); then
+    AGKOZAK_COLORS_USER_HOST=108
+    AGKOZAK_COLORS_PATH=116
+    AGKOZAK_COLORS_BRANCH_STATUS=228
+    AGKOZAK_COLORS_EXIT_STATUS=174
+    AGKOZAK_COLORS_CMD_EXEC_TIME=245
+    AGKOZAK_COLORS_VIRTUALENV=188
+    AGKOZAK_COLORS_BG_STRING=223
+  fi
+  AGKOZAK_CUSTOM_PROMPT=''
+  # Command execution time
+  AGKOZAK_CUSTOM_PROMPT+='%(9V.%F{${AGKOZAK_COLORS_CMD_EXEC_TIME}}%b%9v%b%f .)'
+  # Exit status
+  AGKOZAK_CUSTOM_PROMPT+='%(?..%B%F{${AGKOZAK_COLORS_EXIT_STATUS}}(%?%)%f%b )'
+  # pipestatus
+  AGKOZAK_CUSTOM_PROMPT+='%(13V.%B%F{${AGKOZAK_COLORS_EXIT_STATUS}\}(%13v%)%f%b .%(12V.%F{${AGKOZAK_COLORS_USER_HOST}\}(%12v%)%f .))'
+  # Username and hostname
+  AGKOZAK_CUSTOM_PROMPT+='%(!.%S%B.%B%F{${AGKOZAK_COLORS_USER_HOST}})%n%1v%(!.%b%s.%f%b) '
+  # Virtual environment indicator
+  AGKOZAK_CUSTOM_PROMPT+='%(10V.%F{${AGKOZAK_COLORS_VIRTUALENV}}[%10v]%f .)'
+  # Path
+  AGKOZAK_CUSTOM_PROMPT+='%B%F{${AGKOZAK_COLORS_PATH}}%2v%f%b'
+  # Background job status
+  AGKOZAK_CUSTOM_PROMPT+='%(1j. %F{${AGKOZAK_COLORS_BG_STRING}}%jj%f.)'
+  # Git status
+  AGKOZAK_CUSTOM_PROMPT+=$'%(3V.%F{${AGKOZAK_COLORS_BRANCH_STATUS}}%3v%f.)\n'
+  # SHLVL and prompt character
+  AGKOZAK_CUSTOM_PROMPT+='[%L] %(4V.:.%#) '
+  AGKOZAK_COLORS_BRANCH_STATUS=228
+
+  # No right prompt
+  AGKOZAK_CUSTOM_RPROMPT=''
+
+  # }}}3
+
+  # }}}2
 
   (( AGKDOT_P10K )) && is-at-least 5.1 && zcomet load romkatv/powerlevel10k
 
