@@ -2,8 +2,6 @@
 #
 # https://github.com/agkozak/dotfiles
 
-[[ $OSTYPE == msys ]] || return
-
 typeset -F SECONDS=0
 
 typeset -gx AGKDOT_SYSTEMINFO

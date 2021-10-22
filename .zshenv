@@ -4,7 +4,7 @@
 
 # Benchmarks {{{1
 
-typeset -F SECONDS=0
+typeset -F SECONDS
 
 # }}}1
 
