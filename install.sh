@@ -185,7 +185,7 @@ fi
 
 conditional_install vi .exrc
 
-conditional_install zsh .zprofile .zshenv .zshrc
+conditional_install zsh .zshenv .zshrc
 
 case ${AGKDOT_SYSTEMINFO:=$(uname -a)} in
 	*BSD*|DragonFly*)
@@ -197,6 +197,7 @@ case ${AGKDOT_SYSTEMINFO:=$(uname -a)} in
 	;;
 	*Msys|*Cygwin)
     conditional_install mintty .minttyrc
+    conditional_install zsh .zprofile
 	;;
 esac
 
