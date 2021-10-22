@@ -11,8 +11,8 @@ typeset -F SECONDS=0
 # MSYS2 {{{1
 
 if [[ $OSTYPE == msys ]]; then
-  typeset -gx path=( /usr/local/bin /usr/bin /bin /opt/bin ${path[@]} )
-  [[ -z $ENV && -f ${HOME}/.profile ]] && source ${HOME}/.profile
+  [[ -z $ENV && -f ${HOME}/.profile ]] &&
+    PATH='/usr/local/bin:/usr/bin:/bin:/opt/bin' source ${HOME}/.profile
 fi
 
 # }}}1
