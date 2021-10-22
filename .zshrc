@@ -58,6 +58,8 @@ if (( AGKDOT_BENCHMARKS )); then
       ".zshenv loaded in ${AGKDOT_ZSHENV_BENCHMARK}ms total."
     unset AGKDOT_ZSHENV_BENCHMARK
   fi
+  (( ${+AGKDOT_ZPROFILE_BENCHMARK} )) && _agkdot_benchmark_message \
+      "$AGKDOT_ZPROFILE_BENCHMARK" && unset AGKDOT_ZPROFILE_BENCHMARK
   typeset -F SECONDS=0
 fi
 
