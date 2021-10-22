@@ -451,6 +451,12 @@ if (( ${+commands[git]} )); then
 
   # zcomet load marlonrichert/zsh-autocomplete
 
+  [[ -o KSH_ARRAYS ]] || {
+    ZSH_AUTOSUGGEST_MANUAL_REBIND=1
+    ZSH_AUTOSUGGEST_CLEAR_WIDGETS+=(history-beginning-search-backward-end history-beginning-search-forward-end)
+    zcomet load zsh-users/zsh-autosuggestions
+  }
+
   # }}}2
 
 else
@@ -574,6 +580,22 @@ bindkey -M menuselect 'j' vi-down-line-or-history # bottom
 
 # 26 User Contributions {{{1
 
+# 26.7.1 history-search-end {{{2
+
+autoload -Uz history-search-end
+zle -N history-beginning-search-backward-end history-search-end
+zle -N history-beginning-search-forward-end history-search-end
+bindkey '^P' history-beginning-search-backward-end
+bindkey '^N' history-beginning-search-forward-end
+if [[ $TERM != 'dumb' ]]; then
+  bindkey '^[[A' history-beginning-search-backward-end
+  bindkey '^[[B' history-beginning-search-forward-end
+fi
+bindkey -M vicmd 'k' history-beginning-search-backward-end
+bindkey -M vicmd 'j' history-beginning-search-forward-end
+
+# }}}2
+
 # 26.7.1 Allow pasting URLs as CLI arguments
 if [[ $ZSH_VERSION != '5.1.1' && $TERM != 'dumb' ]] &&
   (( ! $+INSIDE_EMACS )); then
@@ -627,28 +649,6 @@ fi
 # The order here seems to be highly important {{{1
 
 if (( ${+functions[zcomet]} )); then
-
-  # 26.7.1 history-search-end {{{2
-
-  autoload -Uz history-search-end
-  zle -N history-beginning-search-backward-end history-search-end
-  zle -N history-beginning-search-forward-end history-search-end
-  bindkey '^P' history-beginning-search-backward-end
-  bindkey '^N' history-beginning-search-forward-end
-  if [[ $TERM != 'dumb' ]]; then
-    bindkey ${terminfo[kcuu1]} history-beginning-search-backward-end
-    bindkey ${terminfo[kcud1]} history-beginning-search-forward-end
-  fi
-  bindkey -M vicmd 'k' history-beginning-search-backward-end
-  bindkey -M vicmd 'j' history-beginning-search-forward-end
-
-  # }}}2
-
-  [[ -o KSH_ARRAYS ]] || {
-    ZSH_AUTOSUGGEST_MANUAL_REBIND=1
-    ZSH_AUTOSUGGEST_CLEAR_WIDGETS+=(history-beginning-search-backward-end history-beginning-search-forward-end)
-    zcomet load zsh-users/zsh-autosuggestions
-  }
 
   if [[ $OSTYPE != (msys|cygwin) ]]; then
     zcomet load zsh-users/zsh-syntax-highlighting
