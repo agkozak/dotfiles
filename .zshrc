@@ -63,6 +63,20 @@ fi
 
 # }}}1
 
+autoload -Uz is-at-least
+
+# powerlevel10k Instant Prompt {{{1
+
+# Initialization code that may require console input (password prompts, [y/n]
+# confirmations, etc.) must go above this block; everything else may go below.
+if is-at-least 5.1 &&
+   (( AGKDOT_P10K )) &&
+   [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+fi
+
+# }}}1
+
 # AGKDOT_TERM_COLORS {{{1
 
 AGKDOT_TERM_COLORS=${terminfo[colors]:-0}
@@ -107,12 +121,11 @@ alias ls='ls ${=LS_OPTIONS}'
 # Global Aliases {{{2
 
 # alias -g CA='2>&1 | cat -A'
-alias -g G='| grep'
+# alias -g G='| grep' # Interferes with some versions of bashcompinit
 alias -g H='| head'
 
 # Prevent pipes to `less' from being pushed into the background on MSYS2 and
 # Cygwin
-autoload -Uz is-at-least
 
 if [[ $OSTYPE == (msys|cygwin) ]] && is-at-least 5.6; then
   less() {
@@ -318,7 +331,10 @@ if (( ${+commands[git]} )); then
   # agkozak-zsh-prompt {{{2
 
   # AGKOZAK_PROMPT_DEBUG=1
-  zcomet load agkozak/agkozak-zsh-prompt@develop
+  if ! is-at-least 5.1 ||
+     (( ! AGKDOT_P10K )); then
+    zcomet load agkozak/agkozak-zsh-prompt@develop
+  fi
 
   # # An optional way of loading agkozak-zsh-prompt using promptinit
   # zcomet fpath agkozak/agkozak-zsh-prompt@develop
@@ -333,20 +349,7 @@ if (( ${+commands[git]} )); then
   # AGKOZAK_MULTILINE=0
   # AGKOZAK_PROMPT_CHAR=( '❯' '❯' '❮' )
 
-  # Zenburn prompt {{{3
-
-  _andy_pipestatus() {
-    psvar[12]='' psvar[13]=''
-    typeset -g ANDY_PIPESTATUS="${${pipestatus#0}:+${"${pipestatus[*]}"// /${ANDY_PIPESTATUS_SEPARATOR:-|}}}"
-    [[ -z $ANDY_PIPESTATUS ]] && return
-    if [[ $ANDY_PIPESTATUS == *"${ANDY_PIPESTATUS_SEPARATOR:-|}"0 ]]; then
-      typeset -g psvar[12]="${ANDY_PIPESTATUS}"
-    else
-      typeset -g psvar[13]="${ANDY_PIPESTATUS}"
-    fi
-  }
-  autoload -Uz add-zsh-hook
-  add-zsh-hook precmd _andy_pipestatus
+  # # Zenburn prompt {{{3
 
   # Make sure the zsh/terminfo module is loaded
   (( ${+modules[zsh/terminfo]} )) || zmodload zsh/terminfo
@@ -363,6 +366,8 @@ if (( ${+commands[git]} )); then
   AGKOZAK_CUSTOM_PROMPT=''
   # Command execution time
   AGKOZAK_CUSTOM_PROMPT+='%(9V.%F{${AGKOZAK_COLORS_CMD_EXEC_TIME}}%b%9v%b%f .)'
+  # Exit status
+  AGKOZAK_CUSTOM_PROMPT+='%(?..%B%F{${AGKOZAK_COLORS_EXIT_STATUS}}(%?%)%f%b )'
   # pipestatus
   AGKOZAK_CUSTOM_PROMPT+='%(13V.%B%F{${AGKOZAK_COLORS_EXIT_STATUS}\}(%13v%)%f%b .%(12V.%F{${AGKOZAK_COLORS_USER_HOST}\}(%12v%)%f .))'
   # Username and hostname
@@ -582,19 +587,6 @@ elif [[ $TERM == 'dumb' ]]; then
   unset zle_bracketed_paste # Avoid ugly control sequences in dumb terminal
 fi
 
-# 26.7.1 history-search-end
-autoload -Uz history-search-end
-zle -N history-beginning-search-backward-end history-search-end
-zle -N history-beginning-search-forward-end history-search-end
-bindkey '^P' history-beginning-search-backward-end
-bindkey '^N' history-beginning-search-forward-end
-if [[ $TERM != 'dumb' ]]; then
-  bindkey ${terminfo[kcuu1]} history-beginning-search-backward-end
-  bindkey ${terminfo[kcud1]} history-beginning-search-forward-end
-fi
-bindkey -M vicmd 'k' history-beginning-search-backward-end
-bindkey -M vicmd 'j' history-beginning-search-forward-end
-
 # }}}1
 
 # Miscellaneous {{{1
@@ -632,15 +624,25 @@ fi
 
 # }}}1
 
-# Syntax highlighting should always come last {{{1
+# The order here seems to be highly important {{{1
 
 if (( ${+functions[zcomet]} )); then
 
-  if [[ $OSTYPE != (msys|cygwin) ]]; then
-    zcomet load zsh-users/zsh-syntax-highlighting
-  fi
+  # 26.7.1 history-search-end {{{2
 
-  # Or almost last?
+  autoload -Uz history-search-end
+  zle -N history-beginning-search-backward-end history-search-end
+  zle -N history-beginning-search-forward-end history-search-end
+  bindkey '^P' history-beginning-search-backward-end
+  bindkey '^N' history-beginning-search-forward-end
+  if [[ $TERM != 'dumb' ]]; then
+    bindkey ${terminfo[kcuu1]} history-beginning-search-backward-end
+    bindkey ${terminfo[kcud1]} history-beginning-search-forward-end
+  fi
+  bindkey -M vicmd 'k' history-beginning-search-backward-end
+  bindkey -M vicmd 'j' history-beginning-search-forward-end
+
+  # }}}2
 
   [[ -o KSH_ARRAYS ]] || {
     ZSH_AUTOSUGGEST_MANUAL_REBIND=1
@@ -648,8 +650,20 @@ if (( ${+functions[zcomet]} )); then
     zcomet load zsh-users/zsh-autosuggestions
   }
 
+  if [[ $OSTYPE != (msys|cygwin) ]]; then
+    zcomet load zsh-users/zsh-syntax-highlighting
+  fi
+
+  (( AGKDOT_P10K )) && is-at-least 5.1 && zcomet load romkatv/powerlevel10k
+
 fi
 
+# }}}1
+
+# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh. {{{1
+if (( AGKDOT_P10K)) && is-at-least 5.1; then
+  [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+fi
 # }}}1
 
 # compinit {{{1
