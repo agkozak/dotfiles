@@ -8,6 +8,15 @@ typeset -F SECONDS=0
 
 # }}}1
 
+# MSYS2 {{{1
+
+if [[ $OSTYPE == msys ]]; then
+  typeset -gx path=( /usr/local/bin /usr/bin /bin /opt/bin ${path[@]} )
+  [[ -z $ENV && -f ${HOME}/.profile ]] && source ${HOME}/.profile
+fi
+
+# }}}1
+
 # if ~/.profile has not been loaded and /etc/zsh/zshenv has {{{1
 
 if [[ -z $ENV && -n $PATH && $- != *l* ]]; then
