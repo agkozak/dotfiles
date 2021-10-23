@@ -448,7 +448,7 @@ if [ -n "$AGKDOT_SHRC_START" ]; then
   printf '%s\n' "loaded in $((AGKDOT_DIFFERENCE/1000000))ms."
 fi
 
-unset AGKDOT_SHRC_START AGKDOT_SHRC_FINISH AGKDOT_DIFFERENCE
+unset AGKDOT_SHRC_START AGKDOT_SHRC_FINISH AGKDOT_DIFFERENCE AGKDOT_SHRC_LOCAL
 unset -f _agkdot_is_bsd_sh # _agkdot_winpty_alias _agkdot_is_uwin
 
 # }}}1

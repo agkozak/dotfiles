@@ -206,11 +206,9 @@ if [[ -f '/var/.cagefs/.cagefs.token' ]]; then
   fi
 fi
 
-# setopt HIST_IGNORE_DUPS     # Do not enter 2 consecutive duplicates into history
 setopt HIST_IGNORE_SPACE    # Ignore command lines with leading spaces
 setopt HIST_VERIFY          # Reload results of history expansion before executing
-setopt INC_APPEND_HISTORY   # Constantly update $HISTFILE
-# setopt SHARE_HISTORY        # Constantly share history between shell instances
+setopt SHARE_HISTORY        # Constantly share history between shell instances
 
 # }}}2
 
