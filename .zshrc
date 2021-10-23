@@ -535,17 +535,17 @@ bindkey -M vicmd 'j' history-beginning-search-forward-end
 
 # 26.7.1 Allow pasting URLs as CLI arguments
 # if [[ $ZSH_VERSION != '5.1.1' && $TERM != 'dumb' ]] &&
-if (( ! $+INSIDE_EMACS )); then
-  # if is-at-least 5.1; then
-  #   autoload -Uz bracketed-paste-magic
-  #   zle -N bracketed-paste bracketed-paste-magic
-  # fi
-  autoload -Uz url-quote-magic
-  zle -N self-insert url-quote-magic
-fi
-if [[ $TERM == 'dumb' ]]; then
-  unset zle_bracketed_paste # Avoid ugly control sequences in dumb terminal
-fi
+#   (( ! $+INSIDE_EMACS )); then
+#   autoload -Uz url-quote-magic
+#   zle -N self-insert url-quote-magic
+#   if is-at-least 5.1; then
+#     autoload -Uz bracketed-paste-magic
+#     zle -N bracketed-paste bracketed-paste-magic
+#   fi
+# elif [[ $TERM == 'dumb' ]]; then
+#   unset zle_bracketed_paste # Avoid ugly control sequences in dumb terminal
+# fi
+[[ $TERM == 'dumb' ]] && unset zle_bracketed_paste
 
 # }}}1
 
