@@ -89,7 +89,7 @@ case $AGKDOT_SYSTEMINFO in
 		SSL_CERT_FILE=/etc/ssl/cert.pem
 	  ;;
   # WSL1
-  *Microsoft*)
+  *[Mm]icrosoft*)
     [ ! -d "${HOME}/.screen" ] && mkdir "${HOME}/.screen" &&
       chmod 700 "${HOME}/.screen"
     export SCREENDIR
