@@ -102,7 +102,7 @@ if [ "${AGKDOT_IS_BUSYBOX_LS:-0}" -eq 0 ]; then
     # GNU ls
     *)
       LS_OPTIONS='--group-directories-first -F -h -T 0'
-      [ "$AGKDOT_TERM_COLORS" -ge 8 ] && LS_OPTIONS="${LS_OPTIONS} --color"
+      [ "${AGKDOT_TERM_COLORS:-0}" -ge 8 ] && LS_OPTIONS="${LS_OPTIONS} --color"
       case $AGKDOT_SYSTEMINFO in
         *Msys|*Cygwin|*[Mm]icrosoft*)
           LS_OPTIONS="${LS_OPTIONS} --hide=NTUSER* --hide=ntuser*"
@@ -151,7 +151,7 @@ case $AGKDOT_SYSTEMINFO in
     ;;
   *)
     if [ "${AGKDOT_IS_BUSYBOX_LS:-0}" -eq 0 ] &&
-       [ "$AGKDOT_TERM_COLORS"        -ge 8 ]; then
+       [ "${AGKDOT_TERM_COLORS:-0}"   -ge 8 ]; then
       alias dir='dir --color'
       alias vdir='vdir --color'
       alias grep='grep --color'
@@ -184,7 +184,7 @@ ldot() {
 
   until [ $# -eq 0 ]; do
     if [ -d "$1" ]; then
-      ldot "${1}/.*"
+      (cd "$1" && \ls $LS_OPTIONS -ld .*)
     else
       LDOT_ARGS="$LDOT_ARGS ${1}"
     fi
@@ -398,7 +398,7 @@ f() {
 
 update_dotfiles() {
   [ -n "$ZSH_VERSION" ] && setopt NO_WARN_CREATE_GLOBAL \
-      NO_WARN_NESTED_VAR &> /dev/null
+      NO_WARN_NESTED_VAR > /dev/null 2>&1
 
   CUR_DIR="$PWD"
   printf '%s' 'Updating dotfiles: '
