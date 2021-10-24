@@ -4,15 +4,15 @@
 
 # Benchmarks {{{1
 
-typeset -F SECONDS=0
+typeset -F SECONDS
 
 # }}}1
 
-# if ~/.profile has not been loaded and /etc/zsh/zshenv has {{{1
+# # if ~/.profile has not been loaded and /etc/zsh/zshenv has {{{1
 
-if [[ -z $ENV && -n $PATH && $- != *l* ]]; then
-  [[ -f ${HOME}/.profile ]] && source ${HOME}/.profile
-fi
+# if [[ -z $ENV && -n $PATH && $- != *l* ]]; then
+#   [[ -f ${HOME}/.profile ]] && source ${HOME}/.profile
+# fi
 
 # }}}1
 

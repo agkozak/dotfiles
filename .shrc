@@ -64,19 +64,23 @@ fi
 # Aliases {{{1
 
 # enable color support of ls and also add handy aliases {{{2
-if [ "$TERM" != "$AGKDOT_ORIG_TERM" ]; then
-  export AGKDOT_TERM_COLORS
-  case $TERM in
-    *-256color) AGKDOT_TERM_COLORS=256 ;;
-    vt100|vt220|dumb) AGKDOT_TERM_COLORS=-1 ;;
-    *)
-      case ${AGKDOT_SYSTEMINFO} in
-        FreeBSD*|DragonFly*) AGKDOT_TERM_COLORS="$(tput Co)" ;;
-        UWIN*) AGKDOT_TERM_COLORS="$(tput cols)" ;;
-        *) AGKDOT_TERM_COLORS="$(tput colors)" ;;
-      esac
-      ;;
-  esac
+
+# .zshrc sets AGKDOT_TERM_COLORS from terminfo[colors]
+if [ -z "$ZSH_VERSION" ]; then
+  if [ "$TERM" != "$AGKDOT_ORIG_TERM" ]; then
+    export AGKDOT_TERM_COLORS
+    case $TERM in
+      *-256color) AGKDOT_TERM_COLORS=256 ;;
+      vt100|vt220|dumb) AGKDOT_TERM_COLORS=-1 ;;
+      *)
+        case ${AGKDOT_SYSTEMINFO} in
+          FreeBSD*|DragonFly*) AGKDOT_TERM_COLORS="$(tput Co)" ;;
+          UWIN*) AGKDOT_TERM_COLORS="$(tput cols)" ;;
+          *) AGKDOT_TERM_COLORS="$(tput colors)" ;;
+        esac
+        ;;
+    esac
+  fi
 fi
 
 # if /bin/ls is a symlink, then it's BusyBox ls
@@ -98,7 +102,7 @@ if [ "${AGKDOT_IS_BUSYBOX_LS:-0}" -eq 0 ]; then
     # GNU ls
     *)
       LS_OPTIONS='--group-directories-first -F -h -T 0'
-      [ "$AGKDOT_TERM_COLORS" -ge 8 ] && LS_OPTIONS="${LS_OPTIONS} --color"
+      [ "${AGKDOT_TERM_COLORS:-0}" -ge 8 ] && LS_OPTIONS="${LS_OPTIONS} --color"
       case $AGKDOT_SYSTEMINFO in
         *Msys|*Cygwin|*[Mm]icrosoft*)
           LS_OPTIONS="${LS_OPTIONS} --hide=NTUSER* --hide=ntuser*"
@@ -147,7 +151,7 @@ case $AGKDOT_SYSTEMINFO in
     ;;
   *)
     if [ "${AGKDOT_IS_BUSYBOX_LS:-0}" -eq 0 ] &&
-       [ "$AGKDOT_TERM_COLORS"        -ge 8 ]; then
+       [ "${AGKDOT_TERM_COLORS:-0}"   -ge 8 ]; then
       alias dir='dir --color'
       alias vdir='vdir --color'
       alias grep='grep --color'
@@ -180,7 +184,7 @@ ldot() {
 
   until [ $# -eq 0 ]; do
     if [ -d "$1" ]; then
-      LDOT_ARGS="$LDOT_ARGS $(\ls -d "${1}"/.*)"
+      (cd "$1" && \ls $LS_OPTIONS -ld .*)
     else
       LDOT_ARGS="$LDOT_ARGS ${1}"
     fi
@@ -393,6 +397,9 @@ f() {
 # Pull in updates from the dotfiles repo and install them {{{1
 
 update_dotfiles() {
+  [ -n "$ZSH_VERSION" ] && setopt NO_WARN_CREATE_GLOBAL \
+      NO_WARN_NESTED_VAR > /dev/null 2>&1
+
   CUR_DIR="$PWD"
   printf '%s' 'Updating dotfiles: '
   cd "${HOME}/dotfiles" || exit
@@ -423,22 +430,26 @@ fi
 
 # }}}1
 
+# Source ~/.shrc.local {{{1
+
+if [ -f "${HOME}/.shrc.local" ]; then
+  . "${HOME}/.shrc.local" && AGKDOT_SHRC_LOCAL=1
+fi
+
+# }}}1
+
 # End .shrc benchmark {{{1
 
 if [ -n "$AGKDOT_SHRC_START" ]; then
   AGKDOT_SHRC_FINISH="$(/bin/date +%s%N)"
   AGKDOT_DIFFERENCE=$(( AGKDOT_SHRC_FINISH - AGKDOT_SHRC_START ))
-  echo ".shrc loaded in $((AGKDOT_DIFFERENCE/1000000))ms."
+  printf '%s' '.shrc '
+  [ -n "$AGKDOT_SHRC_LOCAL" ] && printf '%s' 'and .shrc.local '
+  printf '%s\n' "loaded in $((AGKDOT_DIFFERENCE/1000000))ms."
 fi
 
-unset AGKDOT_SHRC_START AGKDOT_SHRC_FINISH AGKDOT_DIFFERENCE
+unset AGKDOT_SHRC_START AGKDOT_SHRC_FINISH AGKDOT_DIFFERENCE AGKDOT_SHRC_LOCAL
 unset -f _agkdot_is_bsd_sh # _agkdot_winpty_alias _agkdot_is_uwin
-
-# }}}1
-
-# Source ~/.shrc.local {{{1
-
-if [ -f "${HOME}/.shrc.local" ]; then . "${HOME}/.shrc.local"; fi
 
 # }}}1
 

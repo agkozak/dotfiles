@@ -7,15 +7,15 @@
 
 # Begin .zshrc benchmarks {{{1
 
-# zprof {{{1
+# zprof {{{2
 #
 # To run zprof, execute
 #
 #   env ZSH_PROF='' zsh -ic zprof
 (( $+ZSH_PROF )) && zmodload zsh/zprof
-# }}}1
+# }}}2
 
-# xtrace {{{1
+# xtrace {{{2
 #
 # To run xtrace, execute
 #
@@ -31,7 +31,7 @@ if (( AGKDOT_XTRACE )); then
 
   setopt XTRACE
 fi
-# }}}1
+# }}}2
 
 # For simple script running times, execute
 #
@@ -58,8 +58,30 @@ if (( AGKDOT_BENCHMARKS )); then
       ".zshenv loaded in ${AGKDOT_ZSHENV_BENCHMARK}ms total."
     unset AGKDOT_ZSHENV_BENCHMARK
   fi
+  (( ${+AGKDOT_ZPROFILE_BENCHMARK} )) && _agkdot_benchmark_message \
+      "$AGKDOT_ZPROFILE_BENCHMARK" && unset AGKDOT_ZPROFILE_BENCHMARK
   typeset -F SECONDS=0
 fi
+
+# }}}1
+
+autoload -Uz is-at-least
+
+# powerlevel10k Instant Prompt {{{1
+
+# Initialization code that may require console input (password prompts, [y/n]
+# confirmations, etc.) must go above this block; everything else may go below.
+if is-at-least 5.1 &&
+   (( AGKDOT_P10K )) &&
+   [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+fi
+
+# }}}1
+
+# AGKDOT_TERM_COLORS {{{1
+
+AGKDOT_TERM_COLORS=${terminfo[colors]:-0}
 
 # }}}1
 
@@ -72,9 +94,10 @@ if [[ -f ${HOME}/.shrc ]];then
     (( $+EPOCHREALTIME )) || zmodload zsh/datetime
     typeset -g AGKDOT_ZSHRC_START=$(( EPOCHREALTIME * 1000 ))
     AGKDOT_ZSHRC_LOADING=1 source "${HOME}/.shrc"
+    [[ -f ${HOME}/.shrc.local ]] && AGKDOT_LOCAL_MESSAGE='and .shrc.local '
     _agkdot_benchmark_message \
-      ".shrc loaded in ${$(( (EPOCHREALTIME * 1000) - AGKDOT_ZSHRC_START ))%\.*}ms."
-    unset AGKDOT_ZSHRC_START
+      ".shrc ${AGKDOT_LOCAL_MESSAGE}loaded in ${$(( (EPOCHREALTIME * 1000) - AGKDOT_ZSHRC_START ))%\.*}ms."
+    unset AGKDOT_ZSHRC_START AGKDOT_LOCAL_MESSAGE
   else
     source "${HOME}/.shrc"
   fi
@@ -100,12 +123,11 @@ alias ls='ls ${=LS_OPTIONS}'
 # Global Aliases {{{2
 
 # alias -g CA='2>&1 | cat -A'
-alias -g G='| grep'
+# alias -g G='| grep' # Interferes with some versions of bashcompinit
 alias -g H='| head'
 
 # Prevent pipes to `less' from being pushed into the background on MSYS2 and
 # Cygwin
-autoload -Uz is-at-least
 
 if [[ $OSTYPE == (msys|cygwin) ]] && is-at-least 5.6; then
   less() {
@@ -143,7 +165,7 @@ HISTSIZE=1200000000  # Larger than $SAVEHIST for HIST_EXPIRE_DUPS_FIRST to work
 SAVEHIST=1000000000
 
 # 10ms for key sequences
-KEYTIMEOUT=1
+KEYTIMEOUT=3
 
 # In the line editor, number of matches to show before asking permission
 LISTMAX=9999
@@ -168,16 +190,9 @@ setopt LIST_PACKED        # Use columns of varying widths
 
 # }}}2
 
-# 16.2.3 Expansion and Globbing {{{2
-
-# setopt EQUALS             # Perform = filename expansion (default behavior)
-
-# }}}2
-
 # 16.2.4 History {{{2
 
 setopt EXTENDED_HISTORY       # Save time stamps and durations
-setopt HIST_EXPIRE_DUPS_FIRST # Expire duplicates first
 
 # Enable history on CloudLinux for a custom build of zsh in ~/bin
 # with HAVE_SYMLINKS=0 set at compile time
@@ -191,11 +206,9 @@ if [[ -f '/var/.cagefs/.cagefs.token' ]]; then
   fi
 fi
 
-setopt HIST_IGNORE_DUPS     # Do not enter 2 consecutive duplicates into history
 setopt HIST_IGNORE_SPACE    # Ignore command lines with leading spaces
 setopt HIST_VERIFY          # Reload results of history expansion before executing
-setopt INC_APPEND_HISTORY   # Constantly update $HISTFILE
-# setopt SHARE_HISTORY        # Constantly share history between shell instances
+setopt SHARE_HISTORY        # Constantly share history between shell instances
 
 # }}}2
 
@@ -315,76 +328,6 @@ if (( ${+commands[git]} )); then
   fi
   source ~/.zcomet/bin/zcomet.zsh
 
-  # agkozak-zsh-prompt {{{2
-
-  # AGKOZAK_PROMPT_DEBUG=1
-  zcomet load agkozak/agkozak-zsh-prompt@develop
-
-  # # An optional way of loading agkozak-zsh-prompt using promptinit
-  # zcomet fpath agkozak/agkozak-zsh-prompt@develop
-  # autoload promptinit; promptinit
-  # prompt agkozak-zsh-prompt
-
-  # Configuration
-
-  # AGKOZAK_COLORS_PROMPT_CHAR='magenta'
-  # AGKOZAK_CUSTOM_SYMBOLS=( '⇣⇡' '⇣' '⇡' '+' 'x' '!' '>' '?' 'S' )
-  # AGKOZAK_LEFT_PROMPT_ONLY=1
-  # AGKOZAK_MULTILINE=0
-  # AGKOZAK_PROMPT_CHAR=( '❯' '❯' '❮' )
-
-  # Zenburn prompt {{{3
-
-  _andy_pipestatus() {
-    typeset -g ANDY_PIPESTATUS="${${pipestatus#0}:+(${"${pipestatus[*]}"// /|})}"
-    [[ -z $ANDY_PIPESTATUS ]] && return
-    if [[ $ANDY_PIPESTATUS == *0\) ]]; then
-      typeset -g ANDY_PIPESTATUS="%F{108}${ANDY_PIPESTATUS}%f "
-    else
-      typeset -g ANDY_PIPESTATUS="%B%F{${AGKOZAK_COLORS_EXIT_STATUS}\}${ANDY_PIPESTATUS}%f%b "
-    fi
-  }
-  autoload -Uz add-zsh-hook
-  add-zsh-hook precmd _andy_pipestatus
-
-  # Make sure the zsh/terminfo module is loaded
-  (( ${+modules[zsh/terminfo]} )) || zmodload zsh/terminfo
-  # If there are 256 colors, use the following colors; otherwise use the defaults
-  if (( ${terminfo[colors]:-0} >= 256 )); then
-    AGKOZAK_COLORS_USER_HOST=108
-    AGKOZAK_COLORS_PATH=116
-    AGKOZAK_COLORS_BRANCH_STATUS=228
-    AGKOZAK_COLORS_EXIT_STATUS=174
-    AGKOZAK_COLORS_CMD_EXEC_TIME=245
-    AGKOZAK_COLORS_VIRTUALENV=188
-    AGKOZAK_COLORS_BG_STRING=223
-  fi
-  AGKOZAK_CUSTOM_PROMPT=''
-  # Command execution time
-  AGKOZAK_CUSTOM_PROMPT+='%(9V.%F{${AGKOZAK_COLORS_CMD_EXEC_TIME}}%b%9v%b%f .)'
-  # pipestatus
-  AGKOZAK_CUSTOM_PROMPT+='${ANDY_PIPESTATUS}'
-  # Username and hostname
-  AGKOZAK_CUSTOM_PROMPT+='%(!.%S%B.%B%F{${AGKOZAK_COLORS_USER_HOST}})%n%1v%(!.%b%s.%f%b) '
-  # Virtual environment indicator
-  AGKOZAK_CUSTOM_PROMPT+='%(10V.%F{${AGKOZAK_COLORS_VIRTUALENV}}[%10v]%f .)'
-  # Path
-  AGKOZAK_CUSTOM_PROMPT+='%B%F{${AGKOZAK_COLORS_PATH}}%2v%f%b'
-  # Background job status
-  AGKOZAK_CUSTOM_PROMPT+='%(1j. %F{${AGKOZAK_COLORS_BG_STRING}}%jj%f.)'
-  # Git status
-  AGKOZAK_CUSTOM_PROMPT+=$'%(3V.%F{${AGKOZAK_COLORS_BRANCH_STATUS}}%3v%f.)\n'
-  # SHLVL and prompt character
-  AGKOZAK_CUSTOM_PROMPT+='[%L] %(4V.:.%#) '
-  AGKOZAK_COLORS_BRANCH_STATUS=228
-
-  # No right prompt
-  AGKOZAK_CUSTOM_RPROMPT=''
-
-  # }}}3
-
-  # }}}2
-
   # agkozak/zsh-z {{{2
 
   ZSHZ_DEBUG=1
@@ -409,6 +352,7 @@ if (( ${+commands[git]} )); then
   fi
 
   zcomet load ohmyzsh plugins/gitfast
+  zcomet load ohmyzsh plugins/docker
   zcomet trigger zsh-prompt-benchmark romkatv/zsh-prompt-benchmark
 
   zcomet trigger --no-submodules archive unarchive lsarchive \
@@ -444,8 +388,11 @@ if (( ${+commands[git]} )); then
 
   # zcomet load marlonrichert/zsh-autocomplete
 
-  # ZSH_AUTOSUGGEST_MANUAL_REBIND=1
-  # zcomet load zsh-users/zsh-autosuggestions
+  [[ -o KSH_ARRAYS ]] || {
+    ZSH_AUTOSUGGEST_MANUAL_REBIND=1
+    ZSH_AUTOSUGGEST_CLEAR_WIDGETS+=(history-beginning-search-backward-end history-beginning-search-forward-end)
+    zcomet load zsh-users/zsh-autosuggestions
+  }
 
   # }}}2
 
@@ -570,31 +517,35 @@ bindkey -M menuselect 'j' vi-down-line-or-history # bottom
 
 # 26 User Contributions {{{1
 
-# 26.7.1 Allow pasting URLs as CLI arguments
-if [[ $ZSH_VERSION != '5.1.1' && $TERM != 'dumb' ]] &&
-  (( ! $+INSIDE_EMACS )); then
-  if is-at-least 5.1; then
-    autoload -Uz bracketed-paste-magic
-    zle -N bracketed-paste bracketed-paste-magic
-  fi
-  autoload -Uz url-quote-magic
-  zle -N self-insert url-quote-magic
-elif [[ $TERM == 'dumb' ]]; then
-  unset zle_bracketed_paste # Avoid ugly control sequences in dumb terminal
-fi
+# 26.7.1 history-search-end {{{2
 
-# 26.7.1 history-search-end
 autoload -Uz history-search-end
 zle -N history-beginning-search-backward-end history-search-end
 zle -N history-beginning-search-forward-end history-search-end
 bindkey '^P' history-beginning-search-backward-end
 bindkey '^N' history-beginning-search-forward-end
 if [[ $TERM != 'dumb' ]]; then
-  bindkey ${terminfo[kcuu1]} history-beginning-search-backward-end
-  bindkey ${terminfo[kcud1]} history-beginning-search-forward-end
+  bindkey '^[[A' history-beginning-search-backward-end
+  bindkey '^[[B' history-beginning-search-forward-end
 fi
 bindkey -M vicmd 'k' history-beginning-search-backward-end
 bindkey -M vicmd 'j' history-beginning-search-forward-end
+
+# }}}2
+
+# 26.7.1 Allow pasting URLs as CLI arguments
+# if [[ $ZSH_VERSION != '5.1.1' && $TERM != 'dumb' ]] &&
+#   (( ! $+INSIDE_EMACS )); then
+#   autoload -Uz url-quote-magic
+#   zle -N self-insert url-quote-magic
+#   if is-at-least 5.1; then
+#     autoload -Uz bracketed-paste-magic
+#     zle -N bracketed-paste bracketed-paste-magic
+#   fi
+# elif [[ $TERM == 'dumb' ]]; then
+#   unset zle_bracketed_paste # Avoid ugly control sequences in dumb terminal
+# fi
+[[ $TERM == 'dumb' ]] && unset zle_bracketed_paste
 
 # }}}1
 
@@ -633,14 +584,88 @@ fi
 
 # }}}1
 
-# Syntax highlighting should always come last {{{1
-# if (( ${+functions[zcomet]} )); then
+# The order here seems to be highly important {{{1
 
-#   if [[ $OSTYPE != (msys|cygwin) ]]; then
-#     zcomet load zsh-users/zsh-syntax-highlighting
-#   fi
+if (( ${+functions[zcomet]} )); then
 
-# fi
+  if [[ $OSTYPE != (msys|cygwin) ]]; then
+    zcomet load zsh-users/zsh-syntax-highlighting
+  fi
+
+  # agkozak-zsh-prompt {{{2
+
+  # AGKOZAK_PROMPT_DEBUG=1
+  if ! is-at-least 5.1 ||
+     (( ! AGKDOT_P10K )); then
+    zcomet load agkozak/agkozak-zsh-prompt@develop
+  fi
+
+  # # An optional way of loading agkozak-zsh-prompt using promptinit
+  # zcomet fpath agkozak/agkozak-zsh-prompt@develop
+  # autoload promptinit; promptinit
+  # prompt agkozak-zsh-prompt
+
+  # Configuration
+
+  # AGKOZAK_COLORS_PROMPT_CHAR='magenta'
+  # AGKOZAK_CUSTOM_SYMBOLS=( '⇣⇡' '⇣' '⇡' '+' 'x' '!' '>' '?' 'S' )
+  # AGKOZAK_LEFT_PROMPT_ONLY=1
+  # AGKOZAK_MULTILINE=0
+  # AGKOZAK_PROMPT_CHAR=( '❯' '❯' '❮' )
+
+  # # Zenburn prompt {{{3
+
+  # Make sure the zsh/terminfo module is loaded
+  (( ${+modules[zsh/terminfo]} )) || zmodload zsh/terminfo
+  # If there are 256 colors, use the following colors; otherwise use the defaults
+  if (( ${terminfo[colors]:-0} >= 256 )); then
+    AGKOZAK_COLORS_USER_HOST=108
+    AGKOZAK_COLORS_PATH=116
+    AGKOZAK_COLORS_BRANCH_STATUS=228
+    AGKOZAK_COLORS_EXIT_STATUS=174
+    AGKOZAK_COLORS_CMD_EXEC_TIME=245
+    AGKOZAK_COLORS_VIRTUALENV=188
+    AGKOZAK_COLORS_BG_STRING=223
+  fi
+  AGKOZAK_CUSTOM_PROMPT=''
+  # Command execution time
+  AGKOZAK_CUSTOM_PROMPT+='%(9V.%F{${AGKOZAK_COLORS_CMD_EXEC_TIME}}%b%9v%b%f .)'
+  # Exit status
+  AGKOZAK_CUSTOM_PROMPT+='%(?..%B%F{${AGKOZAK_COLORS_EXIT_STATUS}}(%?%)%f%b )'
+  # pipestatus
+  AGKOZAK_CUSTOM_PROMPT+='%(13V.%B%F{${AGKOZAK_COLORS_EXIT_STATUS}\}(%13v%)%f%b .%(12V.%F{${AGKOZAK_COLORS_USER_HOST}\}(%12v%)%f .))'
+  # Username and hostname
+  AGKOZAK_CUSTOM_PROMPT+='%(!.%S%B.%B%F{${AGKOZAK_COLORS_USER_HOST}})%n%1v%(!.%b%s.%f%b) '
+  # Virtual environment indicator
+  AGKOZAK_CUSTOM_PROMPT+='%(10V.%F{${AGKOZAK_COLORS_VIRTUALENV}}[%10v]%f .)'
+  # Path
+  AGKOZAK_CUSTOM_PROMPT+='%B%F{${AGKOZAK_COLORS_PATH}}%2v%f%b'
+  # Background job status
+  AGKOZAK_CUSTOM_PROMPT+='%(1j. %F{${AGKOZAK_COLORS_BG_STRING}}%jj%f.)'
+  # Git status
+  AGKOZAK_CUSTOM_PROMPT+=$'%(3V.%F{${AGKOZAK_COLORS_BRANCH_STATUS}}%3v%f.)\n'
+  # SHLVL and prompt character
+  AGKOZAK_CUSTOM_PROMPT+='[%L] %(4V.:.%#) '
+  AGKOZAK_COLORS_BRANCH_STATUS=228
+
+  # No right prompt
+  AGKOZAK_CUSTOM_RPROMPT=''
+
+  # }}}3
+
+  # }}}2
+
+  (( AGKDOT_P10K )) && is-at-least 5.1 && zcomet load romkatv/powerlevel10k
+
+fi
+
+# }}}1
+
+# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh. {{{1
+if (( AGKDOT_P10K)) && is-at-least 5.1; then
+  [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+fi
+# }}}1
 
 # compinit {{{1
 
@@ -657,7 +682,7 @@ else
 
   if [[ $TERM != 'dumb' ]]; then
     autoload -Uz compinit
-    compinit -C -d "${HOME}/.zcompdump_${ZSH_VERSION}"
+    compinit -d "${HOME}/.zcompdump_${ZSH_VERSION}"
     compdef mosh=ssh
   fi
 fi
