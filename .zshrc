@@ -55,7 +55,7 @@ _agkdot_benchmark_message() {
 if (( AGKDOT_BENCHMARKS )); then
   if (( $+AGKDOT_ZSHENV_BENCHMARK )); then
     _agkdot_benchmark_message \
-      ".zshenv loaded in ${AGKDOT_ZSHENV_BENCHMARK}ms total."
+      ".zshenv: ${AGKDOT_ZSHENV_BENCHMARK}ms"
     unset AGKDOT_ZSHENV_BENCHMARK
   fi
 fi
@@ -81,7 +81,7 @@ fi
 typeset -F SECONDS=0
 [[ $- == *l* && -z $ENV && -f .profile ]] && source .profile
 _agkdot_benchmark_message \
-    ".profile loaded in ${$(( SECONDS * 1000 ))%.*}ms."
+    ".profile: ${$(( SECONDS * 1000 ))%.*}ms"
 typeset _F SECONDS=0
 
 # }}}1
@@ -101,10 +101,9 @@ if [[ -f ${HOME}/.shrc ]];then
     (( $+EPOCHREALTIME )) || zmodload zsh/datetime
     typeset -g AGKDOT_ZSHRC_START=$(( EPOCHREALTIME * 1000 ))
     AGKDOT_ZSHRC_LOADING=1 source "${HOME}/.shrc"
-    [[ -f ${HOME}/.shrc.local ]] && AGKDOT_LOCAL_MESSAGE='and .shrc.local '
     _agkdot_benchmark_message \
-      ".shrc ${AGKDOT_LOCAL_MESSAGE}loaded in ${$(( (EPOCHREALTIME * 1000) - AGKDOT_ZSHRC_START ))%\.*}ms."
-    unset AGKDOT_ZSHRC_START AGKDOT_LOCAL_MESSAGE
+      ".shrc: ${$(( (EPOCHREALTIME * 1000) - AGKDOT_ZSHRC_START ))%\.*}ms"
+    unset AGKDOT_ZSHRC_START
   else
     source "${HOME}/.shrc"
   fi
@@ -698,9 +697,8 @@ fi
 
 if (( AGKDOT_BENCHMARKS )); then
   local message
-  message='.zshrc '
-  message+="loaded in ${$(( SECONDS * 1000 ))%.*}ms total (including .profile, .shrc, and corresponding .local files)."
-  _agkdot_benchmark_message "$message"
+  _agkdot_benchmark_message \
+    ".zshrc: ${$(( SECONDS * 1000 ))%.*}ms TOTAL (inc. .profile, .shrc., etc.)"
   typeset -i SECONDS
 fi
 
