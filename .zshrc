@@ -58,9 +58,6 @@ if (( AGKDOT_BENCHMARKS )); then
       ".zshenv loaded in ${AGKDOT_ZSHENV_BENCHMARK}ms total."
     unset AGKDOT_ZSHENV_BENCHMARK
   fi
-  (( ${+AGKDOT_ZPROFILE_BENCHMARK} )) && _agkdot_benchmark_message \
-      "$AGKDOT_ZPROFILE_BENCHMARK" && unset AGKDOT_ZPROFILE_BENCHMARK
-  typeset -F SECONDS=0
 fi
 
 # }}}1
@@ -76,6 +73,16 @@ if is-at-least 5.1 &&
    [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
+
+# }}}1
+
+# Source .profile, if necessary {{{1
+
+typeset -F SECONDS=0
+[[ $- == *l* && -z $ENV && -f .profile ]] && source .profile
+_agkdot_benchmark_message \
+    ".profile loaded in ${$(( SECONDS * 1000 ))%.*}ms."
+typeset _F SECONDS=0
 
 # }}}1
 
@@ -577,8 +584,6 @@ zsh_update() {
 # Source ~/.zshrc.local, if present {{{1
 
 if [[ -f ${HOME}/.zshrc.local ]]; then
-  local zshrc_local
-  zshrc_local=1
   source "${HOME}/.zshrc.local"
 fi
 
@@ -694,8 +699,7 @@ fi
 if (( AGKDOT_BENCHMARKS )); then
   local message
   message='.zshrc '
-  (( zshrc_local )) && message+='and .zshrc.local '
-  message+="loaded in ${$(( SECONDS * 1000 ))%.*}ms total."
+  message+="loaded in ${$(( SECONDS * 1000 ))%.*}ms total (including .profile, .shrc, and corresponding .local files)."
   _agkdot_benchmark_message "$message"
   typeset -i SECONDS
 fi

@@ -8,14 +8,6 @@ typeset -F SECONDS
 
 # }}}1
 
-# # if ~/.profile has not been loaded and /etc/zsh/zshenv has {{{1
-
-# if [[ -z $ENV && -n $PATH && $- != *l* ]]; then
-#   [[ -f ${HOME}/.profile ]] && source ${HOME}/.profile
-# fi
-
-# }}}1
-
 # Ubuntu-specific: Don't run compinit in /etc/zshrc; run it later {{{1
 
 skip_global_compinit=1
