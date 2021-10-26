@@ -634,7 +634,7 @@ else
 
   if [[ $TERM != 'dumb' ]]; then
     autoload -Uz compinit
-    compinit -d "${HOME}/.zcompdump_${ZSH_VERSION}"
+    compinit -d "${HOME}/.zcompdump_${EUID}_${OSTYPE}_${ZSH_VERSION}"
     compdef mosh=ssh
   fi
 fi
