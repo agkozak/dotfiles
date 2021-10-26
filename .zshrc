@@ -11,8 +11,8 @@
 #
 # To run zprof, execute
 #
-#   env ZSH_PROF='' zsh -ic zprof
-(( $+ZSH_PROF )) && zmodload zsh/zprof
+#   env ZSH_PROF=1 zsh -ic zprof
+(( ZSH_PROF )) && zmodload zsh/zprof
 # }}}2
 
 # xtrace {{{2
@@ -387,7 +387,7 @@ if (( ${+commands[git]} )); then
 
   zcomet trigger clip open pbcopy pbpaste zpm-zsh/clipboard
 
-  # if [[ $AGKDOT_SYSTEMINFO != *ish* ]]; then
+  # if is-at-least 5 && [[ $AGKDOT_SYSTEMINFO != *ish* ]]; then
   #   zcomet load zdharma/zui
   #   zcomet load zdharma/zbrowse
   # fi
