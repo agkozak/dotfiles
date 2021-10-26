@@ -324,110 +324,6 @@ fi
 
 # }}}1
 
-# zcomet {{{1
-
-if (( ${+commands[git]} )); then
-
-  if [[ ! -f ${HOME}/.zcomet/bin/zcomet.zsh ]]; then
-    command git clone --branch develop https://github.com/agkozak/zcomet.git \
-        ${HOME}/.zcomet/bin
-  fi
-  source ~/.zcomet/bin/zcomet.zsh
-
-  # agkozak/zsh-z {{{2
-
-  ZSHZ_DEBUG=1
-  zcomet load agkozak/zsh-z@develop
-  ZSHZ_CASE='smart'
-  ZSHZ_ECHO=1
-  # In FreeBSD, /home is /usr/home
-  [[ $OSTYPE == freebsd* ]] && typeset -g ZSHZ_NO_RESOLVE_SYMLINKS=1
-  # ZSHZ_TILDE=1
-  ZSHZ_TRAILING_SLASH=1
-  ZSHZ_UNCOMMON=1
-
-  # }}}2
-
-  # Other plugins {{{2
-
-  zcomet trigger zhooks agkozak/zhooks@develop
-
-  if [[ $TERM != 'cons25' ]]; then
-    # zcomet load jreese/zsh-titles
-    zcomet snippet https://github.com/jreese/zsh-titles/blob/master/titles.plugin.zsh
-  fi
-
-  zcomet load ohmyzsh plugins/gitfast
-  zcomet load ohmyzsh plugins/docker
-  zcomet trigger zsh-prompt-benchmark romkatv/zsh-prompt-benchmark
-
-  zcomet trigger --no-submodules archive unarchive lsarchive \
-    prezto modules/archive
-  alias x='unarchive' extract='unarchive'
-
-  # # fzf does not run on a number of platforms and its install script requires
-  # # bash
-  # if [[ $OSTYPE != (msys|cygwin|solaris*) ]] &&
-  #    (( ${+commands[bash]} )) &&
-  #    is-at-least 5; then
-  #   zcomet load junegunn/fzf shell completion.zsh key-bindings.zsh
-  #   (( ${+commands[fzf]} )) || ~[fzf]/install --bin
-  # fi
-
-  # }}}2
-
-  # Other {{{2
-
-  # For when I'm testing the Polyglot Prompt in Zsh
-  # zcomet load agkozak/polyglot@develop
-  # if which kubectl &> /dev/null; then
-  #   zcomet load jonmosco/kube-ps1
-  #   zcomet load agkozak/polyglot-kube-ps1
-  # fi
-
-  zcomet trigger clip open pbcopy pbpaste zpm-zsh/clipboard
-
-  # if is-at-least 5 && [[ $AGKDOT_SYSTEMINFO != *ish* ]]; then
-  #   zcomet load zdharma/zui
-  #   zcomet load zdharma/zbrowse
-  # fi
-
-  # zcomet load marlonrichert/zsh-autocomplete
-
-  [[ -o KSH_ARRAYS ]] || {
-    ZSH_AUTOSUGGEST_MANUAL_REBIND=1
-    ZSH_AUTOSUGGEST_CLEAR_WIDGETS+=(history-beginning-search-backward-end history-beginning-search-forward-end)
-    zcomet load zsh-users/zsh-autosuggestions
-  }
-
-  # }}}2
-
-else
-
-  >&2 print 'Please install Git.'
-
-fi
-
-# }}}1
-
-# 14.7 Filename Generation {{{1
-
-# 14.7.2 Static Named Directories {{{2
-
-# Static named directories
-[[ -d ${HOME}/public_html/wp-content ]] &&
-  hash -d wp-content="${HOME}/public_html/wp-content"
-[[ -d ${HOME}/.zcomet/repos/agkozak/agkozak-zsh-prompt ]] &&
-  hash -d agk="${HOME}/.zcomet/repos/agkozak/agkozak-zsh-prompt"
-[[ -d ${HOME}/.zcomet/repos/agkozak/zsh-z ]] &&
-  hash -d z="${HOME}/.zcomet/repos/agkozak/zsh-z"
-[[ -d ${HOME}/.zcomet/bin ]] &&
-  hash -d zc="${HOME}/.zcomet/bin"
-
-# }}}2
-
-# }}}1
-
 # 20 Completion System {{{1
 
 # https://www.zsh.org/mla/users/2015/msg00467.html
@@ -451,10 +347,6 @@ bindkey . rationalise-dot
 bindkey -M isearch . self-insert
 
 # }}}2
-
-# Menu-style completion (clashes with zsh-autocomplete)
-(( ${+functions[.autocomplete.async.stop]} )) ||
-  zstyle ':completion:*' menu select
 
 # Use dircolors $LS_COLORS for completion when possible
 zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
@@ -564,33 +456,85 @@ if (( SHLVL == 1  && ! $+TMUX )) && [[ $OSTYPE != (msys|cygwin) ]]; then
   cp "${HOME}/.z" "${HOME}/.zbackup/.z_${EPOCHSECONDS}" 2> /dev/null
 fi
 
-############################################################
-# Download the latest dotfiles, then the latest version of
-# zcomet, then the latest zcomet plugins and snippets, and
-# source .zshrc
-############################################################
-zsh_update() {
-  update_dotfiles
-  if (( ${+functions[zcomet]} )); then
-    zcomet self-update
-    zcomet update
+# }}}1
+
+# zcomet {{{1
+
+if (( ${+commands[git]} )); then
+
+  if [[ ! -f ${HOME}/.zcomet/bin/zcomet.zsh ]]; then
+    command git clone --branch develop https://github.com/agkozak/zcomet.git \
+        ${HOME}/.zcomet/bin
   fi
-  exec zsh
-}
+  source ~/.zcomet/bin/zcomet.zsh
 
-# }}}1
+  # agkozak/zsh-z {{{2
 
-# Source ~/.zshrc.local, if present {{{1
+  ZSHZ_DEBUG=1
+  zcomet load agkozak/zsh-z@develop
+  ZSHZ_CASE='smart'
+  ZSHZ_ECHO=1
+  # In FreeBSD, /home is /usr/home
+  [[ $OSTYPE == freebsd* ]] && typeset -g ZSHZ_NO_RESOLVE_SYMLINKS=1
+  # ZSHZ_TILDE=1
+  ZSHZ_TRAILING_SLASH=1
+  ZSHZ_UNCOMMON=1
 
-if [[ -f ${HOME}/.zshrc.local ]]; then
-  source "${HOME}/.zshrc.local"
-fi
+  # }}}2
 
-# }}}1
+  # Other plugins {{{2
 
-# The order here seems to be highly important {{{1
+  zcomet trigger zhooks agkozak/zhooks@develop
 
-if (( ${+functions[zcomet]} )); then
+  if [[ $TERM != 'cons25' ]]; then
+    # zcomet load jreese/zsh-titles
+    zcomet snippet https://github.com/jreese/zsh-titles/blob/master/titles.plugin.zsh
+  fi
+
+  zcomet load ohmyzsh plugins/gitfast
+  zcomet load ohmyzsh plugins/docker
+  zcomet trigger zsh-prompt-benchmark romkatv/zsh-prompt-benchmark
+
+  zcomet trigger --no-submodules archive unarchive lsarchive \
+    prezto modules/archive
+  alias x='unarchive' extract='unarchive'
+
+  # # fzf does not run on a number of platforms and its install script requires
+  # # bash
+  # if [[ $OSTYPE != (msys|cygwin|solaris*) ]] &&
+  #    (( ${+commands[bash]} )) &&
+  #    is-at-least 5; then
+  #   zcomet load junegunn/fzf shell completion.zsh key-bindings.zsh
+  #   (( ${+commands[fzf]} )) || ~[fzf]/install --bin
+  # fi
+
+  # }}}2
+
+  # Other {{{2
+
+  # For when I'm testing the Polyglot Prompt in Zsh
+  # zcomet load agkozak/polyglot@develop
+  # if which kubectl &> /dev/null; then
+  #   zcomet load jonmosco/kube-ps1
+  #   zcomet load agkozak/polyglot-kube-ps1
+  # fi
+
+  zcomet trigger clip open pbcopy pbpaste zpm-zsh/clipboard
+
+  # if is-at-least 5 && [[ $AGKDOT_SYSTEMINFO != *ish* ]]; then
+  #   zcomet load zdharma/zui
+  #   zcomet load zdharma/zbrowse
+  # fi
+
+  # zcomet load marlonrichert/zsh-autocomplete
+
+  [[ -o KSH_ARRAYS ]] || {
+    ZSH_AUTOSUGGEST_MANUAL_REBIND=1
+    ZSH_AUTOSUGGEST_CLEAR_WIDGETS+=(history-beginning-search-backward-end history-beginning-search-forward-end)
+    zcomet load zsh-users/zsh-autosuggestions
+  }
+
+  # }}}2
 
   if [[ $OSTYPE != (msys|cygwin) ]]; then
     zcomet load zsh-users/zsh-syntax-highlighting
@@ -661,6 +605,10 @@ if (( ${+functions[zcomet]} )); then
 
   (( AGKDOT_P10K )) && is-at-least 5.1 && zcomet load romkatv/powerlevel10k
 
+else
+
+  >&2 print 'Please install Git.'
+
 fi
 
 # }}}1
@@ -689,6 +637,58 @@ else
     compinit -d "${HOME}/.zcompdump_${ZSH_VERSION}"
     compdef mosh=ssh
   fi
+fi
+
+# }}}1
+
+# 14.7 Filename Generation {{{1
+
+# 14.7.2 Static Named Directories {{{2
+
+# Static named directories
+[[ -d ${HOME}/public_html/wp-content ]] &&
+  hash -d wp-content="${HOME}/public_html/wp-content"
+[[ -d ${HOME}/.zcomet/repos/agkozak/agkozak-zsh-prompt ]] &&
+  hash -d agk="${HOME}/.zcomet/repos/agkozak/agkozak-zsh-prompt"
+[[ -d ${HOME}/.zcomet/repos/agkozak/zsh-z ]] &&
+  hash -d z="${HOME}/.zcomet/repos/agkozak/zsh-z"
+[[ -d ${HOME}/.zcomet/bin ]] &&
+  hash -d zc="${HOME}/.zcomet/bin"
+
+# }}}2
+
+# }}}1
+
+# Must come after plugin loadin {{{1
+
+# Menu-style completion (clashes with zsh-autocomplete)
+(( ${+functions[.autocomplete.async.stop]} )) ||
+  zstyle ':completion:*' menu select
+
+# }}}1
+
+# zsh_update {{{1
+
+############################################################
+# Download the latest dotfiles, then the latest version of
+# zcomet, then the latest zcomet plugins and snippets, and
+# restart .zshrc
+############################################################
+zsh_update() {
+  update_dotfiles
+  if (( ${+functions[zcomet]} )); then
+    zcomet self-update
+    zcomet update
+  fi
+  exec zsh
+}
+
+# }}}1
+
+# Source ~/.zshrc.local, if present {{{1
+
+if [[ -f ${HOME}/.zshrc.local ]]; then
+  source "${HOME}/.zshrc.local"
 fi
 
 # }}}1
