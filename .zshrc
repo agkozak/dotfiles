@@ -79,9 +79,9 @@ fi
 # Source .profile, if necessary {{{1
 
 typeset -F SECONDS=0
-[[ $- == *l* && -z $ENV && -f .profile ]] && source .profile
-_agkdot_benchmark_message \
-    ".profile: ${$(( SECONDS * 1000 ))%.*}ms"
+[[ $- == *l* && -z $ENV && -f .profile ]] &&
+    source .profile &&
+    _agkdot_benchmark_message ".profile: ${$(( SECONDS * 1000 ))%.*}ms"
 typeset _F SECONDS=0
 
 # }}}1
