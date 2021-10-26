@@ -82,7 +82,7 @@ typeset -F SECONDS=0
 [[ $- == *l* && -z $ENV && -f .profile ]] &&
     source .profile &&
     _agkdot_benchmark_message ".profile: ${$(( SECONDS * 1000 ))%.*}ms"
-typeset _F SECONDS=0
+typeset -F SECONDS=0
 
 # }}}1
 
