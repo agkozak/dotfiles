@@ -80,8 +80,12 @@ fi
 
 typeset -F SECONDS=0
 [[ $- == *l* && -z $ENV && -f .profile ]] &&
+    typeset -g AGKDOT_PROFILE_TOTAL
     source .profile &&
-    _agkdot_benchmark_message ".profile: ${$(( SECONDS * 1000 ))%.*}ms"
+        print -z -f '%.*f' 1 $(( SECONDS * 1000 )) &&
+        read -z AGKDOT_PROFILE_TOTAL
+        _agkdot_benchmark_message ".profile: ${AGKDOT_PROFILE_TOTAL}ms"
+    unset AGKDOT_PROFILE_TOTAL
 typeset -F SECONDS=0
 
 # }}}1
@@ -101,8 +105,12 @@ if [[ -f ${HOME}/.shrc ]];then
     (( $+EPOCHREALTIME )) || zmodload zsh/datetime
     typeset -g AGKDOT_ZSHRC_START=$(( EPOCHREALTIME * 1000 ))
     AGKDOT_ZSHRC_LOADING=1 source "${HOME}/.shrc"
+    typeset -g AGKDOT_SHRC_TOTAL
+    print -z -f '%.*f' \
+        1 $(( (EPOCHREALTIME * 1000) - AGKDOT_ZSHRC_START ))
+    read -z AGKDOT_SHRC_TOTAL
     _agkdot_benchmark_message \
-      ".shrc: ${$(( (EPOCHREALTIME * 1000) - AGKDOT_ZSHRC_START ))%\.*}ms"
+      ".shrc: ${AGKDOT_SHRC_TOTAL}ms"
     unset AGKDOT_ZSHRC_START
   else
     source "${HOME}/.shrc"
@@ -696,9 +704,12 @@ fi
 # End .zshrc benchmark {{{1
 
 if (( AGKDOT_BENCHMARKS )); then
-  local message
+  typeset -g AGKDOT_ZSHRC_TOTAL
+  print -z -f '%.*f' 1 $(( SECONDS * 1000 ))
+  read -z AGKDOT_ZSHRC_TOTAL
   _agkdot_benchmark_message \
-    ".zshrc: ${$(( SECONDS * 1000 ))%.*}ms TOTAL (inc. .profile, .shrc., etc.)"
+    ".zshrc: ${AGKDOT_ZSHRC_TOTAL}ms TOTAL (inc. .profile, .shrc., etc.)"
+  unset AGKDOT_ZSHRC_TOTAL
   typeset -i SECONDS
 fi
 

@@ -22,7 +22,9 @@ skip_global_compinit=1
 
 # Benchmarks {{{1
 
-typeset -g AGKDOT_ZSHENV_BENCHMARK=${$(( SECONDS * 1000))%.*}
+typeset -g AGKDOT_ZSHENV_BENCHMARK
+print -z -f '%.*f' 1 $(( SECONDS * 1000 ))
+read -z AGKDOT_ZSHENV_BENCHMARK
 
 # }}}1
 
