@@ -213,17 +213,20 @@ setopt LIST_PACKED        # Use columns of varying widths
 
 setopt EXTENDED_HISTORY       # Save time stamps and durations
 
-# Enable history on CloudLinux for a custom build of zsh in ~/bin
-# with HAVE_SYMLINKS=0 set at compile time
-# See https://gist.github.com/agkozak/50a9bf7da14b9f060c68124418ac5217
-if [[ -f '/var/.cagefs/.cagefs.token' ]]; then
-  if [[ =zsh != '/bin/zsh' ]]; then
-    setopt HIST_FCNTL_LOCK
-  else
-    # Otherwise, just disable persistent history
+# Old installments of CloudLinux have a /bin/zsh whose history file will not
+# work because of CageFS and SecureLinks. When necessary, disable the history
+# file rather than experience constant error messages.
+() {
+  setopt EQUALS
+
+  if [[ -f '/var/.cagefs/.cagefs.token' && $ZSH_VERSION == 4.3.11 ]]; then
     unset HISTFILE
+  # A custom build of Zsh on CloudLinux may require HIST_FCNTL_LOCK
+  # See https://gist.github.com/agkozak/50a9bf7da14b9f060c68124418ac5217
+  elif [[ =zsh == '/bin/zsh' ]]; then
+    setopt HIST_FCNTL_LOCK
   fi
-fi
+}
 
 setopt HIST_IGNORE_SPACE    # Ignore command lines with leading spaces
 setopt HIST_VERIFY          # Reload results of history expansion before executing
