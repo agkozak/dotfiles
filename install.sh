@@ -185,7 +185,7 @@ fi
 
 conditional_install vi .exrc
 
-conditional_install zsh .zshenv .zprofile .zshrc .p10k.zsh
+conditional_install zsh .zshenv .zshrc .zlogin .p10k.zsh
 
 case ${AGKDOT_SYSTEMINFO:=$(uname -a)} in
 	*BSD*|DragonFly*)
