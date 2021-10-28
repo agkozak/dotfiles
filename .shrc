@@ -125,6 +125,8 @@ elif [ "$TERM" != "$AGKDOT_ORIG_TERM" ] && [ -f "${HOME}/.dircolors" ]; then
   if [ -f "${HOME}/.dc_cache_${TERM}" ]; then
     source "${HOME}/.dc_cache_${TERM}"
   else
+    # TODO: Add metadata to the cache so that it can be invalidated if
+    # .dircolors changes
     case $AGKDOT_SYSTEMINFO in
       SunOS*) dircolors -b > "${HOME}/.dc_cache_${TERM}" ;;
       *)
