@@ -78,14 +78,18 @@ fi
 
 # Source .profile, if necessary {{{1
 
-typeset -F SECONDS=0
-if [[ $- == *l* && -z $ENV && -f .profile ]]; then
-  typeset -g AGKDOT_PROFILE_TOTAL
-  source .profile &&
-      print -z -f '%.*f' 1 $(( SECONDS * 1000 )) &&
-      read -z AGKDOT_PROFILE_TOTAL &&
-      _agkdot_benchmark_message ".profile: ${AGKDOT_PROFILE_TOTAL}ms"
-  unset AGKDOT_PROFILE_TOTAL
+if [[ $- == *l* && -z $ENV && -f ${HOME}/.profile ]]; then
+  if (( AGKDOT_BENCHMARKS )); then
+    typeset -g AGKDOT_PROFILE_TOTAL
+    typeset -F SECONDS=0
+    source "${HOME}/.profile" &&
+        print -z -f '%.*f' 1 $(( SECONDS * 1000 )) &&
+        read -z AGKDOT_PROFILE_TOTAL &&
+        _agkdot_benchmark_message ".profile: ${AGKDOT_PROFILE_TOTAL}ms"
+    unset AGKDOT_PROFILE_TOTAL
+  else
+    source "${HOME}/.profile"
+  fi
 fi
 typeset -F SECONDS=0
 
