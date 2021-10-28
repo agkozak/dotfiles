@@ -135,7 +135,7 @@ elif [ "$TERM" != "$AGKDOT_ORIG_TERM" ] && [ -f "${HOME}/.dircolors" ]; then
         fi
         ;;
     esac
-    source "${HOME}/.dc_cache_${TERM}"
+    [ -f "${HOME}/.dc_cache_${TERM}" ] && source "${HOME}/.dc_cache_${TERM}"
   fi
 fi
 export LS_COLORS AGKDOT_ORIG_TERM
