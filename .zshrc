@@ -553,7 +553,8 @@ if (( ${+commands[git]} )); then
   # }}}2
 
   if [[ $OSTYPE != (msys|cygwin) ]]; then
-    zcomet load zsh-users/zsh-syntax-highlighting
+    # zcomet load zsh-users/zsh-syntax-highlighting
+    zcomet load zdharma-continuum/fast-syntax-highlighting
   fi
 
   # agkozak-zsh-prompt {{{2
