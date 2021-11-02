@@ -538,8 +538,8 @@ if (( ${+commands[git]} )); then
   zcomet trigger clip open pbcopy pbpaste zpm-zsh/clipboard
 
   # if is-at-least 5 && [[ $AGKDOT_SYSTEMINFO != *ish* ]]; then
-  #   zcomet load zdharma/zui
-  #   zcomet load zdharma/zbrowse
+  #   zcomet load agkozak/zui
+  #   zcomet load agkozak/zbrowse
   # fi
 
   # zcomet load marlonrichert/zsh-autocomplete
