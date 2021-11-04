@@ -547,6 +547,7 @@ if (( ${+commands[git]} )); then
   [[ -o KSH_ARRAYS ]] || {
     ZSH_AUTOSUGGEST_MANUAL_REBIND=1
     ZSH_AUTOSUGGEST_CLEAR_WIDGETS+=(history-beginning-search-backward-end history-beginning-search-forward-end)
+    [[ $OSTYPE == (msys|cygwin) ]] && ZSH_AUTOSUGGEST_BUFFER_MAX_SIZE=20
     zcomet load zsh-users/zsh-autosuggestions
   }
 
