@@ -36,6 +36,9 @@ VISUAL="$EDITOR"
 export ENV
 ENV="${HOME}/.shrc"
 
+export GEM_HOME
+GEM_HOME="${HOME}/gems"
+
 export LESS
 case $AGKDOT_SYSTEMINFO in
   UWIN*) LESS=-i ;;
@@ -73,6 +76,7 @@ _agkdot_construct_path  '/mingw64/bin' \
                         "${HOME}/.cabal/bin" \
                         "${HOME}/.config/composer/vendor/bin" \
                         "${HOME}/.composer/vendor/bin" \
+                        "${HOME}/gems/bin" \
                         "${HOME}/bin"
 
 unset -f _agkdot_construct_path

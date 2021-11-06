@@ -183,9 +183,6 @@ HISTFILE="${HOME}/.zsh_history"
 HISTSIZE=1200000000  # Larger than $SAVEHIST for HIST_EXPIRE_DUPS_FIRST to work
 SAVEHIST=1000000000
 
-# 10ms for key sequences
-KEYTIMEOUT=3
-
 # In the line editor, number of matches to show before asking permission
 LISTMAX=9999
 
@@ -538,8 +535,8 @@ if (( ${+commands[git]} )); then
   zcomet trigger clip open pbcopy pbpaste zpm-zsh/clipboard
 
   # if is-at-least 5 && [[ $AGKDOT_SYSTEMINFO != *ish* ]]; then
-  #   zcomet load zdharma/zui
-  #   zcomet load zdharma/zbrowse
+  #   zcomet load agkozak/zui
+  #   zcomet load agkozak/zbrowse
   # fi
 
   # zcomet load marlonrichert/zsh-autocomplete
@@ -547,13 +544,18 @@ if (( ${+commands[git]} )); then
   [[ -o KSH_ARRAYS ]] || {
     ZSH_AUTOSUGGEST_MANUAL_REBIND=1
     ZSH_AUTOSUGGEST_CLEAR_WIDGETS+=(history-beginning-search-backward-end history-beginning-search-forward-end)
+    [[ $OSTYPE == (msys|cygwin) ]] && ZSH_AUTOSUGGEST_BUFFER_MAX_SIZE=20
     zcomet load zsh-users/zsh-autosuggestions
   }
 
   # }}}2
 
-  if [[ $OSTYPE != (msys|cygwin) ]]; then
-    zcomet load zsh-users/zsh-syntax-highlighting
+  if [[ $OSTYPE != (msys|cygwin) ]]; then     # They're too slow
+    if is-at-least 5.7; then                  # F-Sy-H uses the nearcolor module
+      zcomet load zdharma-continuum/fast-syntax-highlighting
+    else
+      zcomet load zsh-users/zsh-syntax-highlighting
+    fi
   fi
 
   # agkozak-zsh-prompt {{{2
