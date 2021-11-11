@@ -464,9 +464,9 @@ bindkey -M vicmd 'j' history-beginning-search-forward-end
 
 # While tinkering with ZSH-z
 
-if (( SHLVL == 1  && ! $+TMUX )) && [[ $OSTYPE != (msys|cygwin) ]]; then
+if (( SHLVL == 1  && ! $+TMUX )) || [[ $OSTYPE == (msys|cygwin) ]]; then
   [[ ! -d ${HOME}/.zbackup ]] && mkdir -p "${HOME}/.zbackup"
-  cp "${HOME}/.z" "${HOME}/.zbackup/.z_${EPOCHSECONDS}" 2> /dev/null
+  cp "${HOME}/.z" "${HOME}/.zbackup/z_${EPOCHSECONDS}" 2> /dev/null
 fi
 
 # }}}1
