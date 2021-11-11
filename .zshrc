@@ -551,7 +551,7 @@ if (( ${+commands[git]} )); then
   # }}}2
 
   if [[ $OSTYPE != (msys|cygwin) ]]; then     # They're too slow
-    zcomet load agkozak/fast-syntax-highlighting@backwards-compatibility
+    zcomet load zsh-users/zsh-syntax-highlighting
   fi
 
   # agkozak-zsh-prompt {{{2
