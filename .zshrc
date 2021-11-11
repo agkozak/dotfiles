@@ -551,11 +551,7 @@ if (( ${+commands[git]} )); then
   # }}}2
 
   if [[ $OSTYPE != (msys|cygwin) ]]; then     # They're too slow
-    if is-at-least 5.7; then                  # F-Sy-H uses the nearcolor module
-      zcomet load zdharma-continuum/fast-syntax-highlighting
-    else
-      zcomet load zsh-users/zsh-syntax-highlighting
-    fi
+    zcomet load zsh-users/zsh-syntax-highlighting
   fi
 
   # agkozak-zsh-prompt {{{2
