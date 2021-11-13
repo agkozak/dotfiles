@@ -121,17 +121,19 @@ if [ -n "$INSIDE_EMACS" ]; then
   unset LS_COLORS
 # If dircolors is available, install.sh will have installed ~/.dircolors
 # Try not to run dircolors more than once unless TERM has changed
-elif [ "$TERM" != "$AGKDOT_ORIG_TERM" ] && [ -f "${HOME}/.dircolors" ]; then
-  case $AGKDOT_SYSTEMINFO in
-    SunOS*) eval "$(dircolors -b)" ;;
-    *)
-      if [ -f "${HOME}/.dircolors" ] && [ "$AGKDOT_TERM_COLORS" -ge 256 ]; then
-        eval "$(dircolors -b "${HOME}/.dircolors")"
-      elif [ "$AGKDOT_TERM_COLORS" -ge 8 ]; then
-        eval "$(dircolors -b)"
-      fi
-      ;;
-  esac
+elif [ -f "${HOME}/.dircolors" ]; then
+  if [ "$TERM" != "$AGKDOT_ORIG_TERM" ] || [ -z "$LS_COLORS" ]; then
+    case $AGKDOT_SYSTEMINFO in
+      SunOS*) eval "$(dircolors -b)" ;;
+      *)
+        if [ -f "${HOME}/.dircolors" ] && [ "$AGKDOT_TERM_COLORS" -ge 256 ]; then
+          eval "$(dircolors -b "${HOME}/.dircolors")"
+        elif [ "$AGKDOT_TERM_COLORS" -ge 8 ]; then
+          eval "$(dircolors -b)"
+        fi
+        ;;
+    esac
+  fi
 fi
 export LS_COLORS AGKDOT_ORIG_TERM
 AGKDOT_ORIG_TERM=$TERM
