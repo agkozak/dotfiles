@@ -641,7 +641,7 @@ if (( ${+functions[zcomet]} )); then
   compdef mosh=ssh
 
   [[ $OSTYPE == (msys|cygwin) || $AGKDOT_SYSTEMINFO == *[Mm]icrosoft* ]] &&
-      zstyle ':zcomet:compinit' arguments -u
+    zstyle ':zcomet:compinit' arguments -u
   zcomet compinit
 
 else
