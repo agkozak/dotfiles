@@ -67,7 +67,7 @@ fi
 
 # .zshrc sets AGKDOT_TERM_COLORS from terminfo[colors]
 if [ -z "$ZSH_VERSION" ]; then
-  if [ "$TERM" != "$AGKDOT_ORIG_TERM" ]; then
+  if [ "$TERM" != "$AGKDOT_ORIG_TERM" ] || [ -z "$AGKDOT_TERM_COLORS" ]; then
     export AGKDOT_TERM_COLORS
     case $TERM in
       *-256color) AGKDOT_TERM_COLORS=256 ;;
