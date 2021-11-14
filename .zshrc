@@ -430,17 +430,17 @@ bindkey -M menuselect 'j' vi-down-line-or-history # bottom
 
 # 26.7.1 history-search-end {{{2
 
-autoload -Uz history-search-end
-zle -N history-beginning-search-backward-end history-search-end
-zle -N history-beginning-search-forward-end history-search-end
-bindkey '^P' history-beginning-search-backward-end
-bindkey '^N' history-beginning-search-forward-end
-if [[ $TERM != 'dumb' ]]; then
-  bindkey '^[[A' history-beginning-search-backward-end
-  bindkey '^[[B' history-beginning-search-forward-end
-fi
-bindkey -M vicmd 'k' history-beginning-search-backward-end
-bindkey -M vicmd 'j' history-beginning-search-forward-end
+# autoload -Uz history-search-end
+# zle -N history-beginning-search-backward-end history-search-end
+# zle -N history-beginning-search-forward-end history-search-end
+# bindkey '^P' history-beginning-search-backward-end
+# bindkey '^N' history-beginning-search-forward-end
+# if [[ $TERM != 'dumb' ]]; then
+#   bindkey '^[[A' history-beginning-search-backward-end
+#   bindkey '^[[B' history-beginning-search-forward-end
+# fi
+# bindkey -M vicmd 'k' history-beginning-search-backward-end
+# bindkey -M vicmd 'j' history-beginning-search-forward-end
 
 # }}}2
 
@@ -543,18 +543,26 @@ if (( ${+commands[git]} )); then
 
   zcomet fpath zsh-users/zsh-completions src
 
+  if [[ $OSTYPE != (msys|cygwin) ]]; then     # They're too slow
+    zcomet load zsh-users/zsh-syntax-highlighting
+  fi
+
+  zcomet load zsh-users/zsh-history-substring-search
+  bindkey '^[[A' history-substring-search-up
+  bindkey '^[[B' history-substring-search-down
+  bindkey -M vicmd 'k' history-substring-search-up
+  bindkey -M vicmd 'j' history-substring-search-down
+  bindkey '^P' history-substring-search-up
+  bindkey '^N' history-substring-search-down
+
   [[ -o KSH_ARRAYS ]] || {
     ZSH_AUTOSUGGEST_MANUAL_REBIND=1
-    ZSH_AUTOSUGGEST_CLEAR_WIDGETS+=(history-beginning-search-backward-end history-beginning-search-forward-end)
+    # ZSH_AUTOSUGGEST_CLEAR_WIDGETS+=(history-beginning-search-backward-end history-beginning-search-forward-end)
     [[ $OSTYPE == (msys|cygwin) ]] && ZSH_AUTOSUGGEST_BUFFER_MAX_SIZE=20
     zcomet load zsh-users/zsh-autosuggestions
   }
 
   # }}}2
-
-  if [[ $OSTYPE != (msys|cygwin) ]]; then     # They're too slow
-    zcomet load zsh-users/zsh-syntax-highlighting
-  fi
 
   # agkozak-zsh-prompt {{{2
 
