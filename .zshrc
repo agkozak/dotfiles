@@ -541,6 +541,8 @@ if (( ${+commands[git]} )); then
 
   # zcomet load marlonrichert/zsh-autocomplete
 
+  zcomet fpath zsh-users/zsh-completions src
+
   [[ -o KSH_ARRAYS ]] || {
     ZSH_AUTOSUGGEST_MANUAL_REBIND=1
     ZSH_AUTOSUGGEST_CLEAR_WIDGETS+=(history-beginning-search-backward-end history-beginning-search-forward-end)
