@@ -724,7 +724,7 @@ if (( AGKDOT_BENCHMARKS )); then
   print -z -f '%.*f' 1 $(( SECONDS * 1000 ))
   read -z AGKDOT_ZSHRC_TOTAL
   _agkdot_benchmark_message \
-    ".zshrc: ${AGKDOT_ZSHRC_TOTAL}ms TOTAL (inc. .profile, .shrc., etc.)"
+    ".zshrc: ${AGKDOT_ZSHRC_TOTAL}ms TOTAL (inc. .profile, .shrc, etc.)"
   unset AGKDOT_ZSHRC_TOTAL
   typeset -i SECONDS
 fi
