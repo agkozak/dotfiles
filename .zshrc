@@ -569,12 +569,12 @@ if (( ${+commands[git]} )); then
   # AGKOZAK_PROMPT_DEBUG=1
   if ! is-at-least 5.1 ||
      (( ! AGKDOT_P10K )); then
-    # zcomet load agkozak/agkozak-zsh-prompt@develop
+    zcomet load agkozak/agkozak-zsh-prompt@develop
 
-    # An optional way of loading agkozak-zsh-prompt using promptinit
-    zcomet fpath agkozak/agkozak-zsh-prompt@develop
-    autoload promptinit; promptinit
-    prompt agkozak-zsh-prompt
+    # # An optional way of loading agkozak-zsh-prompt using promptinit
+    # zcomet fpath agkozak/agkozak-zsh-prompt@develop
+    # autoload promptinit; promptinit
+    # prompt agkozak-zsh-prompt
   fi
 
   # Configuration
