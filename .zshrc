@@ -683,7 +683,7 @@ fi
 
 # }}}1
 
-# Must come after plugin loadin {{{1
+# Must come after plugin loading {{{1
 
 # Menu-style completion (clashes with zsh-autocomplete)
 (( ${+functions[.autocomplete.async.stop]} )) ||
