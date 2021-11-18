@@ -14,7 +14,7 @@ endfunction
 
 silent function! WSL2() abort
   if has('unix') && $VIM !~# 'iVim'
-    return ($AGKDOT_SYSTEMINFO =~# 'microsoft' || system('uname -a'))
+    return ($AGKDOT_SYSTEMINFO =~# 'microsoft' || system('uname -a') =~# 'microsoft')
   endif
 endfunction
 
@@ -341,7 +341,7 @@ if executable('git') && (executable('curl') || executable('wget') || WINDOWS())
     Plug 'fedorenchik/AnsiEsc'
     
     " Git
-    if (has('nvim') || has('patch-8.0.902')) && ! WSL2()
+    if (has('nvim') || has('patch-8.0.902'))
       Plug 'mhinz/vim-signify'
     else
       Plug 'mhinz/vim-signify', { 'branch': 'legacy' }

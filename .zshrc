@@ -430,17 +430,17 @@ bindkey -M menuselect 'j' vi-down-line-or-history # bottom
 
 # 26.7.1 history-search-end {{{2
 
-autoload -Uz history-search-end
-zle -N history-beginning-search-backward-end history-search-end
-zle -N history-beginning-search-forward-end history-search-end
-bindkey '^P' history-beginning-search-backward-end
-bindkey '^N' history-beginning-search-forward-end
-if [[ $TERM != 'dumb' ]]; then
-  bindkey '^[[A' history-beginning-search-backward-end
-  bindkey '^[[B' history-beginning-search-forward-end
-fi
-bindkey -M vicmd 'k' history-beginning-search-backward-end
-bindkey -M vicmd 'j' history-beginning-search-forward-end
+# autoload -Uz history-search-end
+# zle -N history-beginning-search-backward-end history-search-end
+# zle -N history-beginning-search-forward-end history-search-end
+# bindkey '^P' history-beginning-search-backward-end
+# bindkey '^N' history-beginning-search-forward-end
+# if [[ $TERM != 'dumb' ]]; then
+#   bindkey '^[[A' history-beginning-search-backward-end
+#   bindkey '^[[B' history-beginning-search-forward-end
+# fi
+# bindkey -M vicmd 'k' history-beginning-search-backward-end
+# bindkey -M vicmd 'j' history-beginning-search-forward-end
 
 # }}}2
 
@@ -464,9 +464,9 @@ bindkey -M vicmd 'j' history-beginning-search-forward-end
 
 # While tinkering with ZSH-z
 
-if (( SHLVL == 1  && ! $+TMUX )) && [[ $OSTYPE != (msys|cygwin) ]]; then
+if (( SHLVL == 1  && ! $+TMUX )) || [[ $OSTYPE == (msys|cygwin) ]]; then
   [[ ! -d ${HOME}/.zbackup ]] && mkdir -p "${HOME}/.zbackup"
-  cp "${HOME}/.z" "${HOME}/.zbackup/.z_${EPOCHSECONDS}" 2> /dev/null
+  cp "${HOME}/.z" "${HOME}/.zbackup/z_${EPOCHSECONDS}" 2> /dev/null
 fi
 
 # }}}1
@@ -504,8 +504,8 @@ if (( ${+commands[git]} )); then
     zcomet snippet https://github.com/jreese/zsh-titles/blob/master/titles.plugin.zsh
   fi
 
-  zcomet load ohmyzsh plugins/gitfast
-  zcomet load ohmyzsh plugins/docker
+  zcomet fpath ohmyzsh plugins/gitfast
+  zcomet fpath ohmyzsh plugins/docker
   zcomet trigger zsh-prompt-benchmark romkatv/zsh-prompt-benchmark
 
   zcomet trigger --no-submodules archive unarchive lsarchive \
@@ -541,18 +541,28 @@ if (( ${+commands[git]} )); then
 
   # zcomet load marlonrichert/zsh-autocomplete
 
+  zcomet fpath zsh-users/zsh-completions src
+
+  if [[ $OSTYPE != (msys|cygwin) ]]; then     # They're too slow
+    zcomet load zdharma-continuum/fast-syntax-highlighting
+  fi
+
+  zcomet load zsh-users/zsh-history-substring-search
+  bindkey '^[[A' history-substring-search-up
+  bindkey '^[[B' history-substring-search-down
+  bindkey -M vicmd 'k' history-substring-search-up
+  bindkey -M vicmd 'j' history-substring-search-down
+  bindkey '^P' history-substring-search-up
+  bindkey '^N' history-substring-search-down
+
   [[ -o KSH_ARRAYS ]] || {
     ZSH_AUTOSUGGEST_MANUAL_REBIND=1
-    ZSH_AUTOSUGGEST_CLEAR_WIDGETS+=(history-beginning-search-backward-end history-beginning-search-forward-end)
+    # ZSH_AUTOSUGGEST_CLEAR_WIDGETS+=(history-beginning-search-backward-end history-beginning-search-forward-end)
     [[ $OSTYPE == (msys|cygwin) ]] && ZSH_AUTOSUGGEST_BUFFER_MAX_SIZE=20
     zcomet load zsh-users/zsh-autosuggestions
   }
 
   # }}}2
-
-  if [[ $OSTYPE != (msys|cygwin) ]]; then     # They're too slow
-    zcomet load zsh-users/zsh-syntax-highlighting
-  fi
 
   # agkozak-zsh-prompt {{{2
 
@@ -560,12 +570,12 @@ if (( ${+commands[git]} )); then
   if ! is-at-least 5.1 ||
      (( ! AGKDOT_P10K )); then
     zcomet load agkozak/agkozak-zsh-prompt@develop
-  fi
 
-  # # An optional way of loading agkozak-zsh-prompt using promptinit
-  # zcomet fpath agkozak/agkozak-zsh-prompt@develop
-  # autoload promptinit; promptinit
-  # prompt agkozak-zsh-prompt
+    # # An optional way of loading agkozak-zsh-prompt using promptinit
+    # zcomet fpath agkozak/agkozak-zsh-prompt@develop
+    # autoload promptinit; promptinit
+    # prompt agkozak-zsh-prompt
+  fi
 
   # Configuration
 
@@ -641,7 +651,7 @@ if (( ${+functions[zcomet]} )); then
   compdef mosh=ssh
 
   [[ $OSTYPE == (msys|cygwin) || $AGKDOT_SYSTEMINFO == *[Mm]icrosoft* ]] &&
-      zstyle ':zcomet:compinit' arguments -u
+    zstyle ':zcomet:compinit' arguments -u
   zcomet compinit
 
 else
@@ -673,7 +683,7 @@ fi
 
 # }}}1
 
-# Must come after plugin loadin {{{1
+# Must come after plugin loading {{{1
 
 # Menu-style completion (clashes with zsh-autocomplete)
 (( ${+functions[.autocomplete.async.stop]} )) ||
@@ -714,7 +724,7 @@ if (( AGKDOT_BENCHMARKS )); then
   print -z -f '%.*f' 1 $(( SECONDS * 1000 ))
   read -z AGKDOT_ZSHRC_TOTAL
   _agkdot_benchmark_message \
-    ".zshrc: ${AGKDOT_ZSHRC_TOTAL}ms TOTAL (inc. .profile, .shrc., etc.)"
+    ".zshrc: ${AGKDOT_ZSHRC_TOTAL}ms TOTAL (inc. .profile, .shrc, etc.)"
   unset AGKDOT_ZSHRC_TOTAL
   typeset -i SECONDS
 fi
