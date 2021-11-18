@@ -176,28 +176,7 @@ unset AGKDOT_BUSYBOX_LS
 alias l='ls -CF'
 alias la='ls -A'
 alias lart='ls -1Fcart'
-
-# ldot display dotfiles
-ldot() {
-  [ -n "$ZSH_VERSION" ] &&
-    setopt LOCAL_OPTIONS SH_WORD_SPLIT NO_WARN_CREATE_GLOBAL
-
-  [ $# -eq 0 ] && ls $LS_OPTIONS -ld .* && return
-
-  until [ $# -eq 0 ]; do
-    if [ -d "$1" ]; then
-      (cd "$1" && \ls $LS_OPTIONS -ld .*)
-    else
-      LDOT_ARGS="$LDOT_ARGS ${1}"
-    fi
-    shift
-  done
-
-  # shellcheck disable=SC2086
-  ls $LS_OPTIONS -ld $LDOT_ARGS
-  unset LDOT_ARGS
-}
-
+alias ldot='ls -ld .*'
 alias ll='ls -alF'
 alias lr='ls -tRFh'   # sorted by date, recursive, show type, human-readable
 alias lrt='ls -1Fcrt'
