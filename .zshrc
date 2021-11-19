@@ -704,7 +704,6 @@ zsh_update() {
     zcomet self-update
     zcomet update
   fi
-  exec zsh
 }
 
 # }}}1
