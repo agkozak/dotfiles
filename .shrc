@@ -229,7 +229,6 @@ esac
 alias github-stats='github-stats --token ${GITHUB_STATS_TOKEN}'
 alias bri='hue set all -b'
 [ "$EDITOR" = vim ] && alias vi='vim'
-alias wp='wp-cli.phar'
 alias yta='youtube-dl --audio-format best -x '
 
 # unset -f _agkdot_cond_aliases
