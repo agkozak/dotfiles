@@ -242,7 +242,7 @@ fi
 
 case $AGKDOT_SYSTEMINFO in
   *Msys|*Cygwin)
-    if [ "$AGKDOT_WINPTY" -eq 1 ]; then
+    if [ "${AGKDOT_WINPTY:-0}" -eq 1 ]; then
       alias node='winpty node'
       alias php='winpty php'
 
@@ -261,7 +261,7 @@ esac
 
 case $AGKDOT_SYSTEMINFO in
   *Msys)
-    if [ "$AGKDOT_WINPTY" -eq 1 ]; then
+    if [ "${AGKDOT_WINPTY:-0}" -eq 1 ]; then
       alias npm='winpty /c/Program\ Files/nodejs/npm.cmd'
       alias wp='winpty php $HOME/bin/wp-cli.phar --no-color'
     fi
@@ -269,7 +269,7 @@ case $AGKDOT_SYSTEMINFO in
     ;;
   *Cygwin)
     alias composer='php $(cygpath -w "${HOME}/bin/composer.phar")'
-    if [ "$AGKDOT_WINPTY" -eq 1 ]; then
+    if [ "${AGKDOT_WINPTY:-0}" -eq 1 ]; then
       alias npm='winpty /cygdrive/c/Program\ Files/nodejs/npm.cmd'
     fi
     alias gvim='/cygdrive/c/Windows/gvim.bat'
