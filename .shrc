@@ -229,7 +229,6 @@ esac
 alias github-stats='github-stats --token ${GITHUB_STATS_TOKEN}'
 alias bri='hue set all -b'
 [ "$EDITOR" = vim ] && alias vi='vim'
-alias wp='wp-cli.phar'
 alias yta='youtube-dl --audio-format best -x '
 
 # unset -f _agkdot_cond_aliases
@@ -237,7 +236,7 @@ alias yta='youtube-dl --audio-format best -x '
 # System-specific aliases {{{2
 
 if [ -x /usr/bin/winpty ] || [ -x /usr/local/bin/winpty ]; then 
-   AGKDOT_WINPTY=1
+  AGKDOT_WINPTY=1
 fi
 
 case $AGKDOT_SYSTEMINFO in

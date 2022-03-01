@@ -544,7 +544,7 @@ if (( ${+commands[git]} )); then
   zcomet fpath zsh-users/zsh-completions src
 
   if [[ $OSTYPE != (msys|cygwin) ]]; then     # They're too slow
-    zcomet load zdharma-continuum/fast-syntax-highlighting
+    zcomet load zsh-users/zsh-syntax-highlighting
   fi
 
   zcomet load zsh-users/zsh-history-substring-search
@@ -704,7 +704,6 @@ zsh_update() {
     zcomet self-update
     zcomet update
   fi
-  exec zsh
 }
 
 # }}}1
