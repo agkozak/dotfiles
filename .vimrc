@@ -24,10 +24,6 @@ endfunction
 
 " Tests to see if ale can be used for syntax checking
 function! ALECompatible() abort
-  " ALE seems to slow down Vim startup on WSL2
-  if WSL2()
-    return 0
-  endif
   return ((v:version >= 800 && has('job') && has('timers') && has('channel'))
         \ || has('nvim'))
 endfunction
