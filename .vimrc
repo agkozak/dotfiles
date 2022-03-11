@@ -407,7 +407,7 @@ endif
 " => UI {{{1
 
 " For compatibility with true-color terminals
-if &term == 'xterm-direct'
+if &term ==# 'xterm-direct'
   set termguicolors
 endif
 
