@@ -4,10 +4,8 @@
 
 set editing-mode vi
 
-$if mode=vi
 Control-n: next-history
 Control-p: previous-history
 Control-l: clear-screen
-$endif
 
 set keyseq-timeout 100
