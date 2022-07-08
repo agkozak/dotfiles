@@ -171,7 +171,7 @@ else
 fi
 
 if command -v nvim > /dev/null 2>&1; then
-  echo 'Linking ~/.vimrc to ~/config/nvim/init.vim'
+  echo 'Linking ~/.config/nvim/init.vim to ~/.vimrc'
   if ! command -v vim > /dev/null 2>&1; then
     cp .vimrc "$HOME"
   fi

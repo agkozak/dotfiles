@@ -126,7 +126,7 @@ if has('gui_running')
     " Windows GUI font (Consolas tends to leave artefacts)
     set guifont=DejaVu\ Sans\ Mono:h12:cANSI,Consolas:h12:cANSI
   else
-    set guifont=DejaVu\ Sans\ Mono\ 12
+    set guifont=DejaVu\ Sans\ Mono\ 12,Source\ Code\ Pro\ 12
   endif
 endif
 
