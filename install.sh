@@ -185,6 +185,11 @@ fi
 
 conditional_install vi .exrc
 
+if command -v yash > /dev/null 2>&1; then
+  ln -s "$HOME/.profile" "$HOME/.yash_profile"
+  ln -s "$HOME/.shrc" "$HOME/.yashrc"
+fi
+
 conditional_install zsh .zshenv .zshrc .p10k.zsh
 
 case ${AGKDOT_SYSTEMINFO:=$(uname -a)} in
