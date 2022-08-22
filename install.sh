@@ -186,8 +186,12 @@ fi
 conditional_install vi .exrc
 
 if command -v yash > /dev/null 2>&1; then
-  ln -s "$HOME/.profile" "$HOME/.yash_profile"
-  ln -s "$HOME/.shrc" "$HOME/.yashrc"
+  [ ! -f "$HOME/.yash_profile" ] &&
+    echo "Linking ~/.yash_profile to ~/.profile" ] &&
+    ln -s "$HOME/.profile" "$HOME/.yash_profile"
+  [ ! -f "$HOME/.yashrc" ] &&
+    echo "Linking ~/.yashrc to ~/.shrc" &&
+    ln -s "$HOME/.shrc" "$HOME/.yashrc"
 fi
 
 conditional_install zsh .zshenv .zshrc .p10k.zsh
