@@ -499,7 +499,7 @@ if (( ${+commands[git]} )); then
 
   zcomet trigger zhooks agkozak/zhooks@develop
 
-  if [[ $TERM != 'cons25' ]]; then
+  if [[ $TERM != 'cons25' && ! ${+ASCIINEMA_REC} ]]; then
     # zcomet load jreese/zsh-titles
     zcomet snippet https://github.com/jreese/zsh-titles/blob/master/titles.plugin.zsh
   fi
