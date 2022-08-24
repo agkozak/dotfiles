@@ -1,0 +1,9 @@
+# ~/.config/oil/oshrc - the rc file for osh (Oil)
+#
+# https://github.com/agkozak/dotfiles
+#
+# shellcheck shell=sh
+
+[ -n "$ENV" ] && . "$HOME/.profile"
+# shellcheck source=/dev/null
+. "$ENV"

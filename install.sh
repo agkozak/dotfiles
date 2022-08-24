@@ -157,6 +157,11 @@ if command -v phpstorm > /dev/null 2>&1        ||
   cp .ideavimrc "$HOME"
 fi
 
+if command -v osh > /dev/null 2>&1; then
+  echo 'Installing ~/.config/oil/oshrc'
+  cp .config/oil/oshrc "$HOME/.config/oil"
+fi
+
 conditional_install screen .screenrc
 
 conditional_install sh .profile .shrc
