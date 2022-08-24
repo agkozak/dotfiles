@@ -77,6 +77,7 @@ _agkdot_construct_path  '/mingw64/bin' \
                         "${HOME}/.config/composer/vendor/bin" \
                         "${HOME}/.composer/vendor/bin" \
                         "${HOME}/gems/bin" \
+                        "${HOME}/.rbenv/bin" \
                         "${HOME}/bin"
 
 unset -f _agkdot_construct_path

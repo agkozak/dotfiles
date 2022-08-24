@@ -535,6 +535,9 @@ if has('autocmd')
     " JetBrains IDE color schemes
     autocmd BufNewFile,BufReadPost *.icls set filetype=xml
 
+    " osh (Oil) rc file
+    autocmd BufNewFile,BufReadPost oshrc set filetype=sh
+
     " }}}2
   augroup END
 endif
