@@ -246,10 +246,10 @@ case $AGKDOT_SYSTEMINFO in
       alias php='winpty php'
 
       # Workaround for https://github.com/msys2/MSYS2-packages/issues/1568#issuecomment-847004378
-      # alias choco='temp= tmp= winpty choco'
-      # alias cinst='temp= tmp= winpty cinst'
-      # alias cuninst='temp= tmp= winpty cuninst'
-      # alias cup='temp= tmp= winpty cup'
+      alias choco='temp= tmp= winpty choco'
+      alias cinst='temp= tmp= winpty cinst'
+      alias cuninst='temp= tmp= winpty cuninst'
+      alias cup='temp= tmp= winpty cup'
 
       alias eslint='winpty ${APPDATA}/npm/eslint.cmd'
     fi
