@@ -159,6 +159,7 @@ fi
 
 if command -v osh > /dev/null 2>&1; then
   echo 'Installing ~/.config/oil/oshrc'
+  mkdir -p "${HOME}/.config/oil"
   cp .config/oil/oshrc "$HOME/.config/oil"
 fi
 
