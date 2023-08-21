@@ -473,7 +473,7 @@ fi
 
 # zcomet {{{1
 
-if (( ${+commands[git]} )); then
+if which git &> /dev/null; then
 
   if [[ ! -f ${HOME}/.zcomet/bin/zcomet.zsh ]]; then
     command git clone --branch develop https://github.com/agkozak/zcomet.git \
