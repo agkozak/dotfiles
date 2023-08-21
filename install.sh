@@ -189,7 +189,11 @@ if command -v nvim > /dev/null 2>&1; then
   fi
 fi
 
-conditional_install vi .exrc
+case $(ls -al $(command -v vi)) in
+  *busybox*) ;;
+  *) conditional_install vi .exrc ;;
+esac
+
 
 if command -v yash > /dev/null 2>&1; then
   [ ! -f "$HOME/.yash_profile" ] &&
