@@ -169,11 +169,18 @@ conditional_install sh .profile .shrc
 
 conditional_install tmux .tmux.conf
 
-if [ -e "$HOME/.vimrc" ] && ! cmp ./.vimrc "$HOME/.vimrc" > /dev/null 2>&1; then
-  conditional_install vim .vimrc .exrc
-  vim +PlugInstall +qall
+if command -v vim > /dev/null 2>&1; then
+  if [ -e "$HOME/.vimrc" ] && ! cmp ./.vimrc "$HOME/.vimrc" > /dev/null 2>&1; then
+    conditional_install vim .vimrc .exrc
+    vim +PlugInstall +qall
+  else
+    conditional_install vim .vimrc .exrc
+  fi
 else
-  conditional_install vim .vimrc .exrc
+  case $(ls -al $(command -v vi)) in
+  *busybox*) ;;
+  *) conditional_install vi .exrc ;;
+  esac
 fi
 
 if command -v nvim > /dev/null 2>&1; then
@@ -188,12 +195,6 @@ if command -v nvim > /dev/null 2>&1; then
     ln -s "$HOME/.vimrc" "$HOME/.config/nvim/init.vim"
   fi
 fi
-
-case $(ls -al $(command -v vi)) in
-  *busybox*) ;;
-  *) conditional_install vi .exrc ;;
-esac
-
 
 if command -v yash > /dev/null 2>&1; then
   [ ! -f "$HOME/.yash_profile" ] &&
