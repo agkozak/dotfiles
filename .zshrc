@@ -343,24 +343,6 @@ fi
 zstyle -e ':completion:*:*:(ssh|mosh):*:my-accounts' users-hosts \
 	'[[ -f ${HOME}/.ssh/config && $key = hosts ]] && key=my_hosts reply=()'
 
-# rationalise-dot() {{{2
-# https://grml.org/zsh/zsh-lovers.html
-
-rationalise-dot() {
-  if [[ $LBUFFER == *.. ]]; then
-    LBUFFER+=/..
-  else
-    LBUFFER+=.
-  fi
-}
-
-zle -N rationalise-dot
-bindkey . rationalise-dot
-# Without the following, typing a period aborts incremental history search
-bindkey -M isearch . self-insert
-
-# }}}2
-
 # Use dircolors $LS_COLORS for completion when possible
 zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
 
@@ -411,6 +393,24 @@ if is-at-least 5.7.1; then
   zle -N expand-or-complete-with-dots
   bindkey '^I' expand-or-complete-with-dots
 fi
+
+# }}}2
+
+# rationalise-dot() {{{2
+# https://grml.org/zsh/zsh-lovers.html
+
+rationalise-dot() {
+  if [[ $LBUFFER == *.. ]]; then
+    LBUFFER+=/..
+  else
+    LBUFFER+=.
+  fi
+}
+
+zle -N rationalise-dot
+bindkey . rationalise-dot
+# Without the following, typing a period aborts incremental history search
+bindkey -M isearch . self-insert
 
 # }}}2
 
