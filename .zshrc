@@ -638,7 +638,7 @@ fi
 # }}}1
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh. {{{1
-if (( AGKDOT_P10K)) && is-at-least 5.1; then
+if (( AGKDOT_P10K )) && is-at-least 5.1; then
   [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 fi
 # }}}1
