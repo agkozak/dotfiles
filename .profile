@@ -106,8 +106,8 @@ case $AGKDOT_SYSTEMINFO in
 		MSYS=winsymlinks:nativestrict
     unset PYTHONHOME
 		[ ! -f /usr/bin/zsh ] && SHELL=/usr/bin/bash
-		SSL_CERT_DIR=/mingw64/ssl/certs
-		SSL_CERT_FILE=/mingw64/ssl/cert.pem
+		SSL_CERT_DIR=/usr/ssl/certs
+		SSL_CERT_FILE=/usr/ssl/cert.pem
 	  ;;
   *raspberrypi*)
 	  command -v chromium-browser > /dev/null 2>&1 && BROWSER=chromium-browser
