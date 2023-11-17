@@ -9,3 +9,5 @@ if (Test-Path($ChocolateyProfile)) {
 }
 
 Set-Alias -Name vi -Value vim
+
+Import-Module posh-git
