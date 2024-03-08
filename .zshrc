@@ -12,7 +12,7 @@
 # To run zprof, execute
 #
 #   env ZSH_PROF=1 zsh -ic zprof
-(( ZSH_PROF )) && zmodload zsh/zprof
+(( ${ZSH_PROF:-0} )) && zmodload zsh/zprof
 # }}}2
 
 # xtrace {{{2
@@ -20,7 +20,7 @@
 # To run xtrace, execute
 #
 # AGKDOT_XTRACE=1 zsh
-if (( AGKDOT_XTRACE )); then
+if (( ${AGKDOT_XTRACE:-0} )); then
   (( ${+EPOCHREALTIME} )) || zmodload zsh/datetime
   setopt PROMPT_SUBST
   PS4='+$EPOCHREALTIME %N:%i> '
@@ -52,7 +52,7 @@ _agkdot_benchmark_message() {
   >&2 print
 }
 
-if (( AGKDOT_BENCHMARKS )); then
+if (( ${AGKDOT_BENCHMARKS:-0} )); then
   if (( $+AGKDOT_ZSHENV_BENCHMARK )); then
     _agkdot_benchmark_message \
       ".zshenv: ${AGKDOT_ZSHENV_BENCHMARK}ms"
@@ -69,7 +69,7 @@ autoload -Uz is-at-least
 # Initialization code that may require console input (password prompts, [y/n]
 # confirmations, etc.) must go above this block; everything else may go below.
 if is-at-least 5.1 &&
-   (( AGKDOT_P10K )) &&
+   (( ${AGKDOT_P10K:-0} )) &&
    [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
@@ -79,7 +79,7 @@ fi
 # Source .profile, if necessary {{{1
 
 if [[ $- == *l* && -z $ENV && -f ${HOME}/.profile ]]; then
-  if (( AGKDOT_BENCHMARKS )); then
+  if (( ${AGKDOT_BENCHMARKS:-0} )); then
     typeset -g AGKDOT_PROFILE_TOTAL
     typeset -F SECONDS=0
     source "${HOME}/.profile" &&
@@ -499,7 +499,9 @@ if which git &> /dev/null; then
 
   zcomet trigger zhooks agkozak/zhooks@develop
 
-  if [[ $TERM != 'cons25' ]] && (( ! ${+ASCIINEMA_REC} )); then
+  if [[  $TERM != 'cons25'
+      && $TERM != 'sun-color' ]] &&
+      (( ! ${+ASCIINEMA_REC} )); then
     # zcomet load amyreese/zsh-titles
     zcomet snippet https://github.com/amyreese/zsh-titles/blob/master/titles.plugin.zsh
   fi
@@ -568,7 +570,7 @@ if which git &> /dev/null; then
 
   # AGKOZAK_PROMPT_DEBUG=1
   if ! is-at-least 5.1 ||
-     (( ! AGKDOT_P10K )); then
+     (( ! ${AGKDOT_P10K:-0} )); then
     zcomet load agkozak/agkozak-zsh-prompt@develop
 
     # # An optional way of loading agkozak-zsh-prompt using promptinit
@@ -627,7 +629,7 @@ if which git &> /dev/null; then
 
   # }}}2
 
-  (( AGKDOT_P10K )) && is-at-least 5.1 && zcomet load romkatv/powerlevel10k
+  (( ${AGKDOT_P10K:-0} )) && is-at-least 5.1 && zcomet load romkatv/powerlevel10k
 
 else
 
@@ -638,7 +640,7 @@ fi
 # }}}1
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh. {{{1
-if (( AGKDOT_P10K )) && is-at-least 5.1; then
+if (( ${AGKDOT_P10K:-0} )) && is-at-least 5.1; then
   [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 fi
 # }}}1
@@ -718,7 +720,7 @@ fi
 
 # End .zshrc benchmark {{{1
 
-if (( AGKDOT_BENCHMARKS )); then
+if (( ${AGKDOT_BENCHMARKS:-0} )); then
   typeset -g AGKDOT_ZSHRC_TOTAL
   print -z -f '%.*f' 1 $(( SECONDS * 1000 ))
   read -z AGKDOT_ZSHRC_TOTAL
@@ -733,7 +735,7 @@ unfunction _agkdot_benchmark_message
 # }}}1
 
 # xtrace {{{1
-if (( AGKDOT_XTRACE )); then
+if (( ${AGKDOT_XTRACE:-0} )); then
   unsetopt XTRACE
   exec 2>&3 3>&-
 fi
