@@ -545,9 +545,7 @@ if which git &> /dev/null; then
 
   # zcomet fpath zsh-users/zsh-completions src
 
-  # if [[ $OSTYPE != (msys|cygwin) ]]; then     # They're too slow
-    zcomet load zsh-users/zsh-syntax-highlighting
-  # fi
+  zcomet load zsh-users/zsh-syntax-highlighting
 
   zcomet load zsh-users/zsh-history-substring-search
   bindkey '^[[A' history-substring-search-up
