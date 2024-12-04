@@ -507,7 +507,7 @@ if which git &> /dev/null; then
   fi
 
   zcomet fpath ohmyzsh plugins/gitfast
-  zcomet fpath ohmyzsh plugins/docker
+  # zcomet fpath ohmyzsh plugins/docker
   zcomet trigger zsh-prompt-benchmark romkatv/zsh-prompt-benchmark
 
   zcomet trigger --no-submodules archive unarchive lsarchive \
@@ -543,7 +543,7 @@ if which git &> /dev/null; then
 
   # zcomet load marlonrichert/zsh-autocomplete
 
-  zcomet fpath zsh-users/zsh-completions src
+  # zcomet fpath zsh-users/zsh-completions src
 
   # if [[ $OSTYPE != (msys|cygwin) ]]; then     # They're too slow
     zcomet load zsh-users/zsh-syntax-highlighting
