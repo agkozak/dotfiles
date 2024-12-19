@@ -73,11 +73,13 @@ if [ -z "$ZSH_VERSION" ]; then
       *-256color) AGKDOT_TERM_COLORS=256 ;;
       vt100|vt220|dumb) AGKDOT_TERM_COLORS=-1 ;;
       *)
-        case ${AGKDOT_SYSTEMINFO} in
-          FreeBSD*|DragonFly*) AGKDOT_TERM_COLORS="$(tput Co)" ;;
-          UWIN*) AGKDOT_TERM_COLORS="$(tput cols)" ;;
-          *) AGKDOT_TERM_COLORS="$(tput colors)" ;;
-        esac
+        if type tput > /dev/null 2>&1; then
+          case ${AGKDOT_SYSTEMINFO} in
+            FreeBSD*|DragonFly*) AGKDOT_TERM_COLORS="$(tput Co)" ;;
+            UWIN*) AGKDOT_TERM_COLORS="$(tput cols)" ;;
+            *) AGKDOT_TERM_COLORS="$(tput colors)" ;;
+          esac
+        fi
         ;;
     esac
   fi
@@ -93,7 +95,7 @@ if [ "${AGKDOT_IS_BUSYBOX_LS:-0}" -eq 0 ]; then
     NetBSD*|OpenBSD*|UWIN*) ;;
     SunOS*|FreeBSD*) LS_OPTIONS='--color' ;;
     Darwin*|*DragonFly*)
-      if [ "$AGKDOT_TERM_COLORS" -ge 8 ]; then
+      if [ "${AGKDOT_TERM_COLORS:-0}" -ge 8 ]; then
         CLICLOR=1
         LSCOLORS='ExfxcxdxBxegedAbagacad'
         LS_OPTIONS='-G'
@@ -111,7 +113,7 @@ if [ "${AGKDOT_IS_BUSYBOX_LS:-0}" -eq 0 ]; then
       ;;
   esac
 else
-  [ "$AGKDOT_TERM_COLORS" -ge 8 ] && LS_OPTIONS=--color
+  [ "${AGKDOT_TERM_COLORS:-0}" -ge 8 ] && LS_OPTIONS=--color
 fi
 
 alias ls='/bin/ls ${LS_OPTIONS}'
@@ -126,9 +128,9 @@ elif [ -f "${HOME}/.dircolors" ]; then
     case $AGKDOT_SYSTEMINFO in
       SunOS*) eval "$(dircolors -b)" ;;
       *)
-        if [ -f "${HOME}/.dircolors" ] && [ "$AGKDOT_TERM_COLORS" -ge 256 ]; then
+        if [ -f "${HOME}/.dircolors" ] && [ "${AGKDOT_TERM_COLORS:-0}" -ge 256 ]; then
           eval "$(dircolors -b "${HOME}/.dircolors")"
-        elif [ "$AGKDOT_TERM_COLORS" -ge 8 ]; then
+        elif [ "${AGKDOT_TERM_COLORS:-0}" -ge 8 ]; then
           eval "$(dircolors -b)"
         fi
         ;;
