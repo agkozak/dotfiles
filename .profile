@@ -88,6 +88,9 @@ case $AGKDOT_SYSTEMINFO in
     # Have `ln' create native symlinks in Windows - only works for administrator
     CYGWIN=winsymlinks:native
 		unset PYTHONHOME SSL_CERT_DIR SSL_CERT_FILE
+
+    export WINHOME
+    WINHOME="$USERPROFILE"
 	  ;;
 	Darwin*|FreeBSD*)
 		SSL_CERT_DIR=/etc/ssl/certs
@@ -115,6 +118,9 @@ case $AGKDOT_SYSTEMINFO in
 		[ ! -f /usr/bin/zsh ] && SHELL=/usr/bin/bash
 		SSL_CERT_DIR=/usr/ssl/certs
 		SSL_CERT_FILE=/usr/ssl/cert.pem
+
+    export WINHOME
+    WINHOME="$USERPROFILE"
 	  ;;
   *raspberrypi*)
 	  command -v chromium-browser > /dev/null 2>&1 && BROWSER=chromium-browser
