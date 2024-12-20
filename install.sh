@@ -141,10 +141,8 @@ cp .editorconfig "$HOME"
 
 conditional_install mysql .editrc
 
-if command -v phpstorm > /dev/null 2>&1        ||
-  [ -d '/c/Program Files/JetBrains' ]          ||
-  [ -d '/cygdrive/c/Program Files/JetBrains' ] ||
-  [ -d '/mnt/c/Program Files/JetBrains' ]; then
+if [ -d '/c/Program Files (x86)/JetBrains' ] ||
+   [ -d '/cygdrive/c/Program Files (x86)/JetBrains' ]; then
   echo Installing .ideavimrc
   cp .ideavimrc "$HOME"
 fi
