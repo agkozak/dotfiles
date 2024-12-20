@@ -670,6 +670,11 @@ fi
 # 14.7.2 Static Named Directories {{{2
 
 # Static named directories
+
+# Shortcut to Windows home directory (idea borrowed from @romkatv's zsh4humans
+[[ -d $WINHOME ]] && hash -d w="${WINHOME}"
+
+# Other named directories
 [[ -d ${HOME}/public_html/wp-content ]] &&
   hash -d wp-content="${HOME}/public_html/wp-content"
 [[ -d ${HOME}/.zcomet/repos/agkozak/agkozak-zsh-prompt ]] &&

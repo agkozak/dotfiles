@@ -93,12 +93,19 @@ case $AGKDOT_SYSTEMINFO in
 		SSL_CERT_DIR=/etc/ssl/certs
 		SSL_CERT_FILE=/etc/ssl/cert.pem
 	  ;;
-  # WSL1
+  # WSL
   *[Mm]icrosoft*)
     [ ! -d "${HOME}/.screen" ] && mkdir "${HOME}/.screen" &&
       chmod 700 "${HOME}/.screen"
     export SCREENDIR
     SCREENDIR="${HOME}/.screen"
+
+    # WINHOME should contain the user's Windows home directory
+    if command -v wslpath > /dev/null 2>&1 &&
+        command -v cmd.exe > /dev/null 2>&1; then
+      export WINHOME
+      WINHOME="$(wslpath "$(cmd.exe /C "echo %USERPROFILE%" 2>/dev/null | tr -d '\r')")"
+    fi
     ;;
 	*Msys)
 		export MSYS SSL_CERT_DIR SSL_CERT_FILE
