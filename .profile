@@ -90,7 +90,7 @@ case $AGKDOT_SYSTEMINFO in
 		unset PYTHONHOME SSL_CERT_DIR SSL_CERT_FILE
 
     export WINHOME
-    WINHOME="$USERPROFILE"
+    WINHOME="$(cygpath "$USERPROFILE")"
 	  ;;
 	Darwin*|FreeBSD*)
 		SSL_CERT_DIR=/etc/ssl/certs
@@ -120,7 +120,7 @@ case $AGKDOT_SYSTEMINFO in
 		SSL_CERT_FILE=/usr/ssl/cert.pem
 
     export WINHOME
-    WINHOME="$USERPROFILE"
+    WINHOME="$(cygpath "$USERPROFILE")"
 	  ;;
   *raspberrypi*)
 	  command -v chromium-browser > /dev/null 2>&1 && BROWSER=chromium-browser
