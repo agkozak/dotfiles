@@ -167,7 +167,7 @@ if command -v vim > /dev/null 2>&1; then
     conditional_install vim .vimrc .exrc
   fi
 else
-  case $(ls -al $(command -v vi)) in
+  case $(ls -al "$(command -v vi)") in
   *busybox*) ;;
   *) conditional_install vi .exrc ;;
   esac
@@ -188,7 +188,7 @@ fi
 
 if command -v yash > /dev/null 2>&1; then
   [ ! -f "$HOME/.yash_profile" ] &&
-    echo "Linking ~/.yash_profile to ~/.profile" ] &&
+    echo "Linking ~/.yash_profile to ~/.profile" &&
     ln -s "$HOME/.profile" "$HOME/.yash_profile"
   [ ! -f "$HOME/.yashrc" ] &&
     echo "Linking ~/.yashrc to ~/.shrc" &&
