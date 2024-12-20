@@ -139,14 +139,6 @@ conditional_install csh .cshrc
 echo '.editorconfig'
 cp .editorconfig "$HOME"
 
-if command -v emacs > /dev/null 2>&1; then
-  if [ ! -d "$HOME/.emacs.d" ]; then
-    mkdir "$HOME/.emacs.d"
-  fi
-  echo Installing ~/.emacs.d/init.el
-  cp ./.emacs.d/init.el "$HOME/.emacs.d"
-fi
-
 conditional_install mysql .editrc
 
 if command -v phpstorm > /dev/null 2>&1        ||
