@@ -51,7 +51,6 @@ unset -f _agkdot_dirname
 # Argument:
 #   $1              Program
 ###########################################################
-
 has_command() {
   command -v "$1" > /dev/null 2>&1
 }
