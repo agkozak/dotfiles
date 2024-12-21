@@ -46,6 +46,17 @@ unset -f _agkdot_dirname
 # Functions {{{1
 
 ###########################################################
+# Test to see if a command is available
+#
+# Argument:
+#   $1              Program
+###########################################################
+
+has_command() {
+  command -v "$1" > /dev/null 2>&1
+}
+
+###########################################################
 # Install configuration files only if the program they
 # configure is installed.
 #
@@ -54,7 +65,7 @@ unset -f _agkdot_dirname
 #   $2, $3, $4, etc. Configuration files
 ###########################################################
 conditional_install() {
-  if command -v "$1" > /dev/null 2>&1; then
+  if has_command "$1"; then
     shift
     until [ $# = 0 ]; do
       if [ ! -e "${HOME}/$1" ]; then
@@ -80,12 +91,12 @@ conditional_install() {
 #   [Optional] Branch (if other than master)
 ###########################################################
 github_clone_or_update() {
-  if ! command -v git > /dev/null 2>&1; then
+  if ! has_command git; then
     echo 'Install git.' >&2 && return 1
   fi
   case $1 in
     */*) ;;
-    *) command -v "$1" > /dev/null 2>&1 && shift || return ;;
+    *) has_command "$1" && shift || return ;;
   esac
   AGKDOT_REPO=$(echo "$1" | awk -F/ '{ printf "%s", $2 }')
   echo
@@ -147,7 +158,7 @@ if [ -d '/c/Program Files (x86)/JetBrains' ] ||
   cp .ideavimrc "$HOME"
 fi
 
-if command -v osh > /dev/null 2>&1; then
+if has_command osh; then
   echo 'Installing ~/.config/oil/oshrc'
   mkdir -p "${HOME}/.config/oil"
   cp .config/oil/oshrc "$HOME/.config/oil"
@@ -159,7 +170,7 @@ conditional_install sh .profile .shrc
 
 conditional_install tmux .tmux.conf
 
-if command -v vim > /dev/null 2>&1; then
+if has_command vim; then
   if [ -e "$HOME/.vimrc" ] && ! cmp ./.vimrc "$HOME/.vimrc" > /dev/null 2>&1; then
     conditional_install vim .vimrc .exrc
     vim +PlugInstall +qall
@@ -173,9 +184,9 @@ else
   esac
 fi
 
-if command -v nvim > /dev/null 2>&1; then
+if has_command nvim; then
   echo 'Linking ~/.config/nvim/init.vim to ~/.vimrc'
-  if ! command -v vim > /dev/null 2>&1; then
+  if ! has_command vim; then
     cp .vimrc "$HOME"
   fi
   if [ ! -d "$HOME/.config/nvim" ]; then
@@ -186,7 +197,7 @@ if command -v nvim > /dev/null 2>&1; then
   fi
 fi
 
-if command -v yash > /dev/null 2>&1; then
+if has_command yash; then
   [ ! -f "$HOME/.yash_profile" ] &&
     echo "Linking ~/.yash_profile to ~/.profile" &&
     ln -s "$HOME/.profile" "$HOME/.yash_profile"
