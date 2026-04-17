@@ -69,7 +69,7 @@ conditional_install() {
     until [ $# = 0 ]; do
       if [ ! -e "${HOME}/$1" ]; then
         printf 'Installing %s\n' "$1"
-      elif [ -n "$(find -L "./$1" -prune -newer "${HOME}/$1" > /dev/null 2>&1)" ]; then
+      elif [ -n "$(find -L "./$1" -prune -newer "${HOME}/$1" 2>/dev/null)" ]; then
         printf 'Upgrading %s\n' "$1"
       else
         printf 'Replacing %s\n' "$1"
@@ -103,7 +103,7 @@ github_clone_or_update() {
   if [ ! -d "$AGKDOT_REPO" ]; then
     AGKDOT_CUR_DIR="$PWD"
     git clone https://github.com/"$1".git || return 1
-    cd "$AGKDOT_REPO" || return 1
+    cd "$AGKDOT_REPO" || { rm -rf "$AGKDOT_REPO"; return 1; }
     [ -n "$2" ] && git checkout "$2"
     cd "$AGKDOT_CUR_DIR" || return 1
   else
@@ -223,7 +223,7 @@ esac
 case ${AGKDOT_SYSTEMINFO:=$(uname -a)} in
   *Cygwin)
     echo .Xresources
-    cp .Xresources.cygwin ../.Xresources
+    cp .Xresources.cygwin "$HOME/.Xresources"
     ;;
 esac
 
