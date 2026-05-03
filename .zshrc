@@ -615,6 +615,10 @@ if (( ${+commands[git]} )); then
 
   # }}}2
 
+  zstyle ':omz:plugins:nvm' lazy yes
+  zstyle ':omz:plugins:nvm' lazy-cmd copilot htmlhint
+  [[ -d ~/.nvm ]] && zcomet load ohmyzsh plugins/nvm
+
   (( ${AGKDOT_P10K:-0} )) && is-at-least 5.1 && zcomet load romkatv/powerlevel10k
 
 else
