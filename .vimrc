@@ -12,12 +12,6 @@ silent function! WINDOWS() abort        " Returns true when the environment is
   return (has('win32') || has('win64')) " Windows (but not Cygwin/MSYS2/WSL)
 endfunction
 
-silent function! WSL2() abort
-  if has('unix') && $VIM !~# 'iVim'
-    return ($AGKDOT_SYSTEMINFO =~# 'microsoft' || system('uname -a') =~# 'microsoft')
-  endif
-endfunction
-
 " }}}1
 
 " ALE Compatibility {{{
@@ -145,7 +139,12 @@ set visualbell
 
 " 13 selecting text {{{2
 
-set clipboard=unnamed       " Use system clipboard
+" Use system clipboard
+if has('unnamedplus')
+  set clipboard=unnamed,unnamedplus
+else
+  set clipboard=unnamed
+endif
 
 " }}}2
 
@@ -229,30 +228,30 @@ set fileformats=unix,dos
 " Derived from http://www.valmikam.com/2010/09/vim-auto-backup-configuration.html
 
 " Avoid problems with file permissions
-if $USER !=# 'root'
+"if $USER !=# 'root'
 
-  "enable backup
-  set backup
-  "
-  "Create a backup folder, I like to have it in $HOME/vimbackup/date/
-  let g:backup_day = strftime('%Y.%m.%d')
-  let g:backupdir = $HOME . '/vimbackup/' . g:backup_day
-  silent! let g:xyz = mkdir(g:backupdir, 'p')
-  "
-  "Set the backup folder
-  let g:backup_cmd = 'set backupdir=' . g:backupdir
-  execute g:backup_cmd
-  "
-  "Create an extention for backup file, useful when you are modifying the
-  "same file multiple times in a day. I like to have an extention with
-  "time hour.min.sec
-  let g:backup_time = strftime('.%H.%M.%S')
-  let g:backup_cmd = 'set backupext='. g:backup_time
-  execute g:backup_cmd
-  "
-  "test.cpp is going to be backed up as HOME/vimbackup/date/test.cpp.hour.min.sec
+"  "enable backup
+"  set backup
+"  "
+"  "Create a backup folder, I like to have it in $HOME/vimbackup/date/
+"  let g:backup_day = strftime('%Y.%m.%d')
+"  let g:backupdir = $HOME . '/vimbackup/' . g:backup_day
+"  silent! let g:xyz = mkdir(g:backupdir, 'p')
+"  "
+"  "Set the backup folder
+"  let g:backup_cmd = 'set backupdir=' . g:backupdir
+"  execute g:backup_cmd
+"  "
+"  "Create an extention for backup file, useful when you are modifying the
+"  "same file multiple times in a day. I like to have an extention with
+"  "time hour.min.sec
+"  let g:backup_time = strftime('.%H.%M.%S')
+"  let g:backup_cmd = 'set backupext='. g:backup_time
+"  execute g:backup_cmd
+"  "
+"  "test.cpp is going to be backed up as HOME/vimbackup/date/test.cpp.hour.min.sec
 
-endif
+"endif
 
 " ===================================================== AUTOMATIC BACKUPS
 
@@ -299,10 +298,10 @@ if executable('git') && (executable('curl') || executable('wget') || WINDOWS())
 
     " Set up bundle support
     if CMDEXE() || WINDOWS()
-      set runtimepath=~/.vim,$VIMRUNTIME
+      set runtimepath^=~/.vim
 
     " Avoid multiple threads on CloudLinux and iSH
-    elseif has('unix') && ($AGKDOT_SYSTEMINFO =~# 'lve' 
+    elseif has('unix') && ($AGKDOT_SYSTEMINFO =~# 'lve'
         \ || $AGKDOT_SYSTEMINFO =~# 'iSH'
         \ || $VIM !~# 'iVim'
         \ && system('uname -a') =~# 'lve')
@@ -335,7 +334,7 @@ if executable('git') && (executable('curl') || executable('wget') || WINDOWS())
     Plug 'tpope/vim-commentary'
     Plug 'ciaranm/securemodelines'
     Plug 'fedorenchik/AnsiEsc'
-    
+
     " Git
     if (has('nvim') || has('patch-8.0.902'))
       Plug 'mhinz/vim-signify'
@@ -387,7 +386,7 @@ if executable('git') && (executable('curl') || executable('wget') || WINDOWS())
 
   endif
 else
-  if !has('iVim')
+  if $VIM !~# 'iVim'
     if !executable('git')
       echom 'Please install git.'
     endif
@@ -418,7 +417,7 @@ if &term !=# 'cygwin' && &term !=# 'win32'
     nnoremap <Char-0x07F> <BS>
   endif
 
-  if has('iVim')
+  if $VIM =~# 'iVim'
     silent! colorscheme desert
   else
     let g:zenburn_high_Contrast = 1
@@ -496,7 +495,7 @@ let g:signify_vcs_list = [ 'git' ]
 
 " \cc toggles a vertical ruler in column 80 on and off
 function! ColorColumnToggle() abort
-  if &colorcolumn != 80
+  if &colorcolumn !=# '80'
     set colorcolumn=80
   else
     set colorcolumn=0
@@ -570,34 +569,34 @@ set t_ut= " Disable background color erase
 
 " Project-Specific .vimrc.local files
 " https://www.reddit.com/r/vim/comments/7iy03o/you_aint_gonna_need_it_your_replacement_for/
-function! SourceProjectConfig() abort
-  let l:projectfile = findfile('.vimrc.local', expand('%:p').';')
-  if filereadable(l:projectfile)
-    silent execute 'source' l:projectfile
-  endif
-endfunction
+" function! SourceProjectConfig() abort
+"   let l:projectfile = findfile('.vimrc.local', expand('%:p').';')
+"   if filereadable(l:projectfile)
+"     silent execute 'source' l:projectfile
+"   endif
+" endfunction
 
-if has('autocmd')
-  augroup LocalVimrc
-    autocmd!
-    autocmd BufRead,BufNewFile * call SourceProjectConfig()
+" if has('autocmd')
+"   augroup LocalVimrc
+"     autocmd!
+"     autocmd BufRead,BufNewFile * call SourceProjectConfig()
 
-    if has('nvim')
-      autocmd DirChanged * call SourceProjectConfig()
-    endif
-  augroup END
-endif
+"     if has('nvim')
+"       autocmd DirChanged * call SourceProjectConfig()
+"     endif
+"   augroup END
+" endif
 
 " statusline function (from https://github.com/tpope/tpope/blob/master/.vimrc)
 
 if has('eval')
-	function! SL(function) abort
-	  if exists('*'.a:function)
-	    return call(a:function,[])
-	  else
-	    return ''
-	  endif
-	endfunction
+  function! SL(function) abort
+    if exists('*'.a:function)
+      return call(a:function,[])
+    else
+      return ''
+    endif
+  endfunction
 endif
 
 " ALE linter status {{{2
