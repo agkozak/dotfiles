@@ -47,7 +47,7 @@ fi
 ############################################################
 _agkdot_benchmark_message() {
   (( ${terminfo[colors]:-0} >= 8 )) && >&2 print -Pn '%F{red}'
-  >&2 print -n -- $@
+  >&2 print -n -- "$@"
   (( ${terminfo[colors]:-0} >= 8 )) && >&2 print -Pn '%f'
   >&2 print
 }
@@ -103,8 +103,8 @@ AGKDOT_TERM_COLORS=${terminfo[colors]:-0}
 
 # Source ~/.shrc {{{1
 
-if [[ -f ${HOME}/.shrc ]];then
-  if (( AGKDOT_BENCHMARKS )); then
+if [[ -f ${HOME}/.shrc ]]; then
+  if (( ${+AGKDOT_BENCHMARKS} )); then
     # Try to use zsh's $EPOCHREALTIME to get the benchmarks here rather than
     # using date inside of .shrc
     (( $+EPOCHREALTIME )) || zmodload zsh/datetime
@@ -151,9 +151,9 @@ alias -g H='| head'
 if [[ $OSTYPE == (msys|cygwin) ]] && is-at-least 5.6; then
   less() {
     if [[ -p /dev/fd/0 ]]; then
-      (command less $@)
+      (command less "$@")
     else
-      command less $@
+      command less "$@"
     fi
   }
 fi
@@ -341,7 +341,7 @@ fi
 
 # https://www.zsh.org/mla/users/2015/msg00467.html
 zstyle -e ':completion:*:*:(ssh|mosh):*:my-accounts' users-hosts \
-	'[[ -f ${HOME}/.ssh/config && $key = hosts ]] && key=my_hosts reply=()'
+  '[[ -f ${HOME}/.ssh/config && $key = hosts ]] && key=my_hosts reply=()'
 
 # Use dircolors $LS_COLORS for completion when possible
 zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
@@ -460,26 +460,15 @@ bindkey -M menuselect 'j' vi-down-line-or-history # bottom
 
 # }}}1
 
-# Miscellaneous {{{1
-
-# While tinkering with ZSH-z
-
-if (( SHLVL == 1  && ! $+TMUX )) || [[ $OSTYPE == (msys|cygwin) ]]; then
-  [[ ! -d ${HOME}/.zbackup ]] && mkdir -p "${HOME}/.zbackup"
-  cp "${HOME}/.z" "${HOME}/.zbackup/z_${EPOCHSECONDS}" 2> /dev/null
-fi
-
-# }}}1
-
 # zcomet {{{1
 
-if which git &> /dev/null; then
+if (( ${+commands[git]} )); then
 
   if [[ ! -f ${HOME}/.zcomet/bin/zcomet.zsh ]]; then
     command git clone --branch develop https://github.com/agkozak/zcomet.git \
         ${HOME}/.zcomet/bin
   fi
-  source ~/.zcomet/bin/zcomet.zsh
+  [[ -f ${HOME}/.zcomet/bin/zcomet.zsh ]] && source ~/.zcomet/bin/zcomet.zsh
 
   # agkozak/zsh-z {{{2
 
@@ -618,7 +607,6 @@ if which git &> /dev/null; then
   AGKOZAK_CUSTOM_PROMPT+=$'%(3V.%F{${AGKOZAK_COLORS_BRANCH_STATUS}}%3v%f.)\n'
   # SHLVL and prompt character
   AGKOZAK_CUSTOM_PROMPT+='[%L] %(4V.:.%#) '
-  AGKOZAK_COLORS_BRANCH_STATUS=228
 
   # No right prompt
   AGKOZAK_CUSTOM_RPROMPT=''
@@ -704,7 +692,7 @@ fi
 # restart .zshrc
 ############################################################
 zsh_update() {
-  update_dotfiles
+  (( ${+functions[update_dotfiles]} )) && update_dotfiles
   if (( ${+functions[zcomet]} )); then
     zcomet self-update
     zcomet update
