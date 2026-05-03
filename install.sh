@@ -74,7 +74,7 @@ conditional_install() {
       else
         printf 'Replacing %s\n' "$1"
       fi
-      cp "$1" "$HOME"
+      cp -p "$1" "$HOME"
       shift
     done
   fi
@@ -91,29 +91,24 @@ conditional_install() {
 ###########################################################
 github_clone_or_update() {
   if ! has_command git; then
-    echo 'Install git.' >&2 && return 1
+    printf 'Install git.\n' >&2 && return 1
   fi
   case $1 in
     */*) ;;
     *) has_command "$1" && shift || return ;;
   esac
-  AGKDOT_REPO=$(echo "$1" | awk -F/ '{ printf "%s", $2 }')
-  echo
+  AGKDOT_REPO=${1#*/}
+  printf '\n'
   printf 'GitHub repository %s:\n' "$1"
   if [ ! -d "$AGKDOT_REPO" ]; then
-    AGKDOT_CUR_DIR="$PWD"
     git clone https://github.com/"$1".git || return 1
-    cd "$AGKDOT_REPO" || { rm -rf "$AGKDOT_REPO"; return 1; }
-    [ -n "$2" ] && git checkout "$2"
-    cd "$AGKDOT_CUR_DIR" || return 1
+    (cd "$AGKDOT_REPO" && { [ -z "$2" ] || git checkout "$2"; }) ||
+      { rm -rf "$AGKDOT_REPO"; return 1; }
   else
-    AGKDOT_CUR_DIR="$PWD"
-    cd "$AGKDOT_REPO" || return 1
-    git pull || return 1
-    [ -n "$2" ] && git checkout "$2"
-    cd "$AGKDOT_CUR_DIR" || return 1
+    (cd "$AGKDOT_REPO" && git pull && { [ -z "$2" ] || git checkout "$2"; }) ||
+      return 1
   fi
-  echo
+  printf '\n'
   unset AGKDOT_REPO
 }
 
@@ -121,7 +116,7 @@ github_clone_or_update() {
 
 # Main routine {{{1
 
-[ ! -d prompts ] && mkdir prompts
+[ ! -d prompts ] && mkdir -p prompts
 
 cd prompts || exit
 
@@ -132,11 +127,7 @@ github_clone_or_update kubectl agkozak/polyglot-kube-ps1
 cd .. || exit
 
 if [ -d "${HOME}/dotfiles/plugins/bash-z" ]; then
-  AGKDOT_CUR_DIR="$PWD"
-  cd "${HOME}/dotfiles/plugins/bash-z" || exit
-  git pull
-  cd "$AGKDOT_CUR_DIR" || exit
-  unset AGKDOT_CUR_DIR
+  (cd "${HOME}/dotfiles/plugins/bash-z" && git pull)
 fi
 
 github_clone_or_update dircolors agkozak/dircolors-zenburn &&
@@ -146,19 +137,19 @@ conditional_install bash .bash_profile .bashrc .inputrc
 
 conditional_install csh .cshrc
 
-echo '.editorconfig'
+printf '.editorconfig\n'
 cp .editorconfig "$HOME"
 
 conditional_install mysql .editrc
 
 if [ -d '/c/Program Files (x86)/JetBrains' ] ||
    [ -d '/cygdrive/c/Program Files (x86)/JetBrains' ]; then
-  echo Installing .ideavimrc
+  printf 'Installing .ideavimrc\n'
   cp .ideavimrc "$HOME"
 fi
 
 if has_command osh; then
-  echo 'Installing ~/.config/oil/oshrc'
+  printf 'Installing ~/.config/oil/oshrc\n'
   mkdir -p "${HOME}/.config/oil"
   cp .config/oil/oshrc "$HOME/.config/oil"
 fi
@@ -177,31 +168,32 @@ if has_command vim; then
     conditional_install vim .vimrc .exrc
   fi
 else
-  case $(ls -al "$(command -v vi)") in
-  *busybox*) ;;
-  *) conditional_install vi .exrc ;;
+  case $(readlink -f "$(command -v vi)" 2>/dev/null) in
+    *busybox*) ;;
+    *) conditional_install vi .exrc ;;
   esac
 fi
 
 if has_command nvim; then
-  echo 'Linking ~/.config/nvim/init.vim to ~/.vimrc'
+  printf 'Linking ~/.config/nvim/init.vim to ~/.vimrc\n'
   if ! has_command vim; then
     cp .vimrc "$HOME"
   fi
   if [ ! -d "$HOME/.config/nvim" ]; then
-    ln -s "$HOME/.vim" "$HOME/.config/nvim"
+    [ -d "${HOME}/.vim" ] && ln -s "$HOME/.vim" "$HOME/.config/nvim"
   fi
   if [ ! -f "$HOME/.config/nvim/init.vim" ]; then
+    mkdir -p "$HOME/.config/nvim"
     ln -s "$HOME/.vimrc" "$HOME/.config/nvim/init.vim"
   fi
 fi
 
 if has_command yash; then
   [ ! -f "$HOME/.yash_profile" ] &&
-    echo "Linking ~/.yash_profile to ~/.profile" &&
+    printf 'Linking ~/.yash_profile to ~/.profile\n' &&
     ln -s "$HOME/.profile" "$HOME/.yash_profile"
   [ ! -f "$HOME/.yashrc" ] &&
-    echo "Linking ~/.yashrc to ~/.shrc" &&
+    printf 'Linking ~/.yashrc to ~/.shrc\n' &&
     ln -s "$HOME/.shrc" "$HOME/.yashrc"
 fi
 
@@ -212,7 +204,7 @@ case ${AGKDOT_SYSTEMINFO:=$(uname -a)} in
     conditional_install sh .login_conf
 	;;
 	*raspberrypi*)
-		echo .config/lxterminal
+		printf '.config/lxterminal\n'
 		cp .config/lxterminal/lxterminal.conf "$HOME/.config/lxterminal"
 	;;
 	*Msys|*Cygwin)
@@ -222,7 +214,7 @@ esac
 
 case ${AGKDOT_SYSTEMINFO:=$(uname -a)} in
   *Cygwin)
-    echo .Xresources
+    printf '.Xresources\n'
     cp .Xresources.cygwin "$HOME/.Xresources"
     ;;
 esac
