@@ -6,7 +6,7 @@
 
 # Begin .bashrc benchmark {{{1
 
-if (( AGKDOT_BENCHMARKS )) && [[ $OSTYPE != freebsd* ]]; then
+if (( AGKDOT_BENCHMARKS )) && [[ $OSTYPE != freebsd* && $OSTYPE != darwin* ]]; then
   (( AGKDOT_BASHRC_START=$(date +%s%N)/1000000 ))
 fi
 
@@ -31,14 +31,15 @@ shopt -s checkwinsize
 
 # Omit .exe on completion
 case $OSTYPE in
-  msys|cygwin) shopt -s completion_strip_exe ;;
+  msys|cygwin) [[ "${BASH_VERSINFO[0]:-0}" -ge 4 ]] &&
+    shopt -s completion_strip_exe ;;
 esac
 
 shopt -s extglob  # Extended globbing
 
 # If set, the pattern "**" used in a pathname expansion context will
 # match all files and zero or more directories and subdirectories.
-shopt -s globstar
+[[ "${BASH_VERSINFO[0]:-0}" -ge 4 ]] && shopt -s globstar
 
 shopt -s histappend # Append to the history file (don't overwrite it)
 
@@ -48,8 +49,7 @@ shopt -s histappend # Append to the history file (don't overwrite it)
 
 # don't put duplicate lines or lines starting with space in the history.
 HISTCONTROL=ignoreboth
-HISTFILESIZE=10000  # Number of lines to save to history file
-HISTSIZE=12000      # Number of history items to keep in memory
+HISTFILESIZE=100000  # Number of lines to save to history file
 
 # }}}1
 
@@ -78,12 +78,12 @@ fi
 [[ $OSTYPE == freebsd* ]] && _Z_NO_RESOLVE_SYMLINKS=1
 
 # shellcheck source=/dev/null
-if [[ -f ${HOME}/dotfiles/plugins/bash-z/bash-z.sh ]]; then
-  . "${HOME}/dotfiles/plugins/bash-z/bash-z.sh"
+if [[ -f ${HOME}/dotfiles/plugins/bash-z/z.sh ]]; then
+  . "${HOME}/dotfiles/plugins/bash-z/z.sh"
 else
   if [[ ! -d ${HOME}/dotfiles/plugins/z ]]; then
     if type git &> /dev/null; then
-      git clone https://github.com/rupa/z.git "$HOME/dotfiles/plugins/z"
+      git clone https://github.com/rupa/z.git "${HOME}/dotfiles/plugins/z"
     else
       >&2 echo 'Please install Git.'
     fi
@@ -100,7 +100,7 @@ fi
 
 # End .bashrc benchmark {{{
 
-if (( AGKDOT_BENCHMARKS )) && [[ $OSTYPE != freebsd* ]]; then
+if (( AGKDOT_BENCHMARKS )) && [[ $OSTYPE != freebsd* && $OSTYPE != darwin* ]]; then
   (( AGKDOT_BASHRC_FINISH=$(date +%s%N)/1000000 ))
   >&2 echo ".bashrc loaded in $((AGKDOT_BASHRC_FINISH-AGKDOT_BASHRC_START))ms total."
 fi
@@ -111,9 +111,9 @@ unset AGKDOT_BASHRC_START AGKDOT_BASHRC_FINISH
 
 # source ~/.bashrc.local {{{1
 
-if [[ -f "$HOME/.bashrc.local" ]]; then
+if [[ -f "${HOME}/.bashrc.local" ]]; then
   # shellcheck source=/dev/null
-  . "$HOME/.bashrc.local"
+  . "${HOME}/.bashrc.local"
 fi
 
 # }}}1
