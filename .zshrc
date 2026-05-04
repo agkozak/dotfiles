@@ -214,7 +214,7 @@ setopt EXTENDED_HISTORY       # Save time stamps and durations
 # work because of CageFS and SecureLinks. When necessary, disable the history
 # file rather than experience constant error messages.
 () {
-  setopt EQUALS
+  setopt LOCAL_OPTIONS EQUALS
 
   if [[ -f '/var/.cagefs/.cagefs.token' && $ZSH_VERSION == 4.3.11 ]]; then
     unset HISTFILE
