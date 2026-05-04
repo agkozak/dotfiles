@@ -12,7 +12,7 @@
 
 case $- in
   *i*) ;;
-  *) exit ;;
+  *) return ;;
 esac
 
 # }}}1
@@ -231,14 +231,14 @@ esac
 alias github-stats='github-stats --token ${GITHUB_STATS_TOKEN}'
 alias bri='hue set all -b'
 [ "$EDITOR" = vim ] && alias vi='vim'
-alias yta='youtube-dl --audio-format best -x '
+alias yta='yt-dlp --audio-format best -x '
 alias bat='batcat'
 
 # unset -f _agkdot_cond_aliases
 
 # System-specific aliases {{{2
 
-if [ -x /usr/bin/winpty ] || [ -x /usr/local/bin/winpty ]; then 
+if [ -x /usr/bin/winpty ] || [ -x /usr/local/bin/winpty ]; then
   AGKDOT_WINPTY=1
 fi
 
@@ -277,7 +277,7 @@ case $AGKDOT_SYSTEMINFO in
     alias gvim='/cygdrive/c/Windows/gvim.bat'
     ;;
   *CYGWIN_NT-10.0-WOW*|*[Mm]icrosoft*)
-    tmux='tmux -S "${HOME}/.tmsock"'
+    alias tmux='tmux -S "${HOME}/.tmsock"'
     ;;
   *raspberrypi*)
     alias temp='/opt/vc/bin/vcgencmd measure_temp | egrep "[0-9.]{4,}" -o'
@@ -323,7 +323,7 @@ _agkdot_is_bsd_sh() {
 if [ -z "$ZSH_VERSION" ] ||
    [ "$0" = 'bash' ]     ||
    [ "$0" = 'ksh' ]      ||
-   [ "$0" = 'sh' ] && ! _agkdot_is_bsd_sh; then
+   { [ "$0" = 'sh' ] && ! _agkdot_is_bsd_sh; }; then
   if [ -f "${HOME}/dotfiles/prompts/polyglot/polyglot.sh" ]; then
     # shellcheck source=/dev/null
     . "${HOME}/dotfiles/prompts/polyglot/polyglot.sh"
@@ -382,24 +382,22 @@ f() {
 update_dotfiles() {
   [ -n "$ZSH_VERSION" ] && setopt NO_WARN_CREATE_GLOBAL \
       NO_WARN_NESTED_VAR > /dev/null 2>&1
-
-  CUR_DIR="$PWD"
   printf '%s' 'Updating dotfiles: '
-  cd "${HOME}/dotfiles" || exit
-  git pull && ./install.sh
-  # shellcheck disable=SC2044
-  for i in $(find . -name '.git'); do
-    i=${i#\./}
-    [ "$i" = '.git' ] && continue
-    i=${i%/\.git}
-    printf 'Updating %s: ' "${i##*/}"
-    cd "$i" || exit
-    cd ..
-    git pull
-    cd "${HOME}/dotfiles" || exit
-  done
-  cd "$CUR_DIR" || exit
-  unset CUR_DIR i
+  (
+    cd "${HOME}/dotfiles" || exit 1
+    git pull && ./install.sh
+    # shellcheck disable=SC2044
+    for i in $(find . -name '.git'); do
+      i=${i#\./}
+      [ "$i" = '.git' ] && continue
+      i=${i%/\.git}
+      printf 'Updating %s: ' "${i##*/}"
+      cd "$i" || exit 1
+      cd ..
+      git pull
+      cd "${HOME}/dotfiles" || exit 1
+    done
+  )
 }
 
 # }}}1
