@@ -53,7 +53,7 @@ export PAGER
 PAGER='less'
 
 # More modern utilities on Solaris
-# case $systeminfo in
+# case $AGKDOT_SYSTEMINFO in
 #   SunOS*) PATH="$(getconf PATH):$PATH" ;;
 # esac
 
@@ -62,9 +62,9 @@ export PATH
 _agkdot_construct_path() {
   while [ $# -gt 0 ]; do
     if [ -d "$1" ]; then
-      case $PATH in
-        $1:*|*:$1:*|*:$1) ;;
-        *) PATH="$1:${PATH}" ;;
+      case ":$PATH:" in
+        *":$1:"*) ;;
+        *) PATH="$1${PATH:+:$PATH}" ;;
       esac
     fi
     shift
@@ -82,23 +82,42 @@ _agkdot_construct_path  '/mingw64/bin' \
 
 unset -f _agkdot_construct_path
 
+# The user's Windows home directory rarely changes. Cache it to avoid forking
+# cygpath/cmd.exe on every login.
+_agkdot_cache_winhome() {
+  _f="${XDG_CACHE_HOME:-${HOME}/.cache}/agkdot/winhome"
+  if [ -s "$_f" ]; then
+    IFS= read -r WINHOME < "$_f"
+  else
+    WINHOME=$("$@")
+    [ -n "$WINHOME" ] && mkdir -p "${_f%/*}" 2>/dev/null &&
+      printf '%s\n' "$WINHOME" > "$_f" 2>/dev/null
+  fi
+  unset _f
+}
+
+_agkdot_winhome_wsl() {
+  wslpath "$(cmd.exe /C "echo %USERPROFILE%" 2>/dev/null | tr -d '\r')"
+}
+
 case $AGKDOT_SYSTEMINFO in
-	*Cygwin)
-		export CYGWIN
+  *Cygwin)
+    export CYGWIN
     # Have `ln' create native symlinks in Windows - only works for administrator
     CYGWIN=winsymlinks:native
-		unset PYTHONHOME SSL_CERT_DIR SSL_CERT_FILE
+    unset PYTHONHOME SSL_CERT_DIR SSL_CERT_FILE
 
     export WINHOME
-    WINHOME="$(cygpath "$USERPROFILE")"
-	  ;;
-	Darwin*|FreeBSD*)
-		SSL_CERT_DIR=/etc/ssl/certs
-		SSL_CERT_FILE=/etc/ssl/cert.pem
-	  ;;
+    _agkdot_cache_winhome cygpath "$USERPROFILE"
+    ;;
+  Darwin*|FreeBSD*)
+    export SSL_CERT_DIR SSL_CERT_FILE
+    SSL_CERT_DIR=/etc/ssl/certs
+    SSL_CERT_FILE=/etc/ssl/cert.pem
+    ;;
   # WSL
   *[Mm]icrosoft*)
-    [ ! -d "${HOME}/.screen" ] && mkdir "${HOME}/.screen" &&
+    [ ! -d "${HOME}/.screen" ] && mkdir -p "${HOME}/.screen" &&
       chmod 700 "${HOME}/.screen"
     export SCREENDIR
     SCREENDIR="${HOME}/.screen"
@@ -107,25 +126,30 @@ case $AGKDOT_SYSTEMINFO in
     if command -v wslpath > /dev/null 2>&1 &&
         command -v cmd.exe > /dev/null 2>&1; then
       export WINHOME
-      WINHOME="$(wslpath "$(cmd.exe /C "echo %USERPROFILE%" 2>/dev/null | tr -d '\r')")"
+      _agkdot_cache_winhome _agkdot_winhome_wsl
     fi
     ;;
-	*Msys)
-		export MSYS SSL_CERT_DIR SSL_CERT_FILE
-		# Have `ln' create native symlinks in Windows - only works for administrator
-		MSYS=winsymlinks:nativestrict
+  *Msys)
+    export MSYS SSL_CERT_DIR SSL_CERT_FILE
+    # Have `ln' create native symlinks in Windows - only works for administrator
+    MSYS=winsymlinks:nativestrict
     unset PYTHONHOME
-		[ ! -f /usr/bin/zsh ] && SHELL=/usr/bin/bash
-		SSL_CERT_DIR=/usr/ssl/certs
-		SSL_CERT_FILE=/usr/ssl/cert.pem
+    [ ! -f /usr/bin/zsh ] && SHELL=/usr/bin/bash
+    SSL_CERT_DIR=/usr/ssl/certs
+    SSL_CERT_FILE=/usr/ssl/cert.pem
 
     export WINHOME
-    WINHOME="$(cygpath "$USERPROFILE")"
-	  ;;
+    _agkdot_cache_winhome cygpath "$USERPROFILE"
+    ;;
   *raspberrypi*)
-	  command -v chromium-browser > /dev/null 2>&1 && BROWSER=chromium-browser
+    if command -v firefox > /dev/null 2>&1; then
+      export BROWSER
+      BROWSER=firefox
+    fi
     ;;
 esac
+
+unset -f _agkdot_cache_winhome _agkdot_winhome_wsl
 
 # }}}1
 
@@ -146,7 +170,7 @@ esac
 # Source ~/.profile.local {{{1
 
 if [ -f "$HOME/.profile.local" ]; then
-	. "$HOME/.profile.local"
+  . "$HOME/.profile.local"
 fi
 
 # }}}1
