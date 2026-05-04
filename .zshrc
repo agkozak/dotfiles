@@ -180,8 +180,8 @@ autoload -Uz edit-command-line zmv
 
 # History environment variables
 HISTFILE="${HOME}/.zsh_history"
-HISTSIZE=1200000000  # Larger than $SAVEHIST for HIST_EXPIRE_DUPS_FIRST to work
-SAVEHIST=1000000000
+HISTSIZE=1000000  # Larger than $SAVEHIST for HIST_EXPIRE_DUPS_FIRST to work
+SAVEHIST=500000
 
 # In the line editor, number of matches to show before asking permission
 LISTMAX=9999
