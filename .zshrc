@@ -465,8 +465,11 @@ bindkey -M menuselect 'j' vi-down-line-or-history # bottom
 if (( ${+commands[git]} )); then
 
   if [[ ! -f ${HOME}/.zcomet/bin/zcomet.zsh ]]; then
-    command git clone --branch develop https://github.com/agkozak/zcomet.git \
-        ${HOME}/.zcomet/bin
+    >&2 print 'Bootstrapping zcomet from github.com/agkozak/zcomet...'
+    if ! command git clone --branch develop https://github.com/agkozak/zcomet.git \
+        ${HOME}/.zcomet/bin; then
+      >&2 print 'zcomet clone failed; plugin setup will be skipped.'
+    fi
   fi
   [[ -f ${HOME}/.zcomet/bin/zcomet.zsh ]] && source ~/.zcomet/bin/zcomet.zsh
 
