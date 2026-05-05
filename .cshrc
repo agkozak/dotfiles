@@ -2,14 +2,24 @@
 #
 # https://github.com/agkozak/dotfiles
 
-alias h		history 100
-alias j		jobs -l
-alias la	ls -a
-alias lf	ls -FA
-alias ll	ls -lA
-if ( `uname -s` != 'SunOS' ) then
-	alias ls	ls -G
-endif
+alias h   history 100
+alias j   jobs -l
+alias la  ls -a
+alias lf  ls -FA
+alias ll  ls -lA
+
+switch ( "`uname -s`" )
+    case Linux:
+        alias ls 'ls --color=auto'
+        breaksw
+    case SunOS:
+        # leave ls alone
+        breaksw
+    default:
+        alias ls 'ls -G'   # BSD, macOS
+        breaksw
+endsw
+
 alias .. cd ..
 alias ... cd ../..
 
@@ -18,43 +28,46 @@ umask 22
 
 set path = (/sbin /bin /usr/sbin /usr/bin /usr/games /usr/local/sbin /usr/local/bin $HOME/bin)
 
-setenv	CLICOLOR true
+setenv  CLICOLOR true
 
-setenv	PAGER   less
-setenv	BLOCKSIZE	K
+setenv  PAGER   less
+setenv  BLOCKSIZE K
 
 if ($?prompt) then
-	# An interactive shell -- set some stuff up
-	if ( $?tcsh ) then
-		switch ($TERM)
-			case "xterm*":
-			set prompt = '%{\033]0;%n@%m:%~\007%}[%B%n@%m%b] %B%~%b%# '
-				breaksw
-			default:
-			set prompt = '[%B%n@%m%b] %B%~%b%# '
-				breaksw
-		endsw
-	endif
-	set autolist = ambiguous
-	set complete = enhance
-	set correct = cmd
-	set filec
-	set autocorrect
-	set filec
-	set history = 100
-	set savehist = 100
-	# Use history to aid expansion
+  # An interactive shell -- set some stuff up
+  if ( $?tcsh ) then
+
+    switch ($TERM)
+      case "xterm*":
+        set prompt = '%{\033]0;%n@%m:%~\007%}[%B%n@%m%b] %B%~%b%# '
+        breaksw
+      default:
+        set prompt = '[%B%n@%m%b] %B%~%b%# '
+        breaksw
+    endsw
+
+    set autolist = ambiguous
+    set complete = enhance
+    set correct = cmd
+    set autocorrect
     set autoexpand
     set autorehash
-	set mail = (/var/mail/$USER)
-	if ( $?tcsh ) then
-		bindkey "^W" backward-delete-word
-		bindkey -k up history-search-backward
-		bindkey -k down history-search-forward
+
+  endif
+
+  set filec
+  set history = 10000
+  set savehist = 10000
+  # Use history to aid expansion
+  set mail = (/var/mail/$USER)
+  if ( $?tcsh ) then
     bindkey -v
+    bindkey "^W" backward-delete-word
+    bindkey -k up history-search-backward
+    bindkey -k down history-search-forward
     # Like Zsh's `setopt AUTO_CD'
     set implicitcd
-	endif
+  endif
 endif
 
 # Enable colors and such for git diffs
