@@ -50,3 +50,20 @@ That will copy relevant configuration files to your home directory. The files co
 in any POSIX-compliant shell. `update_dotfiles` is a function that pulls in the latest commits to my dotfiles repository and does what is necessary to update the system.
 
 My `.zshrc` also provides a `zsh_update` function that runs `update_dotfiles`  and then uses my own plugin manager ([`zcomet`](https://github.com/agkozak/zcomet)) to update the various plugins.
+
+<!--
+
+tmux and Zsh startup time
+
+If interactive Zsh startup feels slow inside `tmux` or `screen`, the delay
+might be coming from terminal capability queries rather than from the dotfiles
+themselves. If `tmux` or `screen` does not pass those queries through to the
+outer terminal, Zsh can wait about half a second during startup.
+
+Recent `tmux` versions can be configured to allow passthrough:
+
+```tmux
+set -g allow-passthrough on
+```
+
+-->
