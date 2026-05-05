@@ -2,12 +2,12 @@
 #
 # https://github.com/agkozak/dotfiles
 #
-# shellcheck shell=bash disable=SC1090,SC1091,SC2039
+# shellcheck shell=bash disable=SC1090,SC1091
 
-# Source global definitions in CloudLinux if shell is interactive
-[[ -n $PS1 && -f /etc/bashrc ]] && source /etc/bashrc
+# CloudLinux/RHEL: /etc/profile may not source /etc/bashrc
+[[ $- == *i* && -f /etc/bashrc ]] && source /etc/bashrc
 
-source "$HOME/.profile"
+source "${HOME}/.profile"
 
 [[ $- == *i* && -f ${HOME}/.bashrc ]] && source "${HOME}/.bashrc"
 
