@@ -78,6 +78,7 @@ _agkdot_construct_path  '/mingw64/bin' \
                         "${HOME}/.composer/vendor/bin" \
                         "${HOME}/gems/bin" \
                         "${HOME}/.rbenv/bin" \
+                        "${HOME}/.cargo/bin" \
                         "${HOME}/bin"
 
 unset -f _agkdot_construct_path
@@ -176,3 +177,5 @@ fi
 # }}}1
 
 # vim: fdm=marker:ts=2:sts=2:sw=2:ai:et
+
+. "$HOME/.cargo/env"
