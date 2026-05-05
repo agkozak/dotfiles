@@ -3,7 +3,10 @@ set noerrorbells
 set ignorecase
 set nolist
 set number
+set report=2
+set ruler
 set showmatch
 set shiftwidth=2
-set showmode
 set tabstop=2
+set tags=tags
+set wrapscan
