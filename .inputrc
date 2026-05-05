@@ -2,10 +2,31 @@
 #
 # https://github.com/agkozak/dotfiles
 
-set editing-mode vi
+$include /etc/inputrc
 
+set editing-mode vi
+set keyseq-timeout 100
+
+set show-mode-in-prompt on
+set vi-ins-mode-string "(ins) "
+set vi-cmd-mode-string "(cmd) "
+
+set completion-ignore-case on
+set show-all-if-ambiguous on
+set colored-stats on
+set colored-completion-prefix on
+set mark-symlinked-directories on
+set visible-stats on
+set bell-style none
+
+set keymap vi-insert
 Control-n: next-history
 Control-p: previous-history
 Control-l: clear-screen
 
-set keyseq-timeout 100
+set keymap vi-command
+Control-l: clear-screen
+k: history-search-backward
+j: history-search-forward
+
+# vim: ts=2:sw=2:et:sts=2
