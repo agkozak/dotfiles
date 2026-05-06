@@ -206,6 +206,12 @@ setopt LIST_PACKED        # Use columns of varying widths
 
 # }}}2
 
+# 16.2.3 Expansion and Globbing {{{2
+
+setopt EQUALS             # Perform = filename expansion
+
+# }}}2
+
 # 16.2.4 History {{{2
 
 setopt EXTENDED_HISTORY       # Save time stamps and durations
@@ -213,17 +219,14 @@ setopt EXTENDED_HISTORY       # Save time stamps and durations
 # Old installments of CloudLinux have a /bin/zsh whose history file will not
 # work because of CageFS and SecureLinks. When necessary, disable the history
 # file rather than experience constant error messages.
-() {
-  setopt LOCAL_OPTIONS EQUALS
 
-  if [[ -f '/var/.cagefs/.cagefs.token' && $ZSH_VERSION == 4.3.11 ]]; then
-    unset HISTFILE
-  # A custom build of Zsh on CloudLinux may require HIST_FCNTL_LOCK
-  # See https://gist.github.com/agkozak/50a9bf7da14b9f060c68124418ac5217
-  elif [[ =zsh == '/bin/zsh' ]]; then
-    setopt HIST_FCNTL_LOCK
-  fi
-}
+if [[ -f '/var/.cagefs/.cagefs.token' && $ZSH_VERSION == 4.3.11 ]]; then
+  unset HISTFILE
+# A custom build of Zsh on CloudLinux may require HIST_FCNTL_LOCK
+# See https://gist.github.com/agkozak/50a9bf7da14b9f060c68124418ac5217
+elif [[ =zsh == '/bin/zsh' ]]; then
+  setopt HIST_FCNTL_LOCK
+fi
 
 setopt HIST_IGNORE_SPACE    # Ignore command lines with leading spaces
 setopt HIST_VERIFY          # Reload results of history expansion before executing
@@ -462,7 +465,7 @@ bindkey -M menuselect 'j' vi-down-line-or-history # bottom
 
 # zcomet {{{1
 
-if (( ${+commands[git]} )); then
+if [[ -x =git ]]; then
 
   if [[ ! -f ${HOME}/.zcomet/bin/zcomet.zsh ]]; then
     >&2 print 'Bootstrapping zcomet from github.com/agkozak/zcomet...'
@@ -509,10 +512,10 @@ if (( ${+commands[git]} )); then
   # # fzf does not run on a number of platforms and its install script requires
   # # bash
   # if [[ $OSTYPE != (msys|cygwin|solaris*) ]] &&
-  #    (( ${+commands[bash]} )) &&
+  #    [[ -x =bash ]] &&
   #    is-at-least 5; then
   #   zcomet load junegunn/fzf shell completion.zsh key-bindings.zsh
-  #   (( ${+commands[fzf]} )) || ~[fzf]/install --bin
+  #   [[ -x =fzf ]] || ~[fzf]/install --bin
   # fi
 
   # }}}2
@@ -739,3 +742,5 @@ fi
 # }}}1
 
 # vim: ai:fdm=marker:ts=2:et:sts=2:sw=2
+
+. "$HOME/.cargo/env"
