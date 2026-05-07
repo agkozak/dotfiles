@@ -742,5 +742,3 @@ fi
 # }}}1
 
 # vim: ai:fdm=marker:ts=2:et:sts=2:sw=2
-
-. "$HOME/.cargo/env"
