@@ -292,6 +292,7 @@ set viewoptions=folds,options,cursor,unix,slash
 " This plugin arrangement requires git (and curl, except in Windows
 " CMD.EXE/Powershell
 if executable('git') && (executable('curl') || executable('wget') || WINDOWS())
+    \ && !($MOBANOACL !=# '' && !has('timers'))
 
   " Only try to load plugins if vim-plug is installed
   if filereadable(expand('~/.vim/autoload/plug.vim'))
@@ -317,7 +318,7 @@ if executable('git') && (executable('curl') || executable('wget') || WINDOWS())
     Plug 'mhinz/vim-startify'
     if ALECompatible()
       Plug 'dense-analysis/ale'
-    else
+    elseif has('file_in_path')
       Plug 'scrooloose/syntastic'
     endif
     if &term !=# 'win32'
