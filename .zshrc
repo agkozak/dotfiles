@@ -498,7 +498,7 @@ if [[ -x =git ]]; then
       && $TERM != 'sun-color' ]] &&
       (( ! ${+ASCIINEMA_REC} )); then
     # zcomet load amyreese/zsh-titles
-    zcomet snippet https://github.com/amyreese/zsh-titles/blob/master/titles.plugin.zsh
+    # zcomet snippet https://github.com/amyreese/zsh-titles/blob/master/titles.plugin.zsh
   fi
 
   zcomet fpath ohmyzsh plugins/gitfast
