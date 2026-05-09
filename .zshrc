@@ -540,7 +540,7 @@ if [[ -x =git ]]; then
 
   # zcomet fpath zsh-users/zsh-completions src
 
-  (( ${+modules[zsh/regex]} )) && zcomet load zsh-users/zsh-syntax-highlighting
+  (( ! ${+modules[zsh/regex]} )) && zcomet load zsh-users/zsh-syntax-highlighting
 
   zcomet load zsh-users/zsh-history-substring-search
   bindkey ${terminfo[kcuu1]} history-substring-search-up
