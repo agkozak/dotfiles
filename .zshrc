@@ -148,7 +148,9 @@ alias -g H='| head'
 # Prevent pipes to `less' from being pushed into the background on MSYS2 and
 # Cygwin
 
-if [[ $OSTYPE == (msys|cygwin) ]] && is-at-least 5.6; then
+if [[ $OSTYPE == (msys|cygwin) ]] &&
+  is-at-least 5.6 &&
+  [[ -n $MOBANOACL ]]; then
   less() {
     if [[ -p /dev/fd/0 ]]; then
       (command less "$@")
@@ -540,7 +542,7 @@ if [[ -x =git ]]; then
 
   # zcomet fpath zsh-users/zsh-completions src
 
-  (( ! ${+modules[zsh/regex]} )) && zcomet load zsh-users/zsh-syntax-highlighting
+  (( ${+modules[zsh/regex]} )) && zcomet load zsh-users/zsh-syntax-highlighting
 
   zcomet load zsh-users/zsh-history-substring-search
   bindkey ${terminfo[kcuu1]} history-substring-search-up
