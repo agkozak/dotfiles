@@ -624,7 +624,7 @@ if [[ -x =git ]]; then
   # }}}2
 
   #nvm
-  zcomet trigger node npm nvm copilot htmlhint ohmyzsh plugins/nvm
+  zcomet trigger node npm nvm npx copilot htmlhint yo ohmyzsh plugins/nvm
 
   (( ${AGKDOT_P10K:-0} )) && is-at-least 5.1 && zcomet load romkatv/powerlevel10k
 
