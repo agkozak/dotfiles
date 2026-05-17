@@ -531,7 +531,26 @@ if [[ -x =git ]]; then
   #   zcomet load agkozak/polyglot-kube-ps1
   # fi
 
-  zcomet trigger clip open pbcopy pbpaste zpm-zsh/clipboard
+  # zcomet trigger clip open pbcopy pbpaste zpm-zsh/clipboard
+
+  open() {
+    if [[ $OSTYPE == linux* && -r /proc/version &&
+          $(< /proc/version) == *[Mm]icrosoft* ]]; then
+      explorer.exe $@
+    elif (( ${+commands[xdg-open]} )); then
+      xdg-open $@
+    elif [[ $OSTYPE == darwin* ]]; then
+      command open $@
+    elif [[ $OSTYPE == cygwin* ]]; then
+      if (( ${+commands[cygstart]} )); then
+        cygstart $@
+      else
+        start $@
+      fi
+    elif [[ $OSTYPE == msys ]]; then
+      explorer.exe $(cygpath -w $@)
+    fi
+  }
 
   # if is-at-least 5 && [[ $AGKDOT_SYSTEMINFO != *ish* ]]; then
   #   zcomet load agkozak/zui
