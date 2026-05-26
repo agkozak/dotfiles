@@ -64,6 +64,13 @@ fi
 
 autoload -Uz is-at-least
 
+# Recent builds of zsh can leak terminal-query replies under screen when ZLE
+# starts. Disable those startup queries there.
+if [[ $TERM == screen* ]]; then
+  typeset -ga .term.extensions
+  [[ ${.term.extensions[(Ie)-query]} -eq 0 ]] && .term.extensions+=(-query)
+fi
+
 # powerlevel10k Instant Prompt {{{1
 
 # Initialization code that may require console input (password prompts, [y/n]
