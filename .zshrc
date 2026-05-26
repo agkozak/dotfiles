@@ -633,7 +633,7 @@ if [[ -x =git ]]; then
   # Git status
   AGKOZAK_CUSTOM_PROMPT+=$'%(3V.%F{${AGKOZAK_COLORS_BRANCH_STATUS}}%3v%f.)\n'
   # SHLVL and prompt character
-  AGKOZAK_CUSTOM_PROMPT+='[%L] %(4V.:.%#) '
+  AGKOZAK_CUSTOM_PROMPT+=$'%{\e[0m%}[%L] %(4V.:.%#) '
 
   # No right prompt
   AGKOZAK_CUSTOM_RPROMPT=''
