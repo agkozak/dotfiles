@@ -561,7 +561,7 @@ if [[ -x =git ]]; then
 
   # zcomet fpath zsh-users/zsh-completions src
 
-  zcomet load zsh-users/zsh-syntax-highlighting
+  is-at-least 5.0 && zcomet load zsh-users/zsh-syntax-highlighting
 
   zcomet load zsh-users/zsh-history-substring-search
   if [[ $TERM != 'dumb' ]]; then
