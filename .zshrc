@@ -564,8 +564,10 @@ if [[ -x =git ]]; then
   zcomet load zsh-users/zsh-syntax-highlighting
 
   zcomet load zsh-users/zsh-history-substring-search
-  bindkey ${terminfo[kcuu1]} history-substring-search-up
-  bindkey ${terminfo[kcud1]} history-substring-search-down
+  if [[ $TERM != 'dumb' ]]; then
+    bindkey ${terminfo[kcuu1]} history-substring-search-up
+    bindkey ${terminfo[kcud1]} history-substring-search-down
+  fi
   bindkey -M vicmd 'k' history-substring-search-up
   bindkey -M vicmd 'j' history-substring-search-down
   bindkey '^P' history-substring-search-up
