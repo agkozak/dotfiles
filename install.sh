@@ -220,7 +220,7 @@ case ${AGKDOT_SYSTEMINFO:=$(uname -a)} in
 esac
 
 # Clean up after some frameworks {{{1
-rm -f "$HOME/.zlogin" "$HOME/.zlogin.zwc" "$HOME/.zlogout" "$HOME/zlogout.zwc"
+rm -f "$HOME/.zlogout" "$HOME/zlogout.zwc"
 
 # }}}1
 
