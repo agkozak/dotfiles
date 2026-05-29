@@ -197,7 +197,7 @@ if has_command yash; then
     ln -s "$HOME/.shrc" "$HOME/.yashrc"
 fi
 
-conditional_install zsh .zshenv .zshrc .zlogin .p10k.zsh
+conditional_install zsh .zshenv .zshrc .zprofile .p10k.zsh
 
 case ${AGKDOT_SYSTEMINFO:=$(uname -a)} in
 	*BSD*|DragonFly*)
