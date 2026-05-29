@@ -226,7 +226,7 @@ rm -f "$HOME/.zlogout" "$HOME/zlogout.zwc"
 
 # Clean up outdated files {{{1
 
-[ -f "${HOME}/.zprofile" ] && rm "${HOME}/.zprofile"
+[ -f "${HOME}/.zlogin" ] && rm "${HOME}/.zlogin"
 
 # Return to original directory {{{1
 

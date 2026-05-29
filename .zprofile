@@ -1,3 +1,7 @@
+# ~/.zprofile
+#
+# https://github.com/agkozak/dotfiles
+
 if [[ -o interactive &&
       -t 0 &&
       -t 1 &&
