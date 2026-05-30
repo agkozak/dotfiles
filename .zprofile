@@ -2,6 +2,8 @@
 #
 # https://github.com/agkozak/dotfiles
 
+[[ -f ${HOME}/.profile ]] && source "${HOME}/.profile"
+
 if [[ -o interactive &&
       -t 0 &&
       -t 1 &&
