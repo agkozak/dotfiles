@@ -2,7 +2,7 @@
 #
 # https://github.com/agkozak/dotfiles
 
-[[ -f ${HOME}/.profile ]] && source "${HOME}/.profile"
+[[ -z $ENV && -f ${HOME}/.profile ]] && source "${HOME}/.profile"
 
 if [[ -o interactive &&
       -t 0 &&
@@ -12,3 +12,5 @@ if [[ -o interactive &&
       -z $INSIDE_EMACS ]]; then
       (( ${+commands[tmux]} )) && exec tmux
 fi
+
+# vim: ai:fdm=marker:ts=2:et:sts=2:sw=2

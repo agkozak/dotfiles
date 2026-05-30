@@ -7,6 +7,8 @@
 
 # Begin .zshrc benchmarks {{{1
 
+typeset -F SECONDS=0
+
 # zprof {{{2
 #
 # To run zprof, execute
@@ -52,14 +54,6 @@ _agkdot_benchmark_message() {
   >&2 print
 }
 
-if (( ${AGKDOT_BENCHMARKS:-0} )); then
-  if (( $+AGKDOT_ZSHENV_BENCHMARK )); then
-    _agkdot_benchmark_message \
-      ".zshenv: ${AGKDOT_ZSHENV_BENCHMARK}ms"
-    unset AGKDOT_ZSHENV_BENCHMARK
-  fi
-fi
-
 # }}}1
 
 autoload -Uz is-at-least
@@ -79,19 +73,8 @@ fi
 # Source .profile, if necessary {{{1
 
 if [[ $- == *l* && -z $ENV && -f ${HOME}/.profile ]]; then
-  if (( ${AGKDOT_BENCHMARKS:-0} )); then
-    typeset -g AGKDOT_PROFILE_TOTAL
-    typeset -F SECONDS=0
-    source "${HOME}/.profile" &&
-        print -z -f '%.*f' 1 $(( SECONDS * 1000 )) &&
-        read -z AGKDOT_PROFILE_TOTAL &&
-        _agkdot_benchmark_message ".profile: ${AGKDOT_PROFILE_TOTAL}ms"
-    unset AGKDOT_PROFILE_TOTAL
-  else
-    source "${HOME}/.profile"
-  fi
+  source "${HOME}/.profile"
 fi
-typeset -F SECONDS=0
 
 # }}}1
 
@@ -104,7 +87,7 @@ AGKDOT_TERM_COLORS=${terminfo[colors]:-0}
 # Source ~/.shrc {{{1
 
 if [[ -f ${HOME}/.shrc ]]; then
-  if (( ${+AGKDOT_BENCHMARKS} )); then
+  if (( ${AGKDOT_BENCHMARKS:-0} )); then
     # Try to use zsh's $EPOCHREALTIME to get the benchmarks here rather than
     # using date inside of .shrc
     (( $+EPOCHREALTIME )) || zmodload zsh/datetime
@@ -745,7 +728,7 @@ if (( ${AGKDOT_BENCHMARKS:-0} )); then
   print -z -f '%.*f' 1 $(( SECONDS * 1000 ))
   read -z AGKDOT_ZSHRC_TOTAL
   _agkdot_benchmark_message \
-    ".zshrc: ${AGKDOT_ZSHRC_TOTAL}ms TOTAL (inc. .profile, .shrc, etc.)"
+    ".zshrc: ${AGKDOT_ZSHRC_TOTAL}ms TOTAL (inc. .shrc)"
   unset AGKDOT_ZSHRC_TOTAL
   typeset -i SECONDS
 fi
