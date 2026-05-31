@@ -43,7 +43,7 @@ if [ "${AGKDOT_BENCHMARKS:-0}" -eq 1 ]    &&
    [ ! -h /bin/date ]; then
   case $AGKDOT_SYSTEMINFO in
     # Neither does BSD date
-    *BSD*|DragonFly*) ;;
+    *BSD*|DragonFly*|Darwin*) ;;
     *) AGKDOT_SHRC_START="$(/bin/date +%s%N)" ;;
   esac
 fi
@@ -104,7 +104,7 @@ if [ "${AGKDOT_IS_BUSYBOX_LS:-0}" -eq 0 ]; then
     # GNU ls
     *)
       LS_OPTIONS='--group-directories-first -F -h -T 0'
-      [ "${AGKDOT_TERM_COLORS:-0}" -ge 8 ] && LS_OPTIONS="${LS_OPTIONS} --color"
+      [ "${AGKDOT_TERM_COLORS:-0}" -ge 8 ] && LS_OPTIONS="${LS_OPTIONS} --color=auto"
       case $AGKDOT_SYSTEMINFO in
         *Msys|*Cygwin|*[Mm]icrosoft*)
           LS_OPTIONS="${LS_OPTIONS} --hide=NTUSER* --hide=ntuser*"
@@ -113,7 +113,7 @@ if [ "${AGKDOT_IS_BUSYBOX_LS:-0}" -eq 0 ]; then
       ;;
   esac
 else
-  [ "${AGKDOT_TERM_COLORS:-0}" -ge 8 ] && LS_OPTIONS=--color
+  [ "${AGKDOT_TERM_COLORS:-0}" -ge 8 ] && LS_OPTIONS='--color=auto'
 fi
 
 alias ls='/bin/ls ${LS_OPTIONS}'
@@ -128,7 +128,7 @@ elif [ -f "${HOME}/.dircolors" ]; then
     case $AGKDOT_SYSTEMINFO in
       SunOS*) eval "$(dircolors -b)" ;;
       *)
-        if [ -f "${HOME}/.dircolors" ] && [ "${AGKDOT_TERM_COLORS:-0}" -ge 256 ]; then
+        if [ "${AGKDOT_TERM_COLORS:-0}" -ge 256 ]; then
           eval "$(dircolors -b "${HOME}/.dircolors")"
         elif [ "${AGKDOT_TERM_COLORS:-0}" -ge 8 ]; then
           eval "$(dircolors -b)"
@@ -143,8 +143,8 @@ AGKDOT_ORIG_TERM=$TERM
 case $AGKDOT_SYSTEMINFO in
   *ish*|UWIN*) ;;
   *solaris*)
-    alias dir='dir --color'
-    alias vdir='vdir --color'
+    alias dir='dir --color=auto'
+    alias vdir='vdir --color=auto'
     case $AGKDOT_SYSTEMINFO in
       *joyent*)
         alias grep='grep --color'
@@ -156,8 +156,8 @@ case $AGKDOT_SYSTEMINFO in
   *)
     if [ "${AGKDOT_IS_BUSYBOX_LS:-0}" -eq 0 ] &&
        [ "${AGKDOT_TERM_COLORS:-0}"   -ge 8 ]; then
-      alias dir='dir --color'
-      alias vdir='vdir --color'
+      alias dir='dir --color=auto'
+      alias vdir='vdir --color=auto'
       alias grep='grep --color'
       alias fgrep='fgrep --color'
       alias egrep='egrep --color'
@@ -167,7 +167,7 @@ esac
 
 # Zenburn-like colors for GNU grep
 export GREP_COLORS
-GREP_COLORS='sl=49;39:cx=49;39:mt=48;5;22;38;5;230;1:fn=49;38;5;224:ln=49;38;5;78:bn=49;38;5;78:se=49;38;5;116';
+GREP_COLORS='sl=49;39:cx=49;39:mt=48;5;22;38;5;230;1:fn=49;38;5;224:ln=49;38;5;78:bn=49;38;5;78:se=49;38;5;116'
 
 unset AGKDOT_IS_BUSYBOX_LS
 
@@ -232,7 +232,7 @@ alias github-stats='github-stats --token ${GITHUB_STATS_TOKEN}'
 alias bri='hue set all -b'
 [ "$EDITOR" = vim ] && alias vi='vim'
 alias yta='yt-dlp --audio-format best -x '
-alias bat='batcat'
+command -v batcat > /dev/null 2>&1 && alias bat='batcat'
 
 # unset -f _agkdot_cond_aliases
 
@@ -279,10 +279,9 @@ case $AGKDOT_SYSTEMINFO in
   *CYGWIN_NT-10.0-WOW*|*[Mm]icrosoft*)
     alias tmux='tmux -S "${HOME}/.tmsock"'
     ;;
-  *raspberrypi*)
-    alias temp='/opt/vc/bin/vcgencmd measure_temp | egrep "[0-9.]{4,}" -o'
-    ;;
 esac
+
+[ -f /etc/rpi-issue ] && alias temp='/opt/vc/bin/vcgencmd measure_temp | egrep "[0-9.]{4,}" -o'
 
 # WSL aliases {{{3
 
@@ -321,9 +320,9 @@ _agkdot_is_bsd_sh() {
 }
 
 if [ -z "$ZSH_VERSION" ] ||
-   [ "$0" = 'bash' ]     ||
-   [ "$0" = 'ksh' ]      ||
-   { [ "$0" = 'sh' ] && ! _agkdot_is_bsd_sh; }; then
+   [ "${0#-}" = 'bash' ]     ||
+   [ "${0#-}" = 'ksh' ]      ||
+   { [ "${0#-}" = 'sh' ] && ! _agkdot_is_bsd_sh; }; then
   if [ -f "${HOME}/dotfiles/prompts/polyglot/polyglot.sh" ]; then
     # shellcheck source=/dev/null
     . "${HOME}/dotfiles/prompts/polyglot/polyglot.sh"
@@ -348,7 +347,7 @@ case $KSH_VERSION in
     # shellcheck disable=SC3040
     set -o globstar
     # Search path for autoloadable functions
-    FPATH='/usr/share/ksh/functions:~/.func'
+    FPATH="/usr/share/ksh/functions:${HOME}/.func"
     ;;
   *'PD KSH'*)
     # shellcheck disable=SC3040
@@ -366,14 +365,6 @@ if [ -z "$ZSH_VERSION" ]; then
     *) HISTFILE="${HOME}/.ksh_history" ;;
   esac
 fi
-
-# }}}1
-
-# find shorthand {{{1
-
-f() {
-  find . -name "$1" 2>&1 | grep -v 'Permission denied'
-}
 
 # }}}1
 
@@ -405,7 +396,7 @@ update_dotfiles() {
 # Disable flow control -- allows use of Ctrl-Q as tmux/screen prefix {{{1
 
 # zsh might be running in ksh emulation mode
-if [ "$0" = 'ksh' ] || [ -z "$ZSH_VERSION" ]; then
+if [ "${0#-}" = 'ksh' ] || [ -z "$ZSH_VERSION" ]; then
   stty -ixon
 fi
 

@@ -59,27 +59,33 @@ PAGER='less'
 
 export PATH
 
+# Directories are listed at the call site in priority order (highest first).
+# Each existing, not-already-present directory is collected in that order and
+# the whole block is prepended ahead of the inherited PATH.
 _agkdot_construct_path() {
+  _agkdot_new_path=
   while [ $# -gt 0 ]; do
     if [ -d "$1" ]; then
-      case ":$PATH:" in
+      case ":${PATH}:${_agkdot_new_path}:" in
         *":$1:"*) ;;
-        *) PATH="$1${PATH:+:$PATH}" ;;
+        *) _agkdot_new_path="${_agkdot_new_path:+${_agkdot_new_path}:}$1" ;;
       esac
     fi
     shift
   done
+  [ -n "$_agkdot_new_path" ] && PATH="${_agkdot_new_path}${PATH:+:${PATH}}"
+  unset _agkdot_new_path
 }
 
-_agkdot_construct_path  '/mingw64/bin' \
-                        "${HOME}/.local/bin" \
-                        "${HOME}/.cabal/bin" \
-                        "${HOME}/.config/composer/vendor/bin" \
-                        "${HOME}/.composer/vendor/bin" \
-                        "${HOME}/gems/bin" \
-                        "${HOME}/.rbenv/bin" \
+_agkdot_construct_path  "${HOME}/bin" \
                         "${HOME}/.cargo/bin" \
-                        "${HOME}/bin"
+                        "${HOME}/.rbenv/bin" \
+                        "${HOME}/gems/bin" \
+                        "${HOME}/.composer/vendor/bin" \
+                        "${HOME}/.config/composer/vendor/bin" \
+                        "${HOME}/.cabal/bin" \
+                        "${HOME}/.local/bin" \
+                        '/mingw64/bin'
 
 unset -f _agkdot_construct_path
 
@@ -111,15 +117,19 @@ case $AGKDOT_SYSTEMINFO in
     export WINHOME
     _agkdot_cache_winhome cygpath "$USERPROFILE"
     ;;
-  Darwin*|FreeBSD*)
+  Darwin*)
+    export SSL_CERT_FILE
+    SSL_CERT_FILE=/etc/ssl/cert.pem
+    ;;
+  FreeBSD*)
     export SSL_CERT_DIR SSL_CERT_FILE
     SSL_CERT_DIR=/etc/ssl/certs
     SSL_CERT_FILE=/etc/ssl/cert.pem
     ;;
   # WSL
   *[Mm]icrosoft*)
-    [ ! -d "${HOME}/.screen" ] && mkdir -p "${HOME}/.screen" &&
-      chmod 700 "${HOME}/.screen"
+    [ ! -d "${HOME}/.screen" ] && mkdir -p "${HOME}/.screen"
+    chmod 700 "${HOME}/.screen"
     export SCREENDIR
     SCREENDIR="${HOME}/.screen"
 
@@ -131,7 +141,7 @@ case $AGKDOT_SYSTEMINFO in
     fi
     ;;
   *Msys)
-    export MSYS SSL_CERT_DIR SSL_CERT_FILE
+    export MSYS SHELL SSL_CERT_DIR SSL_CERT_FILE
     # Have `ln' create native symlinks in Windows - only works for administrator
     MSYS=winsymlinks:nativestrict
     unset PYTHONHOME
@@ -142,13 +152,14 @@ case $AGKDOT_SYSTEMINFO in
     export WINHOME
     _agkdot_cache_winhome cygpath "$USERPROFILE"
     ;;
-  *raspberrypi*)
-    if command -v firefox > /dev/null 2>&1; then
-      export BROWSER
-      BROWSER=firefox
-    fi
-    ;;
 esac
+
+if [ -f /etc/rpi-issue ]; then
+  if command -v firefox > /dev/null 2>&1; then
+    export BROWSER
+    BROWSER=firefox
+  fi
+fi
 
 unset -f _agkdot_cache_winhome _agkdot_winhome_wsl
 
@@ -163,7 +174,6 @@ case $AGKDOT_SYSTEMINFO in
       000|0000) umask 022 ;;
     esac
     ;;
-  *) ;;
 esac
 
 # }}}1
