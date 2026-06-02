@@ -98,16 +98,15 @@ fi
 #   . "${HOME}/dotfiles/prompts/polyglot-kube-ps1/polyglot-kube-ps1.sh"
 # fi
 
-# End .bashrc benchmark {{{
+# End .bashrc benchmark {{{1
 
 if (( AGKDOT_BENCHMARKS )) && [[ $OSTYPE != freebsd* && $OSTYPE != darwin* ]]; then
   (( AGKDOT_BASHRC_FINISH=$(date +%s%N)/1000000 ))
   >&2 echo ".bashrc loaded in $((AGKDOT_BASHRC_FINISH-AGKDOT_BASHRC_START))ms total."
+  unset AGKDOT_BASHRC_START AGKDOT_BASHRC_FINISH
 fi
 
-unset AGKDOT_BASHRC_START AGKDOT_BASHRC_FINISH
-
-# }}}
+# }}}1
 
 # source ~/.bashrc.local {{{1
 
