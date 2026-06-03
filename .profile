@@ -85,7 +85,8 @@ _agkdot_construct_path  "${HOME}/bin" \
                         "${HOME}/.config/composer/vendor/bin" \
                         "${HOME}/.cabal/bin" \
                         "${HOME}/.local/bin" \
-                        '/mingw64/bin'
+                        '/mingw64/bin' \
+                        '/clang64/bin'
 
 unset -f _agkdot_construct_path
 
