@@ -117,6 +117,9 @@ case $AGKDOT_SYSTEMINFO in
 
     export WINHOME
     _agkdot_cache_winhome cygpath "$USERPROFILE"
+
+    export TMUX_TMPDIR="${HOME}/.tmux-cygwin"
+    [ ! -d "$TMUX_TMPDIR" ] && mkdir -p "$TMUX_TMPDIR"
     ;;
   Darwin*)
     export SSL_CERT_FILE
