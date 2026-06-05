@@ -155,10 +155,6 @@ case $AGKDOT_SYSTEMINFO in
 
     export WINHOME
     _agkdot_cache_winhome cygpath "$USERPROFILE"
-
-    export TMUX_TMPDIR
-    TMUX_TMPDIR="${HOME}/.tmux-msys2"
-    [ ! -d "$TMUX_TMPDIR" ] && mkdir -p "$TMUX_TMPDIR"
     ;;
 esac
 
