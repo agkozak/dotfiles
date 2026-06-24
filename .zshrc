@@ -643,6 +643,8 @@ else
 fi
 
 [[ -d ${HOME}/eq78/completions/zsh ]] && fpath+=( ${HOME}/eq78/completions/zsh )
+[[ -d ${WINHOME}/eq78/completions/zsh ]] &&
+  fpath+=( ${WINHOME}/eq78/completions/zsh )
 
 # }}}1
 
