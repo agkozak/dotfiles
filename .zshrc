@@ -357,6 +357,13 @@ zstyle ':completion:*' group-name ''
 # In menu-style completion, give a status bar
 zstyle ':completion:*' select-prompt '%SScrolling active: current selection at %p%s'
 
+# Tab your way through MSYS2's fake mount
+if [[ $AGKDOT_SYSTEMINFO == MSYS* ]]; then
+  zstyle ':completion:*' accept-exact-dirs true
+  zstyle ':completion:*' path-completion true
+  zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
+fi
+
 # vi mode exceptions {{{2
 
 [[ -o vi ]] || bindkey -v
@@ -634,6 +641,8 @@ else
   >&2 print 'Please install Git.'
 
 fi
+
+[[ -d ${HOME}/eq78/completions/zsh ]] && fpath+=( ${HOME}/eq78/completions/zsh )
 
 # }}}1
 
