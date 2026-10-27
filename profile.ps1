@@ -1,1 +1,1 @@
-﻿Import-Module posh-git
+﻿. "$PSScriptRoot\polyglot-prompt.ps1"

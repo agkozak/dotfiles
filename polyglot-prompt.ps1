@@ -1,0 +1,317 @@
+###########################################################################
+# Polyglot-style prompt for PowerShell
+#
+# A PowerShell approximation of Polyglot Prompt (polyglot.sh):
+#
+#   (1) (venv) user@host ~/.../foo/bar (main &*+x!>?) $
+#
+# Usage: either paste this into profile.ps1, or keep it as a separate file
+# next to your profile and dot-source it from there:
+#
+#   . "$PSScriptRoot\polyglot-prompt.ps1"
+#
+# ("Dot-sourcing" runs a script in the caller's scope, like `. file` in sh,
+# so the functions and variables defined here stay available afterward.)
+#
+# Settings (environment variables, as in polyglot.sh):
+#   $env:POLYGLOT_PROMPT_DIRTRIM   number of trailing path elements to show
+#                                  (default 2; 0 disables abbreviation)
+#   $env:POLYGLOT_SHOW_UNTRACKED   set to 0 to ignore untracked files
+#                                  (faster in very large repos)
+###########################################################################
+
+
+# -------------------------------------------------------------------------
+# One-time setup (runs once, when the profile loads)
+# -------------------------------------------------------------------------
+
+# Python's venv Activate.ps1 normally redefines the prompt function to add
+# "(venv) ". This tells it not to; we display the venv ourselves below.
+$env:VIRTUAL_ENV_DISABLE_PROMPT = 1
+
+# Default the dirtrim setting to 2 if the user hasn't set it.
+# (-not on an unset/empty variable is $true, much like [ -z "$VAR" ].)
+if (-not $env:POLYGLOT_PROMPT_DIRTRIM) { $env:POLYGLOT_PROMPT_DIRTRIM = 2 }
+
+# Are we running elevated? This is the equivalent of polyglot's
+# _polyglot_is_superuser, computed once rather than on every prompt.
+#
+# - $IsWindows exists only in PowerShell 6+. In Windows PowerShell 5.1 it's
+#   undefined (so $null, i.e. false), which is why we also check for the
+#   'Desktop' edition, which only 5.1 reports.
+# - On Windows we ask .NET whether the current identity is in the
+#   Administrators role. Note that `if` in PowerShell is an expression, so
+#   its result can be assigned directly to a variable.
+# - Elsewhere we just shell out to `id -u`, as polyglot does.
+$PolyglotIsAdmin = if ($IsWindows -or $PSVersionTable.PSEdition -eq 'Desktop') {
+  ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()
+  ).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
+} else {
+  (id -u) -eq 0   # `id` outputs a string; -eq coerces the 0 to match
+}
+
+# Like polyglot, show "@host" only over SSH or when running as admin/root.
+# The SSH_* variables are set by sshd; an unset $env: variable is $null.
+# MachineName may be fully qualified, so keep only the part before the
+# first dot (cf. ${HOST%%.*}). -split takes a regex, hence '\.'.
+$PolyglotHost = if ($env:SSH_CONNECTION -or $env:SSH_CLIENT -or $env:SSH_TTY -or $PolyglotIsAdmin) {
+  '@' + ([Environment]::MachineName -split '\.')[0]
+} else {
+  ''
+}
+
+
+# -------------------------------------------------------------------------
+# Get-PolyglotDir: abbreviated working directory
+#
+# PowerShell's version of _polyglot_prompt_dirtrim / bash's PROMPT_DIRTRIM:
+#   $HOME              -> ~
+#   $HOME/a/b/c/d      -> ~/.../c/d
+#   /usr/local/share   -> .../local/share
+#
+# Parameters:
+#   $Trim  number of trailing path elements to keep (0 = no abbreviation)
+# -------------------------------------------------------------------------
+function Get-PolyglotDir([int]$Trim = 2) {
+  # The native separator: '\' on Windows, '/' elsewhere.
+  $sep = [IO.Path]::DirectorySeparatorChar
+
+  # $PWD is a PathInfo object, not a string; .Path is the string form.
+  $path = $PWD.Path
+
+  # Exactly at home: just '~'. (`return` exits the function early; any
+  # value given to it becomes the function's output.)
+  if ($path -eq $HOME) { return '~' }
+
+  # Under home: strip the $HOME prefix and remember to put '~' back.
+  # The comparison is case-insensitive, which is right for Windows paths
+  # (slightly loose on Linux, but harmless in practice). We match
+  # "$HOME$sep" rather than "$HOME" so that /home/alexander doesn't count
+  # as being under /home/alex.
+  $tilde = ''
+  if ($path.StartsWith("$HOME$sep", [StringComparison]::OrdinalIgnoreCase)) {
+    $path  = $path.Substring($HOME.Length)   # leaves e.g. '\a\b\c'
+    $tilde = '~'
+  }
+
+  # Split into elements, dropping the empty string before the leading
+  # separator (the equivalent of polyglot's `shift` after `set --`).
+  $parts = $path.Split($sep, [StringSplitOptions]::RemoveEmptyEntries)
+
+  # Nothing to abbreviate: return the path as is.
+  if ($Trim -le 0 -or $parts.Count -le $Trim) { return "$tilde$path" }
+
+  # Keep the last $Trim elements. Negative indices count from the end, and
+  # -2..-1 is a range, so $parts[-2..-1] yields the last two elements.
+  # -join glues them back together with the separator.
+  $tail = $parts[-$Trim..-1] -join $sep
+
+  # The last expression's value is the function's output (no `return`
+  # needed); this is an if/else expression yielding one string or the other.
+  if ($tilde) { "~$sep...$sep$tail" } else { "...$sep$tail" }
+}
+
+
+# -------------------------------------------------------------------------
+# Get-PolyglotGit: branch name and status symbols
+#
+# Returns ' (branch SYMBOLS)', or '' outside a Git repository.
+#
+# Symbols, in polyglot's order:
+#   &   behind the upstream        *   ahead of the upstream
+#   &*  diverged (both of the above)
+#   +   new file staged            x   file deleted
+#   !   file modified              >   file renamed
+#   ?   untracked files
+#
+# Instead of parsing human-readable `git status` output, as polyglot.sh
+# must for portability, this uses the machine-readable porcelain v2
+# format, which is locale-independent and stable across Git versions.
+# Sample output:
+#
+#   # branch.oid 3f2a9c1e...
+#   # branch.head main
+#   # branch.upstream origin/main
+#   # branch.ab +1 -2
+#   1 .M N... 100644 100644 100644 <hash> <hash> file.txt
+#   2 R. N... 100644 100644 100644 <hash> <hash> R100 new.txt	old.txt
+#   ? scratch.txt
+#
+# Lines starting with '1' are ordinary changes and '2' are renames or
+# copies. The two characters after the type ("XY") give the status in the
+# index (X) and the working tree (Y); '.' means unchanged.
+# -------------------------------------------------------------------------
+function Get-PolyglotGit {
+  # Honor POLYGLOT_SHOW_UNTRACKED=0, like polyglot's `git status -uno`.
+  $u = if ($env:POLYGLOT_SHOW_UNTRACKED -eq '0') { 'no' } else { 'normal' }
+
+  # Output from a native command arrives as an array of strings, one per
+  # line. --no-optional-locks is the flag form of GIT_OPTIONAL_LOCKS=0, so
+  # the prompt never fights with other git processes for the index lock.
+  # 2>$null discards stderr ("not a git repository", etc.).
+  $status = git --no-optional-locks status --porcelain=v2 --branch --untracked-files=$u 2>$null
+
+  # $LASTEXITCODE holds the exit code of the last native command (like $?
+  # in sh). Non-zero means no repository here, or git isn't installed.
+  if ($LASTEXITCODE -ne 0) { return '' }
+
+  # Initialize state. Chained assignment works as in C: a = b = value.
+  $branch = $oid = ''
+  $ahead = $behind = 0
+  $new = $del = $mod = $ren = $untracked = $false
+
+  # When given an array, `switch` loops over every element (here, every
+  # line of git's output). -Regex makes each case a regular expression,
+  # and after a successful match the automatic $Matches hashtable holds the
+  # capture groups: $Matches[1], $Matches[2], and so on.
+  #
+  # Unlike sh's `case`, a PowerShell switch keeps testing the remaining
+  # cases after a match. That's harmless here because these patterns are
+  # mutually exclusive.
+  switch -Regex ($status) {
+    # Commit hash, needed only for a detached HEAD.
+    '^# branch\.oid (\S+)' { $oid = $Matches[1] }
+
+    # Branch name, or the literal '(detached)'.
+    '^# branch\.head (.+)' { $branch = $Matches[1] }
+
+    # Ahead/behind counts. This line appears only if the branch has an
+    # upstream. The [int] casts convert the captured strings to numbers.
+    '^# branch\.ab \+(\d+) -(\d+)' {
+      $ahead  = [int]$Matches[1]
+      $behind = [int]$Matches[2]
+    }
+
+    # A changed tracked file. Group 1 is the line type (1 or 2); groups 2
+    # and 3 are X and Y. `$x, $y = a, b` is multiple assignment.
+    '^([12]) (.)(.)' {
+      $x, $y = $Matches[2], $Matches[3]
+
+      # 'A' only makes sense in the index: a newly added, staged file
+      # (polyglot's "new file:").
+      if ($x -eq 'A') { $new = $true }
+
+      # Deleted or modified, whether staged (X) or not (Y).
+      if ($x -eq 'D' -or $y -eq 'D') { $del = $true }
+      if ($x -eq 'M' -or $y -eq 'M') { $mod = $true }
+
+      # Type 2 lines are always renames/copies.
+      if ($Matches[1] -eq '2') { $ren = $true }
+    }
+
+    # An untracked file.
+    '^\?' { $untracked = $true }
+  }
+
+  # Detached HEAD: show the abbreviated commit hash instead, as polyglot
+  # does with `git rev-parse --short HEAD`.
+  if ($branch -eq '(detached)') { $branch = $oid.Substring(0, 7) }
+
+  # Build the symbol string. Integers are truthy when non-zero, so
+  # `if ($behind)` means "behind by at least one commit". Because behind
+  # is tested before ahead, a diverged branch naturally gets '&*'.
+  $sym = ''
+  if ($behind)    { $sym += '&' }
+  if ($ahead)     { $sym += '*' }
+  if ($new)       { $sym += '+' }
+  if ($del)       { $sym += 'x' }
+  if ($mod)       { $sym += '!' }
+  if ($ren)       { $sym += '>' }
+  if ($untracked) { $sym += '?' }
+
+  # This string is the function's output.
+  if ($sym) { " ($branch $sym)" } else { " ($branch)" }
+}
+
+
+# -------------------------------------------------------------------------
+# prompt: called by PowerShell before every command line
+#
+# Defining a function named `prompt` is how you customize the prompt in
+# PowerShell; whatever string it outputs is displayed. It plays the role of
+# PS1 + PROMPT_COMMAND (or a zsh precmd hook) combined.
+#
+# PSReadLine measures ANSI escape sequences itself, so there's no need for
+# bash's \[ \] or the \001 markers polyglot needs for mksh/pdksh.
+# -------------------------------------------------------------------------
+function prompt {
+  # $? is $true/$false: did the last command succeed? It has to be read on
+  # the very first line, because every statement after this resets it.
+  $ok = $?
+
+  # Save the last native exit code too. Calling git below will overwrite
+  # $LASTEXITCODE, so we restore it at the end. The $global: scope
+  # modifier is needed because we're inside a function, and an assignment
+  # without it would create a local variable instead.
+  $code = $global:LASTEXITCODE
+
+  # The ESC character, for ANSI color sequences. PowerShell 7 also accepts
+  # "`e", but [char]27 works in Windows PowerShell 5.1 as well.
+  $e = [char]27
+
+  # The prompt is assembled in this string.
+  $out = ''
+
+  # --- Vi mode indicator (optional; see the PSReadLine section below) ---
+  # Uncomment to show polyglot's '+' (insert) or ':' (command) prefix.
+  # $out += if ($global:PolyglotViMode -eq 'Command') { ':' } else { '+' }
+
+  # --- Exit status, in bold red, only after a failure ---
+  # A failed native command has a non-zero $LASTEXITCODE. A failed cmdlet
+  # has no exit code, so we show (1) instead.
+  #
+  # Note on "$e[1;31m": in a double-quoted string, PowerShell expands $e and
+  # treats the following [1;31m as literal text, not an array index. (An
+  # index inside a string would need $($e[1]).) $(...) inside a string runs
+  # arbitrary code, like $(...) in sh, but in-process.
+  if (-not $ok) {
+    $out += "$e[1;31m($(if ($code) { $code } else { 1 }))$e[0m "
+  }
+
+  # --- Python virtual environment name (cf. _polyglot_venv) ---
+  $v = ''
+  if ($env:VIRTUAL_ENV) {
+    # Split-Path -Leaf is like basename; plain Split-Path is like dirname.
+    $v = Split-Path $env:VIRTUAL_ENV -Leaf
+
+    # pipenv/poetry with an in-project .venv: use the project directory's
+    # name instead.
+    if ($v -eq '.venv') {
+      $v = Split-Path (Split-Path $env:VIRTUAL_ENV) -Leaf
+    }
+    # pipenv elsewhere: names look like project-AbC123xy, so strip the
+    # final hyphen and hash (cf. ${VIRTUAL_ENV%-*}). -replace is a regex
+    # substitution; with no replacement string, it deletes the match.
+    elseif ($env:PIPENV_ACTIVE) {
+      $v = $v -replace '-[^-]*$'
+    }
+  }
+  elseif ($env:CONDA_DEFAULT_ENV) {
+    $v = $env:CONDA_DEFAULT_ENV
+  }
+  if ($v) { $out += "($v) " }
+
+  # --- user[@host]: bold green, or reverse video when elevated ---
+  $user = [Environment]::UserName + $PolyglotHost
+  $out += if ($PolyglotIsAdmin) { "$e[7m$user$e[0m " } else { "$e[1;32m$user$e[0m " }
+
+  # --- Working directory, in bold blue ---
+  # The environment variable is a string; Get-PolyglotDir's [int]
+  # parameter converts it automatically.
+  $out += "$e[1;34m$(Get-PolyglotDir $env:POLYGLOT_PROMPT_DIRTRIM)$e[0m"
+
+  # --- Git branch and status, in yellow ('' outside a repository) ---
+  $out += "$e[33m$(Get-PolyglotGit)$e[0m"
+
+  # --- Prompt character: # when elevated, $ otherwise ---
+  # Single quotes are literal, so '$' needs no escaping.
+  $out += if ($PolyglotIsAdmin) { ' # ' } else { ' $ ' }
+
+  # Undo the damage git did to $LASTEXITCODE, so that scripts (and the next
+  # prompt) see the exit code of *your* last command.
+  $global:LASTEXITCODE = $code
+
+  # Output the finished string. A bare expression on a line by itself is
+  # written to the output stream, which makes it the function's result.
+  $out
+}
