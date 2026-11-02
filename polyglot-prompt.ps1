@@ -5,6 +5,17 @@
 #
 #   (1) (venv) user@host ~/.../foo/bar (main &*+x!>?) $
 #
+# with three additions taken from the agkozak-zsh-prompt configuration in
+# .zshrc, and that configuration's Zenburn 256-color palette:
+#
+#   12s (1) (venv) user@host ~/.../foo/bar 1j (main &*+x!>?) $
+#
+#   12s  how long the last command ran, if it took long enough
+#   1j   number of PowerShell background jobs that haven't finished
+#
+# plus, in Windows Terminal, an invisible escape sequence that tells the
+# terminal the current directory (see the end of the prompt function).
+#
 # Usage: either paste this into profile.ps1, or keep it as a separate file
 # next to your profile and dot-source it from there:
 #
@@ -18,6 +29,11 @@
 #                                  (default 2; 0 disables abbreviation)
 #   $env:POLYGLOT_SHOW_UNTRACKED   set to 0 to ignore untracked files
 #                                  (faster in very large repos)
+#   $env:POLYGLOT_CMD_EXEC_TIME    show the last command's running time if it
+#                                  took at least this many seconds (default 5,
+#                                  as AGKOZAK_CMD_EXEC_TIME; 0 disables). This
+#                                  setting is specific to this file; polyglot.sh
+#                                  doesn't have it.
 ###########################################################################
 
 
@@ -32,6 +48,34 @@ $env:VIRTUAL_ENV_DISABLE_PROMPT = 1
 # Default the dirtrim setting to 2 if the user hasn't set it.
 # (-not on an unset/empty variable is $true, much like [ -z "$VAR" ].)
 if (-not $env:POLYGLOT_PROMPT_DIRTRIM) { $env:POLYGLOT_PROMPT_DIRTRIM = 2 }
+
+# Default the execution-time threshold to 5 seconds if the user hasn't set it.
+# Environment variables are always strings, and any non-empty string is
+# truthy, so a user's '0' would survive a -not test too; comparing with $null
+# just states the intent (apply the default only when unset) directly.
+if ($null -eq $env:POLYGLOT_CMD_EXEC_TIME) { $env:POLYGLOT_CMD_EXEC_TIME = 5 }
+
+# The Id of the last history entry whose running time the prompt has
+# considered. Pressing Enter on an empty line runs no command and adds
+# nothing to the history, so without this the prompt would keep showing the
+# previous command's time.
+$PolyglotLastHistoryId = 0
+
+# Colors, as SGR parameters: the part of an escape sequence ESC[...m between
+# '[' and 'm'. '1' is bold; '38;5;N' selects foreground color N from the
+# 256-color palette. The numbers are the AGKOZAK_COLORS_* values in .zshrc.
+# polyglot.sh's own colors were bold green (1;32) for user@host, bold blue
+# (1;34) for the path, yellow (33) for Git and bold red (1;31) for the exit
+# status; substitute those to go back to them.
+$PolyglotColors = @{
+  ExecTime   = '38;5;245'     # AGKOZAK_COLORS_CMD_EXEC_TIME
+  ExitStatus = '1;38;5;174'   # AGKOZAK_COLORS_EXIT_STATUS
+  Venv       = '38;5;188'     # AGKOZAK_COLORS_VIRTUALENV
+  UserHost   = '1;38;5;108'   # AGKOZAK_COLORS_USER_HOST
+  Path       = '1;38;5;116'   # AGKOZAK_COLORS_PATH
+  Jobs       = '38;5;223'     # AGKOZAK_COLORS_BG_STRING
+  Git        = '38;5;228'     # AGKOZAK_COLORS_BRANCH_STATUS
+}
 
 # Are we running elevated? This is the equivalent of polyglot's
 # _polyglot_is_superuser, computed once rather than on every prompt.
@@ -225,6 +269,28 @@ function Get-PolyglotGit {
 
 
 # -------------------------------------------------------------------------
+# Format-PolyglotDuration: a number of seconds as e.g. 7s, 3m12s, 1h0m5s
+#
+# Parameters:
+#   $Seconds  whole seconds (the [int] cast rounds a fractional value)
+# -------------------------------------------------------------------------
+function Format-PolyglotDuration([int]$Seconds) {
+  # [Math]::Floor because PowerShell's / always produces a fractional result
+  # when the division isn't exact (7 / 2 is 3.5, not 3 as in sh's $(( ))).
+  # % is the remainder, as in sh.
+  $h = [Math]::Floor($Seconds / 3600)
+  $m = [Math]::Floor(($Seconds % 3600) / 60)
+  $s = $Seconds % 60
+
+  # ${h} rather than $h, because "$hh" would be read as a variable named hh.
+  $r = ''
+  if ($h)       { $r += "${h}h" }
+  if ($h -or $m) { $r += "${m}m" }
+  "$r${s}s"
+}
+
+
+# -------------------------------------------------------------------------
 # prompt: called by PowerShell before every command line
 #
 # Defining a function named `prompt` is how you customize the prompt in
@@ -256,16 +322,36 @@ function prompt {
   # Uncomment to show polyglot's '+' (insert) or ':' (command) prefix.
   # $out += if ($global:PolyglotViMode -eq 'Command') { ':' } else { '+' }
 
-  # --- Exit status, in bold red, only after a failure ---
+  # A shorter name for the color table defined at the top of the file.
+  $c = $PolyglotColors
+
+  # --- Running time of the last command, if it reached the threshold ---
+  # Get-History -Count 1 returns the most recent history entry, or nothing
+  # if no command has run yet. Its start and end times are [DateTime]s, and
+  # subtracting them gives a [TimeSpan]. (PowerShell 7 also has a Duration
+  # property, but Windows PowerShell 5.1 doesn't.)
+  $last = Get-History -Count 1
+  if ($last -and $last.Id -ne $global:PolyglotLastHistoryId) {
+    $global:PolyglotLastHistoryId = $last.Id
+    $secs = [Math]::Floor(($last.EndExecutionTime - $last.StartExecutionTime).TotalSeconds)
+    $min = [int]$env:POLYGLOT_CMD_EXEC_TIME
+    if ($min -gt 0 -and $secs -ge $min) {
+      $out += "$e[$($c.ExecTime)m$(Format-PolyglotDuration $secs)$e[0m "
+    }
+  }
+
+  # --- Exit status, in bold, only after a failure ---
   # A failed native command has a non-zero $LASTEXITCODE. A failed cmdlet
   # has no exit code, so we show (1) instead.
   #
-  # Note on "$e[1;31m": in a double-quoted string, PowerShell expands $e and
-  # treats the following [1;31m as literal text, not an array index. (An
-  # index inside a string would need $($e[1]).) $(...) inside a string runs
-  # arbitrary code, like $(...) in sh, but in-process.
+  # Note on "$e[$($c.ExitStatus)m": in a double-quoted string, PowerShell
+  # expands $e and treats the following '[' as literal text, not an array
+  # index. (An index inside a string would need $($e[1]).) $(...) inside a
+  # string runs arbitrary code, like $(...) in sh, but in-process; it is
+  # needed here because "$c.ExitStatus" would expand only $c and leave
+  # '.ExitStatus' as literal text.
   if (-not $ok) {
-    $out += "$e[1;31m($(if ($code) { $code } else { 1 }))$e[0m "
+    $out += "$e[$($c.ExitStatus)m($(if ($code) { $code } else { 1 }))$e[0m "
   }
 
   # --- Python virtual environment name (cf. _polyglot_venv) ---
@@ -289,23 +375,42 @@ function prompt {
   elseif ($env:CONDA_DEFAULT_ENV) {
     $v = $env:CONDA_DEFAULT_ENV
   }
-  if ($v) { $out += "($v) " }
+  if ($v) { $out += "$e[$($c.Venv)m($v)$e[0m " }
 
-  # --- user[@host]: bold green, or reverse video when elevated ---
+  # --- user[@host]: bold, or reverse video when elevated ---
   $user = [Environment]::UserName + $PolyglotHost
-  $out += if ($PolyglotIsAdmin) { "$e[7m$user$e[0m " } else { "$e[1;32m$user$e[0m " }
+  $out += if ($PolyglotIsAdmin) { "$e[7m$user$e[0m " } else { "$e[$($c.UserHost)m$user$e[0m " }
 
-  # --- Working directory, in bold blue ---
+  # --- Working directory, in bold ---
   # The environment variable is a string; Get-PolyglotDir's [int]
   # parameter converts it automatically.
-  $out += "$e[1;34m$(Get-PolyglotDir $env:POLYGLOT_PROMPT_DIRTRIM)$e[0m"
+  $out += "$e[$($c.Path)m$(Get-PolyglotDir $env:POLYGLOT_PROMPT_DIRTRIM)$e[0m"
 
-  # --- Git branch and status, in yellow ('' outside a repository) ---
-  $out += "$e[33m$(Get-PolyglotGit)$e[0m"
+  # --- Number of unfinished background jobs (cf. %j in zsh prompts) ---
+  # Start-Job, Start-ThreadJob and `command &` create jobs. A finished job
+  # stays in Get-Job's list until Remove-Job, so count only those in a state
+  # other than Completed, Failed or Stopped. @(...) makes the result an array
+  # even when there are zero or one jobs, so that .Count is always correct.
+  $jobs = @(Get-Job | Where-Object { $_.State -notin 'Completed', 'Failed', 'Stopped' }).Count
+  if ($jobs) { $out += " $e[$($c.Jobs)m${jobs}j$e[0m" }
+
+  # --- Git branch and status ('' outside a repository) ---
+  $out += "$e[$($c.Git)m$(Get-PolyglotGit)$e[0m"
 
   # --- Prompt character: # when elevated, $ otherwise ---
   # Single quotes are literal, so '$' needs no escaping.
   $out += if ($PolyglotIsAdmin) { ' # ' } else { ' $ ' }
+
+  # --- Report the current directory to Windows Terminal ---
+  # The sequence ESC ] 9 ; 9 ; "path" ESC \ is a Windows Terminal extension
+  # that prints nothing. It records the directory, so that "Duplicate Tab"
+  # and new split panes start there. Windows Terminal sets WT_SESSION in
+  # every shell it starts; other terminals don't get the sequence. Only
+  # FileSystem locations have a directory to report: in HKLM:\ or Env:\,
+  # $PWD.ProviderPath isn't a directory.
+  if ($env:WT_SESSION -and $PWD.Provider.Name -eq 'FileSystem') {
+    $out += "$e]9;9;`"$($PWD.ProviderPath)`"$e\"
+  }
 
   # Undo the damage git did to $LASTEXITCODE, so that scripts (and the next
   # prompt) see the exit code of *your* last command.
