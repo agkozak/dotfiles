@@ -642,6 +642,7 @@ else
 
 fi
 
+<<<<<<< HEAD
 # Vivid 78s completions
 
 # Generate each completion script by running the binary at its full path (it
@@ -677,7 +678,6 @@ if [[ -n $WINHOME && -d ${WINHOME}/.cargo/bin ]]; then
   }
   fpath+=( ${WINHOME}/.zfunc )
 fi
-
 
 # }}}1
 
