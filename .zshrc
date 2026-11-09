@@ -642,9 +642,42 @@ else
 
 fi
 
-[[ -d ${HOME}/eq78/completions/zsh ]] && fpath+=( ${HOME}/eq78/completions/zsh )
-[[ -d ${WINHOME}/eq78/completions/zsh ]] &&
-  fpath+=( ${WINHOME}/eq78/completions/zsh )
+# Vivid 78s completions
+
+# Generate each completion script by running the binary at its full path (it
+# may not be on PATH). Regenerate when the script is missing, empty, or older
+# than the binary, so a reinstall with new options refreshes it. Output goes to
+# a temp file that replaces the script only if the binary exits successfully.
+if [[ -n $WINHOME && -d ${WINHOME}/.cargo/bin ]]; then
+  () {
+    local name exe f
+    for name in vivid78s vivid78s-declick vivid78s-declick-lab; do
+      exe=${WINHOME}/.cargo/bin/${name}.exe
+      f=${WINHOME}/.zfunc/_${name}
+      [[ -x $exe ]] || continue
+      [[ -d ${f:h} ]] || mkdir -p ${f:h} || return
+      if [[ ! -s $f || $exe -nt $f ]]; then
+        $exe --completions zsh >| $f.tmp.$$ && mv -f $f.tmp.$$ $f ||
+          rm -f $f.tmp.$$
+      fi
+    done
+
+    # compinit reuses its dump file as long as the number of completion files
+    # in $fpath and the zsh version are unchanged, so a script that replaces a
+    # removed one would go unregistered. WSL, MSYS2 and Cygwin share this
+    # directory but keep separate dump files, so each shell deletes its own
+    # dump whenever a script here is newer than it, and compinit rebuilds it.
+    local dump=${ZDOTDIR:-$HOME}/.zcompdump_${EUID}_${OSTYPE}_${ZSH_VERSION}
+    for f in ${WINHOME}/.zfunc/_*(N); do
+      if [[ $f -nt $dump ]]; then
+        rm -f $dump $dump.zwc
+        break
+      fi
+    done
+  }
+  fpath+=( ${WINHOME}/.zfunc )
+fi
+
 
 # }}}1
 
@@ -672,6 +705,18 @@ else
     compinit -d "${HOME}/.zcompdump_${EUID}_${OSTYPE}_${ZSH_VERSION}"
     compdef mosh=ssh
   fi
+fi
+
+# The Vivid 78s completion scripts declare `#compdef vivid78s' etc. On WSL the
+# commands must be typed with the .exe suffix, and zsh looks up completions by
+# the typed command name, so bind the same functions to the .exe names too.
+if [[ $AGKDOT_SYSTEMINFO == *[Mm]icrosoft* ]] && (( ${+functions[compdef]} )); then
+  () {
+    local c
+    for c in vivid78s vivid78s-declick vivid78s-declick-lab; do
+      (( ${+_comps[$c]} )) && compdef $_comps[$c] $c.exe
+    done
+  }
 fi
 
 # }}}1
