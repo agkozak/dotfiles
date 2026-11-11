@@ -642,43 +642,6 @@ else
 
 fi
 
-<<<<<<< HEAD
-# Vivid 78s completions
-
-# Generate each completion script by running the binary at its full path (it
-# may not be on PATH). Regenerate when the script is missing, empty, or older
-# than the binary, so a reinstall with new options refreshes it. Output goes to
-# a temp file that replaces the script only if the binary exits successfully.
-if [[ -n $WINHOME && -d ${WINHOME}/.cargo/bin ]]; then
-  () {
-    local name exe f
-    for name in vivid78s vivid78s-declick vivid78s-declick-lab; do
-      exe=${WINHOME}/.cargo/bin/${name}.exe
-      f=${WINHOME}/.zfunc/_${name}
-      [[ -x $exe ]] || continue
-      [[ -d ${f:h} ]] || mkdir -p ${f:h} || return
-      if [[ ! -s $f || $exe -nt $f ]]; then
-        $exe --completions zsh >| $f.tmp.$$ && mv -f $f.tmp.$$ $f ||
-          rm -f $f.tmp.$$
-      fi
-    done
-
-    # compinit reuses its dump file as long as the number of completion files
-    # in $fpath and the zsh version are unchanged, so a script that replaces a
-    # removed one would go unregistered. WSL, MSYS2 and Cygwin share this
-    # directory but keep separate dump files, so each shell deletes its own
-    # dump whenever a script here is newer than it, and compinit rebuilds it.
-    local dump=${ZDOTDIR:-$HOME}/.zcompdump_${EUID}_${OSTYPE}_${ZSH_VERSION}
-    for f in ${WINHOME}/.zfunc/_*(N); do
-      if [[ $f -nt $dump ]]; then
-        rm -f $dump $dump.zwc
-        break
-      fi
-    done
-  }
-  fpath+=( ${WINHOME}/.zfunc )
-fi
-
 # }}}1
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh. {{{1
