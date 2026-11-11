@@ -670,18 +670,6 @@ else
   fi
 fi
 
-# The Vivid 78s completion scripts declare `#compdef vivid78s' etc. On WSL the
-# commands must be typed with the .exe suffix, and zsh looks up completions by
-# the typed command name, so bind the same functions to the .exe names too.
-if [[ $AGKDOT_SYSTEMINFO == *[Mm]icrosoft* ]] && (( ${+functions[compdef]} )); then
-  () {
-    local c
-    for c in vivid78s vivid78s-declick vivid78s-declick-lab; do
-      (( ${+_comps[$c]} )) && compdef $_comps[$c] $c.exe
-    done
-  }
-fi
-
 # }}}1
 
 # 14.7 Filename Generation {{{1
