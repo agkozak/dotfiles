@@ -219,6 +219,45 @@ case ${AGKDOT_SYSTEMINFO:=$(uname -a)} in
     ;;
 esac
 
+# Windows-specific files {{{1
+
+# The PowerShell profiles and .psmux.conf are installed by install.ps1,
+# which Windows' PowerShell 7 (pwsh.exe) runs. That happens in Cygwin
+# (including MobaXterm), MSYS2, Git Bash and WSL, and nowhere else.
+#
+# uname -s gives CYGWIN_NT-..., MSYS_NT-..., MINGW64_NT-... (also MINGW32,
+# UCRT64, CLANG64 and CLANGARM64, after the MSYS2 environment), or Linux,
+# which is WSL if /proc/version mentions Microsoft. pwsh.exe is a Windows
+# program, so it is given the script's Windows path, from cygpath -w or
+# wslpath -w. In WSL, the name pwsh.exe avoids a Linux pwsh. If pwsh.exe
+# isn't on PATH (MSYS2 doesn't include the Windows PATH by default), its
+# default location is tried. -ExecutionPolicy Bypass lets the unsigned
+# script run whatever the machine's execution policy is. (In WSL, the
+# script's path is a \\wsl.localhost\... network path.)
+AGKDOT_TOPATH=''
+case $(uname -s) in
+  CYGWIN*|MSYS*|MINGW*|UCRT*|CLANG*) AGKDOT_TOPATH='cygpath' ;;
+  Linux) grep -qi microsoft /proc/version 2>/dev/null && AGKDOT_TOPATH='wslpath' ;;
+esac
+if [ -n "$AGKDOT_TOPATH" ]; then
+  if has_command pwsh.exe; then
+    AGKDOT_PWSH='pwsh.exe'
+  else
+    AGKDOT_PWSH=$($AGKDOT_TOPATH -u 'C:\Program Files\PowerShell\7\pwsh.exe' 2>/dev/null)
+    [ -x "$AGKDOT_PWSH" ] || AGKDOT_PWSH=''
+  fi
+  if [ -n "$AGKDOT_PWSH" ]; then
+    printf '\nWindows-specific files:\n'
+    "$AGKDOT_PWSH" -NoProfile -ExecutionPolicy Bypass \
+      -File "$($AGKDOT_TOPATH -w "${PWD}/install.ps1")"
+  else
+    printf '\nPowerShell 7 (pwsh.exe) not found; Windows-specific files not installed.\n'
+  fi
+fi
+unset AGKDOT_TOPATH AGKDOT_PWSH
+
+# }}}1
+
 # Clean up after some frameworks {{{1
 rm -f "$HOME/.zlogout" "$HOME/zlogout.zwc"
 

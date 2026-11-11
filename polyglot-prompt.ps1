@@ -1,6 +1,8 @@
 ###########################################################################
 # Polyglot-style prompt for PowerShell
 #
+# https://github.com/agkozak/dotfiles
+#
 # A PowerShell approximation of Polyglot Prompt (polyglot.sh):
 #
 #   (1) (venv) user@host ~/.../foo/bar (main &*+x!>?) $
@@ -13,7 +15,16 @@
 #   12s  how long the last command ran, if it took long enough
 #   1j   number of PowerShell background jobs that haven't finished
 #
-# plus, in Windows Terminal, an invisible escape sequence that tells the
+# In PSReadLine's vi command mode, the prompt character becomes ':', as
+# agkozak-zsh-prompt shows it in vicmd mode. That requires a
+# ViModeChangeHandler that sets $PolyglotViMode and redraws the prompt; the
+# profile defines one (see "Vi mode and redraws" below).
+#
+# A path on a named drive, such as HKLM:\ or Temp:\ or one created with
+# New-PSDrive, keeps the drive name in front when abbreviated, as '~' is kept
+# for the home directory: Temp:\...\c\d.
+#
+# Plus, in Windows Terminal, an invisible escape sequence that tells the
 # terminal the current directory (see the end of the prompt function).
 #
 # Usage: either paste this into profile.ps1, or keep it as a separate file
@@ -60,6 +71,25 @@ if ($null -eq $env:POLYGLOT_CMD_EXEC_TIME) { $env:POLYGLOT_CMD_EXEC_TIME = 5 }
 # nothing to the history, so without this the prompt would keep showing the
 # previous command's time.
 $PolyglotLastHistoryId = 0
+
+# Vi mode and redraws. PSReadLine starts in vi insert mode. A
+# ViModeChangeHandler (in the profile) stores 'Insert' or 'Command' here
+# whenever the mode changes, sets $PolyglotPromptRedraw, and calls
+# [Microsoft.PowerShell.PSConsoleReadLine]::InvokePrompt(), which calls the
+# prompt function again. On such a redraw nothing but the vi mode can have
+# changed, so the prompt function reuses $PolyglotPromptPrefix, everything it
+# built before the prompt character the last time it ran, rather than running
+# git again. A redraw also must not recompute the exit status, because $? by
+# then describes the handler, not the last command.
+#
+# Only the handler changes $PolyglotViMode. PSReadLine also leaves vi mode
+# unchanged from one line to the next: Enter in command mode runs
+# ViAcceptLine, which switches to insert mode (and so calls the handler)
+# before accepting the line, while Ctrl-C (CancelLine) in command mode leaves
+# the next line in command mode too.
+$PolyglotViMode = 'Insert'
+$PolyglotPromptRedraw = $false
+$PolyglotPromptPrefix = $null
 
 # Colors, as SGR parameters: the part of an escape sequence ESC[...m between
 # '[' and 'm'. '1' is bold; '38;5;N' selects foreground color N from the
@@ -112,6 +142,7 @@ $PolyglotHost = if ($env:SSH_CONNECTION -or $env:SSH_CLIENT -or $env:SSH_TTY -or
 #   $HOME              -> ~
 #   $HOME/a/b/c/d      -> ~/.../c/d
 #   /usr/local/share   -> .../local/share
+#   Temp:\a\b\c\d      -> Temp:\...\c\d
 #
 # Parameters:
 #   $Trim  number of trailing path elements to keep (0 = no abbreviation)
@@ -132,10 +163,21 @@ function Get-PolyglotDir([int]$Trim = 2) {
   # (slightly loose on Linux, but harmless in practice). We match
   # "$HOME$sep" rather than "$HOME" so that /home/alexander doesn't count
   # as being under /home/alex.
-  $tilde = ''
+  $prefix = ''
   if ($path.StartsWith("$HOME$sep", [StringComparison]::OrdinalIgnoreCase)) {
-    $path  = $path.Substring($HOME.Length)   # leaves e.g. '\a\b\c'
-    $tilde = '~'
+    $path   = $path.Substring($HOME.Length)   # leaves e.g. '\a\b\c'
+    $prefix = '~'
+  }
+  # On a drive whose name is longer than one letter (HKLM:, Temp:, or a
+  # drive made with New-PSDrive), $PWD.Path begins with that name, e.g.
+  # 'Temp:\a\b'. Treat 'Temp:' the way '~' is treated above, so that it is
+  # kept when the rest is abbreviated. Single-letter drives such as C: are
+  # left as they were. (In PowerShell on Linux and macOS the file system
+  # drive is named '/', so this doesn't apply to it.)
+  elseif ($PWD.Drive -and $PWD.Drive.Name.Length -gt 1 -and
+          $path.StartsWith("$($PWD.Drive.Name):", [StringComparison]::OrdinalIgnoreCase)) {
+    $prefix = "$($PWD.Drive.Name):"
+    $path   = $path.Substring($prefix.Length)  # leaves e.g. '\a\b'
   }
 
   # Split into elements, dropping the empty string before the leading
@@ -143,7 +185,7 @@ function Get-PolyglotDir([int]$Trim = 2) {
   $parts = $path.Split($sep, [StringSplitOptions]::RemoveEmptyEntries)
 
   # Nothing to abbreviate: return the path as is.
-  if ($Trim -le 0 -or $parts.Count -le $Trim) { return "$tilde$path" }
+  if ($Trim -le 0 -or $parts.Count -le $Trim) { return "$prefix$path" }
 
   # Keep the last $Trim elements. Negative indices count from the end, and
   # -2..-1 is a range, so $parts[-2..-1] yields the last two elements.
@@ -152,7 +194,7 @@ function Get-PolyglotDir([int]$Trim = 2) {
 
   # The last expression's value is the function's output (no `return`
   # needed); this is an if/else expression yielding one string or the other.
-  if ($tilde) { "~$sep...$sep$tail" } else { "...$sep$tail" }
+  if ($prefix) { "$prefix$sep...$sep$tail" } else { "...$sep$tail" }
 }
 
 
@@ -305,6 +347,16 @@ function prompt {
   # the very first line, because every statement after this resets it.
   $ok = $?
 
+  # A redraw after a vi mode change (see "Vi mode and redraws" at the top of
+  # the file): reuse the saved prefix and add the new prompt character. The
+  # flag is cleared first, so that the next ordinary prompt is built anew.
+  if ($global:PolyglotPromptRedraw) {
+    $global:PolyglotPromptRedraw = $false
+    if ($null -ne $global:PolyglotPromptPrefix) {
+      return $global:PolyglotPromptPrefix + (Get-PolyglotPromptEnd)
+    }
+  }
+
   # Save the last native exit code too. Calling git below will overwrite
   # $LASTEXITCODE, so we restore it at the end. The $global: scope
   # modifier is needed because we're inside a function, and an assignment
@@ -317,10 +369,6 @@ function prompt {
 
   # The prompt is assembled in this string.
   $out = ''
-
-  # --- Vi mode indicator (optional; see the PSReadLine section below) ---
-  # Uncomment to show polyglot's '+' (insert) or ':' (command) prefix.
-  # $out += if ($global:PolyglotViMode -eq 'Command') { ':' } else { '+' }
 
   # A shorter name for the color table defined at the top of the file.
   $c = $PolyglotColors
@@ -397,9 +445,34 @@ function prompt {
   # --- Git branch and status ('' outside a repository) ---
   $out += "$e[$($c.Git)m$(Get-PolyglotGit)$e[0m"
 
-  # --- Prompt character: # when elevated, $ otherwise ---
+  # Everything so far is what a vi mode redraw reuses.
+  $global:PolyglotPromptPrefix = $out
+
+  # Undo the damage git did to $LASTEXITCODE, so that scripts (and the next
+  # prompt) see the exit code of *your* last command.
+  $global:LASTEXITCODE = $code
+
+  # Output the finished string. A bare expression on a line by itself is
+  # written to the output stream, which makes it the function's result.
+  $out + (Get-PolyglotPromptEnd)
+}
+
+
+# -------------------------------------------------------------------------
+# Get-PolyglotPromptEnd: the prompt character and what follows it
+#
+# Called by the prompt function both when it builds the prompt and when it
+# redraws it after a vi mode change.
+# -------------------------------------------------------------------------
+function Get-PolyglotPromptEnd {
+  $e = [char]27
+
+  # --- Prompt character: ':' in vi command mode, else # when elevated and
+  # $ otherwise (cf. %(4V.:.%#) in .zshrc's AGKOZAK_CUSTOM_PROMPT) ---
   # Single quotes are literal, so '$' needs no escaping.
-  $out += if ($PolyglotIsAdmin) { ' # ' } else { ' $ ' }
+  $end = if ($global:PolyglotViMode -eq 'Command') { ' : ' }
+         elseif ($PolyglotIsAdmin) { ' # ' }
+         else { ' $ ' }
 
   # --- Report the current directory to Windows Terminal ---
   # The sequence ESC ] 9 ; 9 ; "path" ESC \ is a Windows Terminal extension
@@ -409,14 +482,8 @@ function prompt {
   # FileSystem locations have a directory to report: in HKLM:\ or Env:\,
   # $PWD.ProviderPath isn't a directory.
   if ($env:WT_SESSION -and $PWD.Provider.Name -eq 'FileSystem') {
-    $out += "$e]9;9;`"$($PWD.ProviderPath)`"$e\"
+    $end += "$e]9;9;`"$($PWD.ProviderPath)`"$e\"
   }
 
-  # Undo the damage git did to $LASTEXITCODE, so that scripts (and the next
-  # prompt) see the exit code of *your* last command.
-  $global:LASTEXITCODE = $code
-
-  # Output the finished string. A bare expression on a line by itself is
-  # written to the output stream, which makes it the function's result.
-  $out
+  $end
 }
