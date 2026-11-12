@@ -402,31 +402,57 @@ endif
 
 " => UI {{{1
 
-" For compatibility with true-color terminals
-if &term ==# 'xterm-direct'
-  set termguicolors
+" ConEmu running cmd.exe or PowerShell. This is skipped when 'term' is win32
+" (Vim is using the native Windows console interface) or cygwin. It comes
+" before the 'termguicolors' setting below because changing 'term' reloads the
+" terminal codes that 'termguicolors' relies on.
+if $ConEmuDir !=# '' && CMDEXE() && &term !=# 'win32' && &term !=# 'cygwin'
+  set term=xterm
+  " Make the DEL character (0x7F) act as Backspace
+  inoremap <Char-0x07F> <BS>
+  nnoremap <Char-0x07F> <BS>
 endif
 
-" Rule out certain Cygwin/MSYS2 shells in ConEmu
-" Rule out cmd.exe and Powershell in the Windows Console
-if &term !=# 'cygwin' && &term !=# 'win32'
+" Enable 24-bit color only when there is evidence that the terminal supports
+" it. has('termguicolors') only means that Vim was compiled with the feature.
+" The evidence accepted is:
+"   - a terminfo entry with -direct in its name (e.g., xterm-direct), which
+"     declares direct (24-bit) color;
+"   - $COLORTERM set to truecolor or 24bit, the convention most 24-bit
+"     terminal emulators follow (it is often not passed through SSH);
+"   - has('vcon'), which in the Windows console means that the console
+"     supports virtual terminal sequences and 'termguicolors' can be used.
+if has('termguicolors')
+      \ && (&term =~# '-direct'
+      \     || $COLORTERM ==# 'truecolor' || $COLORTERM ==# '24bit'
+      \     || has('vcon'))
+  set termguicolors
 
-  " ConEmu running cmd.exe or Powershell
-  if $ConEmuDir !=# '' && CMDEXE()
-    set term=xterm
-    inoremap <Char-0x07F> <BS>  " Backspace
-    nnoremap <Char-0x07F> <BS>
+  " t_8f and t_8b hold the escape sequences for setting 24-bit foreground and
+  " background colors. If they are empty, 'termguicolors' has no way to output
+  " colors. Vim 9.2 sets them by default for most terminals; this fills them in
+  " with the same values in case a build has left them empty. The Windows
+  " console interface ('term' is win32) is left alone, so that its terminal
+  " codes stay as Vim sets them.
+  if &term !=# 'win32' && &t_8f ==# ''
+    let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
+    let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
   endif
+endif
 
-  if $VIM =~# 'iVim'
-    silent! colorscheme desert
-  else
-    let g:zenburn_high_Contrast = 1
-    silent! colorscheme zenburn
-  endif
-
-else
+" Use industry in the Cygwin console ('term' is cygwin) and in a Windows
+" console where 'termguicolors' is not enabled; otherwise use zenburn (desert
+" in iVim). exists('+termguicolors') is needed because &termguicolors is an
+" error in builds without the option.
+if &term ==# 'cygwin'
+      \ || (&term ==# 'win32'
+      \     && !(exists('+termguicolors') && &termguicolors))
   colorscheme industry
+elseif $VIM =~# 'iVim'
+  silent! colorscheme desert
+else
+  let g:zenburn_high_Contrast = 1
+  silent! colorscheme zenburn
 endif
 
 syntax on
