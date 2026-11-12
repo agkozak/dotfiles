@@ -107,6 +107,45 @@ $PolyglotColors = @{
   Git        = '38;5;228'     # AGKOZAK_COLORS_BRANCH_STATUS
 }
 
+# Can the host display escape sequences? The Windows PowerShell ISE output
+# pane is not a console and does not interpret them: it drops the ESC
+# character and prints the rest of each sequence (e.g. '[1;38;5;108m') as
+# literal text. $Host.UI.SupportsVirtualTerminal reports whether the host
+# interprets VT escape sequences; it is $false in such hosts. Hosts that
+# predate the property return $null for it, which also counts as $false here,
+# so they get a plain prompt. The $Host.Name test excludes ISE by name as
+# well, in case its UI object ever reports the property differently.
+#
+# When this is $false, the prompt is built with no escape sequences at all:
+# no colors (see Format-PolyglotColor) and no Windows Terminal directory
+# report (see Get-PolyglotPromptEnd).
+$PolyglotUseEscapes = [bool]$Host.UI.SupportsVirtualTerminal -and
+                      $Host.Name -ne 'Windows PowerShell ISE Host'
+
+
+# -------------------------------------------------------------------------
+# Format-PolyglotColor: wrap text in an SGR color sequence
+#
+# Returns ESC[<Sgr>m<Text>ESC[0m, or just <Text> when the host cannot
+# display escape sequences ($PolyglotUseEscapes is $false).
+#
+# Parameters:
+#   $Sgr   SGR parameters, e.g. '1;38;5;108' (see $PolyglotColors)
+#   $Text  the text to color
+# -------------------------------------------------------------------------
+function Format-PolyglotColor([string]$Sgr, [string]$Text) {
+  if (-not $PolyglotUseEscapes) { return $Text }
+
+  # The ESC character. PowerShell 7 also accepts "`e", but [char]27 works in
+  # Windows PowerShell 5.1 as well.
+  $e = [char]27
+
+  # In a double-quoted string, PowerShell expands $e and treats the
+  # following '[' as literal text, not an array index. ${Sgr} needs braces
+  # because "$Sgrm" would be read as a variable named Sgrm.
+  "$e[${Sgr}m$Text$e[0m"
+}
+
 # Are we running elevated? This is the equivalent of polyglot's
 # _polyglot_is_superuser, computed once rather than on every prompt.
 #
@@ -363,10 +402,6 @@ function prompt {
   # without it would create a local variable instead.
   $code = $global:LASTEXITCODE
 
-  # The ESC character, for ANSI color sequences. PowerShell 7 also accepts
-  # "`e", but [char]27 works in Windows PowerShell 5.1 as well.
-  $e = [char]27
-
   # The prompt is assembled in this string.
   $out = ''
 
@@ -384,7 +419,7 @@ function prompt {
     $secs = [Math]::Floor(($last.EndExecutionTime - $last.StartExecutionTime).TotalSeconds)
     $min = [int]$env:POLYGLOT_CMD_EXEC_TIME
     if ($min -gt 0 -and $secs -ge $min) {
-      $out += "$e[$($c.ExecTime)m$(Format-PolyglotDuration $secs)$e[0m "
+      $out += (Format-PolyglotColor $c.ExecTime (Format-PolyglotDuration $secs)) + ' '
     }
   }
 
@@ -392,14 +427,10 @@ function prompt {
   # A failed native command has a non-zero $LASTEXITCODE. A failed cmdlet
   # has no exit code, so we show (1) instead.
   #
-  # Note on "$e[$($c.ExitStatus)m": in a double-quoted string, PowerShell
-  # expands $e and treats the following '[' as literal text, not an array
-  # index. (An index inside a string would need $($e[1]).) $(...) inside a
-  # string runs arbitrary code, like $(...) in sh, but in-process; it is
-  # needed here because "$c.ExitStatus" would expand only $c and leave
-  # '.ExitStatus' as literal text.
+  # $(...) inside a double-quoted string runs arbitrary code, like $(...) in
+  # sh, but in-process.
   if (-not $ok) {
-    $out += "$e[$($c.ExitStatus)m($(if ($code) { $code } else { 1 }))$e[0m "
+    $out += (Format-PolyglotColor $c.ExitStatus "($(if ($code) { $code } else { 1 }))") + ' '
   }
 
   # --- Python virtual environment name (cf. _polyglot_venv) ---
@@ -423,16 +454,16 @@ function prompt {
   elseif ($env:CONDA_DEFAULT_ENV) {
     $v = $env:CONDA_DEFAULT_ENV
   }
-  if ($v) { $out += "$e[$($c.Venv)m($v)$e[0m " }
+  if ($v) { $out += (Format-PolyglotColor $c.Venv "($v)") + ' ' }
 
-  # --- user[@host]: bold, or reverse video when elevated ---
+  # --- user[@host]: bold, or reverse video (SGR 7) when elevated ---
   $user = [Environment]::UserName + $PolyglotHost
-  $out += if ($PolyglotIsAdmin) { "$e[7m$user$e[0m " } else { "$e[$($c.UserHost)m$user$e[0m " }
+  $out += (Format-PolyglotColor $(if ($PolyglotIsAdmin) { '7' } else { $c.UserHost }) $user) + ' '
 
   # --- Working directory, in bold ---
   # The environment variable is a string; Get-PolyglotDir's [int]
   # parameter converts it automatically.
-  $out += "$e[$($c.Path)m$(Get-PolyglotDir $env:POLYGLOT_PROMPT_DIRTRIM)$e[0m"
+  $out += Format-PolyglotColor $c.Path (Get-PolyglotDir $env:POLYGLOT_PROMPT_DIRTRIM)
 
   # --- Number of unfinished background jobs (cf. %j in zsh prompts) ---
   # Start-Job, Start-ThreadJob and `command &` create jobs. A finished job
@@ -440,10 +471,12 @@ function prompt {
   # other than Completed, Failed or Stopped. @(...) makes the result an array
   # even when there are zero or one jobs, so that .Count is always correct.
   $jobs = @(Get-Job | Where-Object { $_.State -notin 'Completed', 'Failed', 'Stopped' }).Count
-  if ($jobs) { $out += " $e[$($c.Jobs)m${jobs}j$e[0m" }
+  if ($jobs) { $out += ' ' + (Format-PolyglotColor $c.Jobs "${jobs}j") }
 
   # --- Git branch and status ('' outside a repository) ---
-  $out += "$e[$($c.Git)m$(Get-PolyglotGit)$e[0m"
+  # Outside a repository there is nothing to color, so skip the sequences.
+  $git = Get-PolyglotGit
+  if ($git) { $out += Format-PolyglotColor $c.Git $git }
 
   # Everything so far is what a vi mode redraw reuses.
   $global:PolyglotPromptPrefix = $out
@@ -481,7 +514,12 @@ function Get-PolyglotPromptEnd {
   # every shell it starts; other terminals don't get the sequence. Only
   # FileSystem locations have a directory to report: in HKLM:\ or Env:\,
   # $PWD.ProviderPath isn't a directory.
-  if ($env:WT_SESSION -and $PWD.Provider.Name -eq 'FileSystem') {
+  #
+  # $PolyglotUseEscapes is checked too because WT_SESSION is inherited by
+  # child processes: ISE started from a shell in Windows Terminal would see
+  # it, but would print the sequence as text.
+  if ($PolyglotUseEscapes -and $env:WT_SESSION -and
+      $PWD.Provider.Name -eq 'FileSystem') {
     $end += "$e]9;9;`"$($PWD.ProviderPath)`"$e\"
   }
 

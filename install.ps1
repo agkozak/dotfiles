@@ -16,6 +16,13 @@
 #   have been moved (OneDrive moves it into the OneDrive folder, for
 #   example), so the directory is taken from $PROFILE, which reflects
 #   where it actually is.
+# - The files in WindowsPowerShell\ go in <Documents>\WindowsPowerShell,
+#   the profile directory of Windows PowerShell 5.1 (the console host and
+#   ISE). They are shims: each dot-sources the PowerShell 7 file of the same
+#   name, or for ISE the console profile, from ..\PowerShell. That relative
+#   path only works because the two profile directories are both in
+#   <Documents>, so this directory is taken as the sibling of the PowerShell
+#   7 one rather than looked up separately.
 # - .psmux.conf goes in the home directory, if psmux is installed. It is
 #   looked for on PATH and where WinGet installs it, since a pwsh started
 #   from MSYS2 with a minimal PATH might not find it on PATH.
@@ -28,7 +35,8 @@
 # The profile depends on Windows (WinGet, Git for Windows, Windows' tar.exe
 # and so on), so on Linux and macOS, where PowerShell 7 also runs, the
 # script does nothing. #Requires stops it with an error in Windows
-# PowerShell 5.1, whose profile directory is a different one.
+# PowerShell 5.1, in which $PROFILE names the 5.1 profile directory rather
+# than the PowerShell 7 one.
 
 [CmdletBinding(SupportsShouldProcess)]
 param()
@@ -38,9 +46,11 @@ if (-not $IsWindows) {
   return
 }
 
+# Install-DotFile: copy the file $Name from $SourceDir (by default the
+# directory of this script) to $Destination, under the same name.
 function Install-DotFile {
-  param([string]$Name, [string]$Destination)
-  $source = Join-Path $PSScriptRoot $Name
+  param([string]$Name, [string]$Destination, [string]$SourceDir = $PSScriptRoot)
+  $source = Join-Path $SourceDir $Name
   $target = Join-Path $Destination $Name
   $verb = if (-not (Test-Path -LiteralPath $target)) { 'Installing' }
           elseif ((Get-Item -LiteralPath $source).LastWriteTimeUtc -gt
@@ -58,6 +68,13 @@ $profileDir = Split-Path $PROFILE.CurrentUserAllHosts
 foreach ($name in 'profile.ps1', 'Microsoft.PowerShell_profile.ps1',
                   'Microsoft.VSCode_profile.ps1', 'polyglot-prompt.ps1') {
   Install-DotFile -Name $name -Destination $profileDir
+}
+
+# The Windows PowerShell 5.1 shims (see the top of this file).
+$shimDir = Join-Path (Split-Path $profileDir) 'WindowsPowerShell'
+foreach ($name in 'profile.ps1', 'Microsoft.PowerShell_profile.ps1',
+                  'Microsoft.PowerShellISE_profile.ps1') {
+  Install-DotFile -Name $name -Destination $shimDir -SourceDir (Join-Path $PSScriptRoot 'WindowsPowerShell')
 }
 
 if ((Get-Command psmux -CommandType Application -ErrorAction Ignore) -or
