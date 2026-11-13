@@ -532,18 +532,23 @@ function lr {
 # The drives are created through the session state API that New-PSDrive
 # itself uses. For these three drives that took about 9 ms here, against
 # about 37 ms for three New-PSDrive calls.
+#
+# A drive that already exists is left alone, because Drive.New throws "A
+# drive with the name 'agk' already exists" when the profile is run a second
+# time in the same session (. $PROFILE).
 $fileSystem = $ExecutionContext.SessionState.Provider.GetOne('FileSystem')
+$existingDrives = @($ExecutionContext.SessionState.Drive.GetAllAtScope('Global').Name)
 foreach ($namedDir in @(
     @{ Name = 'agk';        Root = "$HOME\.zcomet\repos\agkozak\agkozak-zsh-prompt" }
     @{ Name = 'zshz';       Root = "$HOME\.zcomet\repos\agkozak\zsh-z" }
     @{ Name = 'zc';         Root = "$HOME\.zcomet\bin" }
     @{ Name = 'wp-content'; Root = "$HOME\public_html\wp-content" })) {
-  if ([IO.Directory]::Exists($namedDir.Root)) {
+  if ($namedDir.Name -notin $existingDrives -and [IO.Directory]::Exists($namedDir.Root)) {
     $drive = [Management.Automation.PSDriveInfo]::new($namedDir.Name, $fileSystem, $namedDir.Root, '', $null)
     $null = $ExecutionContext.SessionState.Drive.New($drive, 'Global')
   }
 }
-Remove-Variable fileSystem, namedDir, drive -ErrorAction Ignore
+Remove-Variable fileSystem, existingDrives, namedDir, drive -ErrorAction Ignore
 
 # Directory stack (cf. AUTO_PUSHD and PUSHD_IGNORE_DUPS in .zshrc).
 # $DirStack holds the previous locations, most recent first, as Zsh's
@@ -569,9 +574,15 @@ Remove-Variable fileSystem, namedDir, drive -ErrorAction Ignore
 # Everything else given to cd is passed to Set-Location, except pipeline
 # input ('Get-Item x | cd' needs Set-Location). cd is a built-in alias with the
 # AllScope option, so it must be removed with -Force before a function of
-# that name can be called.
-$DirStack = [Collections.Generic.List[string]]::new()
-$DirStackPwd = $PWD.Path
+# that name can be called. When the profile is run again in the same session,
+# the alias is already gone, hence -ErrorAction Ignore on the removal.
+#
+# When the profile is run again in the same session (. $PROFILE), the
+# existing stack is kept rather than replaced by an empty one.
+if ($DirStack -isnot [Collections.Generic.List[string]]) {
+  $DirStack = [Collections.Generic.List[string]]::new()
+  $DirStackPwd = $PWD.Path
+}
 
 function Update-DirStack {
   $here = $PWD.Path
@@ -587,12 +598,20 @@ function Update-DirStack {
 # Add Update-DirStack to the prompt by wrapping the prompt function, as
 # zoxide's init script does below. The old prompt runs first, so that it
 # still sees $? from the last command.
-$dirStackPrompt = $function:prompt
-$function:prompt = {
-  & $dirStackPrompt
-  Update-DirStack
-}.GetNewClosure()
-Remove-Variable dirStackPrompt
+#
+# $DirStackHooked records that the prompt has been wrapped, as zoxide's
+# $__zoxide_hooked does. Without it, each further run of the profile in the
+# same session would wrap the already wrapped prompt again, and
+# Update-DirStack would run once more per prompt for every run.
+if (-not $DirStackHooked) {
+  $DirStackHooked = $true
+  $dirStackPrompt = $function:prompt
+  $function:prompt = {
+    & $dirStackPrompt
+    Update-DirStack
+  }.GetNewClosure()
+  Remove-Variable dirStackPrompt
+}
 
 function dirs {
   $flags = -join ($args | ForEach-Object { "$_".TrimStart('-') })
@@ -614,7 +633,7 @@ function dirs {
   }
 }
 
-Remove-Item Alias:cd -Force
+Remove-Item Alias:cd -Force -ErrorAction Ignore
 function cd {
   # The parameters are declared, rather than all arguments being taken from
   # $args, so that the completer registered below can complete -Path.

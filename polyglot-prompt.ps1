@@ -15,6 +15,15 @@
 #   12s  how long the last command ran, if it took long enough
 #   1j   number of PowerShell background jobs that haven't finished
 #
+# and two changes that keep it from being mistaken for a POSIX shell's
+# prompt: it begins with 'PS' and PowerShell's major version number, and the
+# prompt character for an unelevated user is '>' (as in PowerShell's default
+# prompt, 'PS C:\>') instead of '$':
+#
+#   PS7 12s (1) (venv) user@host ~/.../foo/bar 1j (main &*+x!>?) >
+#
+# Windows PowerShell 5.1 shows PS5 instead of PS7.
+#
 # In PSReadLine's vi command mode, the prompt character becomes ':', as
 # agkozak-zsh-prompt shows it in vicmd mode. That requires a
 # ViModeChangeHandler that sets $PolyglotViMode and redraws the prompt; the
@@ -98,6 +107,7 @@ $PolyglotPromptPrefix = $null
 # (1;34) for the path, yellow (33) for Git and bold red (1;31) for the exit
 # status; substitute those to go back to them.
 $PolyglotColors = @{
+  Shell      = '38;5;245'     # the PS7 tag; not from .zshrc
   ExecTime   = '38;5;245'     # AGKOZAK_COLORS_CMD_EXEC_TIME
   ExitStatus = '1;38;5;174'   # AGKOZAK_COLORS_EXIT_STATUS
   Venv       = '38;5;188'     # AGKOZAK_COLORS_VIRTUALENV
@@ -172,6 +182,11 @@ $PolyglotHost = if ($env:SSH_CONNECTION -or $env:SSH_CLIENT -or $env:SSH_TTY -or
 } else {
   ''
 }
+
+# The tag at the start of the prompt: 'PS' followed by the major version of
+# the running PowerShell, e.g. PS7 in PowerShell 7.x and PS5 in Windows
+# PowerShell 5.1. $PSVersionTable exists in every edition this file supports.
+$PolyglotShell = 'PS' + $PSVersionTable.PSVersion.Major
 
 
 # -------------------------------------------------------------------------
@@ -402,11 +417,11 @@ function prompt {
   # without it would create a local variable instead.
   $code = $global:LASTEXITCODE
 
-  # The prompt is assembled in this string.
-  $out = ''
-
   # A shorter name for the color table defined at the top of the file.
   $c = $PolyglotColors
+
+  # The prompt is assembled in this string. It begins with the PS7 tag.
+  $out = (Format-PolyglotColor $c.Shell $PolyglotShell) + ' '
 
   # --- Running time of the last command, if it reached the threshold ---
   # Get-History -Count 1 returns the most recent history entry, or nothing
@@ -501,11 +516,13 @@ function Get-PolyglotPromptEnd {
   $e = [char]27
 
   # --- Prompt character: ':' in vi command mode, else # when elevated and
-  # $ otherwise (cf. %(4V.:.%#) in .zshrc's AGKOZAK_CUSTOM_PROMPT) ---
-  # Single quotes are literal, so '$' needs no escaping.
+  # > otherwise. This follows %(4V.:.%#) in .zshrc's AGKOZAK_CUSTOM_PROMPT,
+  # except that the unelevated character is PowerShell's '>' rather than the
+  # POSIX shells' '$', so that the prompt can't be mistaken for one of
+  # theirs. ---
   $end = if ($global:PolyglotViMode -eq 'Command') { ' : ' }
          elseif ($PolyglotIsAdmin) { ' # ' }
-         else { ' $ ' }
+         else { ' > ' }
 
   # --- Report the current directory to Windows Terminal ---
   # The sequence ESC ] 9 ; 9 ; "path" ESC \ is a Windows Terminal extension
